@@ -8,3 +8,5 @@
 /build
 /captures
 .externalNativeBuild
+app/src/main/res/values/secrets.xml
+notes.txt
