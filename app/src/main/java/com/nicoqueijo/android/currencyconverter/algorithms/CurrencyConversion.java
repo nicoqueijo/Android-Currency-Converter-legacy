@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.Conversion;
+package com.nicoqueijo.android.currencyconverter.algorithms;
 
 /**
  * Class dedicated to perform currency conversions.

@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter;
+package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +10,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.nicoqueijo.android.currencyconverter.Conversion.CurrencyConversion;
+import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
 
 import org.json.JSONException;
 import org.json.JSONObject;
