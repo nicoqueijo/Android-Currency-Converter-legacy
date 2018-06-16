@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONObject rates = jsonObject.getJSONObject("quotes");
                             updateSharedPreferencesExchangeRates(rates);
-                            double fromRate = getDouble(mSharedPreferences, "USDBTC", 0);
+                            double fromRate = getDouble(mSharedPreferences, "USDARS", 0);
                             double toRate = getDouble(mSharedPreferences, "USDUYU", 0);
                             String result = Double.toString(CurrencyConversion
                                     .currencyConverter(amount, fromRate, toRate));
@@ -74,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
         volleyRequestQueue.add(stringRequest);
     }
 
+    /**
+     * Traverses the JSON object of the exchange rates
+     * and saves them locally via SharedPreferences.
+     *
+     * @param rates the JSON object containing the exchange rates.
+     * @throws JSONException in case a key being fetched doesn't exist.
+     */
     private void updateSharedPreferencesExchangeRates(JSONObject rates) throws JSONException {
         JSONArray keys = rates.names();
         for (int i = 0; i < keys.length(); i++) {
@@ -85,12 +92,22 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferencesEditor.commit();
     }
 
-    private SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit,
-                                               final String key, final double value) {
-        return edit.putLong(key, Double.doubleToRawLongBits(value));
+
+    /**
+     * Used to store doubles in SharedPreferences without losing precision.
+     * Credit: https://stackoverflow.com/a/18098090/5906793
+     */
+    private void putDouble(final SharedPreferences.Editor edit,
+                           final String key, final double value) {
+        edit.putLong(key, Double.doubleToRawLongBits(value));
     }
 
-    double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
+    /**
+     * Used to retrieve doubles in SharedPreferences without losing precision.
+     * Credit: https://stackoverflow.com/a/18098090/5906793
+     */
+    private double getDouble(final SharedPreferences prefs,
+                             final String key, final double defaultValue) {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
