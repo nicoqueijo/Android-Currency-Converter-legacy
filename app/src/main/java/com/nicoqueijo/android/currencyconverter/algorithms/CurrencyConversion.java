@@ -18,8 +18,7 @@ public class CurrencyConversion {
      */
     public static double currencyConverter(int amount, double fromRate, double toRate) {
         double valueInDollars = convertAnyCurrencyToDollar(amount, fromRate);
-        double valueInTargetCurrency = convertDollarToAnyCurrency(valueInDollars, toRate);
-        return valueInTargetCurrency;
+        return convertDollarToAnyCurrency(valueInDollars, toRate);
     }
 
     /**

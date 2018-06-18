@@ -12,11 +12,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String FORMAT_PARAM = "&format=1";
 
     SharedPreferences mSharedPreferences;
-    SharedPreferences.Editor mSharedPreferencesEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mSharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
-        mSharedPreferencesEditor = mSharedPreferences.edit();
 
         initApiKey();
         String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
@@ -48,17 +47,15 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        int amount = 2425;
-
                         try {
+                            // Encapsulate this code into method(s)
+                            // Get the value in "success key", if it is false handle it someway,
+                            // else process the JSON to update rates.
                             JSONObject jsonObject = new JSONObject(response);
+                            long timestamp = jsonObject.getLong("timestamp");
+                            Date lastUpdated = new Date(timestamp * 1000);
                             JSONObject rates = jsonObject.getJSONObject("quotes");
                             updateSharedPreferencesExchangeRates(rates);
-                            double fromRate = getDouble(mSharedPreferences, "USDARS", 0);
-                            double toRate = getDouble(mSharedPreferences, "USDUYU", 0);
-                            String result = Double.toString(CurrencyConversion
-                                    .currencyConverter(amount, fromRate, toRate));
-                            Log.d(TAG, "onResponse: " + result);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -82,20 +79,20 @@ public class MainActivity extends AppCompatActivity {
      * @throws JSONException in case a key being fetched doesn't exist.
      */
     private void updateSharedPreferencesExchangeRates(JSONObject rates) throws JSONException {
+        SharedPreferences.Editor mSharedPreferencesEditor = mSharedPreferences.edit();
         JSONArray keys = rates.names();
         for (int i = 0; i < keys.length(); i++) {
             String key = keys.getString(i);
             double value = rates.getDouble(key);
             putDouble(mSharedPreferencesEditor, key, value);
-            Log.d(TAG, key + " : " + String.valueOf(value) + "\n");
         }
-        mSharedPreferencesEditor.commit();
+        mSharedPreferencesEditor.apply();
     }
 
 
     /**
      * Used to store doubles in SharedPreferences without losing precision.
-     * Credit: https://stackoverflow.com/a/18098090/5906793
+     * Source: https://stackoverflow.com/a/18098090/5906793
      */
     private void putDouble(final SharedPreferences.Editor edit,
                            final String key, final double value) {
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Used to retrieve doubles in SharedPreferences without losing precision.
-     * Credit: https://stackoverflow.com/a/18098090/5906793
+     * Source: https://stackoverflow.com/a/18098090/5906793
      */
     private double getDouble(final SharedPreferences prefs,
                              final String key, final double defaultValue) {
