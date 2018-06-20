@@ -17,11 +17,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
     private static final String BASE_URL = "http://apilayer.net/api/live";
     private static final String API_KEY_PARAM = "?access_key=";
     private static String API_KEY;
@@ -54,6 +57,18 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             long timestamp = jsonObject.getLong("timestamp");
                             Date lastUpdated = new Date(timestamp * 1000);
+
+                            DateFormat dateFormat = android.text.format.DateFormat
+                                    .getDateFormat(MainActivity.this);
+                            String date1 = dateFormat.format(lastUpdated);
+                            String date2 = dateFormat.format(lastUpdated.getTime());
+                            Log.d(TAG, "onResponse: " + date1);
+                            Log.d(TAG, "onResponse: " + date2);
+
+                            Log.d(TAG, "onResponse: " + MainActivity.this.getResources()
+                                    .getConfiguration().locale.getDisplayName());
+                            Log.d(TAG, "onResponse: " + Locale.getDefault().getLanguage());
+
                             JSONObject rates = jsonObject.getJSONObject("quotes");
                             updateSharedPreferencesExchangeRates(rates);
                         } catch (JSONException e) {
@@ -88,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         }
         mSharedPreferencesEditor.apply();
     }
-
 
     /**
      * Used to store doubles in SharedPreferences without losing precision.
