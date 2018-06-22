@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String FORMAT_PARAM = "&format=1";
 
     SharedPreferences mSharedPreferences;
+    private ImageView flagImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mSharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        flagImage = findViewById(R.id.flag_image);
 
         initApiKey();
         String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
@@ -100,6 +103,14 @@ public class MainActivity extends AppCompatActivity {
             String key = keys.getString(i);
             double value = rates.getDouble(key);
             putDouble(mSharedPreferencesEditor, key, value);
+
+            try {
+                int resId = this.getResources().getIdentifier(key.toLowerCase(), "drawable", this.getPackageName());
+                flagImage.setImageResource(resId);
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         mSharedPreferencesEditor.apply();
     }
