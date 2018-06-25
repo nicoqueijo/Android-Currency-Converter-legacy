@@ -2,10 +2,8 @@ package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,9 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String FORMAT_PARAM = "&format=1";
 
     SharedPreferences mSharedPreferences;
-    private ImageView flagImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mSharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
-        flagImage = findViewById(R.id.flag_image);
 
         initApiKey();
         String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
@@ -59,22 +52,20 @@ public class MainActivity extends AppCompatActivity {
                             // Get the value in "success key", if it is false handle it someway,
                             // else process the JSON to update rates.
                             JSONObject jsonObject = new JSONObject(response);
-                            long timestamp = jsonObject.getLong("timestamp");
-                            Date lastUpdated = new Date(timestamp * 1000);
+                            boolean success = jsonObject.getBoolean("success");
 
-                            DateFormat dateFormat = android.text.format.DateFormat
-                                    .getDateFormat(MainActivity.this);
-                            String date1 = dateFormat.format(lastUpdated);
-                            String date2 = dateFormat.format(lastUpdated.getTime());
-                            Log.d(TAG, "onResponse: " + date1);
-                            Log.d(TAG, "onResponse: " + date2);
+                            if (success) {
+                                long timestamp = jsonObject.getLong("timestamp");
+                                JSONObject rates = jsonObject.getJSONObject("quotes");
+                                updateSharedPreferencesExchangeRates(rates);
+                            } else {
+                                // Handle what happens when user HAS access to internet but
+                                // api is not working for some reason.
 
-                            Log.d(TAG, "onResponse: " + MainActivity.this.getResources()
-                                    .getConfiguration().locale.getDisplayName());
-                            Log.d(TAG, "onResponse: " + Locale.getDefault().getLanguage());
-
-                            JSONObject rates = jsonObject.getJSONObject("quotes");
-                            updateSharedPreferencesExchangeRates(rates);
+                                // If there are already values in sharedpreferences then use
+                                // those and go on as usual showing (possibly) outdated rates.
+                                Log.d(TAG, "onResponse: " + jsonObject.toString());
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -83,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error.getLocalizedMessage());
+                // Handle what happens when user doesn't have access to internet
             }
         });
 
