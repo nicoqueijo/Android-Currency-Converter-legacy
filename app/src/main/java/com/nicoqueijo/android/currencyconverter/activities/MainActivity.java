@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -48,23 +47,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            // Encapsulate this code into method(s)
-                            // Get the value in "success key", if it is false handle it someway,
-                            // else process the JSON to update rates.
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
-
                             if (success) {
-                                long timestamp = jsonObject.getLong("timestamp");
-                                JSONObject rates = jsonObject.getJSONObject("quotes");
-                                updateSharedPreferencesExchangeRates(rates);
+                                updateSharedPreferencesExchangeRates(jsonObject);
+                                // Go on with the app after updating rates
+                            } else if (!isSharedPreferencesEmpty()) {
+                                // Go on with the app using existing rates
                             } else {
-                                // Handle what happens when user HAS access to internet but
-                                // api is not working for some reason.
+                                JSONObject error = jsonObject.getJSONObject("error");
+                                final int INDENT_SPACES = 4;
 
-                                // If there are already values in sharedpreferences then use
-                                // those and go on as usual showing (possibly) outdated rates.
-                                Log.d(TAG, "onResponse: " + jsonObject.toString());
+                                // To be displayed in a "Show more" View to supplement
+                                // a generic error message.
+                                String errorDetails = error.toString(INDENT_SPACES);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -74,7 +70,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error.getLocalizedMessage());
-                // Handle what happens when user doesn't have access to internet
+                // First time launching?
+                //      Display error about not being able to fetch exchange rates from cloud.
+                // Else:
+                //      Proceed with current values in SharedPreferences
             }
         });
 
@@ -83,14 +82,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Traverses the JSON object of the exchange rates
-     * and saves them locally via SharedPreferences.
+     * Determines if values have been previously stored in SharedPreferences
+     * by attempting to fetch the value of the timestamp key.
      *
-     * @param rates the JSON object containing the exchange rates.
+     * @return whether 0 was returned by default due to the timestamp key being null.
+     */
+    private boolean isSharedPreferencesEmpty() {
+        long value = mSharedPreferences.getLong("timestamp", 0L);
+        return value == 0L;
+    }
+
+    /**
+     * Extracts the timestamp and exchange rates from the JSON
+     * object and saves them locally via SharedPreferences.
+     *
+     * @param jsonObject the JSON object containing the exchange rates and timestamp.
      * @throws JSONException in case a key being fetched doesn't exist.
      */
-    private void updateSharedPreferencesExchangeRates(JSONObject rates) throws JSONException {
+    private void updateSharedPreferencesExchangeRates(JSONObject jsonObject) throws JSONException {
         SharedPreferences.Editor mSharedPreferencesEditor = mSharedPreferences.edit();
+        long timestamp = jsonObject.getLong("timestamp");
+        mSharedPreferencesEditor.putLong("timestamp", timestamp);
+        JSONObject rates = jsonObject.getJSONObject("quotes");
         JSONArray keys = rates.names();
         for (int i = 0; i < keys.length(); i++) {
             String key = keys.getString(i);
