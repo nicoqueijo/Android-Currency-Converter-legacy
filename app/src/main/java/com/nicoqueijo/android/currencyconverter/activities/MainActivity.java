@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -103,14 +104,6 @@ public class MainActivity extends AppCompatActivity {
             String key = keys.getString(i);
             double value = rates.getDouble(key);
             putDouble(mSharedPreferencesEditor, key, value);
-
-            try {
-                int resId = this.getResources().getIdentifier(key.toLowerCase(), "drawable", this.getPackageName());
-                flagImage.setImageResource(resId);
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         mSharedPreferencesEditor.apply();
     }
