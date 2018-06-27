@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Currency Converter</string>
+    <string name="share">Share</string>
+    <string name="language">Language</string>
+    <string name="rate_app">Rate App</string>
+    <string name="source_code">Source Code</string>
+    <string name="theme">Theme</string>
+    <string name="contact_us">Contact Us</string>
 </resources>
