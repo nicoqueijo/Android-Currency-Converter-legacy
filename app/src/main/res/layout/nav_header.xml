@@ -4,7 +4,8 @@
     android:layout_height="176dp"
     android:background="@color/colorAccent"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:layout_width="wrap_content"
