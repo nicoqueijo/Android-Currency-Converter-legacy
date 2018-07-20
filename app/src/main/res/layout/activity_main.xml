@@ -39,12 +39,13 @@
                 android:layout_gravity="bottom">
 
                 <TextView
+                    android:id="@+id/last_updated_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:padding="16dp"
                     android:paddingBottom="16dp"
-                    android:text="Last updated: [dynamic date here]" />
+                    tools:text="Last updated: Today 14:22" />
 
             </android.support.design.widget.NavigationView>
 

@@ -28,7 +28,7 @@
             android:icon="@drawable/ic_contact_us"
             android:title="@string/contact_us" />
         <item
-            android:id="@+id/footer_spacer_1"
+            android:id="@+id/footer_spacer"
             android:checkable="false"
             android:enabled="false"
             android:title="" />

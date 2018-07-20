@@ -1,13 +1,16 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,6 +23,8 @@ import com.nicoqueijo.android.currencyconverter.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private TextView mLastUpdatedView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 R.string.nav_drawer_open, R.string.nav_drawer_close);
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
+        mLastUpdatedView = findViewById(R.id.last_updated_view);
 
         initApiKey();
         String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
@@ -92,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         volleyRequestQueue.add(stringRequest);
+
+        // Update the "last update label" that is on bottom of the nav view
+        long timestamp = mSharedPreferences.getLong("timestamp", 0L);
+
     }
 
     @Override
