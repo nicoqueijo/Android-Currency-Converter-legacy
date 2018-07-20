@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 final int INDENT_SPACES = 4;
-
                                 // To be displayed in a "Show more" View to supplement
                                 // a generic error message.
                                 String errorDetails = error.toString(INDENT_SPACES);

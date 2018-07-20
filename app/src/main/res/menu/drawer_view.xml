@@ -27,5 +27,10 @@
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/ic_contact_us"
             android:title="@string/contact_us" />
+        <item
+            android:id="@+id/footer_spacer_1"
+            android:checkable="false"
+            android:enabled="false"
+            android:title="" />
     </group>
 </menu>
