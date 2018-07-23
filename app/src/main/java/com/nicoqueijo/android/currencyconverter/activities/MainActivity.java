@@ -1,17 +1,15 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.SharedPreferences;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -106,11 +103,16 @@ public class MainActivity extends AppCompatActivity {
         // Update the "last update label" that is on bottom of the nav view
         final long MILLIS_IN_SECOND = 1000L;
         long timestamp = mSharedPreferences.getLong("timestamp", 0L);
-        Date date = new Date(timestamp * MILLIS_IN_SECOND);
-        java.text.SimpleDateFormat simpleDateFormat =
-                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-        simpleDateFormat.setTimeZone(TimeZone.getDefault());
-        mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+
+        if (timestamp != 0L) {
+            Date date = new Date(timestamp * MILLIS_IN_SECOND);
+            java.text.SimpleDateFormat simpleDateFormat =
+                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+            simpleDateFormat.setTimeZone(TimeZone.getDefault());
+            mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+        } else {
+            findViewById(R.id.nav_view_footer).setVisibility(View.GONE);
+        }
     }
 
     @Override

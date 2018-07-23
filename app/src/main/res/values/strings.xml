@@ -8,5 +8,6 @@
     <string name="contact_us">Contact Us</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
-    <string name="last_update">Last Updated: %1$s</string>
+    <string name="last_update">Last updated: %1$s</string>
+    <string name="no_internet">No internet connection</string>
 </resources>
