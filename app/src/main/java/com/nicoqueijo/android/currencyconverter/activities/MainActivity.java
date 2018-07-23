@@ -100,19 +100,7 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         volleyRequestQueue.add(stringRequest);
 
-        // Update the "last update label" that is on bottom of the nav view
-        final long MILLIS_IN_SECOND = 1000L;
-        long timestamp = mSharedPreferences.getLong("timestamp", 0L);
-
-        if (timestamp != 0L) {
-            Date date = new Date(timestamp * MILLIS_IN_SECOND);
-            java.text.SimpleDateFormat simpleDateFormat =
-                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-            simpleDateFormat.setTimeZone(TimeZone.getDefault());
-            mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
-        } else {
-            findViewById(R.id.nav_view_footer).setVisibility(View.GONE);
-        }
+        checkForLastUpdate();
     }
 
     @Override
@@ -121,6 +109,26 @@ public class MainActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    /**
+     * Checks when the exchange rate data was last updated to display in the navigation footer.
+     * If the data doesn't exists, the footer is hidden and the content frame displays a
+     * network-issue message.
+     */
+    private void checkForLastUpdate() {
+        final long MILLIS_IN_SECOND = 1000L;
+        long timestamp = mSharedPreferences.getLong("timestamp", 0L);
+        if (timestamp != 0L) {
+            Date date = new Date(timestamp * MILLIS_IN_SECOND);
+            java.text.SimpleDateFormat simpleDateFormat =
+                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+            simpleDateFormat.setTimeZone(TimeZone.getDefault());
+            mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+        } else {
+            findViewById(R.id.nav_view_footer).setVisibility(View.GONE);
+            // change to content frame to network issue message
         }
     }
 
