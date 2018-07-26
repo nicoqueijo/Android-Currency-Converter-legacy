@@ -23,6 +23,11 @@
         tools:context=".activities.MainActivity"
         tools:openDrawer="start">
 
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view_menu"
             android:layout_width="wrap_content"
@@ -45,17 +50,12 @@
                     android:layout_gravity="bottom"
                     android:padding="16dp"
                     android:paddingBottom="16dp"
-                    tools:text="Last updated: Today 14:22" />
+                    tools:text="Last updated: 2018-07-22 14:22" />
 
             </android.support.design.widget.NavigationView>
 
         </android.support.design.widget.NavigationView>
 
     </android.support.v4.widget.DrawerLayout>
-
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </LinearLayout>

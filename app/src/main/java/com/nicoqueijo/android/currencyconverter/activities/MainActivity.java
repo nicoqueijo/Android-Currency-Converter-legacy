@@ -2,14 +2,18 @@ package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String FORMAT_PARAM = "&format=1";
 
     private SharedPreferences mSharedPreferences;
+
     private Toolbar mToolbar;
+    private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private TextView mLastUpdatedView;
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        mNavigationView = findViewById(R.id.nav_view_menu);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close);
@@ -58,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
 
         initApiKey();
         String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                // menuItem.setChecked(true);
+                Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                mDrawerLayout.closeDrawers();
+                return false;
+            }
+        });
 
         // Instantiate the RequestQueue.
         RequestQueue volleyRequestQueue = Volley.newRequestQueue(this);
@@ -99,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         volleyRequestQueue.add(stringRequest);
-
         checkForLastUpdate();
     }
 
@@ -118,10 +134,10 @@ public class MainActivity extends AppCompatActivity {
      * network-issue message.
      */
     private void checkForLastUpdate() {
-        final long MILLIS_IN_SECOND = 1000L;
         long timestamp = mSharedPreferences.getLong("timestamp", 0L);
+        long timestampInMillis = timestamp * 1000L;
         if (timestamp != 0L) {
-            Date date = new Date(timestamp * MILLIS_IN_SECOND);
+            Date date = new Date(timestampInMillis);
             java.text.SimpleDateFormat simpleDateFormat =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
