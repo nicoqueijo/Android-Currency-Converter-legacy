@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 
 import org.json.JSONArray;
@@ -113,19 +113,19 @@ public class MainActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        checkForLastUpdate();
-                        Toast.makeText(MainActivity.this, "Volley request made", Toast.LENGTH_SHORT).show();
+                        checkForLastUpdate(true);
+                        Toast.makeText(MainActivity.this, "Volley request SUCCESS", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: " + error.getLocalizedMessage());
                 // First time launching?
                 //      Display error about not being able to fetch exchange rates from cloud.
                 //      This should be done via a fragment with fragment_no_internet layout
                 // Else:
                 //      Proceed with current values in SharedPreferences
-                checkForLastUpdate();
+                checkForLastUpdate(false);
+                Toast.makeText(MainActivity.this, "Volley request FAILED", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -150,10 +150,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh:
-                // For testing purposes
-                Toast.makeText(this, "Refresh pressed", Toast.LENGTH_SHORT).show();
-                // For testing purposes
                 volleyRequestQueue.add(stringRequest);
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -173,7 +171,10 @@ public class MainActivity extends AppCompatActivity {
      * Checks when the exchange rate data was last updated to display in the navigation footer.
      * If the data doesn't exists, the content frame displays a network-issue message.
      */
-    private void checkForLastUpdate() {
+    private void checkForLastUpdate(boolean internetConnected) {
+
+        // if not internet connected show a snackbar saying "no internet connection"
+
         Toast.makeText(this, "checkForLastUpdate called", Toast.LENGTH_SHORT).show();
         long timestamp = mSharedPreferences.getLong("timestamp", 0L);
         long timestampInMillis = timestamp * 1000L;
@@ -183,18 +184,19 @@ public class MainActivity extends AppCompatActivity {
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
             mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
-            if (fragmentManager.findFragmentByTag("no_internet_fragment") != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragmentManager.findFragmentByTag("no_internet_fragment"));
-                fragmentTransaction.commit();
-            }
+
+            Fragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.content_frame, activeExchangeRatesFragment,
+                    "active_exchange_rates_fragment");
+            fragmentTransaction.commit();
         } else {
-            if (fragmentManager.findFragmentByTag("no_internet_fragment") == null) {
-                Fragment noInternetFragment = new NoInternetFragment();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.content_frame, noInternetFragment, "no_internet_fragment");
-                fragmentTransaction.commit();
-            }
+            Fragment noInternetFragment = new NoInternetFragment();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.content_frame, noInternetFragment,
+                    "no_internet_fragment");
+            fragmentTransaction.commit();
+
         }
     }
 
