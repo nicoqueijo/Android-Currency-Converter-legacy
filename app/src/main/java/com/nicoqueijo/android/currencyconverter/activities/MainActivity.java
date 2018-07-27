@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private TextView mLastUpdatedView;
 
+    FragmentManager fragmentManager = getSupportFragmentManager();
+
+    // Instantiate the RequestQueue.
+    RequestQueue volleyRequestQueue;
+    StringRequest stringRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,11 +88,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Instantiate the RequestQueue.
-        RequestQueue volleyRequestQueue = Volley.newRequestQueue(this);
+        volleyRequestQueue = Volley.newRequestQueue(this);
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, fullUrl,
+        stringRequest = new StringRequest(Request.Method.GET, fullUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         checkForLastUpdate();
+                        Toast.makeText(MainActivity.this, "Volley request made", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -146,8 +151,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refresh:
                 // For testing purposes
-                Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Refresh pressed", Toast.LENGTH_SHORT).show();
                 // For testing purposes
+                volleyRequestQueue.add(stringRequest);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -165,10 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Checks when the exchange rate data was last updated to display in the navigation footer.
-     * If the data doesn't exists, the footer is hidden and the content frame displays a
-     * network-issue message.
+     * If the data doesn't exists, the content frame displays a network-issue message.
      */
     private void checkForLastUpdate() {
+        Toast.makeText(this, "checkForLastUpdate called", Toast.LENGTH_SHORT).show();
         long timestamp = mSharedPreferences.getLong("timestamp", 0L);
         long timestampInMillis = timestamp * 1000L;
         if (timestamp != 0L) {
@@ -177,13 +183,18 @@ public class MainActivity extends AppCompatActivity {
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
             mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+            if (fragmentManager.findFragmentByTag("no_internet_fragment") != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragmentManager.findFragmentByTag("no_internet_fragment"));
+                fragmentTransaction.commit();
+            }
         } else {
-            // change to content frame to network issue message
-            Fragment noInternetFragment = new NoInternetFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.content_frame, noInternetFragment, "no_internet_fragment");
-            fragmentTransaction.commit();
+            if (fragmentManager.findFragmentByTag("no_internet_fragment") == null) {
+                Fragment noInternetFragment = new NoInternetFragment();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.content_frame, noInternetFragment, "no_internet_fragment");
+                fragmentTransaction.commit();
+            }
         }
     }
 
