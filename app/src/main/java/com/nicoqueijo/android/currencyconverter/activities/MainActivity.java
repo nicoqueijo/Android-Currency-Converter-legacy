@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -77,16 +78,17 @@ public class MainActivity extends AppCompatActivity {
         initApiKey();
         String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
 
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                // For testing purposes
-                Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
-                // For testing purposes
-                mDrawerLayout.closeDrawers();
-                return false;
-            }
-        });
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        // For testing purposes
+                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        // For testing purposes
+                        mDrawerLayout.closeDrawers();
+                        return false;
+                    }
+                });
 
         volleyRequestQueue = Volley.newRequestQueue(this);
 
@@ -114,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         checkForLastUpdate(true);
-                        Toast.makeText(MainActivity.this, "Volley request SUCCESS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Volley request SUCCESS",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -125,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 // Else:
                 //      Proceed with current values in SharedPreferences
                 checkForLastUpdate(false);
-                Toast.makeText(MainActivity.this, "Volley request FAILED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Volley request FAILED",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -173,7 +177,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkForLastUpdate(boolean internetConnected) {
 
-        // if not internet connected show a snackbar saying "no internet connection"
+        if (!internetConnected) {
+            Snackbar.make(findViewById(R.id.content_frame), R.string.no_internet,
+                    Snackbar.LENGTH_SHORT).show();
+        }
 
         Toast.makeText(this, "checkForLastUpdate called", Toast.LENGTH_SHORT).show();
         long timestamp = mSharedPreferences.getLong("timestamp", 0L);
@@ -183,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
             java.text.SimpleDateFormat simpleDateFormat =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
-            mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+            mLastUpdatedView.setText(getString(R.string.last_update,
+                    simpleDateFormat.format(date)));
 
             Fragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
