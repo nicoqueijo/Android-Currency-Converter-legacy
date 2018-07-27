@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        checkForLastUpdate();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -112,14 +117,21 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onErrorResponse: " + error.getLocalizedMessage());
                 // First time launching?
                 //      Display error about not being able to fetch exchange rates from cloud.
+                //      This should be done via a fragment with fragment_no_internet layout
                 // Else:
                 //      Proceed with current values in SharedPreferences
+                checkForLastUpdate();
             }
         });
 
         // Add the request to the RequestQueue.
         volleyRequestQueue.add(stringRequest);
-        checkForLastUpdate();
+
+        /* Try this on July 31st
+        for (int i = 0; i < 100; i++) {
+            volleyRequestQueue.add(stringRequest);
+        }
+        */
     }
 
     @Override
@@ -166,8 +178,12 @@ public class MainActivity extends AppCompatActivity {
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
             mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
         } else {
-            findViewById(R.id.nav_view_footer).setVisibility(View.GONE);
             // change to content frame to network issue message
+            Fragment noInternetFragment = new NoInternetFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.content_frame, noInternetFragment, "no_internet_fragment");
+            fragmentTransaction.commit();
         }
     }
 

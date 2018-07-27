@@ -11,4 +11,7 @@
     <string name="last_update">Last updated: %1$s</string>
     <string name="no_internet">No internet connection</string>
     <string name="refresh">Refresh</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
