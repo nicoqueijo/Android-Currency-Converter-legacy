@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         // For testing purposes
-                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, menuItem.getTitle(),
+                                Toast.LENGTH_SHORT).show();
                         // For testing purposes
                         mDrawerLayout.closeDrawers();
                         return false;
@@ -116,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         checkForLastUpdate(true);
-                        Toast.makeText(MainActivity.this, "Volley request SUCCESS",
-                                Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -128,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 // Else:
                 //      Proceed with current values in SharedPreferences
                 checkForLastUpdate(false);
-                Toast.makeText(MainActivity.this, "Volley request FAILED",
-                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -176,35 +173,34 @@ public class MainActivity extends AppCompatActivity {
      * If the data doesn't exists, the content frame displays a network-issue message.
      */
     private void checkForLastUpdate(boolean internetConnected) {
-
         if (!internetConnected) {
             Snackbar.make(findViewById(R.id.content_frame), R.string.no_internet,
                     Snackbar.LENGTH_SHORT).show();
         }
-
-        Toast.makeText(this, "checkForLastUpdate called", Toast.LENGTH_SHORT).show();
-        long timestamp = mSharedPreferences.getLong("timestamp", 0L);
-        long timestampInMillis = timestamp * 1000L;
-        if (timestamp != 0L) {
+        if (!isSharedPreferencesEmpty()) {
+            long timestamp = mSharedPreferences.getLong("timestamp", 0L);
+            long timestampInMillis = timestamp * 1000L;
             Date date = new Date(timestampInMillis);
             java.text.SimpleDateFormat simpleDateFormat =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
             mLastUpdatedView.setText(getString(R.string.last_update,
                     simpleDateFormat.format(date)));
-
-            Fragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.content_frame, activeExchangeRatesFragment,
-                    "active_exchange_rates_fragment");
-            fragmentTransaction.commit();
+            if (fragmentManager.findFragmentByTag("active_exchange_rates_fragment") == null) {
+                Fragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
+                        "active_exchange_rates_fragment");
+                fragmentTransaction.commit();
+            }
         } else {
-            Fragment noInternetFragment = new NoInternetFragment();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.content_frame, noInternetFragment,
-                    "no_internet_fragment");
-            fragmentTransaction.commit();
-
+            if (fragmentManager.findFragmentByTag("no_internet_fragment") == null) {
+                Fragment noInternetFragment = new NoInternetFragment();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.content_frame, noInternetFragment,
+                        "no_internet_fragment");
+                fragmentTransaction.commit();
+            }
         }
     }
 
