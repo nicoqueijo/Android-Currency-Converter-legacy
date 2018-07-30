@@ -7,9 +7,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 
 import org.json.JSONArray;
@@ -58,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    // Instantiate the RequestQueue.
     RequestQueue volleyRequestQueue;
     StringRequest stringRequest;
 
@@ -94,13 +91,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        volleyRequestQueue = Volley.newRequestQueue(this);
+        // Can possibly move this to its own method
+        boolean internetEnabled = isNetworkAvailable();
+        if (internetEnabled) {
+            volleyRequestQueue = Volley.newRequestQueue(this);
+            initVolleyStringRequest();
+            volleyRequestQueue.add(stringRequest);
+        } else if (!isSharedPreferencesEmpty()) {
+            checkForLastUpdate();
+            // Restore contents of RecyclerView
+        } else {
+            fragmentManager.beginTransaction().add(R.id.content_frame,
+                    new NoInternetFragment(), "no_internet_fragment").commit();
+            Snackbar.make(findViewById(R.id.content_frame),
+                    R.string.no_internet, Snackbar.LENGTH_INDEFINITE).show();
+        }
 
-        // Add the request to the RequestQueue.
-        volleyRequestQueue.add(stringRequest);
-
-        /* Try this on July 31st
-        for (int i = 0; i < 100; i++) {
+        /* Try this on July 31st end of day
+        for (int i = 0; i < [remaining usage]; i++) {
             volleyRequestQueue.add(stringRequest);
         }
         */
@@ -117,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh:
-                volleyRequestQueue.add(stringRequest);
+                // volleyRequestQueue.add(stringRequest);
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             default:
@@ -136,34 +144,16 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Checks when the exchange rate data was last updated to display in the navigation footer.
-     * If the data doesn't exists, the content frame displays a network-issue message.
      */
     private void checkForLastUpdate() {
-        if (!isSharedPreferencesEmpty()) {
-            long timestamp = mSharedPreferences.getLong("timestamp", 0L);
-            long timestampInMillis = timestamp * 1000L;
-            Date date = new Date(timestampInMillis);
-            java.text.SimpleDateFormat simpleDateFormat =
-                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-            simpleDateFormat.setTimeZone(TimeZone.getDefault());
-            mLastUpdatedView.setText(getString(R.string.last_update,
-                    simpleDateFormat.format(date)));
-            if (fragmentManager.findFragmentByTag("active_exchange_rates_fragment") == null) {
-                Fragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                        "active_exchange_rates_fragment");
-                fragmentTransaction.commit();
-            }
-        } else {
-            if (fragmentManager.findFragmentByTag("no_internet_fragment") == null) {
-                Fragment noInternetFragment = new NoInternetFragment();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.content_frame, noInternetFragment,
-                        "no_internet_fragment");
-                fragmentTransaction.commit();
-            }
-        }
+        long timestamp = mSharedPreferences.getLong("timestamp", 0L);
+        long timestampInMillis = timestamp * 1000L;
+        Date date = new Date(timestampInMillis);
+        java.text.SimpleDateFormat simpleDateFormat =
+                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        mLastUpdatedView.setText(getString(R.string.last_update,
+                simpleDateFormat.format(date)));
     }
 
     /**
