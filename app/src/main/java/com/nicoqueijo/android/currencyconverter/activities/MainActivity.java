@@ -1,10 +1,12 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String API_KEY_PARAM = "?access_key=";
     private static String API_KEY;
     private static final String FORMAT_PARAM = "&format=1";
+    private String apiFullUrl;
 
     private SharedPreferences mSharedPreferences;
 
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mLastUpdatedView = findViewById(R.id.last_updated_view);
 
         initApiKey();
-        String fullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
+        apiFullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
 
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -92,43 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         volleyRequestQueue = Volley.newRequestQueue(this);
-
-        // Request a string response from the provided URL.
-        stringRequest = new StringRequest(Request.Method.GET, fullUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if (success) {
-                                updateSharedPreferencesExchangeRates(jsonObject);
-                                // Go on with the app after updating rates
-                            } else if (!isSharedPreferencesEmpty()) {
-                                // Go on with the app using existing rates
-                            } else {
-                                JSONObject error = jsonObject.getJSONObject("error");
-                                final int INDENT_SPACES = 4;
-                                // To be displayed in a "Show more" View to supplement
-                                // a generic error message.
-                                String errorDetails = error.toString(INDENT_SPACES);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        checkForLastUpdate(true);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // First time launching?
-                //      Display error about not being able to fetch exchange rates from cloud.
-                //      This should be done via a fragment with fragment_no_internet layout
-                // Else:
-                //      Proceed with current values in SharedPreferences
-                checkForLastUpdate(false);
-            }
-        });
 
         // Add the request to the RequestQueue.
         volleyRequestQueue.add(stringRequest);
@@ -172,11 +138,7 @@ public class MainActivity extends AppCompatActivity {
      * Checks when the exchange rate data was last updated to display in the navigation footer.
      * If the data doesn't exists, the content frame displays a network-issue message.
      */
-    private void checkForLastUpdate(boolean internetConnected) {
-        if (!internetConnected) {
-            Snackbar.make(findViewById(R.id.content_frame), R.string.no_internet,
-                    Snackbar.LENGTH_SHORT).show();
-        }
+    private void checkForLastUpdate() {
         if (!isSharedPreferencesEmpty()) {
             long timestamp = mSharedPreferences.getLong("timestamp", 0L);
             long timestampInMillis = timestamp * 1000L;
@@ -260,5 +222,56 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initApiKey() {
         API_KEY = getResources().getString(R.string.api_key);
+    }
+
+    /**
+     * Checks weather there is currently an active internet connection.
+     *
+     * @return whether there is an internet connection.
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void initVolleyStringRequest() {
+        // Request a string response from the provided URL.
+        stringRequest = new StringRequest(Request.Method.GET, apiFullUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            if (success) {
+                                updateSharedPreferencesExchangeRates(jsonObject);
+                                // Go on with the app after updating rates
+                            } else if (!isSharedPreferencesEmpty()) {
+                                // Go on with the app using existing rates
+                            } else {
+                                JSONObject error = jsonObject.getJSONObject("error");
+                                final int INDENT_SPACES = 4;
+                                // To be displayed in a "Show more" View to supplement
+                                // a generic error message.
+                                String errorDetails = error.toString(INDENT_SPACES);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        checkForLastUpdate();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // First time launching?
+                //      Display error about not being able to fetch exchange rates from cloud.
+                //      This should be done via a fragment with fragment_no_internet layout
+                // Else:
+                //      Proceed with current values in SharedPreferences
+                checkForLastUpdate();
+            }
+        });
     }
 }
