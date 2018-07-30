@@ -82,10 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
                         // For testing purposes
                         Snackbar.make(findViewById(R.id.content_frame),
                                 menuItem.getTitle(), Snackbar.LENGTH_SHORT).show();
                         // For testing purposes
+
                         mDrawerLayout.closeDrawers();
                         return false;
                     }
@@ -99,8 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void appLaunchSetup() {
-        boolean internetEnabled = isNetworkAvailable();
-        if (internetEnabled) {
+        if (isNetworkAvailable()) {
             volleyRequestQueue = Volley.newRequestQueue(this);
             initVolleyStringRequest();
             volleyRequestQueue.add(stringRequest);
@@ -110,6 +111,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             fragmentManager.beginTransaction().add(R.id.content_frame,
                     new NoInternetFragment(), "no_internet_fragment").commit();
+            Snackbar.make(findViewById(R.id.content_frame),
+                    R.string.no_internet, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private void processRefreshClick() {
+        if (isNetworkAvailable()) {
+            volleyRequestQueue = Volley.newRequestQueue(this);
+            initVolleyStringRequest();
+            volleyRequestQueue.add(stringRequest);
+        } else {
             Snackbar.make(findViewById(R.id.content_frame),
                     R.string.no_internet, Snackbar.LENGTH_SHORT).show();
         }
@@ -126,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh:
-                // volleyRequestQueue.add(stringRequest);
                 mDrawerLayout.closeDrawer(GravityCompat.START);
+                processRefreshClick();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -247,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 final int INDENT_SPACES = 4;
                                 // To be displayed in a "Show more" View to supplement
-                                // a generic error message.
+                                // a generic error message in the content frame.
                                 String errorDetails = error.toString(INDENT_SPACES);
                             }
                         } catch (JSONException e) {
