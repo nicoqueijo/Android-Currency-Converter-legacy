@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -77,21 +76,29 @@ public class MainActivity extends AppCompatActivity {
 
         initApiKey();
         apiFullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
+        appLaunchSetup();
 
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         // For testing purposes
-                        Toast.makeText(MainActivity.this, menuItem.getTitle(),
-                                Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.content_frame),
+                                menuItem.getTitle(), Snackbar.LENGTH_SHORT).show();
                         // For testing purposes
                         mDrawerLayout.closeDrawers();
                         return false;
                     }
                 });
 
-        // Can possibly move this to its own method
+        /* Try this on July 31st end of day
+        for (int i = 0; i < [remaining usage]; i++) {
+            volleyRequestQueue.add(stringRequest);
+        }
+        */
+    }
+
+    private void appLaunchSetup() {
         boolean internetEnabled = isNetworkAvailable();
         if (internetEnabled) {
             volleyRequestQueue = Volley.newRequestQueue(this);
@@ -104,14 +111,8 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().add(R.id.content_frame,
                     new NoInternetFragment(), "no_internet_fragment").commit();
             Snackbar.make(findViewById(R.id.content_frame),
-                    R.string.no_internet, Snackbar.LENGTH_INDEFINITE).show();
+                    R.string.no_internet, Snackbar.LENGTH_SHORT).show();
         }
-
-        /* Try this on July 31st end of day
-        for (int i = 0; i < [remaining usage]; i++) {
-            volleyRequestQueue.add(stringRequest);
-        }
-        */
     }
 
     @Override
@@ -157,17 +158,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Determines if values have been previously stored in SharedPreferences
-     * by attempting to fetch the value of the timestamp key.
-     *
-     * @return whether 0 was returned by default due to the timestamp key being null.
-     */
-    private boolean isSharedPreferencesEmpty() {
-        long value = mSharedPreferences.getLong("timestamp", 0L);
-        return value == 0L;
-    }
-
-    /**
      * Extracts the timestamp and exchange rates from the JSON
      * object and saves them locally via SharedPreferences.
      *
@@ -186,6 +176,17 @@ public class MainActivity extends AppCompatActivity {
             putDouble(mSharedPreferencesEditor, key, value);
         }
         mSharedPreferencesEditor.apply();
+    }
+
+    /**
+     * Determines if values have been previously stored in SharedPreferences
+     * by attempting to fetch the value of the timestamp key.
+     *
+     * @return whether 0 was returned by default due to the timestamp key being null.
+     */
+    private boolean isSharedPreferencesEmpty() {
+        long value = mSharedPreferences.getLong("timestamp", 0L);
+        return value == 0L;
     }
 
     /**
@@ -237,9 +238,11 @@ public class MainActivity extends AppCompatActivity {
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
                                 updateSharedPreferencesExchangeRates(jsonObject);
-                                // Go on with the app after updating rates
+                                checkForLastUpdate();
+                                // Go on with the app after updating rates (Populating RecyclerView)
                             } else if (!isSharedPreferencesEmpty()) {
-                                // Go on with the app using existing rates
+                                checkForLastUpdate();
+                                // Go on with the app using existing rates (Populating RecyclerView)
                             } else {
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 final int INDENT_SPACES = 4;
@@ -250,7 +253,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        checkForLastUpdate();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -260,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
                 //      This should be done via a fragment with fragment_no_internet layout
                 // Else:
                 //      Proceed with current values in SharedPreferences
-                checkForLastUpdate();
             }
         });
     }

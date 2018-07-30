@@ -2,4 +2,5 @@
 <resources>
     <string name="last_update">Última actualización: %1$s</string>
     <string name="no_internet">Sin conexión a Internet</string>
+    <string name="network_unavailable">Red no está disponible</string>
 </resources>
