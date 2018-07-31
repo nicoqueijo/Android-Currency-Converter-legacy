@@ -17,6 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -53,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private TextView mLastUpdatedView;
 
-    FragmentManager fragmentManager = getSupportFragmentManager();
+    private FragmentManager fragmentManager = getSupportFragmentManager();
 
-    RequestQueue volleyRequestQueue;
-    StringRequest stringRequest;
+    private RequestQueue volleyRequestQueue;
+    private StringRequest stringRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,31 @@ public class MainActivity extends AppCompatActivity {
         */
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.app_menu, menu);
+        final ImageView mRefreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
+        mRefreshMenuItem.setImageResource(R.drawable.ic_refresh);
+        mRefreshMenuItem.setPadding(24, 24, 24, 24);
+        mRefreshMenuItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                processRefreshClick(mRefreshMenuItem);
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void appLaunchSetup() {
         if (isNetworkAvailable()) {
             volleyRequestQueue = Volley.newRequestQueue(this);
@@ -116,42 +144,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void processRefreshClick() {
+    private void processRefreshClick(ImageView menuItem) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         if (isNetworkAvailable()) {
+            menuItem.startAnimation(AnimationUtils
+                    .loadAnimation(MainActivity.this, R.anim.rotate));
             volleyRequestQueue = Volley.newRequestQueue(this);
             initVolleyStringRequest();
             volleyRequestQueue.add(stringRequest);
         } else {
             Snackbar.make(findViewById(R.id.content_frame),
                     R.string.no_internet, Snackbar.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.app_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh:
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-                processRefreshClick();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
