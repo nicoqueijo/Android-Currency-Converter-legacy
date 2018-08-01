@@ -96,24 +96,19 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        /* Try this on July 31st end of day
-        for (int i = 0; i < [remaining usage]; i++) {
-            volleyRequestQueue.add(stringRequest);
-        }
-        */
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.app_menu, menu);
-        final ImageView mRefreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
-        mRefreshMenuItem.setImageResource(R.drawable.ic_refresh);
-        mRefreshMenuItem.setPadding(24, 24, 24, 24);
-        mRefreshMenuItem.setOnClickListener(new View.OnClickListener() {
+        final ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
+        refreshMenuItem.setImageResource(R.drawable.ic_refresh);
+        refreshMenuItem.setPadding(24, 24, 24, 24);
+        refreshMenuItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                processRefreshClick(mRefreshMenuItem);
+                processRefreshClick(refreshMenuItem);
             }
         });
         return super.onCreateOptionsMenu(menu);
