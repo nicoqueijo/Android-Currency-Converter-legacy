@@ -22,13 +22,12 @@ public class ActiveExchangeRatesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final View mView = inflater.inflate(R.layout.fragment_active_exchange_rates, container, false);
+        View mView = inflater.inflate(R.layout.fragment_active_exchange_rates, container, false);
         mFloatingActionButton = mView.findViewById(R.id.fab);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(mView.findViewById(R.id.fab), "FAB clicked",
-                        Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(v, "FAB clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
         return mView;

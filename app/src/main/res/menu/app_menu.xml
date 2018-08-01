@@ -7,5 +7,4 @@
         android:title="@string/refresh"
         app:actionViewClass="android.widget.ImageView"
         app:showAsAction="ifRoom" />
-
 </menu>

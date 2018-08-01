@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 
 import org.json.JSONArray;
@@ -36,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
@@ -85,17 +88,14 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
                         // For testing purposes
-                        Snackbar.make(findViewById(R.id.content_frame),
+                        Snackbar.make(fragmentManager.getFragments().get(0).getView(),
                                 menuItem.getTitle(), Snackbar.LENGTH_SHORT).show();
                         // For testing purposes
-
                         mDrawerLayout.closeDrawers();
                         return false;
                     }
                 });
-
     }
 
     @Override
@@ -125,17 +125,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void appLaunchSetup() {
         if (isNetworkAvailable()) {
-            volleyRequestQueue = Volley.newRequestQueue(this);
-            initVolleyStringRequest();
-            volleyRequestQueue.add(stringRequest);
+            fragmentManager.beginTransaction().add(R.id.content_frame,
+                    new ActiveExchangeRatesFragment(), "active_exchange_rates_fragment").commit();
+            makeApiCall();
         } else if (!isSharedPreferencesEmpty()) {
+            fragmentManager.beginTransaction().add(R.id.content_frame,
+                    new ActiveExchangeRatesFragment(), "active_exchange_rates_fragment").commit();
             checkForLastUpdate();
-            // Restore contents of RecyclerView
         } else {
             fragmentManager.beginTransaction().add(R.id.content_frame,
                     new NoInternetFragment(), "no_internet_fragment").commit();
-            Snackbar.make(findViewById(R.id.content_frame),
-                    R.string.no_internet, Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -144,13 +143,22 @@ public class MainActivity extends AppCompatActivity {
         if (isNetworkAvailable()) {
             menuItem.startAnimation(AnimationUtils
                     .loadAnimation(MainActivity.this, R.anim.rotate));
-            volleyRequestQueue = Volley.newRequestQueue(this);
-            initVolleyStringRequest();
-            volleyRequestQueue.add(stringRequest);
+            makeApiCall();
         } else {
-            Snackbar.make(findViewById(R.id.content_frame),
-                    R.string.no_internet, Snackbar.LENGTH_SHORT).show();
+            showNoInternetSnackbar();
         }
+    }
+
+    private void makeApiCall() {
+        volleyRequestQueue = Volley.newRequestQueue(this);
+        initVolleyStringRequest();
+        volleyRequestQueue.add(stringRequest);
+    }
+
+    private void showNoInternetSnackbar() {
+        List<Fragment> fragmentList = fragmentManager.getFragments();
+        Fragment activeFragment = fragmentList.get(0);
+        Snackbar.make(activeFragment.getView(), R.string.no_internet, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
