@@ -12,6 +12,8 @@ import com.nicoqueijo.android.currencyconverter.R;
 
 public class NoInternetFragment extends Fragment {
 
+    public static final String TAG = NoInternetFragment.class.getSimpleName();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

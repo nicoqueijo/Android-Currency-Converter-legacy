@@ -6,7 +6,7 @@ package com.nicoqueijo.android.currencyconverter.algorithms;
  */
 public class CurrencyConversion {
 
-    private static final String TAG = "CurrencyConversion";
+    private static final String TAG = CurrencyConversion.class.getSimpleName();
 
     /**
      * Converts a given amount from one currency to another using two helper methods.

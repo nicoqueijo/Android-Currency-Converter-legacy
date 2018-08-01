@@ -14,7 +14,7 @@ import com.nicoqueijo.android.currencyconverter.R;
 
 public class ActiveExchangeRatesFragment extends Fragment {
 
-    private static final String TAG = "ActiveExchangeRates";
+    private static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
 
     FloatingActionButton mFloatingActionButton;
 
