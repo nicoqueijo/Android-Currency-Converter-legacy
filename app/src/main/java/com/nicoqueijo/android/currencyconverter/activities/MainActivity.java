@@ -89,10 +89,8 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        // For testing purposes
                         Snackbar.make(fragmentManager.getFragments().get(0).getView(),
                                 menuItem.getTitle(), Snackbar.LENGTH_SHORT).show();
-                        // For testing purposes
                         mDrawerLayout.closeDrawers();
                         return false;
                     }
