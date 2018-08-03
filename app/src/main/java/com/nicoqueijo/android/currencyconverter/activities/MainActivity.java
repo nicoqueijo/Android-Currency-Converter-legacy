@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String FORMAT_PARAM = "&format=1";
     private String apiFullUrl;
 
-    private SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferencesRates;
+    private SharedPreferences mSharedPreferencesTimestamp;
 
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
@@ -76,7 +77,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        mSharedPreferencesRates = getSharedPreferences(getPackageName()
+                .concat(".rates"), MODE_PRIVATE);
+        mSharedPreferencesTimestamp = getSharedPreferences(getPackageName()
+                .concat(".timestamp"), MODE_PRIVATE);
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mNavigationView = findViewById(R.id.nav_view_menu);
@@ -187,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
      * Checks when the exchange rate data was last updated to display in the navigation footer.
      */
     private void checkForLastUpdate() {
-        long timestamp = mSharedPreferences.getLong("timestamp", 0L);
+        long timestamp = mSharedPreferencesTimestamp.getLong("timestamp", 0L);
         long timestampInMillis = timestamp * 1000L;
         Date date = new Date(timestampInMillis);
         java.text.SimpleDateFormat simpleDateFormat =
@@ -205,9 +209,11 @@ public class MainActivity extends AppCompatActivity {
      * @throws JSONException in case a key being fetched doesn't exist.
      */
     private void updateSharedPreferencesExchangeRates(JSONObject jsonObject) throws JSONException {
-        SharedPreferences.Editor mSharedPreferencesEditor = mSharedPreferences.edit();
+        SharedPreferences.Editor mSharedPreferencesEditor = mSharedPreferencesTimestamp.edit();
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPreferencesEditor.putLong("timestamp", timestamp);
+        mSharedPreferencesEditor.apply();
+        mSharedPreferencesEditor = mSharedPreferencesRates.edit();
         Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
@@ -230,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
      * @return whether 0 was returned by default due to the timestamp key being null.
      */
     private boolean isSharedPreferencesEmpty() {
-        long value = mSharedPreferences.getLong("timestamp", 0L);
+        long value = mSharedPreferencesTimestamp.getLong("timestamp", 0L);
         return value == 0L;
     }
 
