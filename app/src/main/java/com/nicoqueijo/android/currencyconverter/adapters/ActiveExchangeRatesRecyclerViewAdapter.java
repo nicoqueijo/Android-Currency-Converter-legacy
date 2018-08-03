@@ -22,8 +22,11 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     public ActiveExchangeRatesRecyclerViewAdapter() {
         mFlags = new ArrayList<>(Arrays.asList(R.drawable.usdusd,
+                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu, R.drawable.usdusd,
+                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu, R.drawable.usdusd,
+                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu, R.drawable.usdusd,
                 R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu));
-        mCurrencies = new ArrayList<>(Arrays.asList("usdusd", "usdeur", "usdars", "usduyu"));
+        mCurrencies = new ArrayList<>(Arrays.asList("USD", "EUR", "ARS", "UYU", "USD", "EUR", "ARS", "UYU", "USD", "EUR", "ARS", "UYU", "USD", "EUR", "ARS", "UYU"));
     }
 
     @NonNull

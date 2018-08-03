@@ -21,8 +21,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private TextView mLastUpdatedView;
+    private Toast mCloseAppToast;
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -75,16 +78,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mNavigationView = findViewById(R.id.nav_view_menu);
         mDrawerLayout = findViewById(R.id.drawer_layout);
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.nav_drawer_open, R.string.nav_drawer_close);
+
+        initListeners();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
         mLastUpdatedView = findViewById(R.id.last_updated_view);
+        mCloseAppToast = Toast.makeText(this, "Tap twice to close the app", Toast.LENGTH_SHORT);
 
         initApiKey();
         apiFullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
         appLaunchSetup();
+    }
 
+    private void initListeners() {
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -95,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
                         return false;
                     }
                 });
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.nav_drawer_open, R.string.nav_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        };
     }
 
     @Override
@@ -117,8 +133,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (mCloseAppToast.getView().isShown()) {
             super.onBackPressed();
+        } else {
+            mCloseAppToast.show();
         }
     }
 
