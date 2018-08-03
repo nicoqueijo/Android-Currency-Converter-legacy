@@ -40,8 +40,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
         mLastUpdatedView = findViewById(R.id.last_updated_view);
-        mCloseAppToast = Toast.makeText(this, "Tap twice to close the app", Toast.LENGTH_SHORT);
+        mCloseAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT);
 
         initApiKey();
         apiFullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
@@ -102,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.nav_drawer_open, R.string.nav_drawer_close) {
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.nav_drawer_open, R.string.nav_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
@@ -194,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Extracts the timestamp and exchange rates from the JSON
-     * object and saves them locally via SharedPreferences.
+     * Extracts the timestamp and exchange rates from the JSON object and saves them locally via
+     * SharedPreferences. It skips over few exchange rates that are not of interest; e.g. silver.
      *
      * @param jsonObject the JSON object containing the exchange rates and timestamp.
      * @throws JSONException in case a key being fetched doesn't exist.
@@ -204,10 +208,15 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor mSharedPreferencesEditor = mSharedPreferences.edit();
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPreferencesEditor.putLong("timestamp", timestamp);
+        Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
+                .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
         JSONArray keys = rates.names();
         for (int i = 0; i < keys.length(); i++) {
             String key = keys.getString(i);
+            if (exclusionList.contains(key)) {
+                continue;
+            }
             double value = rates.getDouble(key);
             putDouble(mSharedPreferencesEditor, key, value);
         }

@@ -12,4 +12,15 @@
     <string name="no_internet">No internet connection</string>
     <string name="network_unavailable">Network currently unavailable</string>
     <string name="refresh">Refresh</string>
+    <string name="tap_to_close">Tap again to close app</string>
+    <string-array name="exclusion_list">
+        <item>USDBTC</item>
+        <item>USDBYR</item>
+        <item>USDCLF</item>
+        <item>USDCUC</item>
+        <item>USDXAG</item>
+        <item>USDXAU</item>
+        <item>USDXDR</item>
+        <item>USDZMK</item>
+    </string-array>
 </resources>
