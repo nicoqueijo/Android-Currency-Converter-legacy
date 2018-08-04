@@ -35,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
+import com.nicoqueijo.android.currencyconverter.helpers.HelperClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 continue;
             }
             double value = rates.getDouble(key);
-            putDouble(mSharedPreferencesEditor, key, value);
+            HelperClass.putDouble(mSharedPreferencesEditor, key, value);
         }
         mSharedPreferencesEditor.apply();
     }
@@ -238,24 +239,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isSharedPreferencesEmpty() {
         long value = mSharedPreferencesTimestamp.getLong("timestamp", 0L);
         return value == 0L;
-    }
-
-    /**
-     * Used to store doubles in SharedPreferences without losing precision.
-     * Source: https://stackoverflow.com/a/18098090/5906793
-     */
-    private void putDouble(final SharedPreferences.Editor edit,
-                           final String key, final double value) {
-        edit.putLong(key, Double.doubleToRawLongBits(value));
-    }
-
-    /**
-     * Used to retrieve doubles in SharedPreferences without losing precision.
-     * Source: https://stackoverflow.com/a/18098090/5906793
-     */
-    private double getDouble(final SharedPreferences prefs,
-                             final String key, final double defaultValue) {
-        return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
     }
 
     /**

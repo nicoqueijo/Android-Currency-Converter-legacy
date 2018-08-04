@@ -1,5 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,24 +10,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.helpers.HelperClass;
+import com.nicoqueijo.android.currencyconverter.models.Currency;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ActiveExchangeRatesRecyclerViewAdapter extends
         RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder> {
 
-    private List<Integer> mFlags;
-    private List<String> mCurrencies;
+    private static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
-    public ActiveExchangeRatesRecyclerViewAdapter() {
-        mFlags = new ArrayList<>(Arrays.asList(R.drawable.usdusd,
-                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu, R.drawable.usdusd,
-                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu, R.drawable.usdusd,
-                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu, R.drawable.usdusd,
-                R.drawable.usdeur, R.drawable.usdars, R.drawable.usduyu));
-        mCurrencies = new ArrayList<>(Arrays.asList("USD", "EUR", "ARS", "UYU", "USD", "EUR", "ARS", "UYU", "USD", "EUR", "ARS", "UYU", "USD", "EUR", "ARS", "UYU"));
+    Context mContext;
+    List<Currency> mCurrencies;
+
+    public ActiveExchangeRatesRecyclerViewAdapter(Context context, List<Currency> currencies) {
+        mContext = context;
+        mCurrencies = currencies;
     }
 
     @NonNull
@@ -40,8 +39,13 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mFlag.setImageResource(mFlags.get(position));
-        holder.mCurrency.setText(mCurrencies.get(position));
+        holder.mCurrency.setText(mCurrencies.get(position).getCurrencyCode().substring(3));
+        holder.mFlag.setImageResource(HelperClass
+                .getDrawableResourceByName(mCurrencies
+                        .get(position)
+                        .getCurrencyCode()
+                        .toLowerCase(), mContext));
+
     }
 
     @Override

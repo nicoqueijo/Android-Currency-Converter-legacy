@@ -2,6 +2,8 @@ package com.nicoqueijo.android.currencyconverter.models;
 
 public class Currency {
 
+    private static final String TAG = Currency.class.getSimpleName();
+
     private String currencyCode;
     private double exchangeRate;
 
