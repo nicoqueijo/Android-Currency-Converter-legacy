@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Provides useful, general-purpose methods to be used across the project.
  */
-public class HelperClass {
+public class Utility {
     /**
      * Retrieves string resources using a String instead of an int.
      *

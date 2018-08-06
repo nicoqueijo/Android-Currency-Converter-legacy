@@ -35,7 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
-import com.nicoqueijo.android.currencyconverter.helpers.HelperClass;
+import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 continue;
             }
             double value = rates.getDouble(key);
-            HelperClass.putDouble(mSharedPreferencesEditor, key, value);
+            Utility.putDouble(mSharedPreferencesEditor, key, value);
         }
         mSharedPreferencesEditor.apply();
     }
