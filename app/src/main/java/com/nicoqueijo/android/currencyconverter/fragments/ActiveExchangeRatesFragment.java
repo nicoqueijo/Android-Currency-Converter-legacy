@@ -30,7 +30,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ActiveExchangeRatesFragment extends Fragment {
 
-    private static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
+    public static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
 
     private ArrayList<Currency> mCurrencies = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -83,5 +83,11 @@ public class ActiveExchangeRatesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public static ActiveExchangeRatesFragment newInstance() {
+        ActiveExchangeRatesFragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
+        Bundle args = new Bundle();
+        return activeExchangeRatesFragment;
     }
 }

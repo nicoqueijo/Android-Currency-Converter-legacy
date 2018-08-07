@@ -18,7 +18,7 @@ import java.util.List;
 public class ActiveExchangeRatesRecyclerViewAdapter extends
         RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
+    public static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
     Context mContext;
     List<Currency> mCurrencies;

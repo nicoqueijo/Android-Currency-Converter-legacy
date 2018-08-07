@@ -15,7 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,7 +49,7 @@ import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String BASE_URL = "http://apilayer.net/api/live";
     private static final String API_KEY_PARAM = "?access_key=";
@@ -150,26 +149,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void appLaunchSetup() {
-        Log.d(TAG, "appLaunchSetup: ");
         if (isNetworkAvailable()) {
+            Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.content_frame,
-                    new ActiveExchangeRatesFragment(), "active_exchange_rates_fragment").commit();
+                    activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
             makeApiCall();
         } else if (!isSharedPreferencesEmpty()) {
+            Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.content_frame,
-                    new ActiveExchangeRatesFragment(), "active_exchange_rates_fragment").commit();
+                    activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
             checkForLastUpdate();
         } else {
+            Fragment noInternetFragment = NoInternetFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.content_frame,
-                    new NoInternetFragment(), "no_internet_fragment").commit();
+                    noInternetFragment, NoInternetFragment.TAG).commit();
         }
     }
 
     private void processRefreshClick(ImageView menuItem) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         if (isNetworkAvailable()) {
-            menuItem.startAnimation(AnimationUtils
-                    .loadAnimation(MainActivity.this, R.anim.rotate));
+            menuItem.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate));
             makeApiCall();
         } else {
             showNoInternetSnackbar();
@@ -198,8 +198,7 @@ public class MainActivity extends AppCompatActivity {
         java.text.SimpleDateFormat simpleDateFormat =
                 new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
-        mLastUpdatedView.setText(getString(R.string.last_update,
-                simpleDateFormat.format(date)));
+        mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
     }
 
     /**

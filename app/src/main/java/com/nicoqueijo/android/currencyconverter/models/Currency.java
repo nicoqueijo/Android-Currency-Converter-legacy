@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class Currency implements Parcelable {
 
-    private static final String TAG = Currency.class.getSimpleName();
+    public static final String TAG = Currency.class.getSimpleName();
 
     private String currencyCode;
     private String currencyName;

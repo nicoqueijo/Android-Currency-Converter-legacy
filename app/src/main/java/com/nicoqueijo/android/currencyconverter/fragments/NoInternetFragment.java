@@ -21,4 +21,10 @@ public class NoInternetFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_no_internet, container, false);
     }
 
+    public static NoInternetFragment newInstance() {
+        NoInternetFragment noInternetFragment = new NoInternetFragment();
+        Bundle args = new Bundle();
+        return noInternetFragment;
+    }
+
 }

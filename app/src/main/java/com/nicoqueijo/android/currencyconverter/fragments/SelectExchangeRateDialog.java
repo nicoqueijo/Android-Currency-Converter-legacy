@@ -21,7 +21,7 @@ import java.util.List;
 
 public class SelectExchangeRateDialog extends DialogFragment {
 
-    private static final String TAG = SelectExchangeRateDialog.class.getSimpleName();
+    public static final String TAG = SelectExchangeRateDialog.class.getSimpleName();
     private static final String ARG_CURRENCIES = "currencies";
 
     List<Currency> mCurrencies;
@@ -57,7 +57,6 @@ public class SelectExchangeRateDialog extends DialogFragment {
 
         return view;
     }
-
 
     public static SelectExchangeRateDialog newInstance(ArrayList<Currency> currencies) {
         SelectExchangeRateDialog selectExchangeRateDialog = new SelectExchangeRateDialog();
