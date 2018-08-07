@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesRecyclerViewAdapter;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -46,12 +47,12 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
 
-        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences(getContext()
-                .getPackageName().concat(".rates"), MODE_PRIVATE);
+        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences(MainActivity
+                .sharedPrefsRatesFilename, MODE_PRIVATE);
+
         Map<String, ?> keys = mSharedPreferencesRates.getAll();
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            mCurrencies.add(new Currency(entry.getKey(), Utility.getStringResourceByName(
-                    entry.getKey(), getContext()),
+            mCurrencies.add(new Currency(entry.getKey(),
                     Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0)));
         }
         Collections.sort(mCurrencies, new Comparator<Currency>() {
@@ -75,8 +76,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 // ActiveExchangeRatesFragment should not be contenders for selection.
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                DialogFragment selectExchangeRateDialog = SelectExchangeRateDialog
-                        .newInstance(mCurrencies);
+                DialogFragment selectExchangeRateDialog =
+                        SelectExchangeRatesDialog.newInstance(mCurrencies);
                 selectExchangeRateDialog.show(fragmentTransaction, TAG);
             }
         });

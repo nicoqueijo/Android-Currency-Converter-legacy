@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String FORMAT_PARAM = "&format=1";
     private String apiFullUrl;
 
+    public static String sharedPrefsRatesFilename;
+    public static String sharedPrefsTimeFilename;
     private SharedPreferences mSharedPreferencesRates;
     private SharedPreferences mSharedPreferencesTime;
 
@@ -77,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String SHARED_PREF_RATES_FILENAME = getPackageName().concat(".rates");
-        final String SHARED_PREF_TIME_FILENAME = getPackageName().concat(".time");
-        mSharedPreferencesRates = getSharedPreferences(SHARED_PREF_RATES_FILENAME, MODE_PRIVATE);
-        mSharedPreferencesTime = getSharedPreferences(SHARED_PREF_TIME_FILENAME, MODE_PRIVATE);
+        sharedPrefsRatesFilename = getPackageName().concat(".rates");
+        sharedPrefsTimeFilename = getPackageName().concat(".time");
+        mSharedPreferencesRates = getSharedPreferences(sharedPrefsRatesFilename, MODE_PRIVATE);
+        mSharedPreferencesTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

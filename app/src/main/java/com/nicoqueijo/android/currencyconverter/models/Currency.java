@@ -8,13 +8,13 @@ public class Currency implements Parcelable {
     public static final String TAG = Currency.class.getSimpleName();
 
     private String currencyCode;
-    private String currencyName;
     private double exchangeRate;
+    private boolean selected;
 
-    public Currency(String currencyCode, String currencyName, double exchangeRate) {
+    public Currency(String currencyCode, double exchangeRate) {
         this.currencyCode = currencyCode;
-        this.currencyName = currencyName;
         this.exchangeRate = exchangeRate;
+        this.selected = false;
     }
 
     public String getCurrencyCode() {
@@ -25,14 +25,6 @@ public class Currency implements Parcelable {
         this.currencyCode = currencyCode;
     }
 
-    public String getCurrencyName() {
-        return currencyName;
-    }
-
-    public void setCurrencyName(String currencyName) {
-        this.currencyName = currencyName;
-    }
-
     public double getExchangeRate() {
         return exchangeRate;
     }
@@ -41,10 +33,23 @@ public class Currency implements Parcelable {
         this.exchangeRate = exchangeRate;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     protected Currency(Parcel in) {
         currencyCode = in.readString();
-        currencyName = in.readString();
         exchangeRate = in.readDouble();
+        selected = in.readByte() != 0;
     }
 
     public static final Creator<Currency> CREATOR = new Creator<Currency>() {
@@ -60,14 +65,9 @@ public class Currency implements Parcelable {
     };
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(currencyCode);
-        dest.writeString(currencyName);
         dest.writeDouble(exchangeRate);
+        dest.writeByte((byte) (selected ? 1 : 0));
     }
 }

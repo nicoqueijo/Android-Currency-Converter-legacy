@@ -39,13 +39,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="8dp">
 
                 <TextView
                     android:id="@+id/currency_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
                     android:textSize="18sp"
                     tools:text="USD" />
 
@@ -53,7 +53,6 @@
                     android:id="@+id/currency_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
                     android:textSize="14sp"
                     tools:text="United States Dollar" />
 
@@ -68,7 +67,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:src="@drawable/ic_check" />
+            android:src="@drawable/ic_check"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

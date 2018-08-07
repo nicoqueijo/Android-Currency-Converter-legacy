@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -13,15 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecyclerViewAdapter;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SelectExchangeRateDialog extends DialogFragment {
+public class SelectExchangeRatesDialog extends DialogFragment {
 
-    public static final String TAG = SelectExchangeRateDialog.class.getSimpleName();
+    public static final String TAG = SelectExchangeRatesDialog.class.getSimpleName();
     private static final String ARG_CURRENCIES = "currencies";
 
     List<Currency> mCurrencies;
@@ -55,15 +57,20 @@ public class SelectExchangeRateDialog extends DialogFragment {
         mToolbar.inflateMenu(R.menu.menu_search);
         mSearchView = (SearchView) mToolbar.getMenu().getItem(0).getActionView();
 
+        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(getContext(), mCurrencies);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         return view;
     }
 
-    public static SelectExchangeRateDialog newInstance(ArrayList<Currency> currencies) {
-        SelectExchangeRateDialog selectExchangeRateDialog = new SelectExchangeRateDialog();
+    public static SelectExchangeRatesDialog newInstance(ArrayList<Currency> currencies) {
+        SelectExchangeRatesDialog selectExchangeRatesDialog = new SelectExchangeRatesDialog();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_CURRENCIES, currencies);
-        selectExchangeRateDialog.setArguments(args);
-        return selectExchangeRateDialog;
+        selectExchangeRatesDialog.setArguments(args);
+        return selectExchangeRatesDialog;
     }
 
 }
