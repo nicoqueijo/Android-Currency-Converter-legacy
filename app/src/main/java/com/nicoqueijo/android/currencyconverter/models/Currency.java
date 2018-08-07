@@ -1,6 +1,9 @@
 package com.nicoqueijo.android.currencyconverter.models;
 
-public class Currency {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Currency implements Parcelable {
 
     private static final String TAG = Currency.class.getSimpleName();
 
@@ -36,5 +39,35 @@ public class Currency {
 
     public void setExchangeRate(double exchangeRate) {
         this.exchangeRate = exchangeRate;
+    }
+
+    protected Currency(Parcel in) {
+        currencyCode = in.readString();
+        currencyName = in.readString();
+        exchangeRate = in.readDouble();
+    }
+
+    public static final Creator<Currency> CREATOR = new Creator<Currency>() {
+        @Override
+        public Currency createFromParcel(Parcel in) {
+            return new Currency(in);
+        }
+
+        @Override
+        public Currency[] newArray(int size) {
+            return new Currency[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(currencyCode);
+        dest.writeString(currencyName);
+        dest.writeDouble(exchangeRate);
     }
 }

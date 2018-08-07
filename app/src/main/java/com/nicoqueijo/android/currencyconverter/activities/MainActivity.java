@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.app_menu, menu);
+        menuInflater.inflate(R.menu.menu_app, menu);
         final ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
         refreshMenuItem.setImageResource(R.drawable.ic_refresh);
         refreshMenuItem.setPadding(24, 24, 24, 24);
