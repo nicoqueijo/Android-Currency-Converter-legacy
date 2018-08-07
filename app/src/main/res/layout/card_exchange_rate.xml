@@ -14,15 +14,17 @@
         android:padding="4dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <android.support.v7.widget.CardView
                 android:layout_width="50dp"
                 android:layout_height="37dp"
+                android:layout_gravity="center_vertical"
                 app:cardCornerRadius="2dp">
 
                 <ImageView
@@ -34,27 +36,39 @@
 
             </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/currency_code"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingLeft="16dp"
-                android:textSize="24sp"
-                tools:text="USD" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/currency_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textSize="18sp"
+                    tools:text="USD" />
+
+                <TextView
+                    android:id="@+id/currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:textSize="14sp"
+                    tools:text="United States Dollar" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <EditText
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:gravity="right"
-            android:inputType="numberDecimal" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_check" />
 
     </LinearLayout>
 

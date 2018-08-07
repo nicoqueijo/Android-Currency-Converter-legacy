@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -70,15 +69,15 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "FAB clicked", Snackbar.LENGTH_SHORT).show();
                 // TODO: Open dialog fragment containing list of all possible mCurrencies
                 // This dialog fragment should contain a SearchView on top and a
                 // RecyclerView below it. Currencies that are already in the
                 // ActiveExchangeRatesFragment should not be contenders for selection.
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                DialogFragment selectExchangeRateDialog = SelectExchangeRateDialog.newInstance(mCurrencies);
-                selectExchangeRateDialog.show(fragmentTransaction, "dialog");
+                DialogFragment selectExchangeRateDialog = SelectExchangeRateDialog
+                        .newInstance(mCurrencies);
+                selectExchangeRateDialog.show(fragmentTransaction, TAG);
             }
         });
 

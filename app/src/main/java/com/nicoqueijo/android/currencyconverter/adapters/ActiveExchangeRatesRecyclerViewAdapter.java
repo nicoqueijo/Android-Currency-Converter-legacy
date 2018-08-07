@@ -61,7 +61,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         public ViewHolder(View itemView) {
             super(itemView);
             mFlag = itemView.findViewById(R.id.flag);
-            mCurrency = itemView.findViewById(R.id.currency);
+            mCurrency = itemView.findViewById(R.id.currency_code);
         }
     }
 }
