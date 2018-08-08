@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
@@ -41,7 +42,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.mCurrencyCode.setText(mCurrencies.get(position).getCurrencyCode().substring(3));
+        holder.mCurrencyCode.setText(mCurrencies.get(position).getCurrencyCode()
+                .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
                 .getCurrencyCode().toLowerCase(), mContext));
     }

@@ -34,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
+import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 
 import org.json.JSONArray;
@@ -281,10 +282,9 @@ public class MainActivity extends AppCompatActivity {
                                 // Go on with the app using existing rates (Populating RecyclerView)
                             } else {
                                 JSONObject error = jsonObject.getJSONObject("error");
-                                final int INDENT_SPACES = 4;
                                 // To be displayed in a "Show more" View to supplement
                                 // a generic error message in the content frame.
-                                String errorDetails = error.toString(INDENT_SPACES);
+                                String errorDetails = error.toString(Constants.INDENT_SPACES);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

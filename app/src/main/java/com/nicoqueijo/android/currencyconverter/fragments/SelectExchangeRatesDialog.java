@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecyclerViewAdapter;
+import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.List;
 public class SelectExchangeRatesDialog extends DialogFragment {
 
     public static final String TAG = SelectExchangeRatesDialog.class.getSimpleName();
-    private static final String ARG_CURRENCIES = "currencies";
 
     List<Currency> mCurrencies;
 
@@ -43,7 +43,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCurrencies = getArguments().getParcelableArrayList(ARG_CURRENCIES);
+            mCurrencies = getArguments().getParcelableArrayList(Constants.ARG_CURRENCIES);
         }
     }
 
@@ -80,7 +80,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     public static SelectExchangeRatesDialog newInstance(ArrayList<Currency> currencies) {
         SelectExchangeRatesDialog selectExchangeRatesDialog = new SelectExchangeRatesDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_CURRENCIES, currencies);
+        args.putParcelableArrayList(Constants.ARG_CURRENCIES, currencies);
         selectExchangeRatesDialog.setArguments(args);
         return selectExchangeRatesDialog;
     }
