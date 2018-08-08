@@ -36,6 +36,8 @@ import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFra
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
+import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
+import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +50,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -300,5 +302,12 @@ public class MainActivity extends AppCompatActivity {
                 //      Proceed with current values in SharedPreferences
             }
         });
+    }
+
+    @Override
+    public void passSelectedCurrency(Currency currency) {
+        ActiveExchangeRatesFragment activeExchangeRatesFragment = (ActiveExchangeRatesFragment)
+                fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
+        activeExchangeRatesFragment.addActiveCurrency(currency);
     }
 }

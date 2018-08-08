@@ -75,15 +75,11 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Open dialog fragment containing list of all possible mCurrencies
-                // This dialog fragment should contain a SearchView on top and a
-                // RecyclerView below it. Currencies that are already in the
-                // ActiveExchangeRatesFragment should not be contenders for selection.
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 DialogFragment selectExchangeRateDialog =
                         SelectExchangeRatesDialog.newInstance(mCurrencies);
-                selectExchangeRateDialog.show(fragmentTransaction, TAG);
+                selectExchangeRateDialog.show(fragmentTransaction, SelectExchangeRatesDialog.TAG);
             }
         });
 
@@ -94,5 +90,10 @@ public class ActiveExchangeRatesFragment extends Fragment {
         ActiveExchangeRatesFragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
         Bundle args = new Bundle();
         return activeExchangeRatesFragment;
+    }
+
+    public void addActiveCurrency(Currency currency) {
+        mActiveCurrencies.add(currency);
+        mAdapter.notifyDataSetChanged();
     }
 }

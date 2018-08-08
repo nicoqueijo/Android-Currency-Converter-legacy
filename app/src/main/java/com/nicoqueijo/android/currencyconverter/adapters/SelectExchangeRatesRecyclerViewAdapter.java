@@ -1,6 +1,5 @@
 package com.nicoqueijo.android.currencyconverter.adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesDialog;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -24,12 +24,13 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
 
     public static final String TAG = SelectExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
-    Context mContext;
+    SelectExchangeRatesDialog mDialog;
     List<Currency> mCurrencies;
     List<Currency> mCurrenciesFull;
 
-    public SelectExchangeRatesRecyclerViewAdapter(Context context, List<Currency> currencies) {
-        mContext = context;
+    public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesDialog dialog,
+                                                  List<Currency> currencies) {
+        mDialog = dialog;
         mCurrencies = currencies;
         mCurrenciesFull = new ArrayList<>(currencies);
     }
@@ -46,11 +47,11 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
-                .getCurrencyCode().toLowerCase(), mContext));
+                .getCurrencyCode().toLowerCase(), mDialog.getContext()));
         holder.mCurrencyCode.setText(mCurrencies.get(position).getCurrencyCode()
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
         holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
-                .getCurrencyCode(), mContext));
+                .getCurrencyCode(), mDialog.getContext()));
         if (mCurrencies.get(position).isSelected()) {
             holder.mCheck.setVisibility(View.VISIBLE);
         }
@@ -79,7 +80,8 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
 
         @Override
         public void onClick(View v) {
-
+            mDialog.sendActiveCurrency(mCurrencies.get(getAdapterPosition()));
+            mDialog.dismiss();
         }
     }
 
@@ -102,7 +104,7 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
                     currencyCode = currency.getCurrencyCode().substring(Constants
                             .CURRENCY_CODE_STARTING_INDEX).toLowerCase();
                     currencyName = Utility.getStringResourceByName(currency.getCurrencyCode(),
-                            mContext).toLowerCase();
+                            mDialog.getContext()).toLowerCase();
                     if (currencyCode.contains(filterPattern) ||
                             currencyName.contains(filterPattern)) {
                         filteredList.add(currency);

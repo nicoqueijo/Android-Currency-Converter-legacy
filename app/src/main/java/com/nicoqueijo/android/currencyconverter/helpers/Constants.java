@@ -11,5 +11,5 @@ public final class Constants {
 
     public static final int INDENT_SPACES = 4;
 
-    public static final String ARG_CURRENCIES = "currencies";
+    public static final String ARG_CURRENCIES = "arg_currencies";
 }

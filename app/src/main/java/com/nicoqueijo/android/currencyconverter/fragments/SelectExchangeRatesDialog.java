@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecyclerViewAdapter;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
+import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
             }
         });
 
-        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(getContext(), mCurrencies);
+        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(this, mCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -85,5 +86,10 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         args.putParcelableArrayList(Constants.ARG_CURRENCIES, currencies);
         selectExchangeRatesDialog.setArguments(args);
         return selectExchangeRatesDialog;
+    }
+
+    public void sendActiveCurrency(Currency currency) {
+        ICommunicator communicator = (ICommunicator) getActivity();
+        communicator.passSelectedCurrency(currency);
     }
 }
