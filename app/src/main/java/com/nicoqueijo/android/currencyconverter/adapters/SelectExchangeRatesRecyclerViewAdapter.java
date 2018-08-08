@@ -96,11 +96,15 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
                 filteredList.addAll(mCurrenciesFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
+                String currencyCode;
+                String currencyName;
                 for (Currency currency : mCurrenciesFull) {
-                    if (currency.getCurrencyCode().substring(Constants.CURRENCY_CODE_STARTING_INDEX)
-                            .toLowerCase().contains(filterPattern)
-                            || Utility.getStringResourceByName(currency.getCurrencyCode(), mContext)
-                            .toLowerCase().contains(filterPattern)) {
+                    currencyCode = currency.getCurrencyCode().substring(Constants
+                            .CURRENCY_CODE_STARTING_INDEX).toLowerCase();
+                    currencyName = Utility.getStringResourceByName(currency.getCurrencyCode(),
+                            mContext).toLowerCase();
+                    if (currencyCode.contains(filterPattern) ||
+                            currencyName.contains(filterPattern)) {
                         filteredList.add(currency);
                     }
                 }

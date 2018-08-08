@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecyclerViewAdapter;
@@ -56,6 +57,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         mToolbar = view.findViewById(R.id.toolbar_search);
         mToolbar.inflateMenu(R.menu.menu_search);
         mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
+        mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
