@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,19 +15,22 @@ import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SelectExchangeRatesRecyclerViewAdapter extends
-        RecyclerView.Adapter<SelectExchangeRatesRecyclerViewAdapter.ViewHolder> {
+public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
+        <SelectExchangeRatesRecyclerViewAdapter.ViewHolder> implements Filterable {
 
     public static final String TAG = SelectExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
     Context mContext;
     List<Currency> mCurrencies;
+    List<Currency> mCurrenciesFull;
 
     public SelectExchangeRatesRecyclerViewAdapter(Context context, List<Currency> currencies) {
         mContext = context;
         mCurrencies = currencies;
+        mCurrenciesFull = new ArrayList<>(currencies);
     }
 
     @NonNull
@@ -39,11 +44,8 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mFlag.setImageResource(Utility
-                .getDrawableResourceByName(mCurrencies
-                        .get(position)
-                        .getCurrencyCode()
-                        .toLowerCase(), mContext));
+        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
+                .getCurrencyCode().toLowerCase(), mContext));
         holder.mCurrencyCode.setText(mCurrencies.get(position).getCurrencyCode().substring(3));
         holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
                 .getCurrencyCode(), mContext));
@@ -57,19 +59,60 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
         return mCurrencies.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView mFlag;
-        public TextView mCurrencyCode;
-        public TextView mCurrencyName;
-        public ImageView mCheck;
+        ImageView mFlag;
+        TextView mCurrencyCode;
+        TextView mCurrencyName;
+        ImageView mCheck;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mFlag = itemView.findViewById(R.id.flag);
             mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mCurrencyName = itemView.findViewById(R.id.currency_name);
             mCheck = itemView.findViewById(R.id.check);
         }
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
+
+    @Override
+    public Filter getFilter() {
+        return currenciesFilter;
+    }
+
+    private Filter currenciesFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Currency> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(mCurrenciesFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Currency currency : mCurrenciesFull) {
+                    if (currency.getCurrencyCode().substring(3).toLowerCase()
+                            .contains(filterPattern) || Utility.getStringResourceByName
+                            (currency.getCurrencyCode(), mContext).toLowerCase()
+                            .contains(filterPattern)) {
+                        filteredList.add(currency);
+                    }
+                }
+            }
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mCurrencies.clear();
+            mCurrencies.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

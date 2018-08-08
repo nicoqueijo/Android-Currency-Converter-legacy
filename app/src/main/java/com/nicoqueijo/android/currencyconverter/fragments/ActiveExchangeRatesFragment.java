@@ -24,6 +24,7 @@ import com.nicoqueijo.android.currencyconverter.models.Currency;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -33,10 +34,29 @@ public class ActiveExchangeRatesFragment extends Fragment {
     public static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
 
     private ArrayList<Currency> mCurrencies = new ArrayList<>();
+    private List<Currency> mActiveCurrencies = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences(MainActivity
+                .sharedPrefsRatesFilename, MODE_PRIVATE);
+        Map<String, ?> keys = mSharedPreferencesRates.getAll();
+        for (Map.Entry<String, ?> entry : keys.entrySet()) {
+            mCurrencies.add(new Currency(entry.getKey(), Utility.getDouble(mSharedPreferencesRates,
+                    entry.getKey(), 0.0)));
+        }
+        Collections.sort(mCurrencies, new Comparator<Currency>() {
+            @Override
+            public int compare(Currency currency1, Currency currency2) {
+                return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
+            }
+        });
+    }
 
     @Nullable
     @Override
@@ -47,22 +67,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
 
-        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences(MainActivity
-                .sharedPrefsRatesFilename, MODE_PRIVATE);
-
-        Map<String, ?> keys = mSharedPreferencesRates.getAll();
-        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            mCurrencies.add(new Currency(entry.getKey(),
-                    Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0)));
-        }
-        Collections.sort(mCurrencies, new Comparator<Currency>() {
-            @Override
-            public int compare(Currency currency1, Currency currency2) {
-                return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
-            }
-        });
-
-        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mCurrencies);
+        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

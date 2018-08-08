@@ -29,7 +29,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     List<Currency> mCurrencies;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private SelectExchangeRatesRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar mToolbar;
     private SearchView mSearchView;
@@ -55,7 +55,19 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
         mToolbar = view.findViewById(R.id.toolbar_search);
         mToolbar.inflateMenu(R.menu.menu_search);
-        mSearchView = (SearchView) mToolbar.getMenu().getItem(0).getActionView();
+        mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         mAdapter = new SelectExchangeRatesRecyclerViewAdapter(getContext(), mCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -72,5 +84,4 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         selectExchangeRatesDialog.setArguments(args);
         return selectExchangeRatesDialog;
     }
-
 }

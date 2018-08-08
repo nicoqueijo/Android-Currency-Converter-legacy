@@ -9,11 +9,13 @@ public class Currency implements Parcelable {
 
     private String currencyCode;
     private double exchangeRate;
+    private double conversionValue;
     private boolean selected;
 
     public Currency(String currencyCode, double exchangeRate) {
         this.currencyCode = currencyCode;
         this.exchangeRate = exchangeRate;
+        this.conversionValue = 0.0;
         this.selected = false;
     }
 
@@ -31,6 +33,14 @@ public class Currency implements Parcelable {
 
     public void setExchangeRate(double exchangeRate) {
         this.exchangeRate = exchangeRate;
+    }
+
+    public double getConversionValue() {
+        return conversionValue;
+    }
+
+    public void setConversionValue(double conversionValue) {
+        this.conversionValue = conversionValue;
     }
 
     public boolean isSelected() {
