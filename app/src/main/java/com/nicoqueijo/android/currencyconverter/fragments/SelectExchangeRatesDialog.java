@@ -27,7 +27,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
 
     public static final String TAG = SelectExchangeRatesDialog.class.getSimpleName();
 
-    List<Currency> mCurrencies;
+    List<Currency> mAllCurrencies;
 
     private RecyclerView mRecyclerView;
     private SelectExchangeRatesRecyclerViewAdapter mAdapter;
@@ -39,7 +39,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCurrencies = getArguments().getParcelableArrayList(Constants.ARG_CURRENCIES);
+            mAllCurrencies = getArguments().getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
         }
     }
 
@@ -66,7 +66,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
             }
         });
 
-        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(this, mCurrencies);
+        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(this, mAllCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -74,10 +74,10 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         return view;
     }
 
-    public static SelectExchangeRatesDialog newInstance(ArrayList<Currency> currencies) {
+    public static SelectExchangeRatesDialog newInstance(ArrayList<Currency> allCurrencies) {
         SelectExchangeRatesDialog selectExchangeRatesDialog = new SelectExchangeRatesDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(Constants.ARG_CURRENCIES, currencies);
+        args.putParcelableArrayList(Constants.ARG_ALL_CURRENCIES, allCurrencies);
         selectExchangeRatesDialog.setArguments(args);
         return selectExchangeRatesDialog;
     }

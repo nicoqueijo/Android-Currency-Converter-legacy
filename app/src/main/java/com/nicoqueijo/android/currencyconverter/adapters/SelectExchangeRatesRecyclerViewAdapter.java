@@ -29,10 +29,10 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
     List<Currency> mCurrenciesFull;
 
     public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesDialog dialog,
-                                                  List<Currency> currencies) {
+                                                  List<Currency> allCurrencies) {
         mDialog = dialog;
-        mCurrencies = new ArrayList<>(currencies);
-        mCurrenciesFull = new ArrayList<>(currencies);
+        mCurrencies = new ArrayList<>(allCurrencies);
+        mCurrenciesFull = new ArrayList<>(allCurrencies);
     }
 
     @NonNull
@@ -52,9 +52,9 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
         holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
                 .getCurrencyCode(), mDialog.getContext()));
-        if (mCurrencies.get(position).isSelected()) {
-            holder.mCheck.setVisibility(View.VISIBLE);
-        }
+        boolean currencyIsSelected = mCurrencies.get(position).isSelected();
+        holder.itemView.setClickable(!currencyIsSelected);
+        holder.mCheck.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -80,7 +80,9 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
 
         @Override
         public void onClick(View v) {
-            mDialog.sendActiveCurrency(mCurrencies.get(getAdapterPosition()));
+            Currency selectedCurrency = mCurrencies.get(getAdapterPosition());
+            selectedCurrency.setSelected(true);
+            mDialog.sendActiveCurrency(selectedCurrency);
             mDialog.dismiss();
         }
     }

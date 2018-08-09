@@ -48,8 +48,9 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 .sharedPrefsRatesFilename, MODE_PRIVATE);
         Map<String, ?> keys = mSharedPreferencesRates.getAll();
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            mCurrencies.add(new Currency(entry.getKey(), Utility.getDouble(mSharedPreferencesRates,
-                    entry.getKey(), 0.0)));
+            String currencyCode = entry.getKey();
+            double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
+            mCurrencies.add(new Currency(currencyCode, exchangeRate));
         }
         Collections.sort(mCurrencies, new Comparator<Currency>() {
             @Override
@@ -62,14 +63,15 @@ public class ActiveExchangeRatesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(Constants.ARG_CURRENCIES, mActiveCurrencies);
+        outState.putParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES, mActiveCurrencies);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mActiveCurrencies = savedInstanceState.getParcelableArrayList(Constants.ARG_CURRENCIES);
+            mActiveCurrencies = savedInstanceState
+                    .getParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES);
         }
     }
 
@@ -97,7 +99,6 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 selectExchangeRateDialog.show(fragmentTransaction, SelectExchangeRatesDialog.TAG);
             }
         });
-
         return view;
     }
 
