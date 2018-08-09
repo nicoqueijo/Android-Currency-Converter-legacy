@@ -31,7 +31,7 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
     public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesDialog dialog,
                                                   List<Currency> currencies) {
         mDialog = dialog;
-        mCurrencies = currencies;
+        mCurrencies = new ArrayList<>(currencies);
         mCurrenciesFull = new ArrayList<>(currencies);
     }
 

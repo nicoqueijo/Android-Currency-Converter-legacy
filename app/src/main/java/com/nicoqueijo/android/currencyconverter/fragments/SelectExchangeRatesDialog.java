@@ -1,6 +1,5 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,11 +34,6 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar mToolbar;
     private SearchView mSearchView;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

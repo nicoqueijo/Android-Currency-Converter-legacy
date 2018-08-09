@@ -156,15 +156,19 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     private void appLaunchSetup() {
         if (isNetworkAvailable()) {
-            Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.content_frame,
-                    activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
-            makeApiCall();
+            if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                        activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                makeApiCall();
+            }
         } else if (!isSharedPreferencesEmpty()) {
-            Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.content_frame,
-                    activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
-            checkForLastUpdate();
+            if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                        activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                checkForLastUpdate();
+            }
         } else {
             Fragment noInternetFragment = NoInternetFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.content_frame,
