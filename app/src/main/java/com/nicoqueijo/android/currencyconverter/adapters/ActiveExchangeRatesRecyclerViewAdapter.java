@@ -6,11 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.helpers.BlockSelectionEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -23,11 +23,12 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     public static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
     Context mContext;
-    List<Currency> mCurrencies;
+    List<Currency> mActiveCurrencies;
 
-    public ActiveExchangeRatesRecyclerViewAdapter(Context context, List<Currency> currencies) {
+    public ActiveExchangeRatesRecyclerViewAdapter(Context context,
+                                                  List<Currency> activeCurrencies) {
         mContext = context;
-        mCurrencies = currencies;
+        mActiveCurrencies = activeCurrencies;
     }
 
     @NonNull
@@ -42,22 +43,22 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.mCurrencyCode.setText(mCurrencies.get(position).getCurrencyCode()
+        holder.mCurrencyCode.setText(mActiveCurrencies.get(position).getCurrencyCode()
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
-        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
-                .getCurrencyCode().toLowerCase(), mContext));
+        holder.mFlag.setImageResource(Utility.getDrawableResourceByName
+                (mActiveCurrencies.get(position).getCurrencyCode().toLowerCase(), mContext));
     }
 
     @Override
     public int getItemCount() {
-        return mCurrencies.size();
+        return mActiveCurrencies.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView mFlag;
         TextView mCurrencyCode;
-        EditText mConversionValue;
+        BlockSelectionEditText mConversionValue;
 
         ViewHolder(View itemView) {
             super(itemView);

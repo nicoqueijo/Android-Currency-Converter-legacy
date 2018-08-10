@@ -20,14 +20,13 @@ import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SelectExchangeRatesDialog extends DialogFragment {
 
     public static final String TAG = SelectExchangeRatesDialog.class.getSimpleName();
 
-    List<Currency> mAllCurrencies;
+    ArrayList<Currency> mAllCurrencies;
 
     private RecyclerView mRecyclerView;
     private SelectExchangeRatesRecyclerViewAdapter mAdapter;

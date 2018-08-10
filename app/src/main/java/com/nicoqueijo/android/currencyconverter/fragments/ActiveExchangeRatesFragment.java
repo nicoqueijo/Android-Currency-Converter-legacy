@@ -34,7 +34,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
 
     public static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
 
-    private ArrayList<Currency> mCurrencies = new ArrayList<>();
+    private ArrayList<Currency> mAllCurrencies = new ArrayList<>();
     private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ActiveExchangeRatesRecyclerViewAdapter mAdapter;
@@ -50,9 +50,9 @@ public class ActiveExchangeRatesFragment extends Fragment {
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
             String currencyCode = entry.getKey();
             double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
-            mCurrencies.add(new Currency(currencyCode, exchangeRate));
+            mAllCurrencies.add(new Currency(currencyCode, exchangeRate));
         }
-        Collections.sort(mCurrencies, new Comparator<Currency>() {
+        Collections.sort(mAllCurrencies, new Comparator<Currency>() {
             @Override
             public int compare(Currency currency1, Currency currency2) {
                 return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
@@ -64,6 +64,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES, mActiveCurrencies);
+        outState.putParcelableArrayList(Constants.ARG_ALL_CURRENCIES, mAllCurrencies);
     }
 
     @Override
@@ -72,6 +73,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
         if (savedInstanceState != null) {
             mActiveCurrencies = savedInstanceState
                     .getParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES);
+            mAllCurrencies = savedInstanceState.getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
         }
     }
 
@@ -95,7 +97,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 DialogFragment selectExchangeRateDialog =
-                        SelectExchangeRatesDialog.newInstance(mCurrencies);
+                        SelectExchangeRatesDialog.newInstance(mAllCurrencies);
                 selectExchangeRateDialog.show(fragmentTransaction, SelectExchangeRatesDialog.TAG);
             }
         });
