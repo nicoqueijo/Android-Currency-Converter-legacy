@@ -118,7 +118,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    // DO THIS AFTER I IMPLEMENT RECYCLERVIEW REORDERING (DRAGGING)
+    // DO THIS AFTER I IMPLEMENT RECYCLERVIEW REORDERING (DRAGGING) BECAUSE THAT MIGHT AFFECT
+    // HOW THE CURRENCIES ARE STORED.
 //    private void saveActiveCurrencyToSharedPrefs() {
 //        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
 //                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);

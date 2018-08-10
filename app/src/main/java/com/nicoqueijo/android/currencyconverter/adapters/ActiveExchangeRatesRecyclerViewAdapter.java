@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.CustomEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -24,8 +25,9 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     public static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
-    Context mContext;
-    List<Currency> mActiveCurrencies;
+    private Context mContext;
+    private List<Currency> mActiveCurrencies;
+    private boolean onBind;
 
     public ActiveExchangeRatesRecyclerViewAdapter(Context context,
                                                   List<Currency> activeCurrencies) {
@@ -44,7 +46,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        onBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
         holder.mCurrencyCode.setText(currentCurrency.getCurrencyCode()
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
@@ -55,6 +58,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         } else {
             holder.mConversionValue.setText(String.valueOf(currentCurrency.getConversionValue()));
         }
+        onBind = false;
     }
 
     @Override
@@ -62,7 +66,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         return mActiveCurrencies.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
         ImageView mFlag;
         TextView mCurrencyCode;
@@ -73,25 +77,41 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             mFlag = itemView.findViewById(R.id.flag);
             mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mConversionValue = itemView.findViewById(R.id.conversion_value);
-            mConversionValue.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            mConversionValue.addTextChangedListener(this);
+        }
 
-                }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (s.length() > Constants.ZERO) {
-                        mActiveCurrencies.get(getAdapterPosition())
-                                .setConversionValue(Double.parseDouble(s.toString()));
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.length() > Constants.ZERO && !s.toString().equals(".")) {
+                mActiveCurrencies.get(getAdapterPosition())
+                        .setConversionValue(Double.parseDouble(s.toString()));
+                for (int i = 0; i < mActiveCurrencies.size(); i++) {
+                    if (!onBind) {
+                        if (i == getAdapterPosition()) {
+                            continue;
+                        }
+                        Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
+                        Currency ithCurrency = mActiveCurrencies.get(i);
+                        double amount = focusedCurrency.getConversionValue();
+                        double fromRate = focusedCurrency.getExchangeRate();
+                        double toRate = ithCurrency.getExchangeRate();
+                        double convertedCurrency = CurrencyConversion
+                                .currencyConverter(amount, fromRate, toRate);
+                        ithCurrency.setConversionValue(convertedCurrency);
+                        notifyItemChanged(i);
                     }
                 }
+            }
+        }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+        @Override
+        public void afterTextChanged(Editable s) {
 
-                }
-            });
         }
     }
 }

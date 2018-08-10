@@ -16,7 +16,7 @@ public class CurrencyConversion {
      * @param toRate   the exchange rate of the target currency.
      * @return the amount converted to the target currency.
      */
-    public static double currencyConverter(int amount, double fromRate, double toRate) {
+    public static double currencyConverter(double amount, double fromRate, double toRate) {
         double valueInDollars = convertAnyCurrencyToDollar(amount, fromRate);
         return convertDollarToAnyCurrency(valueInDollars, toRate);
     }
@@ -28,7 +28,7 @@ public class CurrencyConversion {
      * @param fromRate the exchange rate of the currency being converted.
      * @return the amount converted to USD.
      */
-    private static double convertAnyCurrencyToDollar(int amount, double fromRate) {
+    private static double convertAnyCurrencyToDollar(double amount, double fromRate) {
         return (amount / fromRate);
     }
 
