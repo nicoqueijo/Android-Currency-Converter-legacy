@@ -73,7 +73,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
         if (savedInstanceState != null) {
             mActiveCurrencies = savedInstanceState
                     .getParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES);
-            mAllCurrencies = savedInstanceState.getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
+            mAllCurrencies = savedInstanceState
+                    .getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
         }
     }
 
@@ -116,4 +117,14 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mActiveCurrencies.add(currency);
         mAdapter.notifyDataSetChanged();
     }
+
+    // DO THIS AFTER I IMPLEMENT RECYCLERVIEW REORDERING (DRAGGING)
+//    private void saveActiveCurrencyToSharedPrefs() {
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
+//                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
+//        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+//        for (Currency currency : mActiveCurrencies) {
+//            sharedPreferencesEditor.putString(currency.getCurrencyCode(), "");
+//        }
+//    }
 }

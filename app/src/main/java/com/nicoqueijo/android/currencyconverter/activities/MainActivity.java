@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     private void appLaunchSetup() {
+        checkForLastUpdate();
         if (isNetworkAvailable()) {
             if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
                 Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
@@ -203,12 +204,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private void checkForLastUpdate() {
         long timestamp = mSharedPreferencesTime.getLong("timestamp", 0L);
-        long timestampInMillis = timestamp * 1000L;
-        Date date = new Date(timestampInMillis);
-        java.text.SimpleDateFormat simpleDateFormat =
-                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-        simpleDateFormat.setTimeZone(TimeZone.getDefault());
-        mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+        if (timestamp != 0L) {
+            long timestampInMillis = timestamp * 1000L;
+            Date date = new Date(timestampInMillis);
+            java.text.SimpleDateFormat simpleDateFormat =
+                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+            simpleDateFormat.setTimeZone(TimeZone.getDefault());
+            mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+        }
     }
 
     /**
