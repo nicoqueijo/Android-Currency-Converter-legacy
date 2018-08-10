@@ -46,7 +46,7 @@
 
         </LinearLayout>
 
-        <com.nicoqueijo.android.currencyconverter.helpers.BlockSelectionEditText
+        <com.nicoqueijo.android.currencyconverter.helpers.CustomEditText
             android:id="@+id/conversion_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

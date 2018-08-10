@@ -96,9 +96,12 @@ public class ActiveExchangeRatesFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                DialogFragment selectExchangeRateDialog =
-                        SelectExchangeRatesDialog.newInstance(mAllCurrencies);
-                selectExchangeRateDialog.show(fragmentTransaction, SelectExchangeRatesDialog.TAG);
+                if (fragmentManager.findFragmentByTag(SelectExchangeRatesDialog.TAG) == null) {
+                    DialogFragment selectExchangeRateDialog =
+                            SelectExchangeRatesDialog.newInstance(mAllCurrencies);
+                    selectExchangeRateDialog.show(fragmentTransaction,
+                            SelectExchangeRatesDialog.TAG);
+                }
             }
         });
         return view;

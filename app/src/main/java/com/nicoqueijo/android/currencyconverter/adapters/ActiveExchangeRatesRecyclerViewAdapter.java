@@ -3,6 +3,8 @@ package com.nicoqueijo.android.currencyconverter.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.helpers.BlockSelectionEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
+import com.nicoqueijo.android.currencyconverter.helpers.CustomEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
@@ -43,10 +45,16 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.mCurrencyCode.setText(mActiveCurrencies.get(position).getCurrencyCode()
+        Currency currentCurrency = mActiveCurrencies.get(position);
+        holder.mCurrencyCode.setText(currentCurrency.getCurrencyCode()
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
-        holder.mFlag.setImageResource(Utility.getDrawableResourceByName
-                (mActiveCurrencies.get(position).getCurrencyCode().toLowerCase(), mContext));
+        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
+                .getCurrencyCode().toLowerCase(), mContext));
+        if (currentCurrency.getConversionValue() == Constants.ZERO) {
+            holder.mConversionValue.setText(Constants.EMPTY_STRING);
+        } else {
+            holder.mConversionValue.setText(String.valueOf(currentCurrency.getConversionValue()));
+        }
     }
 
     @Override
@@ -58,13 +66,32 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         ImageView mFlag;
         TextView mCurrencyCode;
-        BlockSelectionEditText mConversionValue;
+        CustomEditText mConversionValue;
 
         ViewHolder(View itemView) {
             super(itemView);
             mFlag = itemView.findViewById(R.id.flag);
             mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mConversionValue = itemView.findViewById(R.id.conversion_value);
+            mConversionValue.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() > Constants.ZERO) {
+                        mActiveCurrencies.get(getAdapterPosition())
+                                .setConversionValue(Double.parseDouble(s.toString()));
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         }
     }
 }

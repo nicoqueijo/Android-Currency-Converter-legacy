@@ -14,4 +14,8 @@ public final class Constants {
     public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
 
     public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
+
+    public static final String EMPTY_STRING = "";
+
+    public static final double ZERO = 0.0;
 }
