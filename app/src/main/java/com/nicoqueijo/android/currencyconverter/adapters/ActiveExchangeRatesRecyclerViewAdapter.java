@@ -87,6 +87,12 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String text = s.toString();
+            if (text.contains(".") && text.substring(text.indexOf(".") + 1).length() > 2) {
+                mConversionValue.setText(text.substring(0, text.length() - 1));
+                mConversionValue.setSelection(mConversionValue.getText().length());
+                return;
+            }
             if (s.length() > Constants.ZERO && !s.toString().equals(".")) {
                 mActiveCurrencies.get(getAdapterPosition())
                         .setConversionValue(Double.parseDouble(s.toString()));
@@ -111,7 +117,13 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void afterTextChanged(Editable s) {
-
+            if (s.toString().length() == 1) {
+                if (s.toString().startsWith(".")) {
+                    s.insert(0, "0");
+                } else if (s.toString().startsWith("0")) {
+                    s.clear();
+                }
+            }
         }
     }
 }
