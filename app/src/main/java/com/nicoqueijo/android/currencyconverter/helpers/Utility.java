@@ -3,12 +3,16 @@ package com.nicoqueijo.android.currencyconverter.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Provides useful, general-purpose methods to be used across the project.
  */
 public class Utility {
     /**
      * Retrieves string resources using a String instead of an int.
+     * Source: https://stackoverflow.com/a/11595723/5906793
      *
      * @param name    name of the string resource
      * @param context the context from which this method is being called
@@ -21,6 +25,7 @@ public class Utility {
 
     /**
      * Retrieves drawable resources using a String instead of an int.
+     * Source: https://stackoverflow.com/a/11595723/5906793
      *
      * @param name    name of the drawable resource
      * @param context the context from which this method is being called
@@ -31,20 +36,43 @@ public class Utility {
     }
 
     /**
-     * Used to store doubles in SharedPreferences without losing precision.
+     * Stores doubles in SharedPreferences without losing precision.
      * Source: https://stackoverflow.com/a/18098090/5906793
+     *
+     * @param edit  sharedPrefs editor used to store the value
+     * @param key   identifier to map the value
+     * @param value self-explanatory
      */
-    public static void putDouble(final SharedPreferences.Editor edit,
-                                 final String key, final double value) {
+    public static void putDouble(final SharedPreferences.Editor edit, final String key,
+                                 final double value) {
         edit.putLong(key, Double.doubleToRawLongBits(value));
     }
 
     /**
-     * Used to retrieve doubles in SharedPreferences without losing precision.
+     * Retrieves doubles in SharedPreferences without losing precision.
      * Source: https://stackoverflow.com/a/18098090/5906793
+     *
+     * @param prefs        sharedPrefs used to retrieve the value
+     * @param key          the identifier to access the value
+     * @param defaultValue value to set if key is not found
+     * @return
      */
-    public static double getDouble(final SharedPreferences prefs,
-                                   final String key, final double defaultValue) {
+    public static double getDouble(final SharedPreferences prefs, final String key,
+                                   final double defaultValue) {
         return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
+    }
+
+    /**
+     * Rounds a double value to two decimal places.
+     * Source: https://stackoverflow.com/a/2808648/5906793
+     *
+     * @param value the number to be rounded
+     * @return the rounded value
+     */
+    public static double roundDouble(double value) {
+        final int DECIMAL_PLACES = 2;
+        BigDecimal bigDecimal = new BigDecimal(value);
+        bigDecimal = bigDecimal.setScale(DECIMAL_PLACES, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
     }
 }

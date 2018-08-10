@@ -80,6 +80,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             mConversionValue.addTextChangedListener(this);
         }
 
+        // Unused
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -108,6 +109,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                         double toRate = ithCurrency.getExchangeRate();
                         double convertedCurrency = CurrencyConversion
                                 .currencyConverter(amount, fromRate, toRate);
+                        convertedCurrency = Utility.roundDouble(convertedCurrency);
                         ithCurrency.setConversionValue(convertedCurrency);
                         notifyItemChanged(i);
                     }
@@ -115,6 +117,9 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             }
         }
 
+        /**
+         * @param s
+         */
         @Override
         public void afterTextChanged(Editable s) {
             if (s.toString().length() == 1) {
