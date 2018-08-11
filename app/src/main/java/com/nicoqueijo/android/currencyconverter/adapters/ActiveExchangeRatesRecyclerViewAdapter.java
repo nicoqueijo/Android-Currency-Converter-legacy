@@ -54,7 +54,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
-        if (currentCurrency.getConversionValue().compareTo(new BigDecimal(0)) == 0) {
+        BigDecimal conversionValue = currentCurrency.getConversionValue();
+        if (conversionValue.compareTo(new BigDecimal(0)) == 0) {
             holder.mConversionValue.setText("");
         } else {
             holder.mConversionValue.setText(currentCurrency.getConversionValue().toString());
