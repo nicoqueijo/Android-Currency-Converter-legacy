@@ -66,7 +66,7 @@ public class Utility {
      * Rounds a BigDecimal value to two decimal places.
      * Source: https://stackoverflow.com/a/15643364/5906793
      *
-     * @param value the number to be rounded
+     * @param value the value to be rounded
      * @return the rounded value
      */
     public static BigDecimal roundBigDecimal(BigDecimal value) {

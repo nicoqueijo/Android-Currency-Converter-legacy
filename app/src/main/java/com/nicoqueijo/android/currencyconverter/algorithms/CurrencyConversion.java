@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.algorithms;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Class dedicated to perform currency conversions.
@@ -31,7 +32,8 @@ public class CurrencyConversion {
      * @return the amount converted to USD.
      */
     private static BigDecimal convertAnyCurrencyToDollar(BigDecimal amount, double fromRate) {
-        return (amount.divide(BigDecimal.valueOf(fromRate)));
+        final int SCALE = 50;
+        return (amount.divide(BigDecimal.valueOf(fromRate), SCALE, RoundingMode.HALF_UP));
     }
 
     /**

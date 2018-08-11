@@ -146,13 +146,22 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                     }
                 }
             }
+//            else {
+//                if (!onBind) {
+//                    for (int i = 0; i < mActiveCurrencies.size(); i++) {
+//                        Currency ithCurrency = mActiveCurrencies.get(i);
+//                        ithCurrency.setConversionValue(new BigDecimal(0.0));
+//                        notifyItemChanged(i);
+//                    }
+//                }
+//            }
         }
 
         /**
          * Appends a leading zero if user starts input with a decimal point.
          * Clears the input to en empty string if user starts input with a zero.
          *
-         * @param s a handle to the content of the EditText
+         * @param s a handle to the contents of the EditText
          */
         private void cleanInput(Editable s) {
             if (s.toString().length() == 1) {

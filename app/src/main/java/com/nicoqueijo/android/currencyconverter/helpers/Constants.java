@@ -1,5 +1,8 @@
 package com.nicoqueijo.android.currencyconverter.helpers;
 
+/**
+ * Class to store constants.
+ */
 public final class Constants {
     /**
      * The currency codes in the shared_prefs and strings xml files are stored with "USD" preceded
