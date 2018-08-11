@@ -3,19 +3,21 @@ package com.nicoqueijo.android.currencyconverter.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.math.BigDecimal;
+
 public class Currency implements Parcelable {
 
     public static final String TAG = Currency.class.getSimpleName();
 
     private String currencyCode;
     private double exchangeRate;
-    private double conversionValue;
+    private BigDecimal conversionValue;
     private boolean selected;
 
     public Currency(String currencyCode, double exchangeRate) {
         this.currencyCode = currencyCode;
         this.exchangeRate = exchangeRate;
-        this.conversionValue = 0.0;
+        this.conversionValue = new BigDecimal(0.0);
         this.selected = false;
     }
 
@@ -35,11 +37,11 @@ public class Currency implements Parcelable {
         this.exchangeRate = exchangeRate;
     }
 
-    public double getConversionValue() {
+    public BigDecimal getConversionValue() {
         return conversionValue;
     }
 
-    public void setConversionValue(double conversionValue) {
+    public void setConversionValue(BigDecimal conversionValue) {
         this.conversionValue = conversionValue;
     }
 
@@ -54,6 +56,13 @@ public class Currency implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(currencyCode);
+        dest.writeDouble(exchangeRate);
+        dest.writeByte((byte) (selected ? 1 : 0));
     }
 
     protected Currency(Parcel in) {
@@ -73,11 +82,4 @@ public class Currency implements Parcelable {
             return new Currency[size];
         }
     };
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(currencyCode);
-        dest.writeDouble(exchangeRate);
-        dest.writeByte((byte) (selected ? 1 : 0));
-    }
 }

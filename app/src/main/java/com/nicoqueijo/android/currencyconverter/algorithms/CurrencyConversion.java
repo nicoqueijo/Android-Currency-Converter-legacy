@@ -1,5 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.algorithms;
 
+import java.math.BigDecimal;
+
 /**
  * Class dedicated to perform currency conversions.
  * Exchange rates are quoted in values against the US dollar.
@@ -16,8 +18,8 @@ public class CurrencyConversion {
      * @param toRate   the exchange rate of the target currency.
      * @return the amount converted to the target currency.
      */
-    public static double currencyConverter(double amount, double fromRate, double toRate) {
-        double valueInDollars = convertAnyCurrencyToDollar(amount, fromRate);
+    public static BigDecimal currencyConverter(BigDecimal amount, double fromRate, double toRate) {
+        BigDecimal valueInDollars = convertAnyCurrencyToDollar(amount, fromRate);
         return convertDollarToAnyCurrency(valueInDollars, toRate);
     }
 
@@ -28,8 +30,8 @@ public class CurrencyConversion {
      * @param fromRate the exchange rate of the currency being converted.
      * @return the amount converted to USD.
      */
-    private static double convertAnyCurrencyToDollar(double amount, double fromRate) {
-        return (amount / fromRate);
+    private static BigDecimal convertAnyCurrencyToDollar(BigDecimal amount, double fromRate) {
+        return (amount.divide(BigDecimal.valueOf(fromRate)));
     }
 
     /**
@@ -39,7 +41,7 @@ public class CurrencyConversion {
      * @param toRate      the exchange rate of the target currency.
      * @return the dollar amount converted to the target currency.
      */
-    private static double convertDollarToAnyCurrency(double dollarValue, double toRate) {
-        return (dollarValue * toRate);
+    private static BigDecimal convertDollarToAnyCurrency(BigDecimal dollarValue, double toRate) {
+        return (dollarValue.multiply(BigDecimal.valueOf(toRate)));
     }
 }

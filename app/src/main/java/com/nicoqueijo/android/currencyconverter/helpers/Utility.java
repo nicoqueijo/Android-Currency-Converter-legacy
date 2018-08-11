@@ -75,4 +75,9 @@ public class Utility {
         bigDecimal = bigDecimal.setScale(DECIMAL_PLACES, RoundingMode.HALF_UP);
         return bigDecimal.doubleValue();
     }
+
+    public static BigDecimal roundBigDecimal(BigDecimal value) {
+        final int DECIMAL_PLACES = 2;
+        return value.setScale(DECIMAL_PLACES, RoundingMode.CEILING);
+    }
 }

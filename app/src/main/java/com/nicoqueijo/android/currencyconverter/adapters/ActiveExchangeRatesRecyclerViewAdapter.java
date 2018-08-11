@@ -18,6 +18,7 @@ import com.nicoqueijo.android.currencyconverter.helpers.CustomEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ActiveExchangeRatesRecyclerViewAdapter extends
@@ -53,10 +54,10 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
-        if (currentCurrency.getConversionValue() == Constants.ZERO) {
-            holder.mConversionValue.setText(Constants.EMPTY_STRING);
+        if (currentCurrency.getConversionValue().compareTo(new BigDecimal(0)) == 0) {
+            holder.mConversionValue.setText("");
         } else {
-            holder.mConversionValue.setText(String.valueOf(currentCurrency.getConversionValue()));
+            holder.mConversionValue.setText(currentCurrency.getConversionValue().toString());
         }
         onBind = false;
     }
@@ -99,7 +100,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         /**
          * Checks whether the input string has above two decimal places.
-         * Source :https://stackoverflow.com/a/33548446/5906793
+         * Source: https://stackoverflow.com/a/33548446/5906793
          *
          * @param s input string entered by user
          * @return whether input string has above two decimal places
@@ -127,19 +128,19 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         private void processTextChange(CharSequence s) {
             if (s.length() > 0 && !s.toString().equals(".")) {
                 Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
-                focusedCurrency.setConversionValue(Double.parseDouble(s.toString()));
+                focusedCurrency.setConversionValue(new BigDecimal(s.toString()));
                 for (int i = 0; i < mActiveCurrencies.size(); i++) {
                     if (!onBind) {
                         if (i == getAdapterPosition()) {
                             continue;
                         }
                         Currency ithCurrency = mActiveCurrencies.get(i);
-                        double amount = focusedCurrency.getConversionValue();
+                        BigDecimal amount = focusedCurrency.getConversionValue();
                         double fromRate = focusedCurrency.getExchangeRate();
                         double toRate = ithCurrency.getExchangeRate();
-                        double convertedCurrency = CurrencyConversion
+                        BigDecimal convertedCurrency = CurrencyConversion
                                 .currencyConverter(amount, fromRate, toRate);
-                        convertedCurrency = Utility.roundDouble(convertedCurrency);
+                        convertedCurrency = Utility.roundBigDecimal(convertedCurrency);
                         ithCurrency.setConversionValue(convertedCurrency);
                         notifyItemChanged(i);
                     }
