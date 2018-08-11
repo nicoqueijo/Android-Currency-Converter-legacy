@@ -55,7 +55,7 @@ public class Utility {
      * @param prefs        sharedPrefs used to retrieve the value
      * @param key          the identifier to access the value
      * @param defaultValue value to set if key is not found
-     * @return
+     * @return the value as a double
      */
     public static double getDouble(final SharedPreferences prefs, final String key,
                                    final double defaultValue) {
@@ -63,19 +63,12 @@ public class Utility {
     }
 
     /**
-     * Rounds a double value to two decimal places.
-     * Source: https://stackoverflow.com/a/2808648/5906793
+     * Rounds a BigDecimal value to two decimal places.
+     * Source: https://stackoverflow.com/a/15643364/5906793
      *
      * @param value the number to be rounded
      * @return the rounded value
      */
-    public static double roundDouble(double value) {
-        final int DECIMAL_PLACES = 2;
-        BigDecimal bigDecimal = new BigDecimal(value);
-        bigDecimal = bigDecimal.setScale(DECIMAL_PLACES, RoundingMode.HALF_UP);
-        return bigDecimal.doubleValue();
-    }
-
     public static BigDecimal roundBigDecimal(BigDecimal value) {
         final int DECIMAL_PLACES = 2;
         return value.setScale(DECIMAL_PLACES, RoundingMode.CEILING);
