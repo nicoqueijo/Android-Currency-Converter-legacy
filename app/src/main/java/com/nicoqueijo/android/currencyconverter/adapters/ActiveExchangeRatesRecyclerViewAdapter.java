@@ -80,7 +80,6 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             mConversionValue.addTextChangedListener(this);
         }
 
-        // Unused
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -88,21 +87,52 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String text = s.toString();
-            if (text.contains(".") && text.substring(text.indexOf(".") + 1).length() > 2) {
-                mConversionValue.setText(text.substring(0, text.length() - 1));
-                mConversionValue.setSelection(mConversionValue.getText().length());
-                return;
+            if (!isInputAboveTwoDecimalPlaces(s)) {
+                processTextChange(s);
             }
-            if (s.length() > Constants.ZERO && !s.toString().equals(".")) {
-                mActiveCurrencies.get(getAdapterPosition())
-                        .setConversionValue(Double.parseDouble(s.toString()));
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            cleanInput(s);
+        }
+
+        /**
+         * Checks whether the input string has above two decimal places.
+         * Source :https://stackoverflow.com/a/33548446/5906793
+         *
+         * @param s input string entered by user
+         * @return whether input string has above two decimal places
+         */
+        private boolean isInputAboveTwoDecimalPlaces(CharSequence s) {
+            String inputString = s.toString();
+            if (inputString.contains(".") && inputString.substring(inputString.indexOf(".") + 1)
+                    .length() > 2) {
+                mConversionValue.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValue.setSelection(mConversionValue.getText().length());
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Performs the currency conversion of all exchange rates in the list and updates the UI.
+         * On every new input from the EditText, that number is taken, converted against the other
+         * currencies and updated on the UI. The exceptions are if what was entered is an empty
+         * string or a sole decimal point. Skips itself as it doesn't need to do any conversion
+         * on the active EditText.
+         *
+         * @param s input string entered by user
+         */
+        private void processTextChange(CharSequence s) {
+            if (s.length() > 0 && !s.toString().equals(".")) {
+                Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
+                focusedCurrency.setConversionValue(Double.parseDouble(s.toString()));
                 for (int i = 0; i < mActiveCurrencies.size(); i++) {
                     if (!onBind) {
                         if (i == getAdapterPosition()) {
                             continue;
                         }
-                        Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
                         Currency ithCurrency = mActiveCurrencies.get(i);
                         double amount = focusedCurrency.getConversionValue();
                         double fromRate = focusedCurrency.getExchangeRate();
@@ -118,10 +148,12 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         }
 
         /**
-         * @param s
+         * Appends a leading zero if user starts input with a decimal point.
+         * Clears the input to en empty string if user starts input with a zero.
+         *
+         * @param s a handle to the content of the EditText
          */
-        @Override
-        public void afterTextChanged(Editable s) {
+        private void cleanInput(Editable s) {
             if (s.toString().length() == 1) {
                 if (s.toString().startsWith(".")) {
                     s.insert(0, "0");
