@@ -53,18 +53,6 @@ public class Currency implements Parcelable {
         this.selected = selected;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(currencyCode);
-        dest.writeDouble(exchangeRate);
-        dest.writeByte((byte) (selected ? 1 : 0));
-    }
-
     protected Currency(Parcel in) {
         currencyCode = in.readString();
         exchangeRate = in.readDouble();
@@ -82,4 +70,16 @@ public class Currency implements Parcelable {
             return new Currency[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(currencyCode);
+        dest.writeDouble(exchangeRate);
+        dest.writeByte((byte) (selected ? 1 : 0));
+    }
 }

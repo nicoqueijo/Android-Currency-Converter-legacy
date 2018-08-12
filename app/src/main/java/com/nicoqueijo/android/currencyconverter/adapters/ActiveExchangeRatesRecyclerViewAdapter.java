@@ -19,7 +19,11 @@ import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 public class ActiveExchangeRatesRecyclerViewAdapter extends
         RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder> {
@@ -30,11 +34,18 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     private List<Currency> mActiveCurrencies;
     private boolean onBind;
 
+    private NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    private DecimalFormat decimalFormatter = (DecimalFormat) numberFormatter;
+
     public ActiveExchangeRatesRecyclerViewAdapter(Context context,
                                                   List<Currency> activeCurrencies) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
+        String pattern = "###,###.##";
+        decimalFormatter.applyPattern(pattern);
     }
+
+
 
     @NonNull
     @Override
@@ -50,16 +61,13 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         onBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
-        holder.mCurrencyCode.setText(currentCurrency.getCurrencyCode()
+        holder.mCurrencyCodeTextView.setText(currentCurrency.getCurrencyCode()
                 .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
-        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
+        holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
-        if (conversionValue.compareTo(new BigDecimal(0)) == 0) {
-            holder.mConversionValue.setText("");
-        } else {
-            holder.mConversionValue.setText(currentCurrency.getConversionValue().toString());
-        }
+        String formattedConversionValue = decimalFormatter.format(conversionValue);
+        holder.mConversionValueEditText.setText(formattedConversionValue);
         onBind = false;
     }
 
@@ -70,16 +78,16 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
-        ImageView mFlag;
-        TextView mCurrencyCode;
-        CustomEditText mConversionValue;
+        ImageView mFlagImage;
+        TextView mCurrencyCodeTextView;
+        CustomEditText mConversionValueEditText;
 
         ViewHolder(View itemView) {
             super(itemView);
-            mFlag = itemView.findViewById(R.id.flag);
-            mCurrencyCode = itemView.findViewById(R.id.currency_code);
-            mConversionValue = itemView.findViewById(R.id.conversion_value);
-            mConversionValue.addTextChangedListener(this);
+            mFlagImage = itemView.findViewById(R.id.flag);
+            mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
+            mConversionValueEditText = itemView.findViewById(R.id.conversion_value);
+            mConversionValueEditText.addTextChangedListener(this);
         }
 
         @Override
@@ -110,8 +118,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             String inputString = s.toString();
             if (inputString.contains(".") && inputString.substring(inputString.indexOf(".") + 1)
                     .length() > 2) {
-                mConversionValue.setText(inputString.substring(0, inputString.length() - 1));
-                mConversionValue.setSelection(mConversionValue.getText().length());
+                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
                 return true;
             }
             return false;
@@ -129,7 +137,14 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         private void processTextChange(CharSequence s) {
             if (s.length() > 0 && !s.toString().equals(".")) {
                 Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
-                focusedCurrency.setConversionValue(new BigDecimal(s.toString()));
+                Number number = null;
+                try {
+                    number = decimalFormatter.parse(s.toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                double numberAsDouble = number.doubleValue();
+                focusedCurrency.setConversionValue(new BigDecimal(numberAsDouble));
                 for (int i = 0; i < mActiveCurrencies.size(); i++) {
                     if (!onBind) {
                         if (i == getAdapterPosition()) {
