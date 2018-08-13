@@ -56,7 +56,6 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="right"
-            android:hint="0.00"
             android:inputType="numberDecimal" />
 
     </LinearLayout>

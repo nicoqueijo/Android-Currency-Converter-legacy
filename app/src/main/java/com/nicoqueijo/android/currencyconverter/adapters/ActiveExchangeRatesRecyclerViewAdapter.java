@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +35,22 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     private List<Currency> mActiveCurrencies;
     private boolean onBind;
 
-    private NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    private DecimalFormat decimalFormatter = (DecimalFormat) numberFormatter;
+    private NumberFormat numberFormatter;
+    private DecimalFormat decimalFormatter;
+    private String decimalSeparator;
 
     public ActiveExchangeRatesRecyclerViewAdapter(Context context,
                                                   List<Currency> activeCurrencies) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
         String pattern = "###,###.##";
+        numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
+        decimalFormatter = (DecimalFormat) numberFormatter;
         decimalFormatter.applyPattern(pattern);
+        decimalSeparator = String.valueOf(decimalFormatter
+                .getDecimalFormatSymbols()
+                .getDecimalSeparator());
     }
-
 
 
     @NonNull
@@ -53,7 +59,6 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_active_exchange_rate, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-
         return viewHolder;
     }
 
@@ -87,6 +92,10 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             mFlagImage = itemView.findViewById(R.id.flag);
             mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
             mConversionValueEditText = itemView.findViewById(R.id.conversion_value);
+            String hint = "0" + decimalSeparator + "00";
+            mConversionValueEditText.setHint(hint);
+            mConversionValueEditText.setKeyListener(DigitsKeyListener
+                    .getInstance("0123456789" + decimalSeparator));
             mConversionValueEditText.addTextChangedListener(this);
         }
 
@@ -97,7 +106,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!isInputAboveTwoDecimalPlaces(s)) {
+            if (!inputAboveTwoDecimalPlaces(s) && !inputHasOneOrMoreSeparators(s)) {
                 processTextChange(s);
             }
         }
@@ -114,10 +123,27 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          * @param s input string entered by user
          * @return whether input string has above two decimal places
          */
-        private boolean isInputAboveTwoDecimalPlaces(CharSequence s) {
+        private boolean inputAboveTwoDecimalPlaces(CharSequence s) {
             String inputString = s.toString();
-            if (inputString.contains(".") && inputString.substring(inputString.indexOf(".") + 1)
-                    .length() > 2) {
+            if (inputString.contains(decimalSeparator) &&
+                    inputString.substring(inputString.indexOf(decimalSeparator) + 1)
+                            .length() > 2) {
+                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                return true;
+            }
+            return false;
+        }
+
+        private boolean inputHasOneOrMoreSeparators(CharSequence s) {
+            String inputString = s.toString();
+            int occurrences = 0;
+            for (int i = 0; i < inputString.length(); i++) {
+                if (String.valueOf(inputString.charAt(i)).equals(decimalSeparator)) {
+                    occurrences++;
+                }
+            }
+            if (occurrences > 1) {
                 mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
                 mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
                 return true;
@@ -135,7 +161,10 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          * @param s input string entered by user
          */
         private void processTextChange(CharSequence s) {
-            if (s.length() > 0 && !s.toString().equals(".")) {
+            if (onBind) {
+                return;
+            }
+            if (s.length() > 0 && !s.toString().equals(decimalSeparator)) {
                 Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
                 Number number = null;
                 try {
@@ -146,20 +175,18 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                 double numberAsDouble = number.doubleValue();
                 focusedCurrency.setConversionValue(new BigDecimal(numberAsDouble));
                 for (int i = 0; i < mActiveCurrencies.size(); i++) {
-                    if (!onBind) {
-                        if (i == getAdapterPosition()) {
-                            continue;
-                        }
-                        Currency ithCurrency = mActiveCurrencies.get(i);
-                        BigDecimal amount = focusedCurrency.getConversionValue();
-                        double fromRate = focusedCurrency.getExchangeRate();
-                        double toRate = ithCurrency.getExchangeRate();
-                        BigDecimal convertedCurrency = CurrencyConversion
-                                .currencyConverter(amount, fromRate, toRate);
-                        convertedCurrency = Utility.roundBigDecimal(convertedCurrency);
-                        ithCurrency.setConversionValue(convertedCurrency);
-                        notifyItemChanged(i);
+                    if (i == getAdapterPosition()) {
+                        continue;
                     }
+                    Currency ithCurrency = mActiveCurrencies.get(i);
+                    BigDecimal amount = focusedCurrency.getConversionValue();
+                    double fromRate = focusedCurrency.getExchangeRate();
+                    double toRate = ithCurrency.getExchangeRate();
+                    BigDecimal convertedCurrency = CurrencyConversion
+                            .currencyConverter(amount, fromRate, toRate);
+                    convertedCurrency = Utility.roundBigDecimal(convertedCurrency);
+                    ithCurrency.setConversionValue(convertedCurrency);
+                    notifyItemChanged(i);
                 }
             }
 //            else {
@@ -181,7 +208,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          */
         private void cleanInput(Editable s) {
             if (s.toString().length() == 1) {
-                if (s.toString().startsWith(".")) {
+                if (s.toString().startsWith(decimalSeparator)) {
                     s.insert(0, "0");
                 } else if (s.toString().startsWith("0")) {
                     s.clear();
