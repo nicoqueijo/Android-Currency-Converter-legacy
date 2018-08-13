@@ -43,7 +43,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                                                   List<Currency> activeCurrencies) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
-        String pattern = "###,###.##";
+        String pattern = "###,###.00";
         numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
         decimalFormatter = (DecimalFormat) numberFormatter;
         decimalFormatter.applyPattern(pattern);
@@ -71,7 +71,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
-        String formattedConversionValue = decimalFormatter.format(conversionValue);
+        String formattedConversionValue = decimalFormatter.format(conversionValue)
+                .equals(decimalSeparator + "00") ? "0" : decimalFormatter.format(conversionValue);
         holder.mConversionValueEditText.setText(formattedConversionValue);
         onBind = false;
     }
@@ -106,7 +107,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!inputAboveTwoDecimalPlaces(s) && !inputHasOneOrMoreSeparators(s)) {
+            if (isInputValid(s)) {
                 processTextChange(s);
             }
         }
@@ -114,41 +115,6 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         @Override
         public void afterTextChanged(Editable s) {
             cleanInput(s);
-        }
-
-        /**
-         * Checks whether the input string has above two decimal places.
-         * Source: https://stackoverflow.com/a/33548446/5906793
-         *
-         * @param s input string entered by user
-         * @return whether input string has above two decimal places
-         */
-        private boolean inputAboveTwoDecimalPlaces(CharSequence s) {
-            String inputString = s.toString();
-            if (inputString.contains(decimalSeparator) &&
-                    inputString.substring(inputString.indexOf(decimalSeparator) + 1)
-                            .length() > 2) {
-                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
-                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
-                return true;
-            }
-            return false;
-        }
-
-        private boolean inputHasOneOrMoreSeparators(CharSequence s) {
-            String inputString = s.toString();
-            int occurrences = 0;
-            for (int i = 0; i < inputString.length(); i++) {
-                if (String.valueOf(inputString.charAt(i)).equals(decimalSeparator)) {
-                    occurrences++;
-                }
-            }
-            if (occurrences > 1) {
-                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
-                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
-                return true;
-            }
-            return false;
         }
 
         /**
@@ -189,15 +155,45 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                     notifyItemChanged(i);
                 }
             }
-//            else {
-//                if (!onBind) {
-//                    for (int i = 0; i < mActiveCurrencies.size(); i++) {
-//                        Currency ithCurrency = mActiveCurrencies.get(i);
-//                        ithCurrency.setConversionValue(new BigDecimal(0.0));
-//                        notifyItemChanged(i);
-//                    }
-//                }
-//            }
+        }
+
+        private boolean isInputValid(CharSequence s) {
+            return !inputAboveTwoDecimalPlaces(s) && !inputHasOneOrMoreSeparators(s);
+        }
+
+        /**
+         * Checks whether the input string has above two decimal places.
+         * Source: https://stackoverflow.com/a/33548446/5906793
+         *
+         * @param s input string entered by user
+         * @return whether input string has above two decimal places
+         */
+        private boolean inputAboveTwoDecimalPlaces(CharSequence s) {
+            String inputString = s.toString();
+            if (inputString.contains(decimalSeparator) &&
+                    inputString.substring(inputString.indexOf(decimalSeparator) + 1)
+                            .length() > 2) {
+                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                return true;
+            }
+            return false;
+        }
+
+        private boolean inputHasOneOrMoreSeparators(CharSequence s) {
+            String inputString = s.toString();
+            int occurrences = 0;
+            for (int i = 0; i < inputString.length(); i++) {
+                if (String.valueOf(inputString.charAt(i)).equals(decimalSeparator)) {
+                    occurrences++;
+                }
+            }
+            if (occurrences > 1) {
+                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                return true;
+            }
+            return false;
         }
 
         /**
