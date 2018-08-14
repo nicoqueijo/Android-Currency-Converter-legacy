@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 public class Utility {
     /**
      * Retrieves string resources using a String instead of an int.
-     * Source: https://stackoverflow.com/a/11595723/5906793
+     * Credit: https://stackoverflow.com/a/11595723/5906793
      *
      * @param name    name of the string resource
      * @param context the context from which this method is being called
@@ -25,7 +25,7 @@ public class Utility {
 
     /**
      * Retrieves drawable resources using a String instead of an int.
-     * Source: https://stackoverflow.com/a/11595723/5906793
+     * Credit: https://stackoverflow.com/a/11595723/5906793
      *
      * @param name    name of the drawable resource
      * @param context the context from which this method is being called
@@ -37,7 +37,7 @@ public class Utility {
 
     /**
      * Stores doubles in SharedPreferences without losing precision.
-     * Source: https://stackoverflow.com/a/18098090/5906793
+     * Credit: https://stackoverflow.com/a/18098090/5906793
      *
      * @param edit  sharedPrefs editor used to store the value
      * @param key   identifier to map the value
@@ -50,7 +50,7 @@ public class Utility {
 
     /**
      * Retrieves doubles in SharedPreferences without losing precision.
-     * Source: https://stackoverflow.com/a/18098090/5906793
+     * Credit: https://stackoverflow.com/a/18098090/5906793
      *
      * @param prefs        sharedPrefs used to retrieve the value
      * @param key          the identifier to access the value
@@ -64,7 +64,7 @@ public class Utility {
 
     /**
      * Rounds a BigDecimal value to two decimal places.
-     * Source: https://stackoverflow.com/a/15643364/5906793
+     * Credit: https://stackoverflow.com/a/15643364/5906793
      *
      * @param value the value to be rounded
      * @return the rounded value

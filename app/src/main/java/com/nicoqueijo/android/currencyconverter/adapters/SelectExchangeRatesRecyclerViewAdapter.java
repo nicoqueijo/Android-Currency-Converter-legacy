@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesDialog;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
@@ -24,9 +23,9 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
 
     public static final String TAG = SelectExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
-    SelectExchangeRatesDialog mDialog;
-    List<Currency> mCurrencies;
-    List<Currency> mCurrenciesFull;
+    private SelectExchangeRatesDialog mDialog;
+    private List<Currency> mCurrencies;
+    private List<Currency> mCurrenciesFull;
 
     public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesDialog dialog,
                                                   List<Currency> allCurrencies) {
@@ -48,8 +47,7 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
                 .getCurrencyCode().toLowerCase(), mDialog.getContext()));
-        holder.mCurrencyCode.setText(mCurrencies.get(position).getCurrencyCode()
-                .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
+        holder.mCurrencyCode.setText(mCurrencies.get(position).getTrimmedCurrencyCode());
         holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
                 .getCurrencyCode(), mDialog.getContext()));
         boolean currencyIsSelected = mCurrencies.get(position).isSelected();
@@ -92,6 +90,10 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
         return currenciesFilter;
     }
 
+    /**
+     * Performs the filtering based on the user input in the hosting fragment's SearchView.
+     * Credit: https://www.youtube.com/watch?v=sJ-Z9G0SDhc
+     */
     private Filter currenciesFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -103,8 +105,7 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
                 String currencyCode;
                 String currencyName;
                 for (Currency currency : mCurrenciesFull) {
-                    currencyCode = currency.getCurrencyCode().substring(Constants
-                            .CURRENCY_CODE_STARTING_INDEX).toLowerCase();
+                    currencyCode = currency.getTrimmedCurrencyCode().toLowerCase();
                     currencyName = Utility.getStringResourceByName(currency.getCurrencyCode(),
                             mDialog.getContext()).toLowerCase();
                     if (currencyCode.contains(filterPattern) ||

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.CustomEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -66,8 +65,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         onBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
-        holder.mCurrencyCodeTextView.setText(currentCurrency.getCurrencyCode()
-                .substring(Constants.CURRENCY_CODE_STARTING_INDEX));
+        holder.mCurrencyCodeTextView.setText(currentCurrency.getTrimmedCurrencyCode());
         holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
@@ -121,7 +119,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          * Performs the currency conversion of all exchange rates in the list and updates the UI.
          * On every new input from the EditText, that number is taken, converted against the other
          * currencies and updated on the UI. The exceptions are if what was entered is an empty
-         * string or a sole decimal point. Skips itself as it doesn't need to do any conversion
+         * string or a sole decimal separator. Skips itself as it doesn't need to do any conversion
          * on the active EditText.
          *
          * @param s input string entered by user
@@ -158,12 +156,12 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         }
 
         private boolean isInputValid(CharSequence s) {
-            return !inputAboveTwoDecimalPlaces(s) && !inputHasOneOrMoreSeparators(s);
+            return (!inputAboveTwoDecimalPlaces(s) && !inputHasMoreThanOneSeparators(s));
         }
 
         /**
          * Checks whether the input string has above two decimal places.
-         * Source: https://stackoverflow.com/a/33548446/5906793
+         * Credit: https://stackoverflow.com/a/33548446/5906793
          *
          * @param s input string entered by user
          * @return whether input string has above two decimal places
@@ -180,7 +178,14 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             return false;
         }
 
-        private boolean inputHasOneOrMoreSeparators(CharSequence s) {
+        /**
+         * Gets the string in the EditText, parses it checking if the decimal separator appears
+         * more than once and if it does it removes the second one and returns true.
+         *
+         * @param s input string entered by user
+         * @return whether there is more than one decimal separators
+         */
+        private boolean inputHasMoreThanOneSeparators(CharSequence s) {
             String inputString = s.toString();
             int occurrences = 0;
             for (int i = 0; i < inputString.length(); i++) {
@@ -197,7 +202,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         }
 
         /**
-         * Appends a leading zero if user starts input with a decimal point.
+         * Appends a leading zero if user starts input with a decimal separator.
          * Clears the input to en empty string if user starts input with a zero.
          *
          * @param s a handle to the contents of the EditText

@@ -3,8 +3,16 @@ package com.nicoqueijo.android.currencyconverter.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.nicoqueijo.android.currencyconverter.helpers.Constants;
+
 import java.math.BigDecimal;
 
+/**
+ * Model class for a currency.
+ *
+ * Implements Parcelable so objects of this type can be passed
+ * between activities/fragments and or saved in Bundles.
+ */
 public class Currency implements Parcelable {
 
     public static final String TAG = Currency.class.getSimpleName();
@@ -14,6 +22,12 @@ public class Currency implements Parcelable {
     private BigDecimal conversionValue;
     private boolean selected;
 
+    /**
+     * Constructor for creating Currency objects.
+     *
+     * @param currencyCode currency code as it comes from API
+     * @param exchangeRate exchange rate as it comes from API
+     */
     public Currency(String currencyCode, double exchangeRate) {
         this.currencyCode = currencyCode;
         this.exchangeRate = exchangeRate;
@@ -21,6 +35,8 @@ public class Currency implements Parcelable {
         this.selected = false;
     }
 
+
+    // Getters and setters are defined below.
     public String getCurrencyCode() {
         return currencyCode;
     }
@@ -53,6 +69,20 @@ public class Currency implements Parcelable {
         this.selected = selected;
     }
 
+    /**
+     * Fetches the actual currency code.
+     * The currency codes in shared_prefs and strings xml files are stored with "USD" preceded
+     * to them as that's how they come from the API. For example the British Pound currency code
+     * (GDP) is stored as "USDGDP". To access the actual currency code we must substring "USDGDP"
+     * from index 3 onwards to retrieve "GDP".
+     *
+     * @return the trimmed currency code
+     */
+    public String getTrimmedCurrencyCode() {
+        return currencyCode.substring(Constants.CURRENCY_CODE_STARTING_INDEX);
+    }
+
+    // Required, auto-generated code in order to implement Parcelable.
     protected Currency(Parcel in) {
         currencyCode = in.readString();
         exchangeRate = in.readDouble();
