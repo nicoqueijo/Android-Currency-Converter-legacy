@@ -9,6 +9,7 @@ import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,20 +34,19 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     private Context mContext;
     private List<Currency> mActiveCurrencies;
     private boolean onBind;
-    private boolean newItemAdded;
 
     private NumberFormat numberFormatter;
     private DecimalFormat decimalFormatter;
     private String decimalSeparator;
+    private String conversionPattern = "###,##0.00";
 
     public ActiveExchangeRatesRecyclerViewAdapter(Context context,
                                                   List<Currency> activeCurrencies) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
-        String pattern = "###,##0.00";
         numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
         decimalFormatter = (DecimalFormat) numberFormatter;
-        decimalFormatter.applyPattern(pattern);
+        decimalFormatter.applyPattern(conversionPattern);
         decimalSeparator = String.valueOf(decimalFormatter
                 .getDecimalFormatSymbols()
                 .getDecimalSeparator());
@@ -93,6 +93,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
             mConversionValueEditText = itemView.findViewById(R.id.conversion_value);
             String hint = "0" + decimalSeparator + "00";
+            mConversionValueEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             mConversionValueEditText.setHint(hint);
             mConversionValueEditText.setKeyListener(DigitsKeyListener
                     .getInstance("0123456789" + decimalSeparator));
@@ -141,6 +142,12 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                 convertedCurrency = Utility.roundBigDecimal(convertedCurrency);
                 newlyAddedCurrency.setConversionValue(convertedCurrency);
                 return;
+            }
+            if (s.length() == 0) {
+                for (int i = 0; i < mActiveCurrencies.size(); i++) {
+                    mActiveCurrencies.get(i).setConversionValue(new BigDecimal("0"));
+                    notifyItemChanged(i);
+                }
             }
             if (s.length() > 0 && !s.toString().equals(decimalSeparator)) {
                 Number number = null;

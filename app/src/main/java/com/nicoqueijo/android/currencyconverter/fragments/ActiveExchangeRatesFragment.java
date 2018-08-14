@@ -116,7 +116,9 @@ public class ActiveExchangeRatesFragment extends Fragment {
 
     public void addActiveCurrency(Currency currency) {
         mActiveCurrencies.add(currency);
-        mAdapter.notifyDataSetChanged();
+        for (int i = 0; i < mActiveCurrencies.size(); i++) {
+            mAdapter.notifyItemChanged(i);
+        }
     }
 
     // DO THIS AFTER I IMPLEMENT RECYCLERVIEW REORDERING (DRAGGING) BECAUSE THAT MIGHT AFFECT
