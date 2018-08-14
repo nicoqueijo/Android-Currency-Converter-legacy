@@ -114,6 +114,12 @@ public class ActiveExchangeRatesFragment extends Fragment {
         return activeExchangeRatesFragment;
     }
 
+    /**
+     * Adds the newly selected currency to the data set and notifies
+     * the adapter so the changes can be reflected on the UI.
+     *
+     * @param currency the new currency that was selected
+     */
     public void addActiveCurrency(Currency currency) {
         mActiveCurrencies.add(currency);
         for (int i = 0; i < mActiveCurrencies.size(); i++) {

@@ -81,6 +81,11 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         return selectExchangeRatesDialog;
     }
 
+    /**
+     * Passes the newly selected currency to the ActiveExchangeRatesFragment via an interface.
+     *
+     * @param currency the new currency that was selected
+     */
     public void sendActiveCurrency(Currency currency) {
         ICommunicator communicator = (ICommunicator) getActivity();
         communicator.passSelectedCurrency(currency);

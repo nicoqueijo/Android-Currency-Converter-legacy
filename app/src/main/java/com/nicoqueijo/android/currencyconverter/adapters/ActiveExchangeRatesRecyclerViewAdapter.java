@@ -123,7 +123,10 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          * First scenario is when a new currency is received after selecting it from the dialog
          * that the FAB pops up.
          * <p>
-         * Second scenario is on every new input from the EditText, that number is taken, converted
+         * Second scenario is when all the characters are removed from the focused currency. This
+         * sets the other currencies to 0 and updates the UI.
+         * <p>
+         * Third scenario is on every new input from the EditText, that number is taken, converted
          * against the other currencies and updated on the UI. The exceptions are if what was
          * entered is an empty string or a sole decimal separator. Skips itself as it doesn't need
          * to do any conversion on the active EditText.
