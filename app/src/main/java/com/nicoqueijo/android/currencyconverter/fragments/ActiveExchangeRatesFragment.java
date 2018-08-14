@@ -65,6 +65,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES, mActiveCurrencies);
         outState.putParcelableArrayList(Constants.ARG_ALL_CURRENCIES, mAllCurrencies);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

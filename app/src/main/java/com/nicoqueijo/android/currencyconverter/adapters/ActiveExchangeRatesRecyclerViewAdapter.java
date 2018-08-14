@@ -33,6 +33,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     private Context mContext;
     private List<Currency> mActiveCurrencies;
     private boolean onBind;
+    private boolean newItemAdded;
 
     private NumberFormat numberFormatter;
     private DecimalFormat decimalFormatter;
@@ -42,7 +43,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                                                   List<Currency> activeCurrencies) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
-        String pattern = "###,###.00";
+        String pattern = "###,##0.00";
         numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
         decimalFormatter = (DecimalFormat) numberFormatter;
         decimalFormatter.applyPattern(pattern);
@@ -69,8 +70,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
-        String formattedConversionValue = decimalFormatter.format(conversionValue)
-                .equals(decimalSeparator + "00") ? "0" : decimalFormatter.format(conversionValue);
+        String formattedConversionValue = decimalFormatter.format(conversionValue).equals
+                ("0" + decimalSeparator + "00") ? "0" : decimalFormatter.format(conversionValue);
         holder.mConversionValueEditText.setText(formattedConversionValue);
         onBind = false;
     }
@@ -117,19 +118,31 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         /**
          * Performs the currency conversion of all exchange rates in the list and updates the UI.
-         * On every new input from the EditText, that number is taken, converted against the other
-         * currencies and updated on the UI. The exceptions are if what was entered is an empty
-         * string or a sole decimal separator. Skips itself as it doesn't need to do any conversion
-         * on the active EditText.
+         * <p>
+         * First scenario is when a new currency is received after selecting it from the dialog
+         * that the FAB pops up.
+         * <p>
+         * Second scenario is on every new input from the EditText, that number is taken, converted
+         * against the other currencies and updated on the UI. The exceptions are if what was
+         * entered is an empty string or a sole decimal separator. Skips itself as it doesn't need
+         * to do any conversion on the active EditText.
          *
          * @param s input string entered by user
          */
         private void processTextChange(CharSequence s) {
+            Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
             if (onBind) {
+                Currency newlyAddedCurrency = mActiveCurrencies.get(getItemCount() - 1);
+                BigDecimal amount = focusedCurrency.getConversionValue();
+                double fromRate = focusedCurrency.getExchangeRate();
+                double toRate = newlyAddedCurrency.getExchangeRate();
+                BigDecimal convertedCurrency = CurrencyConversion
+                        .currencyConverter(amount, fromRate, toRate);
+                convertedCurrency = Utility.roundBigDecimal(convertedCurrency);
+                newlyAddedCurrency.setConversionValue(convertedCurrency);
                 return;
             }
             if (s.length() > 0 && !s.toString().equals(decimalSeparator)) {
-                Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
                 Number number = null;
                 try {
                     number = decimalFormatter.parse(s.toString());
@@ -155,12 +168,22 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             }
         }
 
+        /**
+         * Checks if the input string that is retrieved from the EditText is eligible
+         * for further processing by testing it against two methods that:
+         * 1) assures user didn't enter more than two decimal places e.g. 12.567
+         * 2) assures user didn't enter two decimal separators e.g. 12.56.7
+         *
+         * @param s input string entered by user
+         * @return whether the s is valid and can be processed
+         */
         private boolean isInputValid(CharSequence s) {
             return (!inputAboveTwoDecimalPlaces(s) && !inputHasMoreThanOneSeparators(s));
         }
 
         /**
-         * Checks whether the input string has above two decimal places.
+         * Checks whether the input string has two or more digits after the decimal separator.
+         * If it does it removes the last one entered.
          * Credit: https://stackoverflow.com/a/33548446/5906793
          *
          * @param s input string entered by user
@@ -179,8 +202,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         }
 
         /**
-         * Gets the string in the EditText, parses it checking if the decimal separator appears
-         * more than once and if it does it removes the second one and returns true.
+         * Checks whether the input string has more than one decimal separator.
+         * If it does it removes the last one entered.
          *
          * @param s input string entered by user
          * @return whether there is more than one decimal separators
