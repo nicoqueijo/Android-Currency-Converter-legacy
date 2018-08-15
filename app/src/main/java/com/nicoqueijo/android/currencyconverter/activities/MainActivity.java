@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -180,7 +181,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private void processRefreshClick(ImageView menuItem) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         if (isNetworkAvailable()) {
-            menuItem.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate));
+            Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+            menuItem.startAnimation(animRotate);
             makeApiCall();
         } else {
             showNoInternetSnackbar();

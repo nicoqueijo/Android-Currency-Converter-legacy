@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.adapters;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -9,6 +10,8 @@ import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,23 +36,27 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     private Context mContext;
     private List<Currency> mActiveCurrencies;
-    private boolean onBind;
+    private boolean mOnBind;
 
-    private NumberFormat numberFormatter;
-    private DecimalFormat decimalFormatter;
-    private String decimalSeparator;
-    private String conversionPattern = "###,##0.00";
+    private NumberFormat mNumberFormatter;
+    private DecimalFormat mDecimalFormatter;
+    private String mDecimalSeparator;
+    private String mConversionPattern = "###,##0.00";
+    private Animation mAnimShake;
+    private Vibrator mVibrator;
 
     public ActiveExchangeRatesRecyclerViewAdapter(Context context,
                                                   List<Currency> activeCurrencies) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
-        numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
-        decimalFormatter = (DecimalFormat) numberFormatter;
-        decimalFormatter.applyPattern(conversionPattern);
-        decimalSeparator = String.valueOf(decimalFormatter
+        mNumberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
+        mDecimalFormatter = (DecimalFormat) mNumberFormatter;
+        mDecimalFormatter.applyPattern(mConversionPattern);
+        mDecimalSeparator = String.valueOf(mDecimalFormatter
                 .getDecimalFormatSymbols()
                 .getDecimalSeparator());
+        mAnimShake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+        mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
 
@@ -64,16 +71,16 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        onBind = true;
+        mOnBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
         holder.mCurrencyCodeTextView.setText(currentCurrency.getTrimmedCurrencyCode());
         holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
-        String formattedConversionValue = decimalFormatter.format(conversionValue).equals
-                ("0" + decimalSeparator + "00") ? "0" : decimalFormatter.format(conversionValue);
+        String formattedConversionValue = mDecimalFormatter.format(conversionValue).equals
+                ("0" + mDecimalSeparator + "00") ? "0" : mDecimalFormatter.format(conversionValue);
         holder.mConversionValueEditText.setText(formattedConversionValue);
-        onBind = false;
+        mOnBind = false;
     }
 
     @Override
@@ -92,11 +99,11 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             mFlagImage = itemView.findViewById(R.id.flag);
             mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
             mConversionValueEditText = itemView.findViewById(R.id.conversion_value);
-            String hint = "0" + decimalSeparator + "00";
+            String hint = "0" + mDecimalSeparator + "00";
             mConversionValueEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             mConversionValueEditText.setHint(hint);
             mConversionValueEditText.setKeyListener(DigitsKeyListener
-                    .getInstance("0123456789" + decimalSeparator));
+                    .getInstance("0123456789" + mDecimalSeparator));
             mConversionValueEditText.addTextChangedListener(this);
         }
 
@@ -107,7 +114,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (isInputValid(s)) {
+            if (isInputValid(s) && !causesOverflow(s)) {
                 processTextChange(s);
             }
         }
@@ -135,7 +142,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          */
         private void processTextChange(CharSequence s) {
             Currency focusedCurrency = mActiveCurrencies.get(getAdapterPosition());
-            if (onBind) {
+            if (mOnBind) {
                 Currency newlyAddedCurrency = mActiveCurrencies.get(getItemCount() - 1);
                 BigDecimal amount = focusedCurrency.getConversionValue();
                 double fromRate = focusedCurrency.getExchangeRate();
@@ -152,10 +159,10 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
                     notifyItemChanged(i);
                 }
             }
-            if (s.length() > 0 && !s.toString().equals(decimalSeparator)) {
+            if (s.length() > 0 && !s.toString().equals(mDecimalSeparator)) {
                 Number number = null;
                 try {
-                    number = decimalFormatter.parse(s.toString());
+                    number = mDecimalFormatter.parse(s.toString());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -180,15 +187,18 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         /**
          * Checks if the input string that is retrieved from the EditText is eligible
-         * for further processing by testing it against two methods that:
+         * for further processing by testing it against three methods that:
          * 1) assures user didn't enter more than two decimal places e.g. 12.567
          * 2) assures user didn't enter two decimal separators e.g. 12.56.7
+         * 3) assures adding an extra digit doesn't potentially cause overflow
          *
          * @param s input string entered by user
          * @return whether the s is valid and can be processed
          */
         private boolean isInputValid(CharSequence s) {
-            return (!inputAboveTwoDecimalPlaces(s) && !inputHasMoreThanOneSeparators(s));
+            return (!inputAboveTwoDecimalPlaces(s)
+                    && !inputHasMoreThanOneSeparators(s)
+                    && !causesOverflow(s));
         }
 
         /**
@@ -201,9 +211,11 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          */
         private boolean inputAboveTwoDecimalPlaces(CharSequence s) {
             String inputString = s.toString();
-            if (inputString.contains(decimalSeparator) &&
-                    inputString.substring(inputString.indexOf(decimalSeparator) + 1)
+            if (inputString.contains(mDecimalSeparator) &&
+                    inputString.substring(inputString.indexOf(mDecimalSeparator) + 1)
                             .length() > 2) {
+                mVibrator.vibrate(25L);
+                itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
                 mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
                 mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
                 return true;
@@ -222,11 +234,33 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
             String inputString = s.toString();
             int occurrences = 0;
             for (int i = 0; i < inputString.length(); i++) {
-                if (String.valueOf(inputString.charAt(i)).equals(decimalSeparator)) {
+                if (String.valueOf(inputString.charAt(i)).equals(mDecimalSeparator)) {
                     occurrences++;
                 }
             }
             if (occurrences > 1) {
+                mVibrator.vibrate(25L);
+                itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
+                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Checks whether the input string can cause overflow. To be on the safe side we are not
+         * allowing more than 14 digits to be entered. This includes the two decimal places.
+         * If user entered a 15th digit it is removed.
+         *
+         * @param s input string entered by user
+         * @return whether adding an additional digit may cause overflow
+         */
+        private boolean causesOverflow(CharSequence s) {
+            String inputString = s.toString();
+            if (inputString.length() > 14 && !mOnBind) {
+                mVibrator.vibrate(25L);
+                itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
                 mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
                 mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
                 return true;
@@ -242,7 +276,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          */
         private void cleanInput(Editable s) {
             if (s.toString().length() == 1) {
-                if (s.toString().startsWith(decimalSeparator)) {
+                if (s.toString().startsWith(mDecimalSeparator)) {
                     s.insert(0, "0");
                 } else if (s.toString().startsWith("0")) {
                     s.clear();
