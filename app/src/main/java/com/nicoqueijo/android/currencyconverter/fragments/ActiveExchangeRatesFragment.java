@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesRecyclerViewAdapter;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
+import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
@@ -40,6 +42,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
     private ActiveExchangeRatesRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
+    private SwipeAndDragHelper swipeAndDragHelper;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     public void onAttach(Context context) {
@@ -87,11 +91,13 @@ public class ActiveExchangeRatesFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
-
-        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies);
+        swipeAndDragHelper = new SwipeAndDragHelper(mAdapter);
+        itemTouchHelper = new ItemTouchHelper(swipeAndDragHelper);
+        mRecyclerView.setAdapter(mAdapter);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

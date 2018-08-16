@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
 import com.nicoqueijo.android.currencyconverter.helpers.CustomEditText;
+import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
@@ -30,7 +31,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class ActiveExchangeRatesRecyclerViewAdapter extends
-        RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder> {
+        RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder>
+        implements SwipeAndDragHelper.IActionCompletionContract {
 
     public static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
@@ -86,6 +88,22 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     @Override
     public int getItemCount() {
         return mActiveCurrencies.size();
+    }
+
+    @Override
+    public void onViewMoved(int oldPosition, int newPosition) {
+        Currency targetCurrency = mActiveCurrencies.get(oldPosition);
+        Currency currency = new Currency(targetCurrency);
+        mActiveCurrencies.remove(oldPosition);
+        mActiveCurrencies.add(newPosition, currency);
+        notifyItemMoved(oldPosition, newPosition);
+    }
+
+    @Override
+    public void onViewSwiped(int position) {
+        mActiveCurrencies.get(position).setSelected(false);
+        mActiveCurrencies.remove(position);
+        notifyItemRemoved(position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {

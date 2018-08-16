@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 /**
  * Model class for a currency.
- *
+ * <p>
  * Implements Parcelable so objects of this type can be passed
  * between activities/fragments and or saved in Bundles.
  */
@@ -35,6 +35,12 @@ public class Currency implements Parcelable {
         this.selected = false;
     }
 
+    public Currency(Currency currency) {
+        this.currencyCode = currency.getCurrencyCode();
+        this.exchangeRate = currency.getExchangeRate();
+        this.conversionValue = currency.getConversionValue();
+        this.selected = currency.isSelected();
+    }
 
     // Getters and setters are defined below.
     public String getCurrencyCode() {
