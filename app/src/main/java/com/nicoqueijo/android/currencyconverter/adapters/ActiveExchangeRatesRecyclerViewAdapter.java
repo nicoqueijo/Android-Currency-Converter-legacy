@@ -131,7 +131,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (isInputValid(s) && !causesOverflow(s)) {
+            if (isInputValid(s)) {
                 processTextChange(s);
             }
         }
@@ -275,6 +275,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
          */
         private boolean causesOverflow(CharSequence s) {
             String inputString = s.toString();
+            String anyNonDigitRegex = "\\D";
+            inputString = inputString.replaceAll(anyNonDigitRegex, "");
             if (inputString.length() > 14 && !mOnBind) {
                 mVibrator.vibrate(25L);
                 itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);

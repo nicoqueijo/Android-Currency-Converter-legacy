@@ -46,17 +46,24 @@
 
         </LinearLayout>
 
-        <com.nicoqueijo.android.currencyconverter.helpers.CustomEditText
-            android:id="@+id/conversion_value"
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:gravity="right"
-            android:inputType="numberDecimal" />
+            android:layout_weight="1">
+
+            <com.nicoqueijo.android.currencyconverter.helpers.CustomEditText
+                android:id="@+id/conversion_value"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical"
+                android:background="@android:color/transparent"
+                android:gravity="right|center_vertical"
+                android:inputType="numberDecimal"
+                android:minWidth="80dp" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
