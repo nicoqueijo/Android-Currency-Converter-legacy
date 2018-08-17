@@ -35,13 +35,6 @@ public class Currency implements Parcelable {
         this.selected = false;
     }
 
-    public Currency(Currency currency) {
-        this.currencyCode = currency.getCurrencyCode();
-        this.exchangeRate = currency.getExchangeRate();
-        this.conversionValue = currency.getConversionValue();
-        this.selected = currency.isSelected();
-    }
-
     // Getters and setters are defined below.
     public String getCurrencyCode() {
         return currencyCode;

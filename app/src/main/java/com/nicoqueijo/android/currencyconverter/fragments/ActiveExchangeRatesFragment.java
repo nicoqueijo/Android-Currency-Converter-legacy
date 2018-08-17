@@ -48,8 +48,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences(MainActivity
-                .sharedPrefsRatesFilename, MODE_PRIVATE);
+        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences
+                (MainActivity.sharedPrefsRatesFilename, MODE_PRIVATE);
         Map<String, ?> keys = mSharedPreferencesRates.getAll();
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
             String currencyCode = entry.getKey();

@@ -61,7 +61,6 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
         mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -93,15 +92,15 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     @Override
     public void onViewMoved(int oldPosition, int newPosition) {
         Currency targetCurrency = mActiveCurrencies.get(oldPosition);
-        Currency currency = new Currency(targetCurrency);
         mActiveCurrencies.remove(oldPosition);
-        mActiveCurrencies.add(newPosition, currency);
+        mActiveCurrencies.add(newPosition, targetCurrency);
         notifyItemMoved(oldPosition, newPosition);
     }
 
     @Override
     public void onViewSwiped(int position) {
         mActiveCurrencies.get(position).setSelected(false);
+        mActiveCurrencies.get(position).setConversionValue(new BigDecimal(0.0));
         mActiveCurrencies.remove(position);
         notifyItemRemoved(position);
     }
