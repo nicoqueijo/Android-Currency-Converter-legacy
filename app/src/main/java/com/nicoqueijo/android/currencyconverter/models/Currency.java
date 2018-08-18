@@ -9,9 +9,8 @@ import java.math.BigDecimal;
 
 /**
  * Model class for a currency.
- * <p>
- * Implements Parcelable so objects of this type can be passed
- * between activities/fragments and or saved in Bundles.
+ * Implements Parcelable so objects of this type can be passed between activities/fragments and or
+ * be saved in Bundles.
  */
 public class Currency implements Parcelable {
 

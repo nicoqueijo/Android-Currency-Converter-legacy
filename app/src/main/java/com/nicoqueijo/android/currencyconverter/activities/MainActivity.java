@@ -51,6 +51,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+/**
+ * Main activity of the app. Hosts the app's fragments and navigation drawer.
+ * Implements ICommunicator to send data between fragments.
+ */
 public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();

@@ -30,6 +30,10 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter for the RecyclerView that displays the exchange rates the user is interacting with.
+ * Implements SwipeAndDragHelper.IActionCompletionContract to remove and reorder items in the list.
+ */
 public class ActiveExchangeRatesRecyclerViewAdapter extends
         RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder>
         implements SwipeAndDragHelper.IActionCompletionContract {
@@ -47,6 +51,12 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     private Animation mAnimShake;
     private Vibrator mVibrator;
 
+    /**
+     * Constructor for the adapter.
+     *
+     * @param context          hosting context
+     * @param activeCurrencies the currencies the user is interacting with
+     */
     public ActiveExchangeRatesRecyclerViewAdapter(Context context,
                                                   List<Currency> activeCurrencies) {
         mContext = context;

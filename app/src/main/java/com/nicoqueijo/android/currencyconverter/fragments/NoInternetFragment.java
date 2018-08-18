@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
 
+/**
+ * Fragment to notify the user when there is no internet and therefore exchange rates could not be
+ * fetched.
+ */
 public class NoInternetFragment extends Fragment {
 
     public static final String TAG = NoInternetFragment.class.getSimpleName();
@@ -21,6 +25,11 @@ public class NoInternetFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_no_internet, container, false);
     }
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
     public static NoInternetFragment newInstance() {
         NoInternetFragment noInternetFragment = new NoInternetFragment();
         Bundle args = new Bundle();

@@ -32,6 +32,9 @@ import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
+/**
+ * Fragment that allows the user to add/remove exchange rates and perform conversions.
+ */
 public class ActiveExchangeRatesFragment extends Fragment {
 
     public static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
@@ -115,6 +118,11 @@ public class ActiveExchangeRatesFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
     public static ActiveExchangeRatesFragment newInstance() {
         ActiveExchangeRatesFragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
         return activeExchangeRatesFragment;

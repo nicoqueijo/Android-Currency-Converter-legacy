@@ -9,6 +9,7 @@ import android.widget.EditText;
  */
 public class CustomEditText extends EditText {
 
+    // Required constructors
     public CustomEditText(Context context) {
         super(context);
     }

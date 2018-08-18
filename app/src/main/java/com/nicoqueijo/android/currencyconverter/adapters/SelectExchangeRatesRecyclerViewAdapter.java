@@ -18,6 +18,10 @@ import com.nicoqueijo.android.currencyconverter.models.Currency;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for the RecyclerView that displays all the exchange rates available for selection.
+ * Implements Filterable to search and filter the long list of exchange rates.
+ */
 public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
         <SelectExchangeRatesRecyclerViewAdapter.ViewHolder> implements Filterable {
 
@@ -27,6 +31,12 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
     private List<Currency> mCurrencies;
     private List<Currency> mCurrenciesFull;
 
+    /**
+     * Constructor for the adapter.
+     *
+     * @param dialog        the dialog fragment hosting this RecyclerView
+     * @param allCurrencies the list of all available currencies
+     */
     public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesDialog dialog,
                                                   List<Currency> allCurrencies) {
         mDialog = dialog;
