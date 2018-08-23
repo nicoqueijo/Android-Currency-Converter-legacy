@@ -67,6 +67,12 @@ public class Currency implements Parcelable {
         this.selected = selected;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Currency currency = (Currency) obj;
+        return currency.getCurrencyCode().equals(this.currencyCode);
+    }
+
     /**
      * Fetches the actual currency code.
      * The currency codes in shared_prefs and strings xml files are stored with "USD" preceded

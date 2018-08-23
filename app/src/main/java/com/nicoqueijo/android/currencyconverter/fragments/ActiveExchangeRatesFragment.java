@@ -180,7 +180,9 @@ public class ActiveExchangeRatesFragment extends Fragment {
             String currencyCode = entry.getKey();
             double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
             int order = sharedPreferences.getInt(entry.getKey(), 0);
-            savedActiveCurrencies[order] = new Currency(currencyCode, exchangeRate);
+            Currency currency = new Currency(currencyCode, exchangeRate);
+            savedActiveCurrencies[order] = currency;
+            mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
         }
         mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
     }
