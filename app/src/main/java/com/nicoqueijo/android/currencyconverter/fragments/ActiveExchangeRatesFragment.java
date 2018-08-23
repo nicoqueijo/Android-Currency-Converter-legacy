@@ -26,6 +26,7 @@ import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
@@ -41,6 +42,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
 
     private ArrayList<Currency> mAllCurrencies = new ArrayList<>();
     private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
+    private SharedPreferences mSharedPreferencesRates;
+
     private RecyclerView mRecyclerView;
     private ActiveExchangeRatesRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -51,7 +54,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        SharedPreferences mSharedPreferencesRates = getContext().getSharedPreferences
+        mSharedPreferencesRates = getContext().getSharedPreferences
                 (MainActivity.sharedPrefsRatesFilename, MODE_PRIVATE);
         Map<String, ?> keys = mSharedPreferencesRates.getAll();
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
@@ -83,6 +86,10 @@ public class ActiveExchangeRatesFragment extends Fragment {
                     .getParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES);
             mAllCurrencies = savedInstanceState
                     .getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
+        } else {
+            // I might be able to restore active currencies from shared prefs here
+            // since this is only hit once upon app launch
+            restoreActiveCurrenciesFromSharedPrefs();
         }
     }
 
@@ -147,6 +154,11 @@ public class ActiveExchangeRatesFragment extends Fragment {
         }
     }
 
+    /**
+     * Saves the list of active currencies to shared prefs maintaining the order in which they
+     * appear. Does this by first clearing what was already inside the shared prefs to avoid
+     * conflicts.
+     */
     private void saveActiveCurrenciesToSharedPrefs() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences
                 (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
@@ -157,5 +169,19 @@ public class ActiveExchangeRatesFragment extends Fragment {
             sharedPreferencesEditor.putInt(currency.getCurrencyCode(), i);
         }
         sharedPreferencesEditor.apply();
+    }
+
+    private void restoreActiveCurrenciesFromSharedPrefs() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
+                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
+        Map<String, ?> keys = sharedPreferences.getAll();
+        Currency[] savedActiveCurrencies = new Currency[keys.size()];
+        for (Map.Entry<String, ?> entry : keys.entrySet()) {
+            String currencyCode = entry.getKey();
+            double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
+            int order = sharedPreferences.getInt(entry.getKey(), 0);
+            savedActiveCurrencies[order] = new Currency(currencyCode, exchangeRate);
+        }
+        mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
     }
 }
