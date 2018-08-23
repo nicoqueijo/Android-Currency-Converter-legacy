@@ -118,6 +118,12 @@ public class ActiveExchangeRatesFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveActiveCurrenciesToSharedPrefs();
+    }
+
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
      *
@@ -141,14 +147,15 @@ public class ActiveExchangeRatesFragment extends Fragment {
         }
     }
 
-    // DO THIS AFTER I IMPLEMENT RECYCLERVIEW REORDERING (DRAGGING) BECAUSE THAT MIGHT AFFECT
-    // HOW THE CURRENCIES ARE STORED.
-//    private void saveActiveCurrencyToSharedPrefs() {
-//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
-//                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
-//        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-//        for (Currency currency : mActiveCurrencies) {
-//            sharedPreferencesEditor.putString(currency.getCurrencyCode(), "");
-//        }
-//    }
+    private void saveActiveCurrenciesToSharedPrefs() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
+                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.clear();
+        for (int i = 0; i < mActiveCurrencies.size(); i++) {
+            Currency currency = mActiveCurrencies.get(i);
+            sharedPreferencesEditor.putInt(currency.getCurrencyCode(), i);
+        }
+        sharedPreferencesEditor.apply();
+    }
 }
