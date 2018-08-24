@@ -3,6 +3,8 @@ package com.nicoqueijo.android.currencyconverter.adapters;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +44,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
 
     private Context mContext;
     private List<Currency> mActiveCurrencies;
+    private FloatingActionButton mFloatingActionButton;
     private boolean mOnBind;
 
     private NumberFormat mNumberFormatter;
@@ -54,13 +57,15 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     /**
      * Constructor for the adapter.
      *
-     * @param context          hosting context
-     * @param activeCurrencies the currencies the user is interacting with
+     * @param context              hosting context
+     * @param activeCurrencies     the currencies the user is interacting with
+     * @param floatingActionButton view to be used as the first param of the Snackbar's make method
      */
-    public ActiveExchangeRatesRecyclerViewAdapter(Context context,
-                                                  List<Currency> activeCurrencies) {
+    public ActiveExchangeRatesRecyclerViewAdapter(Context context, List<Currency> activeCurrencies,
+                                                  FloatingActionButton floatingActionButton) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
+        mFloatingActionButton = floatingActionButton;
         mNumberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
         mDecimalFormatter = (DecimalFormat) mNumberFormatter;
         mDecimalFormatter.applyPattern(mConversionPattern);
@@ -108,11 +113,25 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     }
 
     @Override
-    public void onViewSwiped(int position) {
-        mActiveCurrencies.get(position).setSelected(false);
-        mActiveCurrencies.get(position).setConversionValue(new BigDecimal(0.0));
+    public void onViewSwiped(final int position) {
+        final Currency swipedCurrency = mActiveCurrencies.get(position);
+        final BigDecimal conversionValue = swipedCurrency.getConversionValue();
+        swipedCurrency.setSelected(false);
+        swipedCurrency.setConversionValue(new BigDecimal(0.0));
         mActiveCurrencies.remove(position);
         notifyItemRemoved(position);
+        Snackbar snackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
+                Snackbar.LENGTH_SHORT);
+        snackbar.setAction(R.string.undo, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipedCurrency.setConversionValue(conversionValue);
+                swipedCurrency.setSelected(true);
+                mActiveCurrencies.add(position, swipedCurrency);
+                notifyItemInserted(position);
+            }
+        });
+        snackbar.show();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {

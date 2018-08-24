@@ -101,7 +101,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mFloatingActionButton = view.findViewById(R.id.fab);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies);
+        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies,
+                mFloatingActionButton);
         swipeAndDragHelper = new SwipeAndDragHelper(mAdapter);
         itemTouchHelper = new ItemTouchHelper(swipeAndDragHelper);
         mRecyclerView.setAdapter(mAdapter);

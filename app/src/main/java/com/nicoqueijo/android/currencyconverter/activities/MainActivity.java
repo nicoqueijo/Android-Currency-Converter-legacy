@@ -187,7 +187,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         if (isNetworkAvailable()) {
             Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
             menuItem.startAnimation(animRotate);
-            makeApiCall();
+            if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                        activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                makeApiCall();
+            }
         } else {
             showNoInternetSnackbar();
         }

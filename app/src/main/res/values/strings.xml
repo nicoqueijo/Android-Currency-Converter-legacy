@@ -1,4 +1,5 @@
 <resources>
+    <!-- UI components -->
     <string name="app_name">Currency Converter</string>
     <string name="share">Share</string>
     <string name="language">Language</string>
@@ -13,6 +14,11 @@
     <string name="network_unavailable">Network currently unavailable</string>
     <string name="refresh">Refresh</string>
     <string name="tap_to_close">Tap again to close app</string>
+    <string name="search">Search</string>
+    <string name="item_removed">Item removed</string>
+    <string name="undo">Undo</string>
+
+    <!-- The currencies we don't want to track e.g. silver and gold -->
     <string-array name="exclusion_list">
         <item>USDBTC</item>
         <item>USDBYR</item>
@@ -23,6 +29,8 @@
         <item>USDXDR</item>
         <item>USDZMK</item>
     </string-array>
+
+    <!-- The names of the currencies -->
     <string name="USDAED">Emirati Dirham</string>
     <string name="USDAFN">Afghan Afghani</string>
     <string name="USDALL">Albanian Lek</string>
@@ -183,5 +191,4 @@
     <string name="USDZAR">South African Rand</string>
     <string name="USDZMW">Zambian Kwacha</string>
     <string name="USDZWL">Zimbabwean Dollar</string>
-    <string name="search">Search</string>
 </resources>
