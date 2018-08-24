@@ -87,8 +87,6 @@ public class ActiveExchangeRatesFragment extends Fragment {
             mAllCurrencies = savedInstanceState
                     .getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
         } else {
-            // I might be able to restore active currencies from shared prefs here
-            // since this is only hit once upon app launch
             restoreActiveCurrenciesFromSharedPrefs();
         }
     }
@@ -171,6 +169,10 @@ public class ActiveExchangeRatesFragment extends Fragment {
         sharedPreferencesEditor.apply();
     }
 
+    /**
+     * Restores the list of active currencies from shared prefs maintaining the order in which
+     * they appeared.
+     */
     private void restoreActiveCurrenciesFromSharedPrefs() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences
                 (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
@@ -181,6 +183,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
             double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
             int order = sharedPreferences.getInt(entry.getKey(), 0);
             Currency currency = new Currency(currencyCode, exchangeRate);
+            currency = mAllCurrencies.get(mAllCurrencies.indexOf(currency));
             savedActiveCurrencies[order] = currency;
             mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
         }
