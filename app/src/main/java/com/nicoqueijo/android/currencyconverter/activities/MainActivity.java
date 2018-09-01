@@ -34,6 +34,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -160,12 +161,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     private void appLaunchSetup() {
-        checkForLastUpdate();
+        long timeOfLastUpdate = checkForLastUpdate();
         if (isNetworkAvailable()) {
-            if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
-                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+            if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
+                Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
                 fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                        loadingExchangeRatesFragment, LoadingExchangeRatesFragment.TAG).commit();
                 makeApiCall();
             }
         } else if (!isSharedPreferencesEmpty()) {
@@ -210,19 +211,25 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         Snackbar.make(activeFragment.getView(), R.string.no_internet, Snackbar.LENGTH_SHORT).show();
     }
 
+
     /**
      * Checks when the exchange rate data was last updated to display in the navigation footer.
+     *
+     * @return time in milliseconds since the exchange rates were last updated or -1 if it was
+     * never updated.
      */
-    private void checkForLastUpdate() {
-        long timestamp = mSharedPreferencesTime.getLong("timestamp", 0L);
+    private long checkForLastUpdate() {
+        long currentTime = System.currentTimeMillis();
+        long timestamp = mSharedPreferencesTime.getLong("timestamp", 0L) * 1000;
         if (timestamp != 0L) {
-            long timestampInMillis = timestamp * 1000L;
-            Date date = new Date(timestampInMillis);
+            Date date = new Date(timestamp);
             java.text.SimpleDateFormat simpleDateFormat =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
             mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+            return (currentTime - timestamp);
         }
+        return -1L;
     }
 
     /**
@@ -296,10 +303,18 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             if (success) {
                                 updateSharedPreferencesExchangeRates(jsonObject);
                                 checkForLastUpdate();
-                                // Go on with the app after updating rates (Populating RecyclerView)
+                                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                                        .newInstance();
+                                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                                        activeExchangeRatesFragment,
+                                        ActiveExchangeRatesFragment.TAG).commit();
                             } else if (!isSharedPreferencesEmpty()) {
                                 checkForLastUpdate();
-                                // Go on with the app using existing rates (Populating RecyclerView)
+                                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                                        .newInstance();
+                                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                                        activeExchangeRatesFragment,
+                                        ActiveExchangeRatesFragment.TAG).commit();
                             } else {
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 // To be displayed in a "Show more" View to supplement

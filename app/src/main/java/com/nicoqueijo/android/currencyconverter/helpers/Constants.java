@@ -9,4 +9,5 @@ public final class Constants {
     public static final int INDENT_SPACES = 4;
     public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
     public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
+    public static final long TWELVE_HOURS = 43200000L;
 }
