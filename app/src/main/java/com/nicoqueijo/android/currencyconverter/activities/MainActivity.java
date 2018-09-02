@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     private static final String BASE_URL = "http://apilayer.net/api/live";
     private static final String API_KEY_PARAM = "?access_key=";
-    private static String API_KEY;
+    private static String apiKey;
     private static final String FORMAT_PARAM = "&format=1";
     private String apiFullUrl;
 
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         mCloseAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT);
 
         initApiKey();
-        apiFullUrl = BASE_URL + API_KEY_PARAM + API_KEY + FORMAT_PARAM;
+        apiFullUrl = BASE_URL + API_KEY_PARAM + apiKey + FORMAT_PARAM;
         appLaunchSetup();
     }
 
@@ -163,23 +163,33 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private void appLaunchSetup() {
         long timeOfLastUpdate = checkForLastUpdate();
         if (isNetworkAvailable()) {
-            if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
-                Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
-                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        loadingExchangeRatesFragment, LoadingExchangeRatesFragment.TAG).commit();
-                makeApiCall();
-            }
-        } else if (!isSharedPreferencesEmpty()) {
-            if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
-                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
-                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
-                checkForLastUpdate();
+            if (timeOfLastUpdate > Constants.TWELVE_HOURS ||
+                    timeOfLastUpdate == Constants.EMPTY_SHARED_PREFS) {
+                if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
+                    Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame,
+                            loadingExchangeRatesFragment, LoadingExchangeRatesFragment.TAG).commit();
+                    makeApiCall();
+                }
+            } else {
+                if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame,
+                            activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                }
             }
         } else {
-            Fragment noInternetFragment = NoInternetFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.content_frame,
-                    noInternetFragment, NoInternetFragment.TAG).commit();
+            if (timeOfLastUpdate != Constants.EMPTY_SHARED_PREFS) {
+                if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame,
+                            activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                }
+            } else {
+                Fragment noInternetFragment = NoInternetFragment.newInstance();
+                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                        noInternetFragment, NoInternetFragment.TAG).commit();
+            }
         }
     }
 
@@ -276,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * that is not tracked by Git for obvious reasons.
      */
     private void initApiKey() {
-        API_KEY = getResources().getString(R.string.api_key);
+        apiKey = getResources().getString(R.string.api_key);
     }
 
     /**
@@ -302,14 +312,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
                                 updateSharedPreferencesExchangeRates(jsonObject);
-                                checkForLastUpdate();
-                                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
-                                        .newInstance();
-                                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                                        activeExchangeRatesFragment,
-                                        ActiveExchangeRatesFragment.TAG).commit();
-                            } else if (!isSharedPreferencesEmpty()) {
-                                checkForLastUpdate();
                                 Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
                                         .newInstance();
                                 fragmentManager.beginTransaction().replace(R.id.content_frame,
