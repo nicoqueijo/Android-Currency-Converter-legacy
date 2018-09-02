@@ -34,6 +34,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
@@ -271,19 +272,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Determines if values have been previously stored in SharedPreferences
-     * by attempting to fetch the value of the timestamp key.
-     *
-     * @return whether 0 was returned by default due to the timestamp key being null.
-     */
-    private boolean isSharedPreferencesEmpty() {
-        long value = mSharedPreferencesTime.getLong("timestamp", 0L);
-        return value == 0L;
-    }
-
-    /**
-     * Initializes the API key from a local private file
-     * that is not tracked by Git for obvious reasons.
+     * Initializes the API key from a local private file that is not tracked by Git for obvious
+     * reasons.
      */
     private void initApiKey() {
         apiKey = getResources().getString(R.string.api_key);
@@ -319,9 +309,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                         ActiveExchangeRatesFragment.TAG).commit();
                             } else {
                                 JSONObject error = jsonObject.getJSONObject("error");
-                                // To be displayed in a "Show more" View to supplement
-                                // a generic error message in the content frame.
-                                String errorDetails = error.toString(Constants.INDENT_SPACES);
+                                String errorMessage = error.toString(Constants.INDENT_SPACES);
+                                Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
+                                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                                        errorFragment, ErrorFragment.TAG).commit();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -330,11 +321,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // First time launching?
-                //      Display error about not being able to fetch exchange rates from cloud.
-                //      This should be done via a fragment with fragment_no_internet layout
-                // Else:
-                //      Proceed with current values in SharedPreferences
+                String errorMessage = error.getMessage();
+                Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
+                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                        errorFragment, ErrorFragment.TAG).commit();
             }
         });
     }

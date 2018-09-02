@@ -18,6 +18,9 @@
     <string name="item_removed">Item removed</string>
     <string name="undo">Undo</string>
     <string name="fetching_data">Fetching data…</string>
+    <string name="error_message">An error has occurred.</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
 
     <!-- The currencies we don't want to track e.g. silver and gold -->
     <string-array name="exclusion_list">

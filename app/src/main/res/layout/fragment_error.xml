@@ -20,23 +20,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_no_internet" />
+                android:src="@drawable/ic_error" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/network_unavailable"
+                android:text="@string/error_message"
                 android:textSize="22sp" />
+
+            <Button
+                android:id="@+id/show_hide_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/show" />
 
         </LinearLayout>
 
     </RelativeLayout>
 
-    <View
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+
+    </ScrollView>
 
 </LinearLayout>
