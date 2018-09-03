@@ -199,10 +199,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         if (isNetworkAvailable()) {
             Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
             menuItem.startAnimation(animRotate);
-            if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
-                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
+            Fragment activeFragment = fragmentManager.getFragments().get(0);
+            if (!activeFragment.getTag().equals(ActiveExchangeRatesFragment.TAG)) {
+                Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
                 fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                        loadingExchangeRatesFragment, LoadingExchangeRatesFragment.TAG).commit();
                 makeApiCall();
             }
         } else {
@@ -321,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String errorMessage = error.getMessage();
+                String errorMessage = error.toString();
                 Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
                 fragmentManager.beginTransaction().replace(R.id.content_frame,
                         errorFragment, ErrorFragment.TAG).commit();

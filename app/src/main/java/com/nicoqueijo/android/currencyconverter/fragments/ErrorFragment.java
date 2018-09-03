@@ -16,7 +16,7 @@ import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 /**
  * Fragment to notify the user that an error has occurred.
  */
-public class ErrorFragment extends Fragment {
+public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = ErrorFragment.class.getSimpleName();
 
@@ -37,23 +37,7 @@ public class ErrorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_error, container, false);
-        mShowHideButton = view.findViewById(R.id.show_hide_button);
-        mErrorMessageTextView = view.findViewById(R.id.error_message);
-        mErrorMessageTextView.setText(mErrorMessage);
-        mErrorMessageTextView.setVisibility(View.GONE);
-        mShowHideButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mShowHideButton.getText().toString().equals(getResources()
-                        .getString(R.string.show))) {
-                    mShowHideButton.setText(R.string.hide);
-                    mErrorMessageTextView.setVisibility(View.VISIBLE);
-                } else {
-                    mShowHideButton.setText(R.string.show);
-                    mErrorMessageTextView.setVisibility(View.GONE);
-                }
-            }
-        });
+        initViewsAndListeners(view);
         return view;
     }
 
@@ -70,4 +54,31 @@ public class ErrorFragment extends Fragment {
         return errorFragment;
     }
 
+    /**
+     * Initializes the views and sets the onClick listener for the button.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    private void initViewsAndListeners(View view) {
+        mShowHideButton = view.findViewById(R.id.show_hide_button);
+        mErrorMessageTextView = view.findViewById(R.id.error_message);
+        mErrorMessageTextView.setText(mErrorMessage);
+        mErrorMessageTextView.setVisibility(View.GONE);
+        mShowHideButton.setOnClickListener(this);
+    }
+
+    /**
+     * Toggles between hiding and showing the error message.
+     */
+    @Override
+    public void onClick(View v) {
+        if (mShowHideButton.getText().toString().equals(getResources()
+                .getString(R.string.show))) {
+            mShowHideButton.setText(R.string.hide);
+            mErrorMessageTextView.setVisibility(View.VISIBLE);
+        } else {
+            mShowHideButton.setText(R.string.show);
+            mErrorMessageTextView.setVisibility(View.GONE);
+        }
+    }
 }
