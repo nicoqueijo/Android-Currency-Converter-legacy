@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         appLaunchSetup();
     }
 
+    /**
+     * Sets the listeners for navigation drawer.
+     */
     private void initListeners() {
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -150,17 +153,35 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Upon back button press, as opposed to directly destroying the activity, it closes the
+     * navigation drawer if it is open. If the drawer is already closed it asks the user to confirm
+     * they want to close the app in case they pressed the back button accidentally.
+     */
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (mCloseAppToast.getView().isShown()) {
-            super.onBackPressed();
-        } else {
+        } else if (!mCloseAppToast.getView().isShown()) {
             mCloseAppToast.show();
+        } else {
+            super.onBackPressed();
         }
     }
 
+    /**
+     * This code section determines which Fragment gets loaded into the content frame when the
+     * Activity is created.
+     * If we have internet connection and our exchange rate data has not been
+     * updated for at least six hours then we load a Fragment that shows a splash screen and make
+     * an API call to get fresh data. The method responsible for making the API call replaces this
+     * Fragment with an appropriate Fragment depending on the result of the call.
+     * If our exchange rate data has been updated within the past six hours then we simply load the
+     * Fragment that displays them with their current local values.
+     * In the case that we have no internet we do the following. If we have local exchange rate
+     * values then we load a Fragment to display them. If we don't have any values locally then we
+     * load a Fragment that notifies the user that we have no internet connection.
+     */
     private void appLaunchSetup() {
         long timeOfLastUpdate = checkForLastUpdate();
         if (isNetworkAvailable()) {
@@ -194,6 +215,13 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         }
     }
 
+    /**
+     * Attempts to refresh the exchange rate data if an internet connection is active and the
+     * exchange rates are not currently shown. Otherwise it displays a Snackbar notifying there
+     * is no internet connection.
+     *
+     * @param menuItem the ImageView of the refresh menu item in order to animate it.
+     */
     private void processRefreshClick(ImageView menuItem) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         if (isNetworkAvailable()) {
@@ -211,18 +239,23 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         }
     }
 
+    /**
+     * Initializes the Volley request queue, makes the API call, and adds the request to the queue.
+     */
     private void makeApiCall() {
         volleyRequestQueue = Volley.newRequestQueue(this);
         initVolleyStringRequest();
         volleyRequestQueue.add(stringRequest);
     }
 
+    /**
+     * Shows the Snackbar notifying there is no internet connection.
+     */
     private void showNoInternetSnackbar() {
         List<Fragment> fragmentList = fragmentManager.getFragments();
         Fragment activeFragment = fragmentList.get(0);
         Snackbar.make(activeFragment.getView(), R.string.no_internet, Snackbar.LENGTH_SHORT).show();
     }
-
 
     /**
      * Checks when the exchange rate data was last updated to display in the navigation footer.
@@ -292,8 +325,15 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    /**
+     * Attempts to request a string response from the provided URL.
+     * If a response is received we first check if its "success" key returned true. If it did we
+     * can update our local exchange rate values and load the Fragment that performs the
+     * conversions. If false is returned or we receive an error from the request we extract the
+     * error message from the response and load a Fragment that shows the user information about
+     * the error.
+     */
     private void initVolleyStringRequest() {
-        // Request a string response from the provided URL.
         stringRequest = new StringRequest(Request.Method.GET, apiFullUrl,
                 new Response.Listener<String>() {
                     @Override
