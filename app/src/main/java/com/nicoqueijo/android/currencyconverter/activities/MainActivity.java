@@ -88,26 +88,29 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initViewsAndSharedPrefs();
+        initApiKey();
+        apiFullUrl = BASE_URL + API_KEY_PARAM + apiKey + FORMAT_PARAM;
+        appLaunchSetup();
+    }
 
+    /**
+     * Initializes the views and SharedPrefs.
+     */
+    private void initViewsAndSharedPrefs() {
         sharedPrefsRatesFilename = getPackageName().concat(".rates");
         sharedPrefsTimeFilename = getPackageName().concat(".time");
         mSharedPreferencesRates = getSharedPreferences(sharedPrefsRatesFilename, MODE_PRIVATE);
         mSharedPreferencesTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
-
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mNavigationView = findViewById(R.id.nav_view_menu);
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         initListeners();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
         mLastUpdatedView = findViewById(R.id.last_updated_view);
         mCloseAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT);
-
-        initApiKey();
-        apiFullUrl = BASE_URL + API_KEY_PARAM + apiKey + FORMAT_PARAM;
-        appLaunchSetup();
     }
 
     /**

@@ -56,18 +56,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
         super.onAttach(context);
         mSharedPreferencesRates = getContext().getSharedPreferences
                 (MainActivity.sharedPrefsRatesFilename, MODE_PRIVATE);
-        Map<String, ?> keys = mSharedPreferencesRates.getAll();
-        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            String currencyCode = entry.getKey();
-            double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
-            mAllCurrencies.add(new Currency(currencyCode, exchangeRate));
-        }
-        Collections.sort(mAllCurrencies, new Comparator<Currency>() {
-            @Override
-            public int compare(Currency currency1, Currency currency2) {
-                return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
-            }
-        });
+        initAndSortCurrencies();
     }
 
     @Override
@@ -96,7 +85,50 @@ public class ActiveExchangeRatesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_active_exchange_rates, container, false);
+        initViewsAdaptersAndListeners(view);
+        return view;
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveActiveCurrenciesToSharedPrefs();
+    }
+
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
+    public static ActiveExchangeRatesFragment newInstance() {
+        return new ActiveExchangeRatesFragment();
+    }
+
+    /**
+     * Retrieves the exchange rates stored in SharedPrefs, initializes the currency list with their
+     * values, and sorts the list.
+     */
+    private void initAndSortCurrencies() {
+        Map<String, ?> keys = mSharedPreferencesRates.getAll();
+        for (Map.Entry<String, ?> entry : keys.entrySet()) {
+            String currencyCode = entry.getKey();
+            double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
+            mAllCurrencies.add(new Currency(currencyCode, exchangeRate));
+        }
+        Collections.sort(mAllCurrencies, new Comparator<Currency>() {
+            @Override
+            public int compare(Currency currency1, Currency currency2) {
+                return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
+            }
+        });
+    }
+
+    /**
+     * Initializes the views, sets up the adapters, and sets the onClick listener for the FAB.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    private void initViewsAdaptersAndListeners(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -121,23 +153,6 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 }
             }
         });
-        return view;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        saveActiveCurrenciesToSharedPrefs();
-    }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @return a new instance of fragment
-     */
-    public static ActiveExchangeRatesFragment newInstance() {
-        ActiveExchangeRatesFragment activeExchangeRatesFragment = new ActiveExchangeRatesFragment();
-        return activeExchangeRatesFragment;
     }
 
     /**

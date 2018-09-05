@@ -30,9 +30,7 @@ public class LoadingExchangeRatesFragment extends Fragment {
      * @return a new instance of fragment
      */
     public static LoadingExchangeRatesFragment newInstance() {
-        LoadingExchangeRatesFragment loadingExchangeRatesFragment = new LoadingExchangeRatesFragment();
-        Bundle args = new Bundle();
-        return loadingExchangeRatesFragment;
+        return new LoadingExchangeRatesFragment();
     }
 
 }

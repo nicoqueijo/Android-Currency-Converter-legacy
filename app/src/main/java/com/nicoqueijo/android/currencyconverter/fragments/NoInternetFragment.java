@@ -31,9 +31,7 @@ public class NoInternetFragment extends Fragment {
      * @return a new instance of fragment
      */
     public static NoInternetFragment newInstance() {
-        NoInternetFragment noInternetFragment = new NoInternetFragment();
-        Bundle args = new Bundle();
-        return noInternetFragment;
+        return new NoInternetFragment();
     }
 
 }

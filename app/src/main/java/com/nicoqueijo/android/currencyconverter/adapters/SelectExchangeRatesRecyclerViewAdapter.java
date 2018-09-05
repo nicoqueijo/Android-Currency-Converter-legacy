@@ -92,6 +92,9 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
         return firstCharacter;
     }
 
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
+     */
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView mFlag;

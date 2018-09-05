@@ -2,12 +2,11 @@ package com.nicoqueijo.android.currencyconverter.helpers;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 /**
  * Extension to EditText for the purpose of overriding the onSelectionChanged method.
  */
-public class CustomEditText extends EditText {
+public class CustomEditText extends android.support.v7.widget.AppCompatEditText {
 
     // Required constructors
     public CustomEditText(Context context) {
@@ -20,11 +19,6 @@ public class CustomEditText extends EditText {
 
     public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr,
-                          int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     /**

@@ -23,7 +23,9 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 
-
+/**
+ * Dialog Fragment used to search and add exchange rates to the ActiveExchangeRatesFragment.
+ */
 public class SelectExchangeRatesDialog extends DialogFragment {
 
     public static final String TAG = SelectExchangeRatesDialog.class.getSimpleName();
@@ -50,11 +52,26 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_select_exchange_rate, container, false);
+        initViewsAdaptersAndListeners(view);
+        return view;
+    }
+
+    /**
+     * Initializes the views, sets up the adapters, and sets the setOnQueryTextListener listener
+     * for the SearchView.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    private void initViewsAdaptersAndListeners(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
         mToolbar = view.findViewById(R.id.toolbar_search);
         mToolbar.inflateMenu(R.menu.menu_search);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
+        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(this, mAllCurrencies);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -69,15 +86,13 @@ public class SelectExchangeRatesDialog extends DialogFragment {
                 return false;
             }
         });
-
-        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(this, mAllCurrencies);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        return view;
     }
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
     public static SelectExchangeRatesDialog newInstance(ArrayList<Currency> allCurrencies) {
         SelectExchangeRatesDialog selectExchangeRatesDialog = new SelectExchangeRatesDialog();
         Bundle args = new Bundle();
