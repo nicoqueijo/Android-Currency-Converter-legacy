@@ -121,8 +121,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        Snackbar.make(fragmentManager.getFragments().get(0).getView(),
-                                menuItem.getTitle(), Snackbar.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawers();
                         return false;
                     }
