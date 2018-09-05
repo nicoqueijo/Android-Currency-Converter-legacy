@@ -1,10 +1,12 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -123,15 +125,43 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
-                        final String GOOGLE_PLAY_BASE_URL = "https://play.google.com/store/apps/details?id=";
+                        // Delegate all this to a method(s) later
+                        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
                         final String PACKAGE_NAME = getPackageName();
-                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                        sharingIntent.setType("text/plain");
-                        String googlePlayLink = GOOGLE_PLAY_BASE_URL + PACKAGE_NAME;
-                        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                        sharingIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
-                        startActivity(Intent.createChooser(sharingIntent,
-                                getString(R.string.share_via)));
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_share:
+                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                sharingIntent.setType("text/plain");
+                                String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
+                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                                sharingIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
+                                startActivity(Intent.createChooser(sharingIntent,
+                                        getString(R.string.share_via)));
+                                break;
+                            case R.id.nav_language:
+
+                                break;
+                            case R.id.nav_rate_app:
+                                final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
+                                Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
+                                rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
+                                try {
+                                    startActivity(rateAppIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL + PACKAGE_NAME));
+                                    startActivity(intent);
+                                }
+                                break;
+                            case R.id.nav_source_code:
+
+                                break;
+                            case R.id.nav_theme:
+
+                                break;
+                            case R.id.nav_contact_us:
+
+                                break;
+                        }
                         return false;
                     }
                 });
@@ -151,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_app, menu);
+        menuInflater.inflate(R.menu.menu_refresh, menu);
         final ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
         refreshMenuItem.setImageResource(R.drawable.ic_refresh);
         refreshMenuItem.setPadding(24, 24, 24, 24);

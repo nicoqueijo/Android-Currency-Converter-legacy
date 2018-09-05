@@ -12,7 +12,7 @@
             android:icon="@drawable/ic_language"
             android:title="@string/language" />
         <item
-            android:id="@+id/nav_rate"
+            android:id="@+id/nav_rate_app"
             android:icon="@drawable/ic_rate"
             android:title="@string/rate_app" />
         <item
