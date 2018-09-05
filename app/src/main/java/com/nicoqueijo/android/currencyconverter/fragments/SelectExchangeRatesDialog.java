@@ -18,6 +18,8 @@ import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecy
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
+import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     private SelectExchangeRatesRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar mToolbar;
+    private DragScrollBar mDragScrollBar;
     private SearchView mSearchView;
 
     @Override
@@ -50,6 +53,8 @@ public class SelectExchangeRatesDialog extends DialogFragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
         mToolbar = view.findViewById(R.id.toolbar_search);
         mToolbar.inflateMenu(R.menu.menu_search);
+        mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
+        mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
         mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

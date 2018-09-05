@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesDialog;
+import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +23,11 @@ import java.util.List;
 /**
  * Adapter for the RecyclerView that displays all the exchange rates available for selection.
  * Implements Filterable to search and filter the long list of exchange rates.
+ * Implements INameableAdapter to return the first char of the current element being scrolled.
  */
-public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
-        <SelectExchangeRatesRecyclerViewAdapter.ViewHolder> implements Filterable {
+public class SelectExchangeRatesRecyclerViewAdapter extends
+        RecyclerView.Adapter<SelectExchangeRatesRecyclerViewAdapter.ViewHolder>
+        implements Filterable, INameableAdapter {
 
     public static final String TAG = SelectExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
@@ -68,6 +72,20 @@ public class SelectExchangeRatesRecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public int getItemCount() {
         return mCurrencies.size();
+    }
+
+    /**
+     * Retrieves the first character of the element in the current position of the adapter.
+     *
+     * @param position index of the adapter.
+     * @return first character of element at this position.
+     */
+    @Override
+    public Character getCharacterForElement(int position) {
+        Character firstCharacter;
+        firstCharacter = mCurrencies.get(position).getCurrencyCode()
+                .charAt(Constants.CURRENCY_CODE_STARTING_INDEX);
+        return firstCharacter;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
