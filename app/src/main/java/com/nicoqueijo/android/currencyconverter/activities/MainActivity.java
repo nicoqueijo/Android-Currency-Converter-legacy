@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -125,17 +126,18 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
-                        // Delegate all this to a method(s) later
+
+                        // Delegate all this to a method(s) later //////////////////////////////////
                         final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
                         final String PACKAGE_NAME = getPackageName();
                         switch (menuItem.getItemId()) {
                             case R.id.nav_share:
-                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                                sharingIntent.setType("text/plain");
+                                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                shareIntent.setType("text/plain");
                                 String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
-                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                                sharingIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
-                                startActivity(Intent.createChooser(sharingIntent,
+                                shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                                shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
+                                startActivity(Intent.createChooser(shareIntent,
                                         getString(R.string.share_via)));
                                 break;
                             case R.id.nav_language:
@@ -159,9 +161,23 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
                                 break;
                             case R.id.nav_contact_us:
-
+                                final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
+                                final String DEVICE_INFO = "Device info:";
+                                final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
+                                final String DEVICE_MODEL = Build.MODEL;
+                                final String ANDROID_VERSION = "Android version " + Build.VERSION.SDK_INT;
+                                final String EMAIL_TEMPLATE = "\n\n\n" + DEVICE_INFO + "\n  " + DEVICE_MANUFACTURER + " " + DEVICE_MODEL + "\n  " + ANDROID_VERSION;
+                                Intent contactUsIntent = new Intent(Intent.ACTION_SENDTO);
+                                contactUsIntent.setData(Uri.parse("mailto:"));
+                                contactUsIntent.putExtra(Intent.EXTRA_EMAIL, DEVELOPER_EMAIL);
+                                contactUsIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                                contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
+                                Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string.select_email_app));
+                                startActivity(chooser);
                                 break;
                         }
+                        ////////////////////////////////////////////////////////////////////////////
+
                         return false;
                     }
                 });
