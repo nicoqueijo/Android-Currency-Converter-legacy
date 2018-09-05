@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -122,6 +123,15 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
+                        final String GOOGLE_PLAY_BASE_URL = "https://play.google.com/store/apps/details?id=";
+                        final String PACKAGE_NAME = getPackageName();
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                        sharingIntent.setType("text/plain");
+                        String googlePlayLink = GOOGLE_PLAY_BASE_URL + PACKAGE_NAME;
+                        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                        sharingIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
+                        startActivity(Intent.createChooser(sharingIntent,
+                                getString(R.string.share_via)));
                         return false;
                     }
                 });
