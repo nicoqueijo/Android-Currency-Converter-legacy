@@ -83,8 +83,12 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
     @Override
     public Character getCharacterForElement(int position) {
         Character firstCharacter;
-        firstCharacter = mCurrencies.get(position).getCurrencyCode()
-                .charAt(Constants.CURRENCY_CODE_STARTING_INDEX);
+        try {
+            firstCharacter = mCurrencies.get(position).getCurrencyCode()
+                    .charAt(Constants.CURRENCY_CODE_STARTING_INDEX);
+        } catch (IndexOutOfBoundsException exception) {
+            firstCharacter = ' ';
+        }
         return firstCharacter;
     }
 
