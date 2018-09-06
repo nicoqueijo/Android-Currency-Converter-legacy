@@ -15,6 +15,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
@@ -33,7 +34,7 @@ import java.util.Map;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Fragment that allows the user to add/remove exchange rates and perform conversions.
+ * Fragment that allows the user to add/remove/reorder exchange rates and perform conversions.
  */
 public class ActiveExchangeRatesFragment extends Fragment {
 
@@ -47,14 +48,14 @@ public class ActiveExchangeRatesFragment extends Fragment {
     private ActiveExchangeRatesRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
-    private SwipeAndDragHelper swipeAndDragHelper;
-    private ItemTouchHelper itemTouchHelper;
+    private SwipeAndDragHelper mSwipeAndDragHelper;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mSharedPreferencesRates = getContext().getSharedPreferences
-                (MainActivity.sharedPrefsRatesFilename, MODE_PRIVATE);
+        mSharedPreferencesRates = getContext().getSharedPreferences(MainActivity
+                .sharedPrefsRatesFilename, MODE_PRIVATE);
         initAndSortCurrencies();
     }
 
@@ -84,7 +85,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_active_exchange_rates, container, false);
-        initViewsAdaptersAndListeners(view);
+        initViewsAndAdapters(view);
+        setUpFabListener();
         return view;
     }
 
@@ -123,30 +125,43 @@ public class ActiveExchangeRatesFragment extends Fragment {
     }
 
     /**
-     * Initializes the views, sets up the adapters, and sets the onClick listener for the FAB.
+     * Initializes the views and sets up the adapters.
      *
      * @param view the root view of the inflated hierarchy
      */
-    private void initViewsAdaptersAndListeners(View view) {
+    private void initViewsAndAdapters(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies,
                 mFloatingActionButton);
-        swipeAndDragHelper = new SwipeAndDragHelper(mAdapter);
-        itemTouchHelper = new ItemTouchHelper(swipeAndDragHelper);
+        mSwipeAndDragHelper = new SwipeAndDragHelper(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(mSwipeAndDragHelper);
         mRecyclerView.setAdapter(mAdapter);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
 
+    /**
+     * Sets the onClickListener for the FloatingActionButton. Dismisses the keyboard if it showing.
+     * Then loads up the Fragment that allows exchange rates to be selected adding it to the
+     * backstack.
+     */
+    private void setUpFabListener() {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getWindow()
+                        .getCurrentFocus().getWindowToken(), 0);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 if (fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) == null) {
-                    Fragment selectExchangeRateFragment = SelectExchangeRatesFragment.newInstance(mAllCurrencies);
-                    fragmentTransaction.add(R.id.content_frame, selectExchangeRateFragment, SelectExchangeRatesFragment.TAG);
+                    Fragment selectExchangeRateFragment = SelectExchangeRatesFragment
+                            .newInstance(mAllCurrencies);
+                    fragmentTransaction.add(R.id.content_frame, selectExchangeRateFragment,
+                            SelectExchangeRatesFragment.TAG);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
