@@ -4,25 +4,30 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/ic_share"
-            android:title="@string/share" />
+            android:id="@+id/nav_convert"
+            android:checked="true"
+            android:icon="@drawable/ic_convert"
+            android:title="@string/convert" />
         <item
             android:id="@+id/nav_language"
             android:icon="@drawable/ic_language"
             android:title="@string/language" />
         <item
-            android:id="@+id/nav_rate_app"
-            android:icon="@drawable/ic_rate"
-            android:title="@string/rate_app" />
+            android:id="@+id/nav_theme"
+            android:icon="@drawable/ic_theme"
+            android:title="@string/theme" />
         <item
             android:id="@+id/nav_source_code"
             android:icon="@drawable/ic_source_code"
             android:title="@string/source_code" />
         <item
-            android:id="@+id/nav_theme"
-            android:icon="@drawable/ic_theme"
-            android:title="@string/theme" />
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share"
+            android:title="@string/share" />
+        <item
+            android:id="@+id/nav_rate_app"
+            android:icon="@drawable/ic_rate"
+            android:title="@string/rate_app" />
         <item
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/ic_contact_us"

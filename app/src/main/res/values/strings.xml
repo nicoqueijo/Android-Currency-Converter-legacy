@@ -1,6 +1,7 @@
 <resources>
     <!-- UI components -->
     <string name="app_name">Currency Converter</string>
+    <string name="convert">Convert</string>
     <string name="share">Share</string>
     <string name="language">Language</string>
     <string name="rate_app">Rate App</string>

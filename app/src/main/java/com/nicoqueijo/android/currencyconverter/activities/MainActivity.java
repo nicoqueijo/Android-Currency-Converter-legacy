@@ -14,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,6 +42,8 @@ import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFra
 import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
@@ -126,11 +129,40 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
-
+                        boolean displayAsSelected = false;
                         // Delegate all this to a method(s) later //////////////////////////////////
                         final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
                         final String PACKAGE_NAME = getPackageName();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         switch (menuItem.getItemId()) {
+                            case R.id.nav_convert:
+                                Fragment fragment = fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
+                                if (fragment == null) {
+                                    fragment = ActiveExchangeRatesFragment.newInstance();
+                                }
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
+                                fragmentTransaction.commit();
+                                displayAsSelected = true;
+                                break;
+                            case R.id.nav_language:
+
+                                displayAsSelected = true;
+                                break;
+                            case R.id.nav_theme:
+
+                                displayAsSelected = true;
+                                break;
+                            case R.id.nav_source_code:
+                                if (fragmentManager.findFragmentByTag(SourceCodeFragment.TAG) == null) {
+                                    Fragment sourceCodeFragment = SourceCodeFragment.newInstance();
+                                    fragmentTransaction.add(R.id.content_frame, sourceCodeFragment,
+                                            SourceCodeFragment.TAG);
+                                    fragmentTransaction.addToBackStack(null);
+                                    fragmentTransaction.commit();
+                                }
+                                displayAsSelected = true;
+                                break;
                             case R.id.nav_share:
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                 shareIntent.setType("text/plain");
@@ -139,9 +171,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
                                 startActivity(Intent.createChooser(shareIntent,
                                         getString(R.string.share_via)));
-                                break;
-                            case R.id.nav_language:
-
+                                displayAsSelected = false;
                                 break;
                             case R.id.nav_rate_app:
                                 final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
@@ -153,12 +183,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL + PACKAGE_NAME));
                                     startActivity(intent);
                                 }
-                                break;
-                            case R.id.nav_source_code:
-
-                                break;
-                            case R.id.nav_theme:
-
+                                displayAsSelected = false;
                                 break;
                             case R.id.nav_contact_us:
                                 final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
@@ -174,11 +199,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
                                 Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string.select_email_app));
                                 startActivity(chooser);
+                                displayAsSelected = false;
                                 break;
                         }
                         ////////////////////////////////////////////////////////////////////////////
-
-                        return false;
+                        return displayAsSelected;
                     }
                 });
 
@@ -211,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
+     * EDIT DOCUMENTATION@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
      * Upon back button press, as opposed to directly destroying the activity, it closes the
      * navigation drawer if it is open. If the drawer is already closed it asks the user to confirm
      * they want to close the app in case they pressed the back button accidentally.
@@ -219,7 +245,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (!mCloseAppToast.getView().isShown()) {
+        } else if (!mCloseAppToast.getView().isShown() &&
+                fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) == null &&
+                fragmentManager.findFragmentByTag(SourceCodeFragment.TAG) == null) {
             mCloseAppToast.show();
         } else {
             super.onBackPressed();
@@ -245,34 +273,46 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             if (timeOfLastUpdate > Constants.TWELVE_HOURS ||
                     timeOfLastUpdate == Constants.EMPTY_SHARED_PREFS) {
                 if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
-                    Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame,
-                            loadingExchangeRatesFragment, LoadingExchangeRatesFragment.TAG).commit();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment
+                            .newInstance();
+                    fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
+                            LoadingExchangeRatesFragment.TAG);
+                    fragmentTransaction.commit();
                     makeApiCall();
                 }
             } else {
                 if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
-                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame,
-                            activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                            .newInstance();
+                    fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
+                            ActiveExchangeRatesFragment.TAG);
+                    fragmentTransaction.commit();
                 }
             }
         } else {
             if (timeOfLastUpdate != Constants.EMPTY_SHARED_PREFS) {
                 if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
-                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment.newInstance();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame,
-                            activeExchangeRatesFragment, ActiveExchangeRatesFragment.TAG).commit();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                            .newInstance();
+                    fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
+                            ActiveExchangeRatesFragment.TAG);
+                    fragmentTransaction.commit();
                 }
             } else {
                 Fragment noInternetFragment = NoInternetFragment.newInstance();
-                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        noInternetFragment, NoInternetFragment.TAG).commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, noInternetFragment,
+                        NoInternetFragment.TAG);
+                fragmentTransaction.commit();
             }
         }
     }
 
     /**
+     * EDIT DOCUMENTATION@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
      * Attempts to refresh the exchange rate data if an internet connection is active and the
      * exchange rates are not currently shown. Otherwise it displays a Snackbar notifying there
      * is no internet connection.
@@ -285,10 +325,13 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
             menuItem.startAnimation(animRotate);
             Fragment activeFragment = fragmentManager.getFragments().get(0);
-            if (!activeFragment.getTag().equals(ActiveExchangeRatesFragment.TAG)) {
+            if (activeFragment.getTag().equals(ErrorFragment.TAG) ||
+                    activeFragment.getTag().equals(NoInternetFragment.TAG)) {
                 Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
-                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        loadingExchangeRatesFragment, LoadingExchangeRatesFragment.TAG).commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
+                        LoadingExchangeRatesFragment.TAG);
+                fragmentTransaction.commit();
                 makeApiCall();
             }
         } else {
@@ -402,15 +445,21 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 updateSharedPreferencesExchangeRates(jsonObject);
                                 Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
                                         .newInstance();
-                                fragmentManager.beginTransaction().replace(R.id.content_frame,
+                                FragmentTransaction fragmentTransaction = fragmentManager
+                                        .beginTransaction();
+                                fragmentTransaction.replace(R.id.content_frame,
                                         activeExchangeRatesFragment,
-                                        ActiveExchangeRatesFragment.TAG).commit();
+                                        ActiveExchangeRatesFragment.TAG);
+                                fragmentTransaction.commit();
                             } else {
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 String errorMessage = error.toString(Constants.INDENT_SPACES);
                                 Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
-                                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                                        errorFragment, ErrorFragment.TAG).commit();
+                                FragmentTransaction fragmentTransaction = fragmentManager
+                                        .beginTransaction();
+                                fragmentTransaction.replace(R.id.content_frame, errorFragment,
+                                        ErrorFragment.TAG);
+                                fragmentTransaction.commit();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -421,8 +470,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             public void onErrorResponse(VolleyError error) {
                 String errorMessage = error.toString();
                 Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
-                fragmentManager.beginTransaction().replace(R.id.content_frame,
-                        errorFragment, ErrorFragment.TAG).commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, errorFragment, ErrorFragment.TAG);
+                fragmentTransaction.commit();
             }
         });
     }

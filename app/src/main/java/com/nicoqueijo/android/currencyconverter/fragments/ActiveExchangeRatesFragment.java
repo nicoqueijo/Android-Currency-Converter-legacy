@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -145,11 +144,11 @@ public class ActiveExchangeRatesFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                if (fragmentManager.findFragmentByTag(SelectExchangeRatesDialog.TAG) == null) {
-                    DialogFragment selectExchangeRateDialog =
-                            SelectExchangeRatesDialog.newInstance(mAllCurrencies);
-                    selectExchangeRateDialog.show(fragmentTransaction,
-                            SelectExchangeRatesDialog.TAG);
+                if (fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) == null) {
+                    Fragment selectExchangeRateFragment = SelectExchangeRatesFragment.newInstance(mAllCurrencies);
+                    fragmentTransaction.add(R.id.content_frame, selectExchangeRateFragment, SelectExchangeRatesFragment.TAG);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
             }
         });

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesDialog;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -31,19 +31,19 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
 
     public static final String TAG = SelectExchangeRatesRecyclerViewAdapter.class.getSimpleName();
 
-    private SelectExchangeRatesDialog mDialog;
+    private SelectExchangeRatesFragment mSelectExchangeRatesFragment;
     private List<Currency> mCurrencies;
     private List<Currency> mCurrenciesFull;
 
     /**
      * Constructor for the adapter.
      *
-     * @param dialog        the dialog fragment hosting this RecyclerView
-     * @param allCurrencies the list of all available currencies
+     * @param selectExchangeRatesFragment the selectExchangeRatesFragment fragment hosting this RecyclerView
+     * @param allCurrencies               the list of all available currencies
      */
-    public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesDialog dialog,
+    public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesFragment selectExchangeRatesFragment,
                                                   List<Currency> allCurrencies) {
-        mDialog = dialog;
+        mSelectExchangeRatesFragment = selectExchangeRatesFragment;
         mCurrencies = new ArrayList<>(allCurrencies);
         mCurrenciesFull = new ArrayList<>(allCurrencies);
     }
@@ -60,10 +60,10 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
-                .getCurrencyCode().toLowerCase(), mDialog.getContext()));
+                .getCurrencyCode().toLowerCase(), mSelectExchangeRatesFragment.getContext()));
         holder.mCurrencyCode.setText(mCurrencies.get(position).getTrimmedCurrencyCode());
         holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
-                .getCurrencyCode(), mDialog.getContext()));
+                .getCurrencyCode(), mSelectExchangeRatesFragment.getContext()));
         boolean currencyIsSelected = mCurrencies.get(position).isSelected();
         holder.itemView.setClickable(!currencyIsSelected);
         holder.mCheck.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
@@ -115,8 +115,8 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
         public void onClick(View v) {
             Currency selectedCurrency = mCurrencies.get(getAdapterPosition());
             selectedCurrency.setSelected(true);
-            mDialog.sendActiveCurrency(selectedCurrency);
-            mDialog.dismiss();
+            mSelectExchangeRatesFragment.sendActiveCurrency(selectedCurrency);
+            mSelectExchangeRatesFragment.getFragmentManager().popBackStack();
         }
     }
 
@@ -142,7 +142,7 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
                 for (Currency currency : mCurrenciesFull) {
                     currencyCode = currency.getTrimmedCurrencyCode().toLowerCase();
                     currencyName = Utility.getStringResourceByName(currency.getCurrencyCode(),
-                            mDialog.getContext()).toLowerCase();
+                            mSelectExchangeRatesFragment.getContext()).toLowerCase();
                     if (currencyCode.contains(filterPattern) ||
                             currencyName.contains(filterPattern)) {
                         filteredList.add(currency);

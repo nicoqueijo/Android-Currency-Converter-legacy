@@ -3,7 +3,7 @@ package com.nicoqueijo.android.currencyconverter.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -24,11 +24,11 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar;
 import java.util.ArrayList;
 
 /**
- * Dialog Fragment used to search and add exchange rates to the ActiveExchangeRatesFragment.
+ * Fragment used to search and add exchange rates to the ActiveExchangeRatesFragment.
  */
-public class SelectExchangeRatesDialog extends DialogFragment {
+public class SelectExchangeRatesFragment extends Fragment {
 
-    public static final String TAG = SelectExchangeRatesDialog.class.getSimpleName();
+    public static final String TAG = SelectExchangeRatesFragment.class.getSimpleName();
 
     ArrayList<Currency> mAllCurrencies;
 
@@ -51,7 +51,7 @@ public class SelectExchangeRatesDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_select_exchange_rate, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_exchange_rate, container, false);
         initViewsAdaptersAndListeners(view);
         return view;
     }
@@ -93,12 +93,12 @@ public class SelectExchangeRatesDialog extends DialogFragment {
      *
      * @return a new instance of fragment
      */
-    public static SelectExchangeRatesDialog newInstance(ArrayList<Currency> allCurrencies) {
-        SelectExchangeRatesDialog selectExchangeRatesDialog = new SelectExchangeRatesDialog();
+    public static SelectExchangeRatesFragment newInstance(ArrayList<Currency> allCurrencies) {
+        SelectExchangeRatesFragment selectExchangeRatesFragment = new SelectExchangeRatesFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(Constants.ARG_ALL_CURRENCIES, allCurrencies);
-        selectExchangeRatesDialog.setArguments(args);
-        return selectExchangeRatesDialog;
+        selectExchangeRatesFragment.setArguments(args);
+        return selectExchangeRatesFragment;
     }
 
     /**
