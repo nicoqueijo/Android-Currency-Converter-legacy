@@ -2,40 +2,48 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_group_fragments"
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_convert"
+            android:id="@+id/nav_item_convert"
             android:checked="true"
             android:icon="@drawable/ic_convert"
             android:title="@string/convert" />
         <item
-            android:id="@+id/nav_language"
+            android:id="@+id/nav_item_language"
             android:icon="@drawable/ic_language"
             android:title="@string/language" />
         <item
-            android:id="@+id/nav_theme"
+            android:id="@+id/nav_item_theme"
             android:icon="@drawable/ic_theme"
             android:title="@string/theme" />
         <item
-            android:id="@+id/nav_source_code"
+            android:id="@+id/nav_item_source_code"
             android:icon="@drawable/ic_source_code"
             android:title="@string/source_code" />
+    </group>
+    <group
+        android:id="@+id/nav_group_intents"
+        android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_share"
+            android:id="@+id/nav_item_share"
             android:icon="@drawable/ic_share"
             android:title="@string/share" />
         <item
-            android:id="@+id/nav_rate_app"
+            android:id="@+id/nav_item_rate_app"
             android:icon="@drawable/ic_rate"
             android:title="@string/rate_app" />
         <item
-            android:id="@+id/nav_contact_us"
+            android:id="@+id/nav_item_contact_us"
             android:icon="@drawable/ic_contact_us"
             android:title="@string/contact_us" />
+    </group>
+    <group
+        android:id="@+id/nav_group_footer"
+        android:checkableBehavior="none">
         <item
-            android:id="@+id/footer_spacer"
-            android:checkable="false"
-            android:enabled="false"
+            android:id="@+id/nav_item_last_updated"
             android:title="" />
     </group>
 </menu>

@@ -28,7 +28,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -68,10 +67,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final String BASE_URL = "http://apilayer.net/api/live";
+    private static final String API_BASE_URL = "http://apilayer.net/api/live";
     private static final String API_KEY_PARAM = "?access_key=";
     private static String apiKey;
-    private static final String FORMAT_PARAM = "&format=1";
+    private static final String API_FORMAT_PARAM = "&format=1";
     private String apiFullUrl;
 
     public static String sharedPrefsRatesFilename;
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private TextView mLastUpdatedView;
+    private MenuItem mLastUpdatedView;
     private Toast mCloseAppToast;
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         setContentView(R.layout.activity_main);
         initViewsAndSharedPrefs();
         initApiKey();
-        apiFullUrl = BASE_URL + API_KEY_PARAM + apiKey + FORMAT_PARAM;
+        apiFullUrl = API_BASE_URL + API_KEY_PARAM + apiKey + API_FORMAT_PARAM;
         appLaunchSetup();
     }
 
@@ -116,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         initListeners();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
-        mLastUpdatedView = findViewById(R.id.last_updated_view);
+        mLastUpdatedView = mNavigationView.getMenu().findItem(R.id.nav_item_last_updated);
         mCloseAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT);
     }
 
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                         final String PACKAGE_NAME = getPackageName();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         switch (menuItem.getItemId()) {
-                            case R.id.nav_convert:
+                            case R.id.nav_item_convert:
                                 Fragment fragment = fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
                                 if (fragment == null) {
                                     fragment = ActiveExchangeRatesFragment.newInstance();
@@ -145,15 +144,15 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 fragmentTransaction.commit();
                                 displayAsSelected = true;
                                 break;
-                            case R.id.nav_language:
+                            case R.id.nav_item_language:
 
                                 displayAsSelected = true;
                                 break;
-                            case R.id.nav_theme:
+                            case R.id.nav_item_theme:
 
                                 displayAsSelected = true;
                                 break;
-                            case R.id.nav_source_code:
+                            case R.id.nav_item_source_code:
                                 if (fragmentManager.findFragmentByTag(SourceCodeFragment.TAG) == null) {
                                     Fragment sourceCodeFragment = SourceCodeFragment.newInstance();
                                     fragmentTransaction.add(R.id.content_frame, sourceCodeFragment,
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 }
                                 displayAsSelected = true;
                                 break;
-                            case R.id.nav_share:
+                            case R.id.nav_item_share:
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                 shareIntent.setType("text/plain");
                                 String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                         getString(R.string.share_via)));
                                 displayAsSelected = false;
                                 break;
-                            case R.id.nav_rate_app:
+                            case R.id.nav_item_rate_app:
                                 final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
                                 Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
                                 rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 }
                                 displayAsSelected = false;
                                 break;
-                            case R.id.nav_contact_us:
+                            case R.id.nav_item_contact_us:
                                 final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
                                 final String DEVICE_INFO = "Device info:";
                                 final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
@@ -371,7 +370,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             java.text.SimpleDateFormat simpleDateFormat =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
-            mLastUpdatedView.setText(getString(R.string.last_update, simpleDateFormat.format(date)));
+            mLastUpdatedView.setTitle(getString(R.string.last_update, simpleDateFormat
+                    .format(date)));
             return (currentTime - timestamp);
         }
         return -1L;
@@ -443,6 +443,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
                                 updateSharedPreferencesExchangeRates(jsonObject);
+                                checkForLastUpdate();
                                 Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
                                         .newInstance();
                                 FragmentTransaction fragmentTransaction = fragmentManager
