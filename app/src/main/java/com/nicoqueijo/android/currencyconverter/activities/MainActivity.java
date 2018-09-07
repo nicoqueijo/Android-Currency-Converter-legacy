@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -41,7 +42,6 @@ import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFra
 import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
-import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -128,41 +128,41 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
-                        boolean displayAsSelected = false;
                         // Delegate all this to a method(s) later //////////////////////////////////
                         final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
                         final String PACKAGE_NAME = getPackageName();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentTransaction fragmentTransaction;
                         switch (menuItem.getItemId()) {
-                            case R.id.nav_item_convert:
+                            case R.id.nav_item_convert: {
                                 Fragment fragment = fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
                                 if (fragment == null) {
                                     fragment = ActiveExchangeRatesFragment.newInstance();
-                                }
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
-                                fragmentTransaction.commit();
-                                displayAsSelected = true;
-                                break;
-                            case R.id.nav_item_language:
-
-                                displayAsSelected = true;
-                                break;
-                            case R.id.nav_item_theme:
-
-                                displayAsSelected = true;
-                                break;
-                            case R.id.nav_item_source_code:
-                                if (fragmentManager.findFragmentByTag(SourceCodeFragment.TAG) == null) {
-                                    Fragment sourceCodeFragment = SourceCodeFragment.newInstance();
-                                    fragmentTransaction.add(R.id.content_frame, sourceCodeFragment,
-                                            SourceCodeFragment.TAG);
-                                    fragmentTransaction.addToBackStack(null);
+                                    fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.replace(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
                                     fragmentTransaction.commit();
                                 }
-                                displayAsSelected = true;
-                                break;
-                            case R.id.nav_item_share:
+                            }
+                            break;
+                            case R.id.nav_item_language: {
+
+                            }
+                            break;
+                            case R.id.nav_item_theme: {
+
+                            }
+                            break;
+                            case R.id.nav_item_source_code: {
+                                fragmentManager.popBackStack();
+                                Fragment fragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
+                                if (fragment == null) {
+                                    fragment = SourceCodeFragment.newInstance();
+                                    fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.replace(R.id.content_frame, fragment, SourceCodeFragment.TAG);
+                                    fragmentTransaction.commit();
+                                }
+                            }
+                            break;
+                            case R.id.nav_item_share: {
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                 shareIntent.setType("text/plain");
                                 String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
@@ -170,9 +170,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
                                 startActivity(Intent.createChooser(shareIntent,
                                         getString(R.string.share_via)));
-                                displayAsSelected = false;
-                                break;
-                            case R.id.nav_item_rate_app:
+                            }
+                            break;
+                            case R.id.nav_item_rate_app: {
                                 final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
                                 Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
                                 rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
@@ -182,9 +182,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL + PACKAGE_NAME));
                                     startActivity(intent);
                                 }
-                                displayAsSelected = false;
-                                break;
-                            case R.id.nav_item_contact_us:
+                            }
+                            break;
+                            case R.id.nav_item_contact_us: {
                                 final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
                                 final String DEVICE_INFO = "Device info:";
                                 final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
@@ -198,11 +198,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
                                 Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string.select_email_app));
                                 startActivity(chooser);
-                                displayAsSelected = false;
-                                break;
+                            }
+                            break;
                         }
                         ////////////////////////////////////////////////////////////////////////////
-                        return displayAsSelected;
+                        return true;
                     }
                 });
 
@@ -244,12 +244,36 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (!mCloseAppToast.getView().isShown() &&
-                fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) == null &&
-                fragmentManager.findFragmentByTag(SourceCodeFragment.TAG) == null) {
+        } else if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else if (!mCloseAppToast.getView().isShown()) {
             mCloseAppToast.show();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    /**
+     * Overridind so the keyboard doesn't pop up when device is rotated.
+     *
+     * @param newConfig unused
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        hideKeyboard();
+    }
+
+    /**
+     * Hides the keyboard if it's being shown.
+     */
+    private void hideKeyboard() {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
