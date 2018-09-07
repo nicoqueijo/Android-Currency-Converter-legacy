@@ -210,9 +210,15 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                try {
+                    InputMethodManager inputMethodManager = (InputMethodManager)
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
+                            .getWindowToken(), 0);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
             }
         };
     }
@@ -234,10 +240,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * EDIT DOCUMENTATION@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     * Upon back button press, as opposed to directly destroying the activity, it closes the
-     * navigation drawer if it is open. If the drawer is already closed it asks the user to confirm
-     * they want to close the app in case they pressed the back button accidentally.
+     * Upon back button press, instead of directly destroying the activity, it first closes the
+     * navigation drawer if it is open, it then pops the fragment backstack if not empty, and
+     * finally it asks the user to confirm they want to close the app in case they pressed the
+     * back button accidentally.
      */
     @Override
     public void onBackPressed() {
@@ -253,7 +259,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Overridind so the keyboard doesn't pop up when device is rotated.
+     * Gets called upon device configuration change like rotation. Overridind so the keyboard
+     * doesn't pop up when device is rotated.
      *
      * @param newConfig unused
      */
@@ -336,10 +343,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * EDIT DOCUMENTATION@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     * Attempts to refresh the exchange rate data if an internet connection is active and the
-     * exchange rates are not currently shown. Otherwise it displays a Snackbar notifying there
-     * is no internet connection.
+     * Attempts to refresh the exchange rate data if an internet connection is active and an error
+     * had previously occurred. Otherwise it displays a Snackbar notifying there is no internet
+     * connection.
      *
      * @param menuItem the ImageView of the refresh menu item in order to animate it.
      */
@@ -504,6 +510,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         });
     }
 
+    /**
+     * Used to pass a currency object between Fragments.
+     *
+     * @param currency the currency object being passed.
+     */
     @Override
     public void passSelectedCurrency(Currency currency) {
         ActiveExchangeRatesFragment activeExchangeRatesFragment = (ActiveExchangeRatesFragment)
