@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +28,7 @@ public class SourceCodeFragment extends Fragment {
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Nullable
     @Override
@@ -35,6 +37,7 @@ public class SourceCodeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_source_code, container, false);
         mWebView = view.findViewById(R.id.web_view);
         mProgressBar = view.findViewById(R.id.progress_bar);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         WebSettings webViewSettings = mWebView.getSettings();
         webViewSettings.setJavaScriptEnabled(true);
         webViewSettings.setBuiltInZoomControls(true);
@@ -53,6 +56,7 @@ public class SourceCodeFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 mProgressBar.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -61,6 +65,13 @@ public class SourceCodeFragment extends Fragment {
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 mProgressBar.setProgress(newProgress);
+            }
+        });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mWebView.reload();
             }
         });
 
