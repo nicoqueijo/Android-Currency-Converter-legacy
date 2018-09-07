@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -86,7 +87,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_active_exchange_rates, container, false);
         initViewsAndAdapters(view);
-        setUpFabListener();
+        setUpFabOnClickListener();
         return view;
     }
 
@@ -133,28 +134,27 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies,
                 mFloatingActionButton);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL));
         mSwipeAndDragHelper = new SwipeAndDragHelper(mAdapter);
         mItemTouchHelper = new ItemTouchHelper(mSwipeAndDragHelper);
-        mRecyclerView.setAdapter(mAdapter);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     /**
-     * Sets the onClickListener for the FloatingActionButton. Dismisses the keyboard if it showing.
+     * Sets the onClickListener for the FloatingActionButton. Dismisses the keyboard if showing.
      * Then loads up the Fragment that allows exchange rates to be selected adding it to the
      * backstack.
      */
-    private void setUpFabListener() {
+    private void setUpFabOnClickListener() {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getActivity().getWindow()
-                        .getCurrentFocus().getWindowToken(), 0);
+                hideKeyboard();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 if (fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) == null) {
@@ -167,6 +167,20 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * Hides the keyboard if it's being shown.
+     */
+    private void hideKeyboard() {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus()
+                    .getWindowToken(), 0);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
