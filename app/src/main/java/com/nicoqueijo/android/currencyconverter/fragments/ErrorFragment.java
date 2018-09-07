@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 
 /**
  * Fragment to notify the user that an error has occurred.
@@ -19,6 +18,7 @@ import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = ErrorFragment.class.getSimpleName();
+    public static final String ARG_ERROR_MESSAGE = "arg_error_message";
 
     private String mErrorMessage;
     private Button mShowHideButton;
@@ -28,7 +28,7 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mErrorMessage = getArguments().getString(Constants.ARG_ERROR_MESSAGE);
+            mErrorMessage = getArguments().getString(ARG_ERROR_MESSAGE);
         }
     }
 
@@ -49,7 +49,7 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
     public static ErrorFragment newInstance(String errorMessage) {
         ErrorFragment errorFragment = new ErrorFragment();
         Bundle args = new Bundle();
-        args.putString(Constants.ARG_ERROR_MESSAGE, errorMessage);
+        args.putString(ARG_ERROR_MESSAGE, errorMessage);
         errorFragment.setArguments(args);
         return errorFragment;
     }

@@ -21,7 +21,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesRecyclerViewAdapter;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -40,6 +39,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class ActiveExchangeRatesFragment extends Fragment {
 
     public static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
+    public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
+    public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
     private ArrayList<Currency> mAllCurrencies = new ArrayList<>();
     private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
@@ -63,8 +64,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES, mActiveCurrencies);
-        outState.putParcelableArrayList(Constants.ARG_ALL_CURRENCIES, mAllCurrencies);
+        outState.putParcelableArrayList(ARG_ACTIVE_CURRENCIES, mActiveCurrencies);
+        outState.putParcelableArrayList(ARG_ALL_CURRENCIES, mAllCurrencies);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -72,10 +73,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mActiveCurrencies = savedInstanceState
-                    .getParcelableArrayList(Constants.ARG_ACTIVE_CURRENCIES);
-            mAllCurrencies = savedInstanceState
-                    .getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
+            mActiveCurrencies = savedInstanceState.getParcelableArrayList(ARG_ACTIVE_CURRENCIES);
+            mAllCurrencies = savedInstanceState.getParcelableArrayList(ARG_ALL_CURRENCIES);
         } else {
             restoreActiveCurrenciesFromSharedPrefs();
         }

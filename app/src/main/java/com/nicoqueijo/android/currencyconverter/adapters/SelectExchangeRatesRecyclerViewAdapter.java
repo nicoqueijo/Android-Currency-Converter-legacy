@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
@@ -85,7 +84,7 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
         Character firstCharacter;
         try {
             firstCharacter = mCurrencies.get(position).getCurrencyCode()
-                    .charAt(Constants.CURRENCY_CODE_STARTING_INDEX);
+                    .charAt(Currency.CURRENCY_CODE_STARTING_INDEX);
         } catch (IndexOutOfBoundsException exception) {
             firstCharacter = ' ';
         }

@@ -16,7 +16,6 @@ import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecyclerViewAdapter;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
@@ -44,7 +43,8 @@ public class SelectExchangeRatesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mAllCurrencies = getArguments().getParcelableArrayList(Constants.ARG_ALL_CURRENCIES);
+            mAllCurrencies = getArguments().getParcelableArrayList(ActiveExchangeRatesFragment
+                    .ARG_ALL_CURRENCIES);
         }
     }
 
@@ -99,7 +99,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     public static SelectExchangeRatesFragment newInstance(ArrayList<Currency> allCurrencies) {
         SelectExchangeRatesFragment selectExchangeRatesFragment = new SelectExchangeRatesFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(Constants.ARG_ALL_CURRENCIES, allCurrencies);
+        args.putParcelableArrayList(ActiveExchangeRatesFragment.ARG_ALL_CURRENCIES, allCurrencies);
         selectExchangeRatesFragment.setArguments(args);
         return selectExchangeRatesFragment;
     }

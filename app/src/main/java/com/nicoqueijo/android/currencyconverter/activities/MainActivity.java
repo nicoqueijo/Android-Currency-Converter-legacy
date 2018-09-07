@@ -43,7 +43,6 @@ import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -291,10 +290,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * load a Fragment that notifies the user that we have no internet connection.
      */
     private void appLaunchSetup() {
+        final long EMPTY_SHARED_PREFS = -1L;
+        final long TWELVE_HOURS = 43200000L;
         long timeOfLastUpdate = checkForLastUpdate();
         if (isNetworkAvailable()) {
-            if (timeOfLastUpdate > Constants.TWELVE_HOURS ||
-                    timeOfLastUpdate == Constants.EMPTY_SHARED_PREFS) {
+            if (timeOfLastUpdate > TWELVE_HOURS ||
+                    timeOfLastUpdate == EMPTY_SHARED_PREFS) {
                 if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment
@@ -315,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 }
             }
         } else {
-            if (timeOfLastUpdate != Constants.EMPTY_SHARED_PREFS) {
+            if (timeOfLastUpdate != EMPTY_SHARED_PREFS) {
                 if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
@@ -477,8 +478,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                         ActiveExchangeRatesFragment.TAG);
                                 fragmentTransaction.commit();
                             } else {
+                                final int INDENT_SPACES = 4;
                                 JSONObject error = jsonObject.getJSONObject("error");
-                                String errorMessage = error.toString(Constants.INDENT_SPACES);
+                                String errorMessage = error.toString(INDENT_SPACES);
                                 Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
                                 FragmentTransaction fragmentTransaction = fragmentManager
                                         .beginTransaction();

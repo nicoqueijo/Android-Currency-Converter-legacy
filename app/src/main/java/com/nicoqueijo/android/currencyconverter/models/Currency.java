@@ -3,8 +3,6 @@ package com.nicoqueijo.android.currencyconverter.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.nicoqueijo.android.currencyconverter.helpers.Constants;
-
 import java.math.BigDecimal;
 
 /**
@@ -15,6 +13,7 @@ import java.math.BigDecimal;
 public class Currency implements Parcelable {
 
     public static final String TAG = Currency.class.getSimpleName();
+    public static final int CURRENCY_CODE_STARTING_INDEX = 3;
 
     private String currencyCode;
     private double exchangeRate;
@@ -83,7 +82,7 @@ public class Currency implements Parcelable {
      * @return the trimmed currency code
      */
     public String getTrimmedCurrencyCode() {
-        return currencyCode.substring(Constants.CURRENCY_CODE_STARTING_INDEX);
+        return currencyCode.substring(CURRENCY_CODE_STARTING_INDEX);
     }
 
     // Required, auto-generated code in order to implement Parcelable.
