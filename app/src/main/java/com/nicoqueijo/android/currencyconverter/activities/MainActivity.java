@@ -42,6 +42,7 @@ import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFra
 import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
-    private DrawerLayout mDrawerLayout;
+    public DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MenuItem mLastUpdatedView;
     private Toast mCloseAppToast;
@@ -134,12 +135,16 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                         switch (menuItem.getItemId()) {
                             case R.id.nav_item_convert: {
                                 Fragment fragment = fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.hide(fragmentManager.findFragmentByTag(SourceCodeFragment.TAG));
                                 if (fragment == null) {
                                     fragment = ActiveExchangeRatesFragment.newInstance();
-                                    fragmentTransaction = fragmentManager.beginTransaction();
-                                    fragmentTransaction.replace(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
-                                    fragmentTransaction.commit();
+                                    fragmentTransaction.add(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
+                                    fragmentTransaction.show(fragment);
+                                } else {
+                                    fragmentTransaction.show(fragment);
                                 }
+                                fragmentTransaction.commit();
                             }
                             break;
                             case R.id.nav_item_language: {
@@ -151,14 +156,20 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             }
                             break;
                             case R.id.nav_item_source_code: {
-                                fragmentManager.popBackStack();
                                 Fragment fragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                if (fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) != null) {
+                                    fragmentTransaction.remove(fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG));
+                                }
+                                fragmentTransaction.hide(fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG));
                                 if (fragment == null) {
                                     fragment = SourceCodeFragment.newInstance();
-                                    fragmentTransaction = fragmentManager.beginTransaction();
-                                    fragmentTransaction.replace(R.id.content_frame, fragment, SourceCodeFragment.TAG);
-                                    fragmentTransaction.commit();
+                                    fragmentTransaction.add(R.id.content_frame, fragment, SourceCodeFragment.TAG);
+                                    fragmentTransaction.show(fragment);
+                                } else {
+                                    fragmentTransaction.show(fragment);
                                 }
+                                fragmentTransaction.commit();
                             }
                             break;
                             case R.id.nav_item_share: {

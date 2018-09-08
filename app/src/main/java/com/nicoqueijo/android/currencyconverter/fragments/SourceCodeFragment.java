@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 
 /**
  * Fragment used to view the source code of the project via an embedded browser window inside the
@@ -111,6 +113,11 @@ public class SourceCodeFragment extends Fragment implements
     private void handleBackPress() {
         mWebView.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                MainActivity hostActivity = (MainActivity) getActivity();
+                if (hostActivity.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    hostActivity.mDrawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
+                }
                 if (keyCode == KeyEvent.KEYCODE_BACK
                         && event.getAction() == MotionEvent.ACTION_UP
                         && mWebView.canGoBack()) {
