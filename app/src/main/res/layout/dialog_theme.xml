@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:background="@drawable/background_dialog"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/title_language"
+        android:id="@+id/title_theme"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center_vertical"
         android:paddingStart="24dp"
-        android:text="@string/language"
+        android:text="@string/theme"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -23,7 +22,7 @@
         android:background="#E0E0E0" />
 
     <RadioGroup
-        android:id="@+id/radio_group_language"
+        android:id="@+id/radio_group_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -36,30 +35,22 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/choice_english"
+                android:id="@+id/choice_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <android.support.v7.widget.CardView
+            <ImageView
                 android:layout_width="36dp"
                 android:layout_height="26dp"
                 android:layout_marginStart="20dp"
-                app:cardCornerRadius="2dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/english" />
-
-            </android.support.v7.widget.CardView>
+                android:src="@drawable/icon_theme_light" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
-                android:text="@string/english"
+                android:text="@string/light"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
@@ -76,26 +67,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <android.support.v7.widget.CardView
+            <ImageView
                 android:layout_width="36dp"
                 android:layout_height="26dp"
                 android:layout_marginStart="20dp"
-                app:cardCornerRadius="2dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/spanish" />
-
-            </android.support.v7.widget.CardView>
+                android:src="@drawable/icon_theme_dark" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
-                android:text="@string/spanish"
+                android:text="@string/dark"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 

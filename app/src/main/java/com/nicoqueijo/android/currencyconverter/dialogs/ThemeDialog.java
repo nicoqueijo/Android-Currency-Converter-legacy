@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
 
-public class LanguageDialog extends DialogFragment {
+public class ThemeDialog extends DialogFragment {
 
-    public static final String TAG = DialogFragment.class.getSimpleName();
+    public static final String TAG = ThemeDialog.class.getSimpleName();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_language, container, false);
+        View view = inflater.inflate(R.layout.dialog_theme, container, false);
         return view;
     }
 
@@ -27,8 +27,8 @@ public class LanguageDialog extends DialogFragment {
      *
      * @return a new instance of fragment
      */
-    public static LanguageDialog newInstance() {
-        return new LanguageDialog();
+    public static ThemeDialog newInstance() {
+        return new ThemeDialog();
     }
 
 }

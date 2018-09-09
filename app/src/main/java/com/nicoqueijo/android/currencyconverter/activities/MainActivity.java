@@ -40,6 +40,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
+import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
@@ -154,11 +155,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             break;
                             case R.id.nav_item_language: {
                                 DialogFragment languageDialog = LanguageDialog.newInstance();
-                                languageDialog.show(fragmentManager, "fa");
+                                languageDialog.show(fragmentManager, LanguageDialog.TAG);
                             }
                             break;
                             case R.id.nav_item_theme: {
-
+                                DialogFragment themeDialog = ThemeDialog.newInstance();
+                                themeDialog.show(fragmentManager, ThemeDialog.TAG);
                             }
                             break;
                             case R.id.nav_item_source_code: {

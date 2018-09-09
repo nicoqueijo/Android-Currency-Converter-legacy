@@ -26,9 +26,8 @@
     <string name="select_email_app">Select email app</string>
     <string name="english">English</string>
     <string name="spanish">Español</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
 
     <!-- The currencies we don't want to track e.g. silver and gold -->
     <string-array name="exclusion_list">

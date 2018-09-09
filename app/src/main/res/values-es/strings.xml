@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Convertidor de Moneda</string>
     <string name="last_update">Última actualización: %1$s</string>
     <string name="no_internet">Sin conexión a Internet</string>
     <string name="network_unavailable">Red no está disponible</string>

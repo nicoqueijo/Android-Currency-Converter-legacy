@@ -16,7 +16,7 @@
             android:title="@string/source_code" />
     </group>
     <group
-        android:id="@+id/nav_group_intents"
+        android:id="@+id/nav_group_dialogs"
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_item_language"
@@ -26,6 +26,10 @@
             android:id="@+id/nav_item_theme"
             android:icon="@drawable/ic_theme"
             android:title="@string/theme" />
+    </group>
+    <group
+        android:id="@+id/nav_group_intents"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nav_item_share"
             android:icon="@drawable/ic_share"
