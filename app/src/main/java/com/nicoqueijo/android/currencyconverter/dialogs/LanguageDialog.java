@@ -27,8 +27,18 @@ import java.util.Stack;
 public class LanguageDialog extends DialogFragment implements View.OnClickListener {
 
     public enum Language {
-        en, // English
-        es  // Spanish
+        ENGLISH("en"),
+        SPANISH("es");
+
+        private String language;
+
+        public String getLanguage() {
+            return this.language;
+        }
+
+        Language(String language) {
+            this.language = language;
+        }
     }
 
     public static final String TAG = DialogFragment.class.getSimpleName();
@@ -69,6 +79,18 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.container_language_english:
+                changeLanguage(mEnglishRadioButton, Language.ENGLISH);
+                break;
+            case R.id.container_language_spanish:
+                changeLanguage(mSpanishRadioButton, Language.SPANISH);
+                break;
+        }
+    }
+
     /**
      * Initializes the Dialog's views.
      *
@@ -76,20 +98,26 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
      */
     private void initViews(View view) {
         mEnglishOption = view.findViewById(R.id.container_language_english);
-        mEnglishRadioButton = view.findViewById(R.id.choice_english);
         mSpanishOption = view.findViewById(R.id.container_language_spanish);
+        mEnglishRadioButton = view.findViewById(R.id.choice_english);
         mSpanishRadioButton = view.findViewById(R.id.choice_spanish);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.container_language_english:
-                changeLanguage(mEnglishRadioButton, Language.en);
-                break;
-            case R.id.container_language_spanish:
-                changeLanguage(mSpanishRadioButton, Language.es);
-                break;
+    /**
+     * Retrieves the language setting from the SharedPreferences file and sets that language to the
+     * appropriate RadioButton. If this is the first time running the app SharedPreferences won't
+     * have a language value and the default value will be the system language. If the system
+     * language is not a supported language in this app it defaults to English.
+     */
+    private void restoreSavedLanguage() {
+        String systemLanguage = Locale.getDefault().getLanguage();
+        String savedLanguage = mSharedPreferences.getString("language", systemLanguage);
+        if (savedLanguage.equals(Language.SPANISH.getLanguage())) {
+            mSpanishRadioButton.setChecked(true);
+            mActiveRadioButton.push(mSpanishRadioButton);
+        } else {
+            mEnglishRadioButton.setChecked(true);
+            mActiveRadioButton.push(mEnglishRadioButton);
         }
     }
 
@@ -101,7 +129,6 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         mEnglishRadioButton.setClickable(false);
         mSpanishRadioButton.setClickable(false);
     }
-
 
     /**
      * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
@@ -121,7 +148,7 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         mActiveRadioButton.push(languageRadioButton);
         languageRadioButton.setChecked(true);
         saveLanguage(language);
-        setLocale(language.name());
+        setLocale(language.getLanguage());
         getActivity().recreate();
         dismiss();
     }
@@ -133,26 +160,8 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
      */
     private void saveLanguage(Language language) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString("language", language.name());
+        editor.putString("language", language.getLanguage());
         editor.apply();
-    }
-
-    /**
-     * Retrieves the language setting from the SharedPreferences file and sets that language to the
-     * appropriate RadioButton. If this is the first time running the app SharedPreferences won't
-     * have a language value and the default value will be the system language. If the system
-     * language is not a supported language in this app it defaults to English.
-     */
-    private void restoreSavedLanguage() {
-        String systemLanguage = Locale.getDefault().getLanguage();
-        String savedLanguage = mSharedPreferences.getString("language", systemLanguage);
-        if (savedLanguage.equals(Language.es.name())) {
-            mSpanishRadioButton.setChecked(true);
-            mActiveRadioButton.push(mSpanishRadioButton);
-        } else {
-            mEnglishRadioButton.setChecked(true);
-            mActiveRadioButton.push(mEnglishRadioButton);
-        }
     }
 
     /**
