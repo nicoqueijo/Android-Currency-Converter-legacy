@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
+
                         // Delegate all this to a method(s) later //////////////////////////////////
                         final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
                         final String PACKAGE_NAME = getPackageName();
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Gets called upon device configuration change like rotation. Overridind so the keyboard
+     * Gets called upon device configuration change like rotation. Overriding so the keyboard
      * doesn't pop up when device is rotated.
      *
      * @param newConfig unused

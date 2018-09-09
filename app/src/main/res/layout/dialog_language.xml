@@ -26,14 +26,15 @@
         android:id="@+id/radio_group_language"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="24dp">
+        android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/container_language_english"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="24dp">
 
             <RadioButton
                 android:id="@+id/choice_english"
@@ -66,10 +67,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/container_language_spanish"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="24dp">
 
             <RadioButton
                 android:id="@+id/choice_spanish"
