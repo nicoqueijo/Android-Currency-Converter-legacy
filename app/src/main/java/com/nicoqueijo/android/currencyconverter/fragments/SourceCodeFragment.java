@@ -106,8 +106,7 @@ public class SourceCodeFragment extends Fragment implements
     }
 
     /**
-     * Listens to the back button press and navigates backwards through the WebView if possible
-     * when pressed.
+     * Navigates backwards through the WebView if possible when back button pressed.
      * Credit: https://stackoverflow.com/a/47710213/5906793
      */
     private void handleBackPress() {

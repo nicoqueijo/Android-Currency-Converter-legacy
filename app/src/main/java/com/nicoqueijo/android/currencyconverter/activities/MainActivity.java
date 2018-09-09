@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +39,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
@@ -136,7 +138,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             case R.id.nav_item_convert: {
                                 Fragment fragment = fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
                                 fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.hide(fragmentManager.findFragmentByTag(SourceCodeFragment.TAG));
+                                Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
+                                if (sourceCodeFragment != null) {
+                                    fragmentTransaction.hide(fragmentManager.findFragmentByTag(SourceCodeFragment.TAG));
+                                }
                                 if (fragment == null) {
                                     fragment = ActiveExchangeRatesFragment.newInstance();
                                     fragmentTransaction.add(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
@@ -148,7 +153,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             }
                             break;
                             case R.id.nav_item_language: {
-
+                                DialogFragment languageDialog = LanguageDialog.newInstance();
+                                languageDialog.show(fragmentManager, "fa");
                             }
                             break;
                             case R.id.nav_item_theme: {

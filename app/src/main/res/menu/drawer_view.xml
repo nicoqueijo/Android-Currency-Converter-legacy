@@ -11,14 +11,6 @@
             android:icon="@drawable/ic_convert"
             android:title="@string/convert" />
         <item
-            android:id="@+id/nav_item_language"
-            android:icon="@drawable/ic_language"
-            android:title="@string/language" />
-        <item
-            android:id="@+id/nav_item_theme"
-            android:icon="@drawable/ic_theme"
-            android:title="@string/theme" />
-        <item
             android:id="@+id/nav_item_source_code"
             android:icon="@drawable/ic_source_code"
             android:title="@string/source_code" />
@@ -26,6 +18,14 @@
     <group
         android:id="@+id/nav_group_intents"
         android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_item_language"
+            android:icon="@drawable/ic_language"
+            android:title="@string/language" />
+        <item
+            android:id="@+id/nav_item_theme"
+            android:icon="@drawable/ic_theme"
+            android:title="@string/theme" />
         <item
             android:id="@+id/nav_item_share"
             android:icon="@drawable/ic_share"
