@@ -18,11 +18,25 @@ import com.nicoqueijo.android.currencyconverter.R;
 public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = ErrorFragment.class.getSimpleName();
+
     public static final String ARG_ERROR_MESSAGE = "arg_error_message";
 
     private String mErrorMessage;
     private Button mShowHideButton;
     private TextView mErrorMessageTextView;
+
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
+    public static ErrorFragment newInstance(String errorMessage) {
+        ErrorFragment errorFragment = new ErrorFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_ERROR_MESSAGE, errorMessage);
+        errorFragment.setArguments(args);
+        return errorFragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,19 +53,6 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_error, container, false);
         initViewsAndListeners(view);
         return view;
-    }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @return a new instance of fragment
-     */
-    public static ErrorFragment newInstance(String errorMessage) {
-        ErrorFragment errorFragment = new ErrorFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_ERROR_MESSAGE, errorMessage);
-        errorFragment.setArguments(args);
-        return errorFragment;
     }
 
     /**

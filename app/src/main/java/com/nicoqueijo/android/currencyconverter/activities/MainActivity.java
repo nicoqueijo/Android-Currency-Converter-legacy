@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle(R.string.app_name);
         initViewsAndSharedPrefs();
         initApiKey();
         apiFullUrl = API_BASE_URL + API_KEY_PARAM + apiKey + API_FORMAT_PARAM;

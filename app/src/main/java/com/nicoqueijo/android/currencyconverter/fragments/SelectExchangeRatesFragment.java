@@ -39,6 +39,19 @@ public class SelectExchangeRatesFragment extends Fragment {
     private DragScrollBar mDragScrollBar;
     private SearchView mSearchView;
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
+    public static SelectExchangeRatesFragment newInstance(ArrayList<Currency> allCurrencies) {
+        SelectExchangeRatesFragment selectExchangeRatesFragment = new SelectExchangeRatesFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ActiveExchangeRatesFragment.ARG_ALL_CURRENCIES, allCurrencies);
+        selectExchangeRatesFragment.setArguments(args);
+        return selectExchangeRatesFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,19 +102,6 @@ public class SelectExchangeRatesFragment extends Fragment {
                 return false;
             }
         });
-    }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @return a new instance of fragment
-     */
-    public static SelectExchangeRatesFragment newInstance(ArrayList<Currency> allCurrencies) {
-        SelectExchangeRatesFragment selectExchangeRatesFragment = new SelectExchangeRatesFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ActiveExchangeRatesFragment.ARG_ALL_CURRENCIES, allCurrencies);
-        selectExchangeRatesFragment.setArguments(args);
-        return selectExchangeRatesFragment;
     }
 
     /**

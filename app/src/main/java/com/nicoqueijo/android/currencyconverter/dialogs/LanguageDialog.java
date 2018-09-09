@@ -20,6 +20,10 @@ import com.nicoqueijo.android.currencyconverter.R;
 import java.util.Locale;
 import java.util.Stack;
 
+/**
+ * DialogFragment that allows the user to change the app's language. Implements OnClickListener to
+ * handle the language option clicks.
+ */
 public class LanguageDialog extends DialogFragment implements View.OnClickListener {
 
     public enum Language {
@@ -36,6 +40,15 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
     private RadioButton mEnglishRadioButton;
     private RadioButton mSpanishRadioButton;
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
+    public static LanguageDialog newInstance() {
+        return new LanguageDialog();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,19 +61,24 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_language, container, false);
+        initViews(view);
+        restoreSavedLanguage();
+        disableRadioButtons();
+        mEnglishOption.setOnClickListener(this);
+        mSpanishOption.setOnClickListener(this);
+        return view;
+    }
 
+    /**
+     * Initializes the Dialog's views.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    private void initViews(View view) {
         mEnglishOption = view.findViewById(R.id.container_language_english);
         mEnglishRadioButton = view.findViewById(R.id.choice_english);
         mSpanishOption = view.findViewById(R.id.container_language_spanish);
         mSpanishRadioButton = view.findViewById(R.id.choice_spanish);
-
-        restoreSavedLanguage();
-        disableRadioButtons();
-
-        mEnglishOption.setOnClickListener(this);
-        mSpanishOption.setOnClickListener(this);
-
-        return view;
     }
 
     @Override
@@ -75,29 +93,56 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         }
     }
 
+    /**
+     * Sets all RadioButtons to be unclickable because their clicks are handled by their parent
+     * view.
+     */
     private void disableRadioButtons() {
         mEnglishRadioButton.setClickable(false);
         mSpanishRadioButton.setClickable(false);
     }
 
+
+    /**
+     * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
+     * pressed at a time, a stack is used to pop a button and push another when the user presses
+     * buttons. When a button is pressed it pops the previous button (if any) and pushes the pressed
+     * button. The language of the pressed button is saved to SharedPreferences and the locale is
+     * changed to the new language. The host activity is recreated to update the views with the new
+     * language and this dialog is dismissed.
+     *
+     * @param languageRadioButton the RadioButton pressed.
+     * @param language            the language the user selected.
+     */
     private void changeLanguage(RadioButton languageRadioButton, Language language) {
         if (!mActiveRadioButton.isEmpty()) {
             mActiveRadioButton.pop().setChecked(false);
         }
-        languageRadioButton.setChecked(true);
         mActiveRadioButton.push(languageRadioButton);
+        languageRadioButton.setChecked(true);
         saveLanguage(language);
         setLocale(language.name());
-//        mCommunicator.onDialogMessage(language.name());
+        getActivity().recreate();
         dismiss();
     }
 
+    /**
+     * Saves the language that the user selected to SharedPreferences.
+     *
+     * @param language the language the user selected.
+     */
     private void saveLanguage(Language language) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString("language", language.name());
         editor.apply();
     }
 
+    /**
+     * Retrieves the language setting from the SharedPreferences file and sets that language to the
+     * appropriate RadioButton. If this is the first time running the app SharedPreferences won't
+     * have a language value and the default value will be the system language. If the system
+     * language is not a supported language in this app it defaults to English.
+     */
     private void restoreSavedLanguage() {
         String systemLanguage = Locale.getDefault().getLanguage();
         String savedLanguage = mSharedPreferences.getString("language", systemLanguage);
@@ -123,14 +168,4 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         configuration.setLocale(myLocale);
         resources.updateConfiguration(configuration, displayMetrics);
     }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @return a new instance of fragment
-     */
-    public static LanguageDialog newInstance() {
-        return new LanguageDialog();
-    }
-
 }

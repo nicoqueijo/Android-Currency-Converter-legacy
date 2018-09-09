@@ -53,6 +53,15 @@ public class ActiveExchangeRatesFragment extends Fragment {
     private SwipeAndDragHelper mSwipeAndDragHelper;
     private ItemTouchHelper mItemTouchHelper;
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
+    public static ActiveExchangeRatesFragment newInstance() {
+        return new ActiveExchangeRatesFragment();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -94,15 +103,6 @@ public class ActiveExchangeRatesFragment extends Fragment {
     public void onStop() {
         super.onStop();
         saveActiveCurrenciesToSharedPrefs();
-    }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @return a new instance of fragment
-     */
-    public static ActiveExchangeRatesFragment newInstance() {
-        return new ActiveExchangeRatesFragment();
     }
 
     /**

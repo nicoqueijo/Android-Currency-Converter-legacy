@@ -31,17 +31,6 @@ public class ThemeDialog extends DialogFragment {
     private RadioButton mLightRadioButton;
     private RadioButton mDarkRadioButton;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_theme, container, false);
-
-
-
-        return view;
-    }
-
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
      *
@@ -51,4 +40,13 @@ public class ThemeDialog extends DialogFragment {
         return new ThemeDialog();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_theme, container, false);
+
+
+        return view;
+    }
 }

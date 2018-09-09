@@ -17,13 +17,6 @@ public class LoadingExchangeRatesFragment extends Fragment {
 
     public static final String TAG = LoadingExchangeRatesFragment.class.getSimpleName();
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_loading_exchange_rates, container, false);
-    }
-
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
      *
@@ -33,4 +26,10 @@ public class LoadingExchangeRatesFragment extends Fragment {
         return new LoadingExchangeRatesFragment();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_loading_exchange_rates, container, false);
+    }
 }

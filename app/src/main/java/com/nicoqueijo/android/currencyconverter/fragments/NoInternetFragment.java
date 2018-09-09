@@ -18,13 +18,6 @@ public class NoInternetFragment extends Fragment {
 
     public static final String TAG = NoInternetFragment.class.getSimpleName();
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_no_internet, container, false);
-    }
-
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
      *
@@ -34,4 +27,10 @@ public class NoInternetFragment extends Fragment {
         return new NoInternetFragment();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_no_internet, container, false);
+    }
 }

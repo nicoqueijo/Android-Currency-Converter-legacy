@@ -35,6 +35,15 @@ public class SourceCodeFragment extends Fragment implements
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided parameters.
+     *
+     * @return a new instance of fragment
+     */
+    public static SourceCodeFragment newInstance() {
+        return new SourceCodeFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,15 +53,6 @@ public class SourceCodeFragment extends Fragment implements
         setUpWebClientsAndSwipeLayout();
         handleBackPress();
         return view;
-    }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @return a new instance of fragment
-     */
-    public static SourceCodeFragment newInstance() {
-        return new SourceCodeFragment();
     }
 
     /**
