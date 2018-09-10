@@ -136,15 +136,19 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
      * changed to the new language. The host activity is recreated to update the views with the new
      * language and this dialog is dismissed.
      *
-     * @param languageRadioButton the RadioButton pressed.
+     * @param selectedRadioButton the RadioButton pressed.
      * @param language            the language the user selected.
      */
-    private void changeLanguage(RadioButton languageRadioButton, Language language) {
+    private void changeLanguage(RadioButton selectedRadioButton, Language language) {
+        if (mActiveRadioButton.peek() == selectedRadioButton) {
+            dismiss();
+            return;
+        }
         if (!mActiveRadioButton.isEmpty()) {
             mActiveRadioButton.pop().setChecked(false);
         }
-        mActiveRadioButton.push(languageRadioButton);
-        languageRadioButton.setChecked(true);
+        mActiveRadioButton.push(selectedRadioButton);
+        selectedRadioButton.setChecked(true);
         saveLanguage(language);
         MainActivity hostActivity = (MainActivity) getActivity();
         hostActivity.setLocale(language.getLanguage());
@@ -153,7 +157,7 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
     }
 
     /**
-     * Saves the language that the user selected to SharedPreferences.
+     * Saves the language the user selected to SharedPreferences.
      *
      * @param language the language the user selected.
      */

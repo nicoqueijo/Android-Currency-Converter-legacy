@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         appLaunchSetup();
     }
 
+    /**
+     * Initializes the SharedPreferences objects.
+     */
     private void initSharedPrefs() {
         sharedPrefsSettingsFilename = getPackageName().concat(".settings");
         sharedPrefsRatesFilename = getPackageName().concat(".rates");
@@ -120,6 +123,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         mSharedPrefsTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
     }
 
+    /**
+     * Sets the locale (language) and theme based on the saved settings the user has.
+     */
     private void setLocaleAndTheme() {
         String deviceLanguage = Locale.getDefault().getLanguage();
         setLocale(mSharedPrefsSettings.getString("language", deviceLanguage));

@@ -70,6 +70,8 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
         initViews(view);
         restoreSavedTheme();
         disableRadioButtons();
+        mLightOption.setOnClickListener(this);
+        mDarkOption.setOnClickListener(this);
         return view;
     }
 
@@ -103,9 +105,9 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
      * have a theme value and the default value will be the light theme.
      */
     private void restoreSavedTheme() {
-        int defaultTheme = R.style.Theme_AppCompat_Light;
+        int defaultTheme = R.style.AppThemeLight;
         int savedTheme = mSharedPreferences.getInt("theme", defaultTheme);
-        if (savedTheme == R.style.Theme_AppCompat) {
+        if (savedTheme == R.style.AppThemeDark) {
             mDarkRadioButton.setChecked(true);
             mActiveRadioButton.push(mDarkRadioButton);
         } else {
@@ -127,22 +129,37 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
      * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
      * pressed at a time, a stack is used to pop a button and push another when the user presses
      * buttons. When a button is pressed it pops the previous button (if any) and pushes the pressed
-     * button. The language of the pressed button is saved to SharedPreferences and the locale is
-     * changed to the new language. The host activity is recreated to update the views with the new
-     * language and this dialog is dismissed.
+     * button. The theme of the pressed button is saved to SharedPreferences and the app theme is
+     * changed to the new theme. The host activity is recreated to update the views with the new
+     * theme and this dialog is dismissed.
      *
-     * @param themeRadioButton the RadioButton pressed.
-     * @param theme            the theme the user selected.
+     * @param selectedRadioButton the RadioButton pressed.
+     * @param theme               the theme the user selected.
      */
-    private void changeTheme(RadioButton themeRadioButton, Theme theme) {
+    private void changeTheme(RadioButton selectedRadioButton, Theme theme) {
+        if (mActiveRadioButton.peek() == selectedRadioButton) {
+            dismiss();
+            return;
+        }
         if (!mActiveRadioButton.isEmpty()) {
             mActiveRadioButton.pop().setChecked(false);
         }
-        mActiveRadioButton.push(themeRadioButton);
-        themeRadioButton.setChecked(true);
-//        saveTheme(theme);
-//        setLocale(language.name());
+        mActiveRadioButton.push(selectedRadioButton);
+        selectedRadioButton.setChecked(true);
+        saveTheme(theme);
+        getActivity().setTheme(theme.getTheme());
         getActivity().recreate();
         dismiss();
+    }
+
+    /**
+     * Saves the theme the user selected to SharedPreferences.
+     *
+     * @param theme the theme the user selected.
+     */
+    private void saveTheme(Theme theme) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt("theme", theme.getTheme());
+        editor.apply();
     }
 }
