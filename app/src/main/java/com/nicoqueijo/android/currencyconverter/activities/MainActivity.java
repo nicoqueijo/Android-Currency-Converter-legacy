@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,6 +61,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -76,10 +79,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private static final String API_FORMAT_PARAM = "&format=1";
     private String apiFullUrl;
 
+    public static String sharedPrefsSettingsFilename;
     public static String sharedPrefsRatesFilename;
     public static String sharedPrefsTimeFilename;
-    private SharedPreferences mSharedPreferencesRates;
-    private SharedPreferences mSharedPreferencesTime;
+    private SharedPreferences mSharedPrefsSettings;
+    private SharedPreferences mSharedPrefsRates;
+    private SharedPreferences mSharedPrefsTime;
 
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
@@ -96,22 +101,35 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initSharedPrefs();
+        setLocaleAndTheme();
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_name);
-        initViewsAndSharedPrefs();
+        initViews();
         initApiKey();
         apiFullUrl = API_BASE_URL + API_KEY_PARAM + apiKey + API_FORMAT_PARAM;
         appLaunchSetup();
     }
 
-    /**
-     * Initializes the views and SharedPrefs.
-     */
-    private void initViewsAndSharedPrefs() {
+    private void initSharedPrefs() {
+        sharedPrefsSettingsFilename = getPackageName().concat(".settings");
         sharedPrefsRatesFilename = getPackageName().concat(".rates");
         sharedPrefsTimeFilename = getPackageName().concat(".time");
-        mSharedPreferencesRates = getSharedPreferences(sharedPrefsRatesFilename, MODE_PRIVATE);
-        mSharedPreferencesTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
+        mSharedPrefsSettings = getSharedPreferences(sharedPrefsSettingsFilename, MODE_PRIVATE);
+        mSharedPrefsRates = getSharedPreferences(sharedPrefsRatesFilename, MODE_PRIVATE);
+        mSharedPrefsTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
+    }
+
+    private void setLocaleAndTheme() {
+        String deviceLanguage = Locale.getDefault().getLanguage();
+        setLocale(mSharedPrefsSettings.getString("language", deviceLanguage));
+        setTheme(mSharedPrefsSettings.getInt("theme", ThemeDialog.Theme.LIGHT.getTheme()));
+    }
+
+    /**
+     * Initializes the views.
+     */
+    private void initViews() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mNavigationView = findViewById(R.id.nav_view_menu);
@@ -416,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private long checkForLastUpdate() {
         long currentTime = System.currentTimeMillis();
-        long timestamp = mSharedPreferencesTime.getLong("timestamp", 0L) * 1000;
+        long timestamp = mSharedPrefsTime.getLong("timestamp", 0L) * 1000;
         if (timestamp != 0L) {
             Date date = new Date(timestamp);
             java.text.SimpleDateFormat simpleDateFormat =
@@ -437,11 +455,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @throws JSONException in case a key being fetched doesn't exist.
      */
     private void updateSharedPreferencesExchangeRates(JSONObject jsonObject) throws JSONException {
-        SharedPreferences.Editor mSharedPreferencesEditor = mSharedPreferencesTime.edit();
+        SharedPreferences.Editor mSharedPreferencesEditor = mSharedPrefsTime.edit();
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPreferencesEditor.putLong("timestamp", timestamp);
         mSharedPreferencesEditor.apply();
-        mSharedPreferencesEditor = mSharedPreferencesRates.edit();
+        mSharedPreferencesEditor = mSharedPrefsRates.edit();
         Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
@@ -529,6 +547,20 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    /**
+     * Sets the locale to a new language.
+     *
+     * @param lang the new language to set the app to.
+     */
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.setLocale(myLocale);
+        resources.updateConfiguration(configuration, displayMetrics);
     }
 
     /**

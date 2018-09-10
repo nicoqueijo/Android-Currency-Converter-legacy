@@ -2,13 +2,10 @@ package com.nicoqueijo.android.currencyconverter.dialogs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 
 import java.util.Locale;
 import java.util.Stack;
@@ -148,8 +146,9 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         mActiveRadioButton.push(languageRadioButton);
         languageRadioButton.setChecked(true);
         saveLanguage(language);
-        setLocale(language.getLanguage());
-        getActivity().recreate();
+        MainActivity hostActivity = (MainActivity) getActivity();
+        hostActivity.setLocale(language.getLanguage());
+        hostActivity.recreate();
         dismiss();
     }
 
@@ -162,19 +161,5 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString("language", language.getLanguage());
         editor.apply();
-    }
-
-    /**
-     * Sets the locale to a new language.
-     *
-     * @param lang the new language to set the app to.
-     */
-    public void setLocale(String lang) {
-        Locale myLocale = new Locale(lang);
-        Resources resources = getResources();
-        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        Configuration configuration = resources.getConfiguration();
-        configuration.setLocale(myLocale);
-        resources.updateConfiguration(configuration, displayMetrics);
     }
 }

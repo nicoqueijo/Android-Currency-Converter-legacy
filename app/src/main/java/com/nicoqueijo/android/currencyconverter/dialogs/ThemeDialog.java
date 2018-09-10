@@ -23,8 +23,8 @@ import java.util.Stack;
 public class ThemeDialog extends DialogFragment implements View.OnClickListener {
 
     public enum Theme {
-        LIGHT(R.style.Theme_AppCompat_Light),
-        DARK(R.style.Theme_AppCompat);
+        LIGHT(R.style.AppThemeLight),
+        DARK(R.style.AppThemeDark);
 
         private int theme;
 
@@ -76,12 +76,12 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.container_theme_light:
-//                changeTheme(mLightRadioButton);
-//                break;
-//            case R.id.container_theme_dark:
-//                changeTheme(mDarkRadioButton);
-//                break;
+            case R.id.container_theme_light:
+                changeTheme(mLightRadioButton, Theme.LIGHT);
+                break;
+            case R.id.container_theme_dark:
+                changeTheme(mDarkRadioButton, Theme.DARK);
+                break;
         }
     }
 
@@ -97,6 +97,11 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
         mDarkRadioButton = view.findViewById(R.id.choice_dark);
     }
 
+    /**
+     * Retrieves the theme setting from the SharedPreferences file and sets that theme to the
+     * appropriate RadioButton. If this is the first time running the app SharedPreferences won't
+     * have a theme value and the default value will be the light theme.
+     */
     private void restoreSavedTheme() {
         int defaultTheme = R.style.Theme_AppCompat_Light;
         int savedTheme = mSharedPreferences.getInt("theme", defaultTheme);
@@ -118,26 +123,26 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
         mDarkRadioButton.setClickable(false);
     }
 
-//    /**
-//     * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
-//     * pressed at a time, a stack is used to pop a button and push another when the user presses
-//     * buttons. When a button is pressed it pops the previous button (if any) and pushes the pressed
-//     * button. The language of the pressed button is saved to SharedPreferences and the locale is
-//     * changed to the new language. The host activity is recreated to update the views with the new
-//     * language and this dialog is dismissed.
-//     *
-//     * @param languageRadioButton the RadioButton pressed.
-//     * @param language            the language the user selected.
-//     */
-//    private void changeTheme(RadioButton themeRadioButton, Language language) {
-//        if (!mActiveRadioButton.isEmpty()) {
-//            mActiveRadioButton.pop().setChecked(false);
-//        }
-//        mActiveRadioButton.push(languageRadioButton);
-//        languageRadioButton.setChecked(true);
-//        saveLanguage(language);
+    /**
+     * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
+     * pressed at a time, a stack is used to pop a button and push another when the user presses
+     * buttons. When a button is pressed it pops the previous button (if any) and pushes the pressed
+     * button. The language of the pressed button is saved to SharedPreferences and the locale is
+     * changed to the new language. The host activity is recreated to update the views with the new
+     * language and this dialog is dismissed.
+     *
+     * @param themeRadioButton the RadioButton pressed.
+     * @param theme            the theme the user selected.
+     */
+    private void changeTheme(RadioButton themeRadioButton, Theme theme) {
+        if (!mActiveRadioButton.isEmpty()) {
+            mActiveRadioButton.pop().setChecked(false);
+        }
+        mActiveRadioButton.push(themeRadioButton);
+        themeRadioButton.setChecked(true);
+//        saveTheme(theme);
 //        setLocale(language.name());
-//        getActivity().recreate();
-//        dismiss();
-//    }
+        getActivity().recreate();
+        dismiss();
+    }
 }
