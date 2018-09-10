@@ -4,10 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_active_rates"
+    <com.bosphere.fadingedgelayout.FadingEdgeLayout
+        android:id="@+id/fading_edge_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:fel_edge="bottom"
+        app:fel_size_bottom="86dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_active_rates"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="86dp" />
+
+    </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
