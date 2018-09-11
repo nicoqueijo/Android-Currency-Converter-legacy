@@ -1,6 +1,5 @@
 package com.nicoqueijo.android.currencyconverter.dialogs;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,13 +15,12 @@ import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 
 import java.util.Locale;
-import java.util.Stack;
 
 /**
  * DialogFragment that allows the user to change the app's language. Implements OnClickListener to
  * handle the language option clicks.
  */
-public class LanguageDialog extends DialogFragment implements View.OnClickListener {
+public class LanguageDialog extends SettingsDialog implements View.OnClickListener {
 
     public enum Language {
         ENGLISH("en"),
@@ -41,8 +39,6 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
 
     public static final String TAG = DialogFragment.class.getSimpleName();
 
-    private SharedPreferences mSharedPreferences;
-    private Stack<RadioButton> mActiveRadioButton = new Stack<>();
     private LinearLayout mEnglishOption;
     private LinearLayout mSpanishOption;
     private RadioButton mEnglishRadioButton;
@@ -55,13 +51,6 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
      */
     public static LanguageDialog newInstance() {
         return new LanguageDialog();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSharedPreferences = getActivity().getSharedPreferences(getActivity().getPackageName()
-                .concat(".settings"), Context.MODE_PRIVATE);
     }
 
     @Nullable
@@ -94,7 +83,7 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
      *
      * @param view the root view of the inflated hierarchy
      */
-    private void initViews(View view) {
+    public void initViews(View view) {
         mEnglishOption = view.findViewById(R.id.container_language_english);
         mSpanishOption = view.findViewById(R.id.container_language_spanish);
         mEnglishRadioButton = view.findViewById(R.id.choice_english);
@@ -123,7 +112,7 @@ public class LanguageDialog extends DialogFragment implements View.OnClickListen
      * Sets all RadioButtons to be unclickable because their clicks are handled by their parent
      * view.
      */
-    private void disableRadioButtons() {
+    public void disableRadioButtons() {
         mEnglishRadioButton.setClickable(false);
         mSpanishRadioButton.setClickable(false);
     }

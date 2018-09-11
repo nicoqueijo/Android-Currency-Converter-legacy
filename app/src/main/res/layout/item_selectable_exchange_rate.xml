@@ -41,6 +41,7 @@
                 android:id="@+id/currency_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"
                 tools:text="USD" />
 
@@ -48,6 +49,7 @@
                 android:id="@+id/currency_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:textSize="14sp"
                 tools:text="United States Dollar" />
 

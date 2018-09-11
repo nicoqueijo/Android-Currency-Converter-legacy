@@ -1,11 +1,9 @@
 package com.nicoqueijo.android.currencyconverter.dialogs;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,11 @@ import android.widget.RadioButton;
 
 import com.nicoqueijo.android.currencyconverter.R;
 
-import java.util.Stack;
-
 /**
  * DialogFragment that allows the user to change the app's theme. Implements OnClickListener to
  * handle the theme option clicks.
  */
-public class ThemeDialog extends DialogFragment implements View.OnClickListener {
+public class ThemeDialog extends SettingsDialog implements View.OnClickListener {
 
     public enum Theme {
         LIGHT(R.style.AppThemeLight),
@@ -39,8 +35,6 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
 
     public static final String TAG = ThemeDialog.class.getSimpleName();
 
-    private SharedPreferences mSharedPreferences;
-    private Stack<RadioButton> mActiveRadioButton = new Stack<>();
     private LinearLayout mLightOption;
     private LinearLayout mDarkOption;
     private RadioButton mLightRadioButton;
@@ -53,13 +47,6 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
      */
     public static ThemeDialog newInstance() {
         return new ThemeDialog();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSharedPreferences = getActivity().getSharedPreferences(getActivity().getPackageName()
-                .concat(".settings"), Context.MODE_PRIVATE);
     }
 
     @Nullable
@@ -92,7 +79,7 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
      *
      * @param view the root view of the inflated hierarchy
      */
-    private void initViews(View view) {
+    public void initViews(View view) {
         mLightOption = view.findViewById(R.id.container_theme_light);
         mDarkOption = view.findViewById(R.id.container_theme_dark);
         mLightRadioButton = view.findViewById(R.id.choice_light);
@@ -120,7 +107,7 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
      * Sets all RadioButtons to be unclickable because their clicks are handled by their parent
      * view.
      */
-    private void disableRadioButtons() {
+    public void disableRadioButtons() {
         mLightRadioButton.setClickable(false);
         mDarkRadioButton.setClickable(false);
     }
