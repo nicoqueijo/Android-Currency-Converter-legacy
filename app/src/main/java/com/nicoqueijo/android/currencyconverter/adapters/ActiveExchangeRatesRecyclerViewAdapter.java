@@ -16,6 +16,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
@@ -137,17 +139,22 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
+    public class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
-        ImageView mFlagImage;
-        TextView mCurrencyCodeTextView;
-        CustomEditText mConversionValueEditText;
+        public RelativeLayout mItemBackground;
+        public LinearLayout mItemForeground;
+        public ImageView mFlagImage;
+        public TextView mCurrencyCodeTextView;
+        public CustomEditText mConversionValueEditText;
 
         ViewHolder(View itemView) {
             super(itemView);
+            mItemBackground = itemView.findViewById(R.id.item_background);
+            mItemForeground = itemView.findViewById(R.id.item_foreground);
             mFlagImage = itemView.findViewById(R.id.flag);
             mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
             mConversionValueEditText = itemView.findViewById(R.id.conversion_value);
+
             String hint = "0" + mDecimalSeparator + "00";
             mConversionValueEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             mConversionValueEditText.setHint(hint);
