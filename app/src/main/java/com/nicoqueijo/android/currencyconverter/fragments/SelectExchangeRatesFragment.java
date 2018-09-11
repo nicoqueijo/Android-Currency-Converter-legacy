@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesRecyclerViewAdapter;
+import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesAdapter;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
@@ -33,7 +33,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     ArrayList<Currency> mAllCurrencies;
 
     private RecyclerView mRecyclerView;
-    private SelectExchangeRatesRecyclerViewAdapter mAdapter;
+    private SelectExchangeRatesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar mToolbar;
     private DragScrollBar mDragScrollBar;
@@ -82,7 +82,7 @@ public class SelectExchangeRatesFragment extends Fragment {
         mToolbar.inflateMenu(R.menu.menu_search);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
-        mAdapter = new SelectExchangeRatesRecyclerViewAdapter(this, mAllCurrencies);
+        mAdapter = new SelectExchangeRatesAdapter(this, mAllCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

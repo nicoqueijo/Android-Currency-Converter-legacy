@@ -38,11 +38,11 @@ import java.util.Locale;
  * Adapter for the RecyclerView that displays the exchange rates the user is interacting with.
  * Implements SwipeAndDragHelper.IActionCompletionContract to remove and reorder items in the list.
  */
-public class ActiveExchangeRatesRecyclerViewAdapter extends
-        RecyclerView.Adapter<ActiveExchangeRatesRecyclerViewAdapter.ViewHolder>
+public class ActiveExchangeRatesAdapter extends
+        RecyclerView.Adapter<ActiveExchangeRatesAdapter.ViewHolder>
         implements SwipeAndDragHelper.IActionCompletionContract {
 
-    public static final String TAG = ActiveExchangeRatesRecyclerViewAdapter.class.getSimpleName();
+    public static final String TAG = ActiveExchangeRatesAdapter.class.getSimpleName();
 
     private Context mContext;
     private List<Currency> mActiveCurrencies;
@@ -63,8 +63,8 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
      * @param activeCurrencies     the currencies the user is interacting with
      * @param floatingActionButton view to be used as the first param of the Snackbar's make method
      */
-    public ActiveExchangeRatesRecyclerViewAdapter(Context context, List<Currency> activeCurrencies,
-                                                  FloatingActionButton floatingActionButton) {
+    public ActiveExchangeRatesAdapter(Context context, List<Currency> activeCurrencies,
+                                      FloatingActionButton floatingActionButton) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
         mFloatingActionButton = floatingActionButton;
@@ -115,7 +115,7 @@ public class ActiveExchangeRatesRecyclerViewAdapter extends
     }
 
     @Override
-    public void onViewSwiped(final int position) {
+    public void onViewSwiped(RecyclerView.ViewHolder viewHolder, int direction, final int position) {
         final Currency swipedCurrency = mActiveCurrencies.get(position);
         final BigDecimal conversionValue = swipedCurrency.getConversionValue();
         swipedCurrency.setSelected(false);

@@ -20,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
-import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesRecyclerViewAdapter;
+import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesAdapter;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -47,11 +47,9 @@ public class ActiveExchangeRatesFragment extends Fragment {
     private SharedPreferences mSharedPreferencesRates;
 
     private RecyclerView mRecyclerView;
-    private ActiveExchangeRatesRecyclerViewAdapter mAdapter;
+    private ActiveExchangeRatesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
-    private SwipeAndDragHelper mSwipeAndDragHelper;
-    private ItemTouchHelper mItemTouchHelper;
 
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
@@ -133,15 +131,15 @@ public class ActiveExchangeRatesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
         mFloatingActionButton = view.findViewById(R.id.fab);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ActiveExchangeRatesRecyclerViewAdapter(getContext(), mActiveCurrencies,
+        mAdapter = new ActiveExchangeRatesAdapter(getContext(), mActiveCurrencies,
                 mFloatingActionButton);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
                 DividerItemDecoration.VERTICAL));
-        mSwipeAndDragHelper = new SwipeAndDragHelper(mAdapter);
-        mItemTouchHelper = new ItemTouchHelper(mSwipeAndDragHelper);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new SwipeAndDragHelper(mAdapter,
+                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
     }
 
     /**

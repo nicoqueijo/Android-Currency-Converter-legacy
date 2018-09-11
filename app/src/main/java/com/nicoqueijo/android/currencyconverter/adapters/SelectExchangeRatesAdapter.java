@@ -24,11 +24,11 @@ import java.util.List;
  * Implements Filterable to search and filter the long list of exchange rates.
  * Implements INameableAdapter to return the first char of the current element being scrolled.
  */
-public class SelectExchangeRatesRecyclerViewAdapter extends
-        RecyclerView.Adapter<SelectExchangeRatesRecyclerViewAdapter.ViewHolder>
+public class SelectExchangeRatesAdapter extends
+        RecyclerView.Adapter<SelectExchangeRatesAdapter.ViewHolder>
         implements Filterable, INameableAdapter {
 
-    public static final String TAG = SelectExchangeRatesRecyclerViewAdapter.class.getSimpleName();
+    public static final String TAG = SelectExchangeRatesAdapter.class.getSimpleName();
 
     private SelectExchangeRatesFragment mSelectExchangeRatesFragment;
     private List<Currency> mCurrencies;
@@ -40,8 +40,8 @@ public class SelectExchangeRatesRecyclerViewAdapter extends
      * @param selectExchangeRatesFragment the selectExchangeRatesFragment fragment hosting this RecyclerView
      * @param allCurrencies               the list of all available currencies
      */
-    public SelectExchangeRatesRecyclerViewAdapter(SelectExchangeRatesFragment selectExchangeRatesFragment,
-                                                  List<Currency> allCurrencies) {
+    public SelectExchangeRatesAdapter(SelectExchangeRatesFragment selectExchangeRatesFragment,
+                                      List<Currency> allCurrencies) {
         mSelectExchangeRatesFragment = selectExchangeRatesFragment;
         mCurrencies = new ArrayList<>(allCurrencies);
         mCurrenciesFull = new ArrayList<>(allCurrencies);
