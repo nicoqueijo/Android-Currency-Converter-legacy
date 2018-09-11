@@ -12,7 +12,6 @@ import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesAdap
  * with a background layout.
  * Credit: https://www.androidhive.info/2017/09/android-recyclerview-swipe-delete-undo-using-
  * itemtouchhelper/
- *
  */
 public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
 
@@ -93,10 +92,14 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            final View foregroundView = ((ActiveExchangeRatesAdapter.ViewHolder) viewHolder)
-                    .mItemForeground;
+            ActiveExchangeRatesAdapter.ViewHolder thisHolder = ((ActiveExchangeRatesAdapter.ViewHolder) viewHolder);
+            final View foregroundView = thisHolder.mItemForeground;
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
+            final int DELETE_ICON_START_VISIBILITY = dX > 0.0 ? View.VISIBLE : View.INVISIBLE;
+            final int DELETE_ICON_END_VISIBILITY = dX < 0.0 ? View.VISIBLE : View.INVISIBLE;
+            thisHolder.mDeleteIconStart.setVisibility(DELETE_ICON_START_VISIBILITY);
+            thisHolder.mDeleteIconEnd.setVisibility(DELETE_ICON_END_VISIBILITY);
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

@@ -143,6 +143,8 @@ public class ActiveExchangeRatesAdapter extends
 
         public RelativeLayout mItemBackground;
         public LinearLayout mItemForeground;
+        public ImageView mDeleteIconStart;
+        public ImageView mDeleteIconEnd;
         public ImageView mFlagImage;
         public TextView mCurrencyCodeTextView;
         public CustomEditText mConversionValueEditText;
@@ -151,6 +153,8 @@ public class ActiveExchangeRatesAdapter extends
             super(itemView);
             mItemBackground = itemView.findViewById(R.id.item_background);
             mItemForeground = itemView.findViewById(R.id.item_foreground);
+            mDeleteIconStart = itemView.findViewById(R.id.delete_icon_start);
+            mDeleteIconEnd = itemView.findViewById(R.id.delete_icon_end);
             mFlagImage = itemView.findViewById(R.id.flag);
             mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
             mConversionValueEditText = itemView.findViewById(R.id.conversion_value);

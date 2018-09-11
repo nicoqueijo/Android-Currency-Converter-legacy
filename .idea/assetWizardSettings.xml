@@ -34,6 +34,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="outputName" value="ic_delete" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="ffffff" />
                                     </map>
                                   </option>
                                 </PersistentState>
