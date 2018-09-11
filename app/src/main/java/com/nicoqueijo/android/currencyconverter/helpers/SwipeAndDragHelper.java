@@ -12,6 +12,7 @@ import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesAdap
  * with a background layout.
  * Credit: https://www.androidhive.info/2017/09/android-recyclerview-swipe-delete-undo-using-
  * itemtouchhelper/
+ *
  */
 public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
 
