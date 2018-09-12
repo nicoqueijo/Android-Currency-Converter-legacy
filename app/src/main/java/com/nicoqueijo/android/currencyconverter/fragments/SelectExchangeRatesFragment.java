@@ -71,6 +71,11 @@ public class SelectExchangeRatesFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Hides the keyboard when app returns to focus. The keyboard pops up in the first place
+     * because the Fragment under this one has a list of EditTexts and when it is started again
+     * one of the EditText's will have the focus and force the keyboard to show.
+     */
     @Override
     public void onStart() {
         super.onStart();

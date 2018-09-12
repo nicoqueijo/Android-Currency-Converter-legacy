@@ -89,7 +89,8 @@
                 android:background="@android:color/transparent"
                 android:gravity="right|center_vertical"
                 android:inputType="numberDecimal"
-                android:minWidth="100dp" />
+                android:minWidth="100dp"
+                android:textSize="20sp" />
 
         </FrameLayout>
 
