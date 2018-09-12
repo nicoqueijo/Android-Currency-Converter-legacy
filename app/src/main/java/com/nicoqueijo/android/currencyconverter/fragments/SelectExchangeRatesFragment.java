@@ -85,7 +85,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     }
 
     /**
-     * Remove the Search menu item when this Fragment's view is destroyed as it is no longer needed
+     * Removes the Search menu item when this Fragment's view is destroyed as it is no longer needed
      * and would be irrelevant when other Fragment's take over the content frame.
      */
     @Override

@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
 
@@ -81,7 +82,7 @@ public class Utility {
      * Credit: https://stackoverflow.com/a/28937224/5906793
      */
     public static void roundDialogCorners(DialogFragment dialogFragment) {
-        dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color
+        dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color
                 .TRANSPARENT));
     }
 }

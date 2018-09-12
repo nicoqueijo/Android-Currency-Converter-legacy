@@ -6,10 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.dialogs.ErrorDialog;
@@ -23,8 +25,10 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     public static final String ARG_ERROR_MESSAGE = "arg_error_message";
 
+    private Toolbar mToolbar;
+    private ImageView mRefreshMenuItem;
     private String mErrorMessage;
-    private Button mShowHideButton;
+    private Button mShowButton;
 
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
@@ -63,8 +67,13 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAndListeners(View view) {
-        mShowHideButton = view.findViewById(R.id.show_hide_button);
-        mShowHideButton.setOnClickListener(this);
+        mToolbar = getActivity().findViewById(R.id.toolbar);
+        mToolbar.inflateMenu(R.menu.menu_refresh);
+        mRefreshMenuItem = (ImageView) mToolbar.getMenu().findItem(R.id.refresh).getActionView();
+        mRefreshMenuItem.setImageResource(R.drawable.ic_refresh);
+        mRefreshMenuItem.setPadding(24, 24, 24, 24);
+        mShowButton = view.findViewById(R.id.show_button);
+        mShowButton.setOnClickListener(this);
     }
 
     /**
@@ -75,5 +84,15 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
         FragmentManager fragmentManager = getFragmentManager();
         DialogFragment errorDialog = ErrorDialog.newInstance(mErrorMessage);
         errorDialog.show(fragmentManager, ErrorDialog.TAG);
+    }
+
+    /**
+     * Removes the Refresh menu item when this Fragment's view is destroyed as it is no longer
+     * needed and would be irrelevant when other Fragment's take over the content frame.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mToolbar.getMenu().removeItem(R.id.refresh);
     }
 }
