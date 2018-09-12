@@ -24,8 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -109,6 +108,13 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         initApiKey();
         apiFullUrl = API_BASE_URL + API_KEY_PARAM + apiKey + API_FORMAT_PARAM;
         appLaunchSetup();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: Active");
+        hideKeyboard();
     }
 
     /**
@@ -267,21 +273,22 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         };
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_refresh, menu);
-        final ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
-        refreshMenuItem.setImageResource(R.drawable.ic_refresh);
-        refreshMenuItem.setPadding(24, 24, 24, 24);
-        refreshMenuItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processRefreshClick(refreshMenuItem);
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
+    // MOVE REFRESH MENU ITEM TO THE ERROR FRAGMENTS
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater menuInflater = getMenuInflater();
+//        menuInflater.inflate(R.menu.menu_refresh, menu);
+//        final ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
+//        refreshMenuItem.setImageResource(R.drawable.ic_refresh);
+//        refreshMenuItem.setPadding(24, 24, 24, 24);
+//        refreshMenuItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                processRefreshClick(refreshMenuItem);
+//            }
+//        });
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     /**
      * Upon back button press, instead of directly destroying the activity, it first closes the

@@ -171,10 +171,9 @@ public class ActiveExchangeRatesFragment extends Fragment {
      */
     private void hideKeyboard() {
         try {
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus()
-                    .getWindowToken(), 0);
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext()
+                    .getSystemService(getContext().INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getView().getRootView().getWindowToken(), 0);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

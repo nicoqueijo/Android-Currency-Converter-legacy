@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
@@ -68,6 +69,13 @@ public class SelectExchangeRatesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_select_exchange_rate, container, false);
         initViewsAdaptersAndListeners(view);
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().getWindow().setSoftInputMode(WindowManager
+                .LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
