@@ -71,6 +71,15 @@ public class SelectExchangeRatesFragment extends Fragment {
     }
 
     /**
+     * Remove the Search menu item when this Fragment is stopped as it is no longer needed.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        mToolbar.getMenu().removeItem(R.id.search);
+    }
+
+    /**
      * Initializes the views, sets up the adapters, and sets the setOnQueryTextListener listener
      * for the SearchView.
      *
@@ -78,7 +87,7 @@ public class SelectExchangeRatesFragment extends Fragment {
      */
     private void initViewsAdaptersAndListeners(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
-        mToolbar = view.findViewById(R.id.toolbar_search);
+        mToolbar = getActivity().findViewById(R.id.toolbar);
         mToolbar.inflateMenu(R.menu.menu_search);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);

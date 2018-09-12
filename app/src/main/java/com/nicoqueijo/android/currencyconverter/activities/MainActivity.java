@@ -263,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
             }
         };
     }

@@ -116,6 +116,7 @@ public class SelectExchangeRatesAdapter extends
             selectedCurrency.setSelected(true);
             mSelectExchangeRatesFragment.sendActiveCurrency(selectedCurrency);
             mSelectExchangeRatesFragment.getFragmentManager().popBackStack();
+
         }
     }
 
