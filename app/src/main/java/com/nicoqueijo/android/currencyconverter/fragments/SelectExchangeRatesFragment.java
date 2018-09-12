@@ -84,11 +84,12 @@ public class SelectExchangeRatesFragment extends Fragment {
     }
 
     /**
-     * Remove the Search menu item when this Fragment is stopped as it is no longer needed.
+     * Remove the Search menu item when this Fragment's view is destroyed as it is no longer needed
+     * and would be irrelevant when other Fragment's take over the content frame.
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         mToolbar.getMenu().removeItem(R.id.search);
     }
 
