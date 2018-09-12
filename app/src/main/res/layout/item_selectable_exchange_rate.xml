@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="64dp"
     android:orientation="horizontal"
     android:paddingBottom="8dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
     android:paddingTop="8dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -35,12 +36,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="8dp">
+            android:paddingLeft="16dp">
 
             <TextView
                 android:id="@+id/currency_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 tools:text="USD" />
@@ -50,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 tools:text="United States Dollar" />
 
         </LinearLayout>
@@ -58,12 +60,11 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/check"
+        android:id="@+id/check_mark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="16dp"
         android:src="@drawable/ic_check"
         android:visibility="invisible" />
 

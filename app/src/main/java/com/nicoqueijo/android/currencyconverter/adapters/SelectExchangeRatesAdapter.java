@@ -107,7 +107,7 @@ public class SelectExchangeRatesAdapter extends
             mFlag = itemView.findViewById(R.id.flag);
             mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mCurrencyName = itemView.findViewById(R.id.currency_name);
-            mCheck = itemView.findViewById(R.id.check);
+            mCheck = itemView.findViewById(R.id.check_mark);
         }
 
         @Override

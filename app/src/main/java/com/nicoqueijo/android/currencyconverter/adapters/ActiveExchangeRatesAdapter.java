@@ -123,7 +123,7 @@ public class ActiveExchangeRatesAdapter extends
         mActiveCurrencies.remove(position);
         notifyItemRemoved(position);
         Snackbar snackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
-                Snackbar.LENGTH_SHORT);
+                Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
