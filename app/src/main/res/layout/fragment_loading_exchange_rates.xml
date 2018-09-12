@@ -26,6 +26,7 @@
                 android:layout_gravity="center"
                 android:paddingTop="10dp"
                 android:text="@string/fetching_data"
+                android:textColor="@android:color/black"
                 android:textSize="22sp" />
 
         </LinearLayout>

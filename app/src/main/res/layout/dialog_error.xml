@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_dialog"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title_error"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:text="@string/error"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </ScrollView>
+
+</LinearLayout>

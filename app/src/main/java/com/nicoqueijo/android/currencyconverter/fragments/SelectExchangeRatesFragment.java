@@ -41,8 +41,9 @@ public class SelectExchangeRatesFragment extends Fragment {
     private SearchView mSearchView;
 
     /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
+     * * Factory method to create a new instance of this fragment using the provided parameters.
      *
+     * @param allCurrencies the list of all available currencies.
      * @return a new instance of fragment
      */
     public static SelectExchangeRatesFragment newInstance(ArrayList<Currency> allCurrencies) {

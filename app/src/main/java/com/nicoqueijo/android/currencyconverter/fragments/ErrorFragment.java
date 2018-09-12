@@ -3,14 +3,16 @@ package com.nicoqueijo.android.currencyconverter.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.dialogs.ErrorDialog;
 
 /**
  * Fragment to notify the user that an error has occurred.
@@ -23,11 +25,11 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     private String mErrorMessage;
     private Button mShowHideButton;
-    private TextView mErrorMessageTextView;
 
     /**
      * Factory method to create a new instance of this fragment using the provided parameters.
      *
+     * @param errorMessage error message returned by the API call
      * @return a new instance of fragment
      */
     public static ErrorFragment newInstance(String errorMessage) {
@@ -62,24 +64,16 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
      */
     private void initViewsAndListeners(View view) {
         mShowHideButton = view.findViewById(R.id.show_hide_button);
-        mErrorMessageTextView = view.findViewById(R.id.error_message);
-        mErrorMessageTextView.setText(mErrorMessage);
-        mErrorMessageTextView.setVisibility(View.GONE);
         mShowHideButton.setOnClickListener(this);
     }
 
     /**
-     * Toggles between hiding and showing the error message.
+     * Shows a dialog with the error message (as returned by the API call) upon click.
      */
     @Override
     public void onClick(View v) {
-        if (mShowHideButton.getText().toString().equals(getResources()
-                .getString(R.string.show))) {
-            mShowHideButton.setText(R.string.hide);
-            mErrorMessageTextView.setVisibility(View.VISIBLE);
-        } else {
-            mShowHideButton.setText(R.string.show);
-            mErrorMessageTextView.setVisibility(View.GONE);
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        DialogFragment errorDialog = ErrorDialog.newInstance(mErrorMessage);
+        errorDialog.show(fragmentManager, ErrorDialog.TAG);
     }
 }

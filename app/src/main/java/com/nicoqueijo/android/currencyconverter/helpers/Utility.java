@@ -2,6 +2,8 @@ package com.nicoqueijo.android.currencyconverter.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.DialogFragment;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -72,5 +74,14 @@ public class Utility {
     public static BigDecimal roundBigDecimal(BigDecimal value) {
         final int DECIMAL_PLACES = 2;
         return value.setScale(DECIMAL_PLACES, RoundingMode.CEILING);
+    }
+
+    /**
+     * Allows background_dialog.xml to take effect and round the Dialog's corners.
+     * Credit: https://stackoverflow.com/a/28937224/5906793
+     */
+    public static void roundDialogCorners(DialogFragment dialogFragment) {
+        dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color
+                .TRANSPARENT));
     }
 }

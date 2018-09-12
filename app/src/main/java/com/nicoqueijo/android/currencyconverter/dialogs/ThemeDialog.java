@@ -11,10 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 
 /**
- * DialogFragment that allows the user to change the app's theme. Implements OnClickListener to
- * handle the theme option clicks.
+ * Dialog that allows the user to change the app's theme. Implements OnClickListener to handle the
+ * theme option clicks.
  */
 public class ThemeDialog extends SettingsDialog implements View.OnClickListener {
 
@@ -54,6 +55,7 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_theme, container, false);
+        Utility.roundDialogCorners(this);
         initViews(view);
         restoreSavedTheme();
         disableRadioButtons();

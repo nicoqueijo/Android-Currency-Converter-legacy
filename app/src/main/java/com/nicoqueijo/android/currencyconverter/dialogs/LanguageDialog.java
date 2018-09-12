@@ -13,12 +13,13 @@ import android.widget.RadioButton;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
+import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 
 import java.util.Locale;
 
 /**
- * DialogFragment that allows the user to change the app's language. Implements OnClickListener to
- * handle the language option clicks.
+ * Dialog that allows the user to change the app's language. Implements OnClickListener to handle
+ * the language option clicks.
  */
 public class LanguageDialog extends SettingsDialog implements View.OnClickListener {
 
@@ -58,6 +59,7 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_language, container, false);
+        Utility.roundDialogCorners(this);
         initViews(view);
         restoreSavedLanguage();
         disableRadioButtons();
