@@ -310,18 +310,20 @@ public class ActiveExchangeRatesAdapter extends
 
         /**
          * Checks whether the input string can cause overflow. To be on the safe side we are not
-         * allowing more than 14 digits to be entered. This includes the two decimal places.
-         * If user entered a 15th digit it is removed.
+         * allowing more than 10 digits to be entered. This includes the two decimal places.
+         * If user entered a 11th digit it is removed.
          *
          * @param s input string entered by user
          * @return whether adding an additional digit may cause overflow
          */
         private boolean causesOverflow(CharSequence s) {
+            final int MAX_DIGITS_ALLOWED = 10;
+            final long VIBRATION_LENGTH = 1L;
+            final String ANY_NON_DIGIT_REGEX = "\\D";
             String inputString = s.toString();
-            String anyNonDigitRegex = "\\D";
-            inputString = inputString.replaceAll(anyNonDigitRegex, "");
-            if (inputString.length() > 14 && !mOnBind) {
-                mVibrator.vibrate(25L);
+            inputString = inputString.replaceAll(ANY_NON_DIGIT_REGEX, "");
+            if (inputString.length() > MAX_DIGITS_ALLOWED && !mOnBind) {
+                mVibrator.vibrate(VIBRATION_LENGTH);
                 itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
                 mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
                 mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());

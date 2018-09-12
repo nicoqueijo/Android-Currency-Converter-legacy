@@ -24,7 +24,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -108,13 +107,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         initApiKey();
         apiFullUrl = API_BASE_URL + API_KEY_PARAM + apiKey + API_FORMAT_PARAM;
         appLaunchSetup();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: Active");
-        hideKeyboard();
     }
 
     /**
