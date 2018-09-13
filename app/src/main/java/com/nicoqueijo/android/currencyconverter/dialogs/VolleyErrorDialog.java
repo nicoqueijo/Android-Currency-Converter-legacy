@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.VolleyErrorFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 
 /**
  * Dialog to display an error message to the user.
  */
-public class ErrorDialog extends DialogFragment {
+public class VolleyErrorDialog extends DialogFragment {
 
-    public static final String TAG = ErrorDialog.class.getSimpleName();
+    public static final String TAG = VolleyErrorDialog.class.getSimpleName();
 
     private String mErrorMessage;
     private TextView mErrorMessageTextView;
@@ -29,19 +29,19 @@ public class ErrorDialog extends DialogFragment {
      * @param errorMessage error message returned by the API call
      * @return a new instance of fragment
      */
-    public static ErrorDialog newInstance(String errorMessage) {
-        ErrorDialog errorDialog = new ErrorDialog();
+    public static VolleyErrorDialog newInstance(String errorMessage) {
+        VolleyErrorDialog volleyErrorDialog = new VolleyErrorDialog();
         Bundle args = new Bundle();
-        args.putString(ErrorFragment.ARG_ERROR_MESSAGE, errorMessage);
-        errorDialog.setArguments(args);
-        return errorDialog;
+        args.putString(VolleyErrorFragment.ARG_ERROR_MESSAGE, errorMessage);
+        volleyErrorDialog.setArguments(args);
+        return volleyErrorDialog;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mErrorMessage = getArguments().getString(ErrorFragment.ARG_ERROR_MESSAGE);
+            mErrorMessage = getArguments().getString(VolleyErrorFragment.ARG_ERROR_MESSAGE);
         }
     }
 

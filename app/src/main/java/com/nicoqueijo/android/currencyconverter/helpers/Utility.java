@@ -1,9 +1,12 @@
 package com.nicoqueijo.android.currencyconverter.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.DialogFragment;
 
 import java.math.BigDecimal;
@@ -84,5 +87,18 @@ public class Utility {
     public static void roundDialogCorners(DialogFragment dialogFragment) {
         dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color
                 .TRANSPARENT));
+    }
+
+    /**
+     * Checks weather there is currently an active internet connection.
+     *
+     * @param activity hosting activity from where this method is being called from.
+     * @return whether there is an internet connection.
+     */
+    public static boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) activity
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

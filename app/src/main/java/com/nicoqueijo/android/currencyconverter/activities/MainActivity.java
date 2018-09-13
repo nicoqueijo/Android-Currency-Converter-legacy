@@ -6,14 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,10 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -42,11 +36,11 @@ import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
-import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.ConnectionErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
-import com.nicoqueijo.android.currencyconverter.fragments.NoInternetFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.VolleyErrorFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -58,7 +52,6 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
@@ -265,23 +258,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         };
     }
 
-    // MOVE REFRESH MENU ITEM TO THE ERROR FRAGMENTS
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.menu_refresh, menu);
-//        final ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
-//        refreshMenuItem.setImageResource(R.drawable.ic_refresh);
-//        refreshMenuItem.setPadding(24, 24, 24, 24);
-//        refreshMenuItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                processRefreshClick(refreshMenuItem);
-//            }
-//        });
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
     /**
      * Upon back button press, instead of directly destroying the activity, it first closes the
      * navigation drawer if it is open, it then pops the fragment backstack if not empty, and
@@ -339,22 +315,21 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * values then we load a Fragment to display them. If we don't have any values locally then we
      * load a Fragment that notifies the user that we have no internet connection.
      */
-    private void appLaunchSetup() {
+    public void appLaunchSetup() {
         final long EMPTY_SHARED_PREFS = -1L;
         final long TWELVE_HOURS = 43200000L;
         long timeOfLastUpdate = checkForLastUpdate();
-        if (isNetworkAvailable()) {
-            if (timeOfLastUpdate > TWELVE_HOURS ||
-                    timeOfLastUpdate == EMPTY_SHARED_PREFS) {
-                if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment
-                            .newInstance();
-                    fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
-                            LoadingExchangeRatesFragment.TAG);
-                    fragmentTransaction.commit();
-                    makeApiCall();
-                }
+        if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment
+                    .newInstance();
+            fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
+                    LoadingExchangeRatesFragment.TAG);
+            fragmentTransaction.commit();
+        }
+        if (Utility.isNetworkAvailable(this)) {
+            if (timeOfLastUpdate > TWELVE_HOURS || timeOfLastUpdate == EMPTY_SHARED_PREFS) {
+                makeApiCall();
             } else {
                 if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -376,10 +351,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     fragmentTransaction.commit();
                 }
             } else {
-                Fragment noInternetFragment = NoInternetFragment.newInstance();
+                Fragment noInternetFragment = ConnectionErrorFragment.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_frame, noInternetFragment,
-                        NoInternetFragment.TAG);
+                        ConnectionErrorFragment.TAG);
                 fragmentTransaction.commit();
             }
         }
@@ -392,25 +367,25 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      *
      * @param menuItem the ImageView of the refresh menu item in order to animate it.
      */
-    private void processRefreshClick(ImageView menuItem) {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        if (isNetworkAvailable()) {
-            Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
-            menuItem.startAnimation(animRotate);
-            Fragment activeFragment = fragmentManager.getFragments().get(0);
-            if (activeFragment.getTag().equals(ErrorFragment.TAG) ||
-                    activeFragment.getTag().equals(NoInternetFragment.TAG)) {
-                Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
-                        LoadingExchangeRatesFragment.TAG);
-                fragmentTransaction.commit();
-                makeApiCall();
-            }
-        } else {
-            showNoInternetSnackbar();
-        }
-    }
+//    private void processRefreshClick(ImageView menuItem) {
+//        mDrawerLayout.closeDrawer(GravityCompat.START);
+//        if (isNetworkAvailable()) {
+//            Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+//            menuItem.startAnimation(animRotate);
+//            Fragment activeFragment = fragmentManager.getFragments().get(0);
+//            if (activeFragment.getTag().equals(VolleyErrorFragment.TAG) ||
+//                    activeFragment.getTag().equals(ConnectionErrorFragment.TAG)) {
+//                Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
+//                        LoadingExchangeRatesFragment.TAG);
+//                fragmentTransaction.commit();
+//                makeApiCall();
+//            }
+//        } else {
+//            showNoInternetSnackbar();
+//        }
+//    }
 
     /**
      * Initializes the Volley request queue, makes the API call, and adds the request to the queue.
@@ -419,15 +394,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         volleyRequestQueue = Volley.newRequestQueue(this);
         initVolleyStringRequest();
         volleyRequestQueue.add(stringRequest);
-    }
-
-    /**
-     * Shows the Snackbar notifying there is no internet connection.
-     */
-    private void showNoInternetSnackbar() {
-        List<Fragment> fragmentList = fragmentManager.getFragments();
-        Fragment activeFragment = fragmentList.get(0);
-        Snackbar.make(activeFragment.getView(), R.string.no_internet, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -488,18 +454,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Checks weather there is currently an active internet connection.
-     *
-     * @return whether there is an internet connection.
-     */
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    /**
      * Attempts to request a string response from the provided URL.
      * If a response is received we first check if its "success" key returned true. If it did we
      * can update our local exchange rate values and load the Fragment that performs the
@@ -530,11 +484,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 final int INDENT_SPACES = 4;
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 String errorMessage = error.toString(INDENT_SPACES);
-                                Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
+                                Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
                                 FragmentTransaction fragmentTransaction = fragmentManager
                                         .beginTransaction();
                                 fragmentTransaction.replace(R.id.content_frame, errorFragment,
-                                        ErrorFragment.TAG);
+                                        VolleyErrorFragment.TAG);
                                 fragmentTransaction.commit();
                             }
                         } catch (JSONException e) {
@@ -545,9 +499,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String errorMessage = error.toString();
-                Fragment errorFragment = ErrorFragment.newInstance(errorMessage);
+                Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, errorFragment, ErrorFragment.TAG);
+                fragmentTransaction.replace(R.id.content_frame, errorFragment, VolleyErrorFragment.TAG);
                 fragmentTransaction.commit();
             }
         });

@@ -10,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesAdapter;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -25,7 +28,7 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar;
 import java.util.ArrayList;
 
 /**
- * Fragment used to search and add exchange rates to the ActiveExchangeRatesFragment.
+ * Fragment used to search, filter, and add exchange rates to the ActiveExchangeRatesFragment.
  */
 public class SelectExchangeRatesFragment extends Fragment {
 
@@ -33,12 +36,13 @@ public class SelectExchangeRatesFragment extends Fragment {
 
     ArrayList<Currency> mAllCurrencies;
 
+    private MainActivity hostingActivity;
+    private Toolbar mToolbar;
+    private SearchView mSearchView;
     private RecyclerView mRecyclerView;
     private SelectExchangeRatesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Toolbar mToolbar;
     private DragScrollBar mDragScrollBar;
-    private SearchView mSearchView;
 
     /**
      * * Factory method to create a new instance of this fragment using the provided parameters.
@@ -57,6 +61,9 @@ public class SelectExchangeRatesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        hostingActivity = (MainActivity) getActivity();
+        mToolbar = hostingActivity.findViewById(R.id.toolbar);
         if (getArguments() != null) {
             mAllCurrencies = getArguments().getParcelableArrayList(ActiveExchangeRatesFragment
                     .ARG_ALL_CURRENCIES);
@@ -72,46 +79,10 @@ public class SelectExchangeRatesFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Hides the keyboard when app returns to focus. The keyboard pops up in the first place
-     * because the Fragment under this one has a list of EditTexts and when it is started again
-     * one of the EditText's will have the focus and force the keyboard to show.
-     */
     @Override
-    public void onStart() {
-        super.onStart();
-        getActivity().getWindow().setSoftInputMode(WindowManager
-                .LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
-
-    /**
-     * Removes the Search menu item when this Fragment's view is destroyed as it is no longer needed
-     * and would be irrelevant when other Fragment's take over the content frame.
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mToolbar.getMenu().removeItem(R.id.search);
-    }
-
-    /**
-     * Initializes the views, sets up the adapters, and sets the setOnQueryTextListener listener
-     * for the SearchView.
-     *
-     * @param view the root view of the inflated hierarchy
-     */
-    private void initViewsAdaptersAndListeners(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
-        mToolbar = getActivity().findViewById(R.id.toolbar);
-        mToolbar.inflateMenu(R.menu.menu_search);
-        mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
-        mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
-        mAdapter = new SelectExchangeRatesAdapter(this, mAllCurrencies);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                DividerItemDecoration.VERTICAL));
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_search, menu);
         mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -126,6 +97,49 @@ public class SelectExchangeRatesFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    /**
+     * Hides the keyboard when app returns to focus. The keyboard pops up in the first place
+     * because the Fragment under this one has a list of EditTexts and when it is started again
+     * one of the EditText's will have the focus and force the keyboard to show.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        hostingActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams
+                .SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    /**
+     * Removes the Search menu item when this Fragment's view is destroyed as it is no longer
+     * needed and would be irrelevant when other Fragment's take over the content frame.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        try {
+            mToolbar.getMenu().removeItem(R.id.search);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Initializes the views and sets up the adapters.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    private void initViewsAdaptersAndListeners(View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
+        mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
+        mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
+        mAdapter = new SelectExchangeRatesAdapter(this, mAllCurrencies);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL));
     }
 
     /**
