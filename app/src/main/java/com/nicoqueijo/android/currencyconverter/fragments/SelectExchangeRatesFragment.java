@@ -61,9 +61,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        hostingActivity = (MainActivity) getActivity();
-        mToolbar = hostingActivity.findViewById(R.id.toolbar);
+        setUpFragment();
         if (getArguments() != null) {
             mAllCurrencies = getArguments().getParcelableArrayList(ActiveExchangeRatesFragment
                     .ARG_ALL_CURRENCIES);
@@ -82,21 +80,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_search, menu);
-        mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
-        mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                mAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
+        initMenu(menu, inflater);
     }
 
     /**
@@ -123,6 +107,40 @@ public class SelectExchangeRatesFragment extends Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the reference to the hosting activity and the toolbar. Notifies this fragment that it
+     * has a menu.
+     */
+    private void setUpFragment() {
+        setHasOptionsMenu(true);
+        hostingActivity = (MainActivity) getActivity();
+        mToolbar = hostingActivity.findViewById(R.id.toolbar);
+    }
+
+    /**
+     * Sets up the menu for this fragment.
+     *
+     * @param menu     The options menu in which you place your items.
+     * @param inflater used to instantiate menu XML files into Menu objects.
+     */
+    public void initMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+        mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
+        mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     /**

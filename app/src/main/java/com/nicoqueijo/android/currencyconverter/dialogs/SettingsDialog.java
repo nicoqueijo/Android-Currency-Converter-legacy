@@ -16,6 +16,8 @@ import java.util.Stack;
  */
 public abstract class SettingsDialog extends DialogFragment {
 
+    public static final String TAG = SettingsDialog.class.getSimpleName();
+
     public SharedPreferences mSharedPreferences;
     public Stack<RadioButton> mActiveRadioButton = new Stack<>();
 

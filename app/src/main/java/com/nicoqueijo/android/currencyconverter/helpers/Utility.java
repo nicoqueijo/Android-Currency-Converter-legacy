@@ -15,7 +15,7 @@ import java.math.RoundingMode;
 /**
  * Provides useful, general-purpose methods to be used across the project.
  */
-public class Utility {
+public final class Utility {
     /**
      * Retrieves string resources using a String instead of an int.
      * Credit: https://stackoverflow.com/a/11595723/5906793

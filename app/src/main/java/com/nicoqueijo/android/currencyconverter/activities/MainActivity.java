@@ -361,33 +361,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Attempts to refresh the exchange rate data if an internet connection is active and an error
-     * had previously occurred. Otherwise it displays a Snackbar notifying there is no internet
-     * connection.
-     *
-     * @param menuItem the ImageView of the refresh menu item in order to animate it.
-     */
-//    private void processRefreshClick(ImageView menuItem) {
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
-//        if (isNetworkAvailable()) {
-//            Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
-//            menuItem.startAnimation(animRotate);
-//            Fragment activeFragment = fragmentManager.getFragments().get(0);
-//            if (activeFragment.getTag().equals(VolleyErrorFragment.TAG) ||
-//                    activeFragment.getTag().equals(ConnectionErrorFragment.TAG)) {
-//                Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment.newInstance();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
-//                        LoadingExchangeRatesFragment.TAG);
-//                fragmentTransaction.commit();
-//                makeApiCall();
-//            }
-//        } else {
-//            showNoInternetSnackbar();
-//        }
-//    }
-
-    /**
      * Initializes the Volley request queue, makes the API call, and adds the request to the queue.
      */
     private void makeApiCall() {
