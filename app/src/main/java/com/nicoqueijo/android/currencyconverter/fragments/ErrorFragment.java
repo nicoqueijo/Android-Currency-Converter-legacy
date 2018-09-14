@@ -7,8 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.nicoqueijo.android.currencyconverter.R;
@@ -62,15 +60,12 @@ public abstract class ErrorFragment extends Fragment {
     }
 
     /**
-     * When the refresh menu item is clicked, the drawer is closed (if open), a rotating animation
-     * is done on the menu item, and the hosting activity retries to fetch data. If there is no
-     * internet a Snackbar is shown.
+     * When the refresh menu item is clicked, the drawer is closed (if open) and the hosting
+     * activity retries to fetch data. If there is no internet a Snackbar is shown.
      */
     public void processRefreshClick() {
         hostingActivity.mDrawerLayout.closeDrawer(GravityCompat.START);
         if (Utility.isNetworkAvailable(hostingActivity)) {
-            Animation animRotate = AnimationUtils.loadAnimation(hostingActivity, R.anim.rotate);
-            mRefreshMenuItem.startAnimation(animRotate);
             hostingActivity.appLaunchSetup();
         } else {
             showNoInternetSnackbar();
