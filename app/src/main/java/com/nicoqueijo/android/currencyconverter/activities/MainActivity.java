@@ -35,10 +35,11 @@ import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
-import com.nicoqueijo.android.currencyconverter.fragments.ActiveExchangeRatesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.ActiveCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.ConnectionErrorFragment;
-import com.nicoqueijo.android.currencyconverter.fragments.LoadingExchangeRatesFragment;
-import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.LoadingCurrenciesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.VolleyErrorFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -52,6 +53,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
@@ -147,27 +149,50 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
-
+                        boolean selected = false;
                         // Delegate all this to a method(s) later //////////////////////////////////
                         final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
                         final String PACKAGE_NAME = getPackageName();
                         FragmentTransaction fragmentTransaction;
                         switch (menuItem.getItemId()) {
                             case R.id.nav_item_convert: {
-                                Fragment fragment = fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
-                                if (sourceCodeFragment != null) {
-                                    fragmentTransaction.hide(fragmentManager.findFragmentByTag(SourceCodeFragment.TAG));
+                                Fragment visibleFragment = getVisibleFragment();
+                                if (menuItem.isChecked()) {
+                                    if (visibleFragment instanceof ErrorFragment) {
+                                        ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
+                                    }
+                                    selected = true;
+                                    break;
                                 }
-                                if (fragment == null) {
-                                    fragment = ActiveExchangeRatesFragment.newInstance();
-                                    fragmentTransaction.add(R.id.content_frame, fragment, ActiveExchangeRatesFragment.TAG);
-                                    fragmentTransaction.show(fragment);
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.hide(visibleFragment);
+                                fragmentTransaction.show(fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG));
+                                fragmentTransaction.commit();
+                                selected = true;
+                            }
+                            break;
+                            case R.id.nav_item_source_code: {
+                                Fragment visibleFragment = getVisibleFragment();
+                                if (menuItem.isChecked()) {
+                                    selected = true;
+                                    break;
+                                }
+                                if (visibleFragment instanceof ErrorFragment) {
+                                    ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
+                                    selected = false;
+                                    break;
+                                }
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.hide(visibleFragment);
+                                Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
+                                if (sourceCodeFragment == null) {
+                                    sourceCodeFragment = SourceCodeFragment.newInstance();
+                                    fragmentTransaction.add(R.id.content_frame, sourceCodeFragment, SourceCodeFragment.TAG);
                                 } else {
-                                    fragmentTransaction.show(fragment);
+                                    fragmentTransaction.show(sourceCodeFragment);
                                 }
                                 fragmentTransaction.commit();
+                                selected = true;
                             }
                             break;
                             case R.id.nav_item_language: {
@@ -180,23 +205,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 themeDialog.show(fragmentManager, ThemeDialog.TAG);
                             }
                             break;
-                            case R.id.nav_item_source_code: {
-                                Fragment fragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                if (fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) != null) {
-                                    fragmentTransaction.remove(fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG));
-                                }
-                                fragmentTransaction.hide(fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG));
-                                if (fragment == null) {
-                                    fragment = SourceCodeFragment.newInstance();
-                                    fragmentTransaction.add(R.id.content_frame, fragment, SourceCodeFragment.TAG);
-                                    fragmentTransaction.show(fragment);
-                                } else {
-                                    fragmentTransaction.show(fragment);
-                                }
-                                fragmentTransaction.commit();
-                            }
-                            break;
+
+
                             case R.id.nav_item_share: {
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                 shareIntent.setType("text/plain");
@@ -237,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             break;
                         }
                         ////////////////////////////////////////////////////////////////////////////
-                        return true;
+                        return selected;
                     }
                 });
 
@@ -319,35 +329,35 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         final long EMPTY_SHARED_PREFS = -1L;
         final long TWELVE_HOURS = 43200000L;
         long timeOfLastUpdate = checkForLastUpdate();
-        if (fragmentManager.findFragmentByTag(LoadingExchangeRatesFragment.TAG) == null) {
+        if (fragmentManager.findFragmentByTag(LoadingCurrenciesFragment.TAG) == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment loadingExchangeRatesFragment = LoadingExchangeRatesFragment
+            Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment
                     .newInstance();
             fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
-                    LoadingExchangeRatesFragment.TAG);
+                    LoadingCurrenciesFragment.TAG);
             fragmentTransaction.commit();
         }
         if (Utility.isNetworkAvailable(this)) {
             if (timeOfLastUpdate > TWELVE_HOURS || timeOfLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
-                if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                if (fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                    Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment
                             .newInstance();
                     fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                            ActiveExchangeRatesFragment.TAG);
+                            ActiveCurrenciesFragment.TAG);
                     fragmentTransaction.commit();
                 }
             }
         } else {
             if (timeOfLastUpdate != EMPTY_SHARED_PREFS) {
-                if (fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG) == null) {
+                if (fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                    Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment
                             .newInstance();
                     fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                            ActiveExchangeRatesFragment.TAG);
+                            ActiveCurrenciesFragment.TAG);
                     fragmentTransaction.commit();
                 }
             } else {
@@ -383,8 +393,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             java.text.SimpleDateFormat simpleDateFormat =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
-            mLastUpdatedView.setTitle(getString(R.string.last_update, simpleDateFormat
-                    .format(date)));
+            mLastUpdatedView.setTitle(getString(R.string.last_update,
+                    simpleDateFormat.format(date)));
             return (currentTime - timestamp);
         }
         return -1L;
@@ -445,13 +455,13 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             if (success) {
                                 updateSharedPreferencesExchangeRates(jsonObject);
                                 checkForLastUpdate();
-                                Fragment activeExchangeRatesFragment = ActiveExchangeRatesFragment
+                                Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment
                                         .newInstance();
                                 FragmentTransaction fragmentTransaction = fragmentManager
                                         .beginTransaction();
                                 fragmentTransaction.replace(R.id.content_frame,
                                         activeExchangeRatesFragment,
-                                        ActiveExchangeRatesFragment.TAG);
+                                        ActiveCurrenciesFragment.TAG);
                                 fragmentTransaction.commit();
                             } else {
                                 final int INDENT_SPACES = 4;
@@ -501,8 +511,34 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     @Override
     public void passSelectedCurrency(Currency currency) {
-        ActiveExchangeRatesFragment activeExchangeRatesFragment = (ActiveExchangeRatesFragment)
-                fragmentManager.findFragmentByTag(ActiveExchangeRatesFragment.TAG);
-        activeExchangeRatesFragment.addActiveCurrency(currency);
+        ActiveCurrenciesFragment activeCurrenciesFragment = (ActiveCurrenciesFragment)
+                fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG);
+        activeCurrenciesFragment.addActiveCurrency(currency);
+    }
+
+    /**
+     * Returns the fragment that is currently visible to the user. Does this by iterating through
+     * the active fragments and determining which one is in memory and is visible. If this is the
+     * SelectCurrenciesFragment we remove it and pop it from the stack since this fragment is
+     * really a supplement to the ActiveCurrenciesFragment.
+     *
+     * @return the fragment currently being displayed or null of no fragments in manager.
+     */
+    private Fragment getVisibleFragment() {
+        List<Fragment> fragments = fragmentManager.getFragments();
+        Fragment visibleFragment = null;
+        for (Fragment fragment : fragments) {
+            if (fragment != null && fragment.isVisible()) {
+                if (fragment instanceof SelectCurrenciesFragment) {
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentManager.popBackStack();
+                    fragmentTransaction.commit();
+                    continue;
+                }
+                visibleFragment = fragment;
+            }
+        }
+        return visibleFragment;
     }
 }

@@ -20,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
-import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesAdapter;
+import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -36,9 +36,9 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Fragment that allows the user to add/remove/reorder exchange rates and perform conversions.
  */
-public class ActiveExchangeRatesFragment extends Fragment {
+public class ActiveCurrenciesFragment extends Fragment {
 
-    public static final String TAG = ActiveExchangeRatesFragment.class.getSimpleName();
+    public static final String TAG = ActiveCurrenciesFragment.class.getSimpleName();
     public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
     public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
@@ -47,7 +47,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
     private SharedPreferences mSharedPreferencesRates;
 
     private RecyclerView mRecyclerView;
-    private ActiveExchangeRatesAdapter mAdapter;
+    private ActiveCurrenciesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
 
@@ -56,8 +56,8 @@ public class ActiveExchangeRatesFragment extends Fragment {
      *
      * @return a new instance of fragment
      */
-    public static ActiveExchangeRatesFragment newInstance() {
-        return new ActiveExchangeRatesFragment();
+    public static ActiveCurrenciesFragment newInstance() {
+        return new ActiveCurrenciesFragment();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_active_exchange_rates, container, false);
+        View view = inflater.inflate(R.layout.fragment_active_currencies, container, false);
         initViewsAndAdapters(view);
         setUpFabOnClickListener();
         return view;
@@ -128,10 +128,10 @@ public class ActiveExchangeRatesFragment extends Fragment {
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAndAdapters(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_active_rates);
-        mFloatingActionButton = view.findViewById(R.id.fab);
+        mRecyclerView = view.findViewById(R.id.recycler_view_active_currencies);
+        mFloatingActionButton = view.findViewById(R.id.floating_action_button);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ActiveExchangeRatesAdapter(getContext(), mActiveCurrencies,
+        mAdapter = new ActiveCurrenciesAdapter(getContext(), mActiveCurrencies,
                 mFloatingActionButton);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -154,11 +154,11 @@ public class ActiveExchangeRatesFragment extends Fragment {
                 hideKeyboard();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                if (fragmentManager.findFragmentByTag(SelectExchangeRatesFragment.TAG) == null) {
-                    Fragment selectExchangeRateFragment = SelectExchangeRatesFragment
+                if (fragmentManager.findFragmentByTag(SelectCurrenciesFragment.TAG) == null) {
+                    Fragment selectCurrencyFragment = SelectCurrenciesFragment
                             .newInstance(mAllCurrencies);
-                    fragmentTransaction.add(R.id.content_frame, selectExchangeRateFragment,
-                            SelectExchangeRatesFragment.TAG);
+                    fragmentTransaction.add(R.id.content_frame, selectCurrencyFragment,
+                            SelectCurrenciesFragment.TAG);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
@@ -172,7 +172,7 @@ public class ActiveExchangeRatesFragment extends Fragment {
     private void hideKeyboard() {
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) getContext()
-                    .getSystemService(getContext().INPUT_METHOD_SERVICE);
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getRootView().getWindowToken(), 0);
         } catch (NullPointerException e) {
             e.printStackTrace();

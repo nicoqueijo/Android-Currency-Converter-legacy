@@ -6,13 +6,13 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/container_recycler_view_select_rates"
+        android:id="@+id/container_recycler_view_select_currencies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_select_rates"
+            android:id="@+id/recycler_view_select_currencies"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             app:msb_lightOnTouch="false"
-            app:msb_recyclerView="@id/recycler_view_select_rates" />
+            app:msb_recyclerView="@id/recycler_view_select_currencies" />
 
     </RelativeLayout>
 

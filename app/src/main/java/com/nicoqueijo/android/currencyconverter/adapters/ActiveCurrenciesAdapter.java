@@ -38,11 +38,11 @@ import java.util.Locale;
  * Adapter for the RecyclerView that displays the exchange rates the user is interacting with.
  * Implements SwipeAndDragHelper.IActionCompletionContract to remove and reorder items in the list.
  */
-public class ActiveExchangeRatesAdapter extends
-        RecyclerView.Adapter<ActiveExchangeRatesAdapter.ViewHolder>
+public class ActiveCurrenciesAdapter extends
+        RecyclerView.Adapter<ActiveCurrenciesAdapter.ViewHolder>
         implements SwipeAndDragHelper.IActionCompletionContract {
 
-    public static final String TAG = ActiveExchangeRatesAdapter.class.getSimpleName();
+    public static final String TAG = ActiveCurrenciesAdapter.class.getSimpleName();
 
     private Context mContext;
     private List<Currency> mActiveCurrencies;
@@ -63,8 +63,8 @@ public class ActiveExchangeRatesAdapter extends
      * @param activeCurrencies     the currencies the user is interacting with
      * @param floatingActionButton view to be used as the first param of the Snackbar's make method
      */
-    public ActiveExchangeRatesAdapter(Context context, List<Currency> activeCurrencies,
-                                      FloatingActionButton floatingActionButton) {
+    public ActiveCurrenciesAdapter(Context context, List<Currency> activeCurrencies,
+                                   FloatingActionButton floatingActionButton) {
         mContext = context;
         mActiveCurrencies = activeCurrencies;
         mFloatingActionButton = floatingActionButton;
@@ -82,7 +82,7 @@ public class ActiveExchangeRatesAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_active_exchange_rate, parent, false);
+                .inflate(R.layout.item_active_currency, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }

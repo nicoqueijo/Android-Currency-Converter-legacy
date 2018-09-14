@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.nicoqueijo.android.currencyconverter.adapters.ActiveExchangeRatesAdapter;
+import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
 
 /**
  * Implements the functionality of swipe to dismiss and drag & drop support to RecyclerView along
@@ -57,7 +57,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (viewHolder != null) {
-                final View foregroundView = ((ActiveExchangeRatesAdapter.ViewHolder) viewHolder)
+                final View foregroundView = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder)
                         .mItemForeground;
                 getDefaultUIUtil().onSelected(foregroundView);
             }
@@ -71,7 +71,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            final View foregroundView = ((ActiveExchangeRatesAdapter.ViewHolder) viewHolder)
+            final View foregroundView = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder)
                     .mItemForeground;
             getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
@@ -83,7 +83,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final View foregroundView = ((ActiveExchangeRatesAdapter.ViewHolder) viewHolder)
+        final View foregroundView = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder)
                 .mItemForeground;
         getDefaultUIUtil().clearView(foregroundView);
     }
@@ -92,7 +92,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            ActiveExchangeRatesAdapter.ViewHolder thisHolder = ((ActiveExchangeRatesAdapter.ViewHolder) viewHolder);
+            ActiveCurrenciesAdapter.ViewHolder thisHolder = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder);
             final View foregroundView = thisHolder.mItemForeground;
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);

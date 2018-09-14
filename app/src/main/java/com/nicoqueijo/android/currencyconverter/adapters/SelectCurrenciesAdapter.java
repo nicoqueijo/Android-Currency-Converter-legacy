@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.fragments.SelectExchangeRatesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
@@ -24,25 +24,25 @@ import java.util.List;
  * Implements Filterable to search and filter the long list of exchange rates.
  * Implements INameableAdapter to return the first char of the current element being scrolled.
  */
-public class SelectExchangeRatesAdapter extends
-        RecyclerView.Adapter<SelectExchangeRatesAdapter.ViewHolder>
+public class SelectCurrenciesAdapter extends
+        RecyclerView.Adapter<SelectCurrenciesAdapter.ViewHolder>
         implements Filterable, INameableAdapter {
 
-    public static final String TAG = SelectExchangeRatesAdapter.class.getSimpleName();
+    public static final String TAG = SelectCurrenciesAdapter.class.getSimpleName();
 
-    private SelectExchangeRatesFragment mSelectExchangeRatesFragment;
+    private SelectCurrenciesFragment mSelectCurrenciesFragment;
     private List<Currency> mCurrencies;
     private List<Currency> mCurrenciesFull;
 
     /**
      * Constructor for the adapter.
      *
-     * @param selectExchangeRatesFragment the selectExchangeRatesFragment fragment hosting this RecyclerView
+     * @param selectCurrenciesFragment the selectCurrenciesFragment fragment hosting this RecyclerView
      * @param allCurrencies               the list of all available currencies
      */
-    public SelectExchangeRatesAdapter(SelectExchangeRatesFragment selectExchangeRatesFragment,
-                                      List<Currency> allCurrencies) {
-        mSelectExchangeRatesFragment = selectExchangeRatesFragment;
+    public SelectCurrenciesAdapter(SelectCurrenciesFragment selectCurrenciesFragment,
+                                   List<Currency> allCurrencies) {
+        mSelectCurrenciesFragment = selectCurrenciesFragment;
         mCurrencies = new ArrayList<>(allCurrencies);
         mCurrenciesFull = new ArrayList<>(allCurrencies);
     }
@@ -51,7 +51,7 @@ public class SelectExchangeRatesAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_selectable_exchange_rate, parent, false);
+                .inflate(R.layout.item_selectable_currency, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -59,10 +59,10 @@ public class SelectExchangeRatesAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
-                .getCurrencyCode().toLowerCase(), mSelectExchangeRatesFragment.getContext()));
+                .getCurrencyCode().toLowerCase(), mSelectCurrenciesFragment.getContext()));
         holder.mCurrencyCode.setText(mCurrencies.get(position).getTrimmedCurrencyCode());
         holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
-                .getCurrencyCode(), mSelectExchangeRatesFragment.getContext()));
+                .getCurrencyCode(), mSelectCurrenciesFragment.getContext()));
         boolean currencyIsSelected = mCurrencies.get(position).isSelected();
         holder.itemView.setClickable(!currencyIsSelected);
         holder.mCheck.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
@@ -114,8 +114,8 @@ public class SelectExchangeRatesAdapter extends
         public void onClick(View v) {
             Currency selectedCurrency = mCurrencies.get(getAdapterPosition());
             selectedCurrency.setSelected(true);
-            mSelectExchangeRatesFragment.sendActiveCurrency(selectedCurrency);
-            mSelectExchangeRatesFragment.getFragmentManager().popBackStack();
+            mSelectCurrenciesFragment.sendActiveCurrency(selectedCurrency);
+            mSelectCurrenciesFragment.getFragmentManager().popBackStack();
 
         }
     }
@@ -142,7 +142,7 @@ public class SelectExchangeRatesAdapter extends
                 for (Currency currency : mCurrenciesFull) {
                     currencyCode = currency.getTrimmedCurrencyCode().toLowerCase();
                     currencyName = Utility.getStringResourceByName(currency.getCurrencyCode(),
-                            mSelectExchangeRatesFragment.getContext()).toLowerCase();
+                            mSelectCurrenciesFragment.getContext()).toLowerCase();
                     if (currencyCode.contains(filterPattern) ||
                             currencyName.contains(filterPattern)) {
                         filteredList.add(currency);

@@ -19,7 +19,7 @@ import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
-import com.nicoqueijo.android.currencyconverter.adapters.SelectExchangeRatesAdapter;
+import com.nicoqueijo.android.currencyconverter.adapters.SelectCurrenciesAdapter;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
@@ -28,11 +28,11 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar;
 import java.util.ArrayList;
 
 /**
- * Fragment used to search, filter, and add exchange rates to the ActiveExchangeRatesFragment.
+ * Fragment used to search, filter, and add exchange rates to the ActiveCurrenciesFragment.
  */
-public class SelectExchangeRatesFragment extends Fragment {
+public class SelectCurrenciesFragment extends Fragment {
 
-    public static final String TAG = SelectExchangeRatesFragment.class.getSimpleName();
+    public static final String TAG = SelectCurrenciesFragment.class.getSimpleName();
 
     ArrayList<Currency> mAllCurrencies;
 
@@ -40,7 +40,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     private Toolbar mToolbar;
     private SearchView mSearchView;
     private RecyclerView mRecyclerView;
-    private SelectExchangeRatesAdapter mAdapter;
+    private SelectCurrenciesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private DragScrollBar mDragScrollBar;
 
@@ -50,12 +50,12 @@ public class SelectExchangeRatesFragment extends Fragment {
      * @param allCurrencies the list of all available currencies.
      * @return a new instance of fragment
      */
-    public static SelectExchangeRatesFragment newInstance(ArrayList<Currency> allCurrencies) {
-        SelectExchangeRatesFragment selectExchangeRatesFragment = new SelectExchangeRatesFragment();
+    public static SelectCurrenciesFragment newInstance(ArrayList<Currency> allCurrencies) {
+        SelectCurrenciesFragment selectCurrenciesFragment = new SelectCurrenciesFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ActiveExchangeRatesFragment.ARG_ALL_CURRENCIES, allCurrencies);
-        selectExchangeRatesFragment.setArguments(args);
-        return selectExchangeRatesFragment;
+        args.putParcelableArrayList(ActiveCurrenciesFragment.ARG_ALL_CURRENCIES, allCurrencies);
+        selectCurrenciesFragment.setArguments(args);
+        return selectCurrenciesFragment;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SelectExchangeRatesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setUpFragment();
         if (getArguments() != null) {
-            mAllCurrencies = getArguments().getParcelableArrayList(ActiveExchangeRatesFragment
+            mAllCurrencies = getArguments().getParcelableArrayList(ActiveCurrenciesFragment
                     .ARG_ALL_CURRENCIES);
         }
     }
@@ -72,7 +72,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_select_exchange_rate, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_currency, container, false);
         initViewsAdaptersAndListeners(view);
         return view;
     }
@@ -149,10 +149,10 @@ public class SelectExchangeRatesFragment extends Fragment {
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAdaptersAndListeners(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_select_rates);
+        mRecyclerView = view.findViewById(R.id.recycler_view_select_currencies);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
-        mAdapter = new SelectExchangeRatesAdapter(this, mAllCurrencies);
+        mAdapter = new SelectCurrenciesAdapter(this, mAllCurrencies);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -161,7 +161,7 @@ public class SelectExchangeRatesFragment extends Fragment {
     }
 
     /**
-     * Passes the newly selected currency to the ActiveExchangeRatesFragment via an interface.
+     * Passes the newly selected currency to the ActiveCurrenciesFragment via an interface.
      *
      * @param currency the new currency that was selected
      */

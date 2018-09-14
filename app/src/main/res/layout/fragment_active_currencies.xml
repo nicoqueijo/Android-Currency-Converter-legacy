@@ -12,7 +12,7 @@
         app:fel_size_bottom="86dp">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_active_rates"
+            android:id="@+id/recycler_view_active_currencies"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -21,7 +21,7 @@
     </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
