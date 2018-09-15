@@ -313,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
+     * /////////////////////////// EDIT THIS AS I HAVE REFACTORED IT A LOT /////////////////////////////////////////////////////////////////////////
      * This code section determines which Fragment gets loaded into the content frame when the
      * Activity is created.
      * If we have internet connection and our exchange rate data has not been
@@ -324,48 +325,41 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * In the case that we have no internet we do the following. If we have local exchange rate
      * values then we load a Fragment to display them. If we don't have any values locally then we
      * load a Fragment that notifies the user that we have no internet connection.
+     * * /////////////////////////// EDIT THIS AS I HAVE REFACTORED IT A LOT /////////////////////////////////////////////////////////////////////////
      */
     public void appLaunchSetup() {
-        final long EMPTY_SHARED_PREFS = -1L;
-        final long TWELVE_HOURS = 43200000L;
         long timeOfLastUpdate = checkForLastUpdate();
         if (activityHasExistingData()) {
             return;
         }
-        if (fragmentManager.findFragmentByTag(LoadingCurrenciesFragment.TAG) == null) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment
-                    .newInstance();
-            fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
-                    LoadingCurrenciesFragment.TAG);
-            fragmentTransaction.commit();
-        }
+        final long EMPTY_SHARED_PREFS = -1L;
+        final long TWELVE_HOURS = 43200000L;
+        FragmentTransaction fragmentTransaction;
+        fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
+        fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
+                LoadingCurrenciesFragment.TAG);
+        fragmentTransaction.commit();
         if (Utility.isNetworkAvailable(this)) {
             if (timeOfLastUpdate > TWELVE_HOURS || timeOfLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
-                if (fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG) == null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment
-                            .newInstance();
-                    fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                            ActiveCurrenciesFragment.TAG);
-                    fragmentTransaction.commit();
-                }
+                fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment.newInstance();
+                fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
+                        ActiveCurrenciesFragment.TAG);
+                fragmentTransaction.commit();
             }
         } else {
             if (timeOfLastUpdate != EMPTY_SHARED_PREFS) {
-                if (fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG) == null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment
-                            .newInstance();
-                    fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                            ActiveCurrenciesFragment.TAG);
-                    fragmentTransaction.commit();
-                }
+                fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment.newInstance();
+                fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
+                        ActiveCurrenciesFragment.TAG);
+                fragmentTransaction.commit();
             } else {
                 Fragment noInternetFragment = ConnectionErrorFragment.newInstance();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_frame, noInternetFragment,
                         ConnectionErrorFragment.TAG);
                 fragmentTransaction.commit();
@@ -463,14 +457,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 FragmentTransaction fragmentTransaction = fragmentManager
                                         .beginTransaction();
                                 fragmentTransaction.replace(R.id.content_frame,
-                                        activeExchangeRatesFragment,
-                                        ActiveCurrenciesFragment.TAG);
+                                        activeExchangeRatesFragment, ActiveCurrenciesFragment.TAG);
                                 fragmentTransaction.commit();
                             } else {
                                 final int INDENT_SPACES = 4;
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 String errorMessage = error.toString(INDENT_SPACES);
-                                Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
+                                Fragment errorFragment = VolleyErrorFragment
+                                        .newInstance(errorMessage);
                                 FragmentTransaction fragmentTransaction = fragmentManager
                                         .beginTransaction();
                                 fragmentTransaction.replace(R.id.content_frame, errorFragment,
@@ -487,7 +481,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 String errorMessage = error.toString();
                 Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, errorFragment, VolleyErrorFragment.TAG);
+                fragmentTransaction.replace(R.id.content_frame, errorFragment,
+                        VolleyErrorFragment.TAG);
                 fragmentTransaction.commit();
             }
         });
