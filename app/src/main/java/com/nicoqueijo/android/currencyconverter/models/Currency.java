@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 /**
  * Model class for a currency.
- * Implements Parcelable so objects of this type can be passed between activities/fragments and or
+ * Implements Parcelable so objects of this type can be passed between Activities/Fragments and or
  * be saved in Bundles.
  */
 public class Currency implements Parcelable {

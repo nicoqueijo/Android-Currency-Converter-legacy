@@ -59,8 +59,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 /**
- * Main activity of the app. Hosts the app's fragments and navigation drawer.
- * Implements ICommunicator to send data between fragments.
+ * Main activity of the app. Hosts the app's Fragments and navigation drawer.
+ * Implements ICommunicator to send data between Fragments.
  */
 public class MainActivity extends AppCompatActivity implements ICommunicator {
 
@@ -140,6 +140,130 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         mCloseAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT);
     }
 
+    private boolean processNavItemConvert(MenuItem menuItem) {
+        FragmentTransaction fragmentTransaction;
+        Fragment visibleFragment = getVisibleFragment();
+        if (menuItem.isChecked()) {
+            if (visibleFragment instanceof ErrorFragment) {
+                ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
+            }
+            return true;
+        }
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.hide(visibleFragment);
+        fragmentTransaction.show(fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG));
+        fragmentTransaction.commit();
+        return true;
+    }
+
+    private boolean processNavItemSourceCode(MenuItem menuItem) {
+        FragmentTransaction fragmentTransaction;
+        Fragment visibleFragment = getVisibleFragment();
+        if (menuItem.isChecked()) {
+            return true;
+        }
+        if (visibleFragment instanceof ErrorFragment) {
+            ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
+            return true;
+        }
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.hide(visibleFragment);
+        Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
+        if (sourceCodeFragment == null) {
+            sourceCodeFragment = SourceCodeFragment.newInstance();
+            fragmentTransaction.add(R.id.content_frame, sourceCodeFragment, SourceCodeFragment.TAG);
+        } else {
+            fragmentTransaction.show(sourceCodeFragment);
+        }
+        fragmentTransaction.commit();
+        return true;
+    }
+
+    private boolean processNavItemLanguage() {
+        DialogFragment languageDialog = LanguageDialog.newInstance();
+        languageDialog.show(fragmentManager, LanguageDialog.TAG);
+        return false;
+    }
+
+    private boolean processNavItemTheme() {
+        DialogFragment themeDialog = ThemeDialog.newInstance();
+        themeDialog.show(fragmentManager, ThemeDialog.TAG);
+        return false;
+    }
+
+    private boolean processNavItemShare() {
+        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
+        final String PACKAGE_NAME = getPackageName();
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
+        return false;
+    }
+
+    private boolean processNavItemRateApp() {
+        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
+        final String PACKAGE_NAME = getPackageName();
+        final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
+        Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
+        rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
+        try {
+            startActivity(rateAppIntent);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL + PACKAGE_NAME));
+            startActivity(intent);
+        }
+        return false;
+    }
+
+    private boolean processNavItemContactUs() {
+        final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
+        final String DEVICE_INFO = "Device info:";
+        final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
+        final String DEVICE_MODEL = Build.MODEL;
+        final String ANDROID_VERSION = "Android version " + Build.VERSION.SDK_INT;
+        final String EMAIL_TEMPLATE = "\n\n\n" + DEVICE_INFO + "\n  " + DEVICE_MANUFACTURER + " " + DEVICE_MODEL + "\n  " + ANDROID_VERSION;
+        Intent contactUsIntent = new Intent(Intent.ACTION_SENDTO);
+        contactUsIntent.setData(Uri.parse("mailto:"));
+        contactUsIntent.putExtra(Intent.EXTRA_EMAIL, DEVELOPER_EMAIL);
+        contactUsIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
+        Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string.select_email_app));
+        startActivity(chooser);
+        return false;
+    }
+
+    private boolean processNavItemSelection(MenuItem menuItem) {
+        mDrawerLayout.closeDrawers();
+        boolean selected = false;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_item_convert:
+                selected = processNavItemConvert(menuItem);
+                break;
+            case R.id.nav_item_source_code:
+                selected = processNavItemSourceCode(menuItem);
+                break;
+            case R.id.nav_item_language:
+                selected = processNavItemLanguage();
+                break;
+            case R.id.nav_item_theme:
+                selected = processNavItemTheme();
+                break;
+            case R.id.nav_item_share:
+                selected = processNavItemShare();
+                break;
+            case R.id.nav_item_rate_app:
+                selected = processNavItemRateApp();
+                break;
+            case R.id.nav_item_contact_us:
+                selected = processNavItemContactUs();
+                break;
+        }
+        return selected;
+    }
+
     /**
      * Sets the listeners for navigation drawer.
      */
@@ -148,106 +272,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        mDrawerLayout.closeDrawers();
-                        boolean selected = false;
-                        // Delegate all this to a method(s) later //////////////////////////////////
-                        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
-                        final String PACKAGE_NAME = getPackageName();
-                        FragmentTransaction fragmentTransaction;
-                        switch (menuItem.getItemId()) {
-                            case R.id.nav_item_convert: {
-                                Fragment visibleFragment = getVisibleFragment();
-                                if (menuItem.isChecked()) {
-                                    if (visibleFragment instanceof ErrorFragment) {
-                                        ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
-                                    }
-                                    selected = true;
-                                    break;
-                                }
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.hide(visibleFragment);
-                                fragmentTransaction.show(fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG));
-                                fragmentTransaction.commit();
-                                selected = true;
-                            }
-                            break;
-                            case R.id.nav_item_source_code: {
-                                Fragment visibleFragment = getVisibleFragment();
-                                if (menuItem.isChecked()) {
-                                    selected = true;
-                                    break;
-                                }
-                                if (visibleFragment instanceof ErrorFragment) {
-                                    ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
-                                    selected = false;
-                                    break;
-                                }
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.hide(visibleFragment);
-                                Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
-                                if (sourceCodeFragment == null) {
-                                    sourceCodeFragment = SourceCodeFragment.newInstance();
-                                    fragmentTransaction.add(R.id.content_frame, sourceCodeFragment, SourceCodeFragment.TAG);
-                                } else {
-                                    fragmentTransaction.show(sourceCodeFragment);
-                                }
-                                fragmentTransaction.commit();
-                                selected = true;
-                            }
-                            break;
-                            case R.id.nav_item_language: {
-                                DialogFragment languageDialog = LanguageDialog.newInstance();
-                                languageDialog.show(fragmentManager, LanguageDialog.TAG);
-                            }
-                            break;
-                            case R.id.nav_item_theme: {
-                                DialogFragment themeDialog = ThemeDialog.newInstance();
-                                themeDialog.show(fragmentManager, ThemeDialog.TAG);
-                            }
-                            break;
-
-
-                            case R.id.nav_item_share: {
-                                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                                shareIntent.setType("text/plain");
-                                String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
-                                shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                                shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
-                                startActivity(Intent.createChooser(shareIntent,
-                                        getString(R.string.share_via)));
-                            }
-                            break;
-                            case R.id.nav_item_rate_app: {
-                                final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
-                                Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
-                                rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
-                                try {
-                                    startActivity(rateAppIntent);
-                                } catch (ActivityNotFoundException e) {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL + PACKAGE_NAME));
-                                    startActivity(intent);
-                                }
-                            }
-                            break;
-                            case R.id.nav_item_contact_us: {
-                                final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
-                                final String DEVICE_INFO = "Device info:";
-                                final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
-                                final String DEVICE_MODEL = Build.MODEL;
-                                final String ANDROID_VERSION = "Android version " + Build.VERSION.SDK_INT;
-                                final String EMAIL_TEMPLATE = "\n\n\n" + DEVICE_INFO + "\n  " + DEVICE_MANUFACTURER + " " + DEVICE_MODEL + "\n  " + ANDROID_VERSION;
-                                Intent contactUsIntent = new Intent(Intent.ACTION_SENDTO);
-                                contactUsIntent.setData(Uri.parse("mailto:"));
-                                contactUsIntent.putExtra(Intent.EXTRA_EMAIL, DEVELOPER_EMAIL);
-                                contactUsIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                                contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
-                                Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string.select_email_app));
-                                startActivity(chooser);
-                            }
-                            break;
-                        }
-                        ////////////////////////////////////////////////////////////////////////////
-                        return selected;
+                        return processNavItemSelection(menuItem);
                     }
                 });
 
@@ -270,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     /**
      * Upon back button press, instead of directly destroying the activity, it first closes the
-     * navigation drawer if it is open, it then pops the fragment backstack if not empty, and
+     * navigation drawer if it is open, it then pops the Fragment backstack if not empty, and
      * finally it asks the user to confirm they want to close the app in case they pressed the
      * back button accidentally.
      */
@@ -291,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * Gets called upon device configuration change like rotation. Overriding so the keyboard
      * doesn't pop up when device is rotated.
      *
-     * @param newConfig unused
+     * @param newConfig unused but required.
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -313,19 +338,24 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * /////////////////////////// EDIT THIS AS I HAVE REFACTORED IT A LOT /////////////////////////////////////////////////////////////////////////
      * This code section determines which Fragment gets loaded into the content frame when the
      * Activity is created.
+     * <p>
+     * If the activity was already created this means the user merely just changed the language or
+     * theme and recreate() method was called as a result. Since the Fragments are already in place
+     * we can exit.
+     * <p>
+     * Else, we place a splash screen Fragment on the content frame while we decide how to further
+     * proceed.
      * If we have internet connection and our exchange rate data has not been
-     * updated for at least six hours then we load a Fragment that shows a splash screen and make
-     * an API call to get fresh data. The method responsible for making the API call replaces this
-     * Fragment with an appropriate Fragment depending on the result of the call.
+     * updated for at least twelve hours then we make an API call to get fresh data. The method
+     * responsible for making the API call replaces this Fragment with an appropriate Fragment
+     * depending on the result of the call.
      * If our exchange rate data has been updated within the past six hours then we simply load the
      * Fragment that displays them with their current local values.
      * In the case that we have no internet we do the following. If we have local exchange rate
      * values then we load a Fragment to display them. If we don't have any values locally then we
      * load a Fragment that notifies the user that we have no internet connection.
-     * * /////////////////////////// EDIT THIS AS I HAVE REFACTORED IT A LOT /////////////////////////////////////////////////////////////////////////
      */
     public void appLaunchSetup() {
         long timeOfLastUpdate = checkForLastUpdate();
@@ -334,41 +364,29 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         }
         final long EMPTY_SHARED_PREFS = -1L;
         final long TWELVE_HOURS = 43200000L;
-        FragmentTransaction fragmentTransaction;
-        fragmentTransaction = fragmentManager.beginTransaction();
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
-        fragmentTransaction.replace(R.id.content_frame, loadingExchangeRatesFragment,
-                LoadingCurrenciesFragment.TAG);
-        fragmentTransaction.commit();
+        replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
             if (timeOfLastUpdate > TWELVE_HOURS || timeOfLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
-                fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment.newInstance();
-                fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                        ActiveCurrenciesFragment.TAG);
-                fragmentTransaction.commit();
+                Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
+                replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment.TAG);
             }
         } else {
             if (timeOfLastUpdate != EMPTY_SHARED_PREFS) {
-                fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment.newInstance();
-                fragmentTransaction.replace(R.id.content_frame, activeExchangeRatesFragment,
-                        ActiveCurrenciesFragment.TAG);
-                fragmentTransaction.commit();
+                Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
+                replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment.TAG);
             } else {
-                Fragment noInternetFragment = ConnectionErrorFragment.newInstance();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, noInternetFragment,
-                        ConnectionErrorFragment.TAG);
-                fragmentTransaction.commit();
+                Fragment connectionErrorFragment = ConnectionErrorFragment.newInstance();
+                replaceFragment(connectionErrorFragment, ConnectionErrorFragment.TAG);
             }
         }
     }
 
     /**
-     * Initializes the Volley request queue, makes the API call, and adds the request to the queue.
+     * Initializes the Volley request queue, makes the API call, and adds the request to volley's
+     * request queue.
      */
     private void makeApiCall() {
         volleyRequestQueue = Volley.newRequestQueue(this);
@@ -452,24 +470,17 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             if (success) {
                                 updateSharedPreferencesExchangeRates(jsonObject);
                                 checkForLastUpdate();
-                                Fragment activeExchangeRatesFragment = ActiveCurrenciesFragment
+                                Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
                                         .newInstance();
-                                FragmentTransaction fragmentTransaction = fragmentManager
-                                        .beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame,
-                                        activeExchangeRatesFragment, ActiveCurrenciesFragment.TAG);
-                                fragmentTransaction.commit();
+                                replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment
+                                        .TAG);
                             } else {
                                 final int INDENT_SPACES = 4;
                                 JSONObject error = jsonObject.getJSONObject("error");
                                 String errorMessage = error.toString(INDENT_SPACES);
-                                Fragment errorFragment = VolleyErrorFragment
+                                Fragment volleyErrorFragment = VolleyErrorFragment
                                         .newInstance(errorMessage);
-                                FragmentTransaction fragmentTransaction = fragmentManager
-                                        .beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame, errorFragment,
-                                        VolleyErrorFragment.TAG);
-                                fragmentTransaction.commit();
+                                replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -480,12 +491,22 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             public void onErrorResponse(VolleyError error) {
                 String errorMessage = error.toString();
                 Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, errorFragment,
-                        VolleyErrorFragment.TAG);
-                fragmentTransaction.commit();
+                replaceFragment(errorFragment, VolleyErrorFragment.TAG);
             }
         });
+    }
+
+    /**
+     * Replaces whatever Fragment is inside the content frame (if any) with the Fragment being
+     * passed.
+     *
+     * @param fragment the Fragment to replace the content frame with.
+     * @param tag      identifier for this transaction.
+     */
+    private void replaceFragment(Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, fragment, tag);
+        fragmentTransaction.commit();
     }
 
     /**
@@ -515,12 +536,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Returns the fragment that is currently visible to the user. Does this by iterating through
-     * the active fragments and determining which one is in memory and is visible. If this is the
-     * SelectCurrenciesFragment we remove it and pop it from the stack since this fragment is
+     * Returns the Fragment that is currently visible to the user. Does this by iterating through
+     * the active Fragments and determining which one is in memory and is visible. If this is the
+     * SelectCurrenciesFragment we remove it and pop it from the stack since this Fragment is
      * really a supplement to the ActiveCurrenciesFragment.
      *
-     * @return the fragment currently being displayed or null of no fragments in manager.
+     * @return the Fragment currently being displayed or null of no Fragments in manager.
      */
     private Fragment getVisibleFragment() {
         List<Fragment> fragments = fragmentManager.getFragments();
@@ -542,8 +563,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     /**
      * Determines if the app is at a state where it contains data the user can interact with. This
-     * is true when there is a fragment present in the content frame and that fragment is not an
-     * error fragment.
+     * is true when there is a Fragment present in the content frame and that Fragment is not an
+     * error Fragment.
      *
      * @return true if method description holds.
      */

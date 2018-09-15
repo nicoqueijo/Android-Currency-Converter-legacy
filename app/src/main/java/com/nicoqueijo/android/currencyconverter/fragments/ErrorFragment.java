@@ -14,7 +14,7 @@ import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 
 /**
- * Groups common fields and methods that both the Volley and Connection error fragments use in
+ * Groups common fields and methods that both the Volley and Connection error Fragments use in
  * an attempt to promote code reusability.
  */
 public abstract class ErrorFragment extends Fragment {
@@ -32,7 +32,7 @@ public abstract class ErrorFragment extends Fragment {
     }
 
     /**
-     * Gets the reference to the hosting activity and the toolbar. Notifies this fragment that it
+     * Gets the reference to the hosting activity and the toolbar. Notifies this Fragment that it
      * has a menu.
      */
     public void setUpFragment() {
@@ -42,7 +42,7 @@ public abstract class ErrorFragment extends Fragment {
     }
 
     /**
-     * Sets up the menu for this fragment.
+     * Sets up the menu for this Fragment.
      *
      * @param menu     The options menu in which you place your items.
      * @param inflater used to instantiate menu XML files into Menu objects.

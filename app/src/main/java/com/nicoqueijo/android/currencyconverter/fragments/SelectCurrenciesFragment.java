@@ -45,10 +45,10 @@ public class SelectCurrenciesFragment extends Fragment {
     private DragScrollBar mDragScrollBar;
 
     /**
-     * * Factory method to create a new instance of this fragment using the provided parameters.
+     * * Factory method to create a new instance of this Fragment using the provided parameters.
      *
      * @param allCurrencies the list of all available currencies.
-     * @return a new instance of fragment
+     * @return a new instance of Fragment
      */
     public static SelectCurrenciesFragment newInstance(ArrayList<Currency> allCurrencies) {
         SelectCurrenciesFragment selectCurrenciesFragment = new SelectCurrenciesFragment();
@@ -110,7 +110,7 @@ public class SelectCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Gets the reference to the hosting activity and the toolbar. Notifies this fragment that it
+     * Gets the reference to the hosting activity and the toolbar. Notifies this Fragment that it
      * has a menu.
      */
     private void setUpFragment() {
@@ -120,7 +120,7 @@ public class SelectCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Sets up the menu for this fragment.
+     * Sets up the menu for this Fragment.
      *
      * @param menu     The options menu in which you place your items.
      * @param inflater used to instantiate menu XML files into Menu objects.

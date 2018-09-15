@@ -24,10 +24,10 @@ public class VolleyErrorDialog extends DialogFragment {
     private TextView mErrorMessageTextView;
 
     /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
+     * Factory method to create a new instance of this Fragment using the provided parameters.
      *
      * @param errorMessage error message returned by the API call
-     * @return a new instance of fragment
+     * @return a new instance of Fragment
      */
     public static VolleyErrorDialog newInstance(String errorMessage) {
         VolleyErrorDialog volleyErrorDialog = new VolleyErrorDialog();

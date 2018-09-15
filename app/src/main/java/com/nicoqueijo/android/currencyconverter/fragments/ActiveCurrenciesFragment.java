@@ -52,9 +52,9 @@ public class ActiveCurrenciesFragment extends Fragment {
     private FloatingActionButton mFloatingActionButton;
 
     /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
+     * Factory method to create a new instance of this Fragment using the provided parameters.
      *
-     * @return a new instance of fragment
+     * @return a new instance of Fragment
      */
     public static ActiveCurrenciesFragment newInstance() {
         return new ActiveCurrenciesFragment();

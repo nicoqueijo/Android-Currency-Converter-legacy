@@ -18,9 +18,9 @@ public class LoadingCurrenciesFragment extends Fragment {
     public static final String TAG = LoadingCurrenciesFragment.class.getSimpleName();
 
     /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
+     * Factory method to create a new instance of this Fragment using the provided parameters.
      *
-     * @return a new instance of fragment
+     * @return a new instance of Fragment
      */
     public static LoadingCurrenciesFragment newInstance() {
         return new LoadingCurrenciesFragment();

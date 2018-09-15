@@ -37,7 +37,7 @@ public class SelectCurrenciesAdapter extends
     /**
      * Constructor for the adapter.
      *
-     * @param selectCurrenciesFragment the selectCurrenciesFragment fragment hosting this RecyclerView
+     * @param selectCurrenciesFragment the selectCurrenciesFragment Fragment hosting this RecyclerView
      * @param allCurrencies               the list of all available currencies
      */
     public SelectCurrenciesAdapter(SelectCurrenciesFragment selectCurrenciesFragment,
@@ -126,7 +126,7 @@ public class SelectCurrenciesAdapter extends
     }
 
     /**
-     * Performs the filtering based on the user input in the hosting fragment's SearchView.
+     * Performs the filtering based on the user input in the hosting Fragment's SearchView.
      * Credit: https://www.youtube.com/watch?v=sJ-Z9G0SDhc
      */
     private Filter currenciesFilter = new Filter() {
