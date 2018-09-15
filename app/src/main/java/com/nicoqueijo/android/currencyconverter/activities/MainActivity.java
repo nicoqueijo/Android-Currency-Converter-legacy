@@ -141,6 +141,64 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
+     * Sets the listeners for navigation drawer.
+     */
+    private void initListeners() {
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        return processNavItemSelection(menuItem);
+                    }
+                });
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.nav_drawer_open, R.string.nav_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                hideKeyboard();
+            }
+        };
+    }
+
+    /**
+     * Handles the click operation of the Navigation Drawer by first closing the Drawer if it was
+     * open and then choosing which method to call based on which menu item was clicked.
+     *
+     * @param menuItem the selected item
+     * @return true to display the item as the selected item
+     */
+    private boolean processNavItemSelection(MenuItem menuItem) {
+        mDrawerLayout.closeDrawers();
+        boolean selected = false;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_item_convert:
+                selected = processNavItemConvert(menuItem);
+                break;
+            case R.id.nav_item_source_code:
+                selected = processNavItemSourceCode(menuItem);
+                break;
+            case R.id.nav_item_language:
+                selected = processNavItemLanguage();
+                break;
+            case R.id.nav_item_theme:
+                selected = processNavItemTheme();
+                break;
+            case R.id.nav_item_share:
+                selected = processNavItemShare();
+                break;
+            case R.id.nav_item_rate_app:
+                selected = processNavItemRateApp();
+                break;
+            case R.id.nav_item_contact_us:
+                selected = processNavItemContactUs();
+                break;
+        }
+        return selected;
+    }
+
+    /**
      * If this menu item is checked it means the visible Fragment is either the active currencies
      * Fragment or a Fragment displaying an error. If the former, we can just return, if the latter
      * we still return but show a Snackbar first notifying no internet connection. The other scenario
@@ -288,71 +346,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 .select_email_app));
         startActivity(chooser);
         return false;
-    }
-
-    /**
-     * Handles the click operation of the Navigation Drawer by first closing the Drawer if it was
-     * open and then choosing which method to call based on which menu item was clicked.
-     *
-     * @param menuItem the selected item
-     * @return true to display the item as the selected item
-     */
-    private boolean processNavItemSelection(MenuItem menuItem) {
-        mDrawerLayout.closeDrawers();
-        boolean selected = false;
-        switch (menuItem.getItemId()) {
-            case R.id.nav_item_convert:
-                selected = processNavItemConvert(menuItem);
-                break;
-            case R.id.nav_item_source_code:
-                selected = processNavItemSourceCode(menuItem);
-                break;
-            case R.id.nav_item_language:
-                selected = processNavItemLanguage();
-                break;
-            case R.id.nav_item_theme:
-                selected = processNavItemTheme();
-                break;
-            case R.id.nav_item_share:
-                selected = processNavItemShare();
-                break;
-            case R.id.nav_item_rate_app:
-                selected = processNavItemRateApp();
-                break;
-            case R.id.nav_item_contact_us:
-                selected = processNavItemContactUs();
-                break;
-        }
-        return selected;
-    }
-
-    /**
-     * Sets the listeners for navigation drawer.
-     */
-    private void initListeners() {
-        mNavigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        return processNavItemSelection(menuItem);
-                    }
-                });
-
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.nav_drawer_open, R.string.nav_drawer_close) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                try {
-                    InputMethodManager inputMethodManager = (InputMethodManager)
-                            getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
-                            .getWindowToken(), 0);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
     }
 
     /**
