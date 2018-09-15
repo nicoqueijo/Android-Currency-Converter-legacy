@@ -18,6 +18,7 @@ import com.nicoqueijo.android.currencyconverter.helpers.Utility;
  * an attempt to promote code reusability.
  */
 public abstract class ErrorFragment extends Fragment {
+
     public static final String TAG = ErrorFragment.class.getSimpleName();
 
     public MainActivity hostingActivity;

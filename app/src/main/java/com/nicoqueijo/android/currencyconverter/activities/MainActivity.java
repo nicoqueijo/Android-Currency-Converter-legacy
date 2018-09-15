@@ -326,6 +326,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * load a Fragment that notifies the user that we have no internet connection.
      */
     public void appLaunchSetup() {
+        if (fragmentManager.findFragmentById(R.id.content_frame) != null &&
+                !(fragmentManager.findFragmentById(R.id.content_frame) instanceof ErrorFragment)) {
+            return;
+        }
         final long EMPTY_SHARED_PREFS = -1L;
         final long TWELVE_HOURS = 43200000L;
         long timeOfLastUpdate = checkForLastUpdate();

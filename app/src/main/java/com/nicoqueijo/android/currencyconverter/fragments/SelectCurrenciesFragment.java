@@ -127,7 +127,7 @@ public class SelectCurrenciesFragment extends Fragment {
      */
     public void initMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
-        mSearchView = (SearchView) mToolbar.getMenu().findItem(R.id.search).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
