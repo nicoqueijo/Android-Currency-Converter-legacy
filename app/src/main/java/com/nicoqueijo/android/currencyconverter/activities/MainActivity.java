@@ -326,13 +326,12 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * load a Fragment that notifies the user that we have no internet connection.
      */
     public void appLaunchSetup() {
-        if (fragmentManager.findFragmentById(R.id.content_frame) != null &&
-                !(fragmentManager.findFragmentById(R.id.content_frame) instanceof ErrorFragment)) {
-            return;
-        }
         final long EMPTY_SHARED_PREFS = -1L;
         final long TWELVE_HOURS = 43200000L;
         long timeOfLastUpdate = checkForLastUpdate();
+        if (activityHasExistingData()) {
+            return;
+        }
         if (fragmentManager.findFragmentByTag(LoadingCurrenciesFragment.TAG) == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment
@@ -544,5 +543,17 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             }
         }
         return visibleFragment;
+    }
+
+    /**
+     * Determines if the app is at a state where it contains data the user can interact with. This
+     * is true when there is a fragment present in the content frame and that fragment is not an
+     * error fragment.
+     *
+     * @return true if method description holds.
+     */
+    private boolean activityHasExistingData() {
+        return fragmentManager.findFragmentById(R.id.content_frame) != null &&
+                !(fragmentManager.findFragmentById(R.id.content_frame) instanceof ErrorFragment);
     }
 }
