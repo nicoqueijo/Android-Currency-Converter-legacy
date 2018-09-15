@@ -140,6 +140,16 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         mCloseAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT);
     }
 
+    /**
+     * If this menu item is checked it means the visible Fragment is either the active currencies
+     * Fragment or a Fragment displaying an error. If the former, we can just return, if the latter
+     * we still return but show a Snackbar first notifying no internet connection. The other scenario
+     * is that the SourceCodeFragment is visible. In this case we hide that Fragment and show this
+     * Fragment.
+     *
+     * @param menuItem the selected item
+     * @return true to display the item as the selected item
+     */
     private boolean processNavItemConvert(MenuItem menuItem) {
         FragmentTransaction fragmentTransaction;
         Fragment visibleFragment = getVisibleFragment();
@@ -156,6 +166,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         return true;
     }
 
+    /**
+     * If this menu item is check it means that its Fragment is visible so we can return. If the
+     * visible Fragment is an error Fragment we show a Snackbar notifying no internet connection.
+     * Otherwise we hide the visible Fragment and create and show this Fragment.
+     *
+     * @param menuItem the selected item
+     * @return true to display the item as the selected item
+     */
     private boolean processNavItemSourceCode(MenuItem menuItem) {
         FragmentTransaction fragmentTransaction;
         Fragment visibleFragment = getVisibleFragment();
@@ -164,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         }
         if (visibleFragment instanceof ErrorFragment) {
             ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
-            return true;
+            return false;
         }
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.hide(visibleFragment);
@@ -179,62 +197,106 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         return true;
     }
 
+    /**
+     * Create and open the language chooser Dialog.
+     *
+     * @return false because we are merely triggering a Dialog and not changing the content frame
+     * with another Fragment.
+     */
     private boolean processNavItemLanguage() {
         DialogFragment languageDialog = LanguageDialog.newInstance();
         languageDialog.show(fragmentManager, LanguageDialog.TAG);
         return false;
     }
 
+    /**
+     * Create and open the theme chooser Dialog.
+     *
+     * @return false because we are merely triggering a Dialog and not changing the content frame
+     * with another Fragment.
+     */
     private boolean processNavItemTheme() {
         DialogFragment themeDialog = ThemeDialog.newInstance();
         themeDialog.show(fragmentManager, ThemeDialog.TAG);
         return false;
     }
 
+    /**
+     * Start an implicit Intent for the user to share the app via a chooser.
+     *
+     * @return false because we are merely triggering an Intent and not changing the content frame
+     * with another Fragment.
+     */
     private boolean processNavItemShare() {
-        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
         final String PACKAGE_NAME = getPackageName();
+        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
+        Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_via));
+        startActivity(chooser);
         return false;
     }
 
+    /**
+     * Start an explicit intent to open the app's Google Play link in the device's Google Play app.
+     * If this device doesn't have the Google Play app installed delegate the intent to a browser.
+     *
+     * @return false because we are merely triggering an Intent and not changing the content frame
+     * with another Fragment.
+     */
     private boolean processNavItemRateApp() {
-        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
         final String PACKAGE_NAME = getPackageName();
         final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
+        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
         Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
         rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
         try {
             startActivity(rateAppIntent);
         } catch (ActivityNotFoundException e) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL + PACKAGE_NAME));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL
+                    + PACKAGE_NAME));
             startActivity(intent);
         }
         return false;
     }
 
+    /**
+     * Start an implicit Intent for the user to contact the developer via an email app. The subject
+     * is prefilled with the app's name and the body is prefilled with the device manufacturer,
+     * model, and the Android API level.
+     *
+     * @return false because we are merely triggering an Intent and not changing the content frame
+     * with another Fragment.
+     */
     private boolean processNavItemContactUs() {
         final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
         final String DEVICE_INFO = "Device info:";
         final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
         final String DEVICE_MODEL = Build.MODEL;
         final String ANDROID_VERSION = "Android version " + Build.VERSION.SDK_INT;
-        final String EMAIL_TEMPLATE = "\n\n\n" + DEVICE_INFO + "\n  " + DEVICE_MANUFACTURER + " " + DEVICE_MODEL + "\n  " + ANDROID_VERSION;
+        final String EMAIL_TEMPLATE = "\n\n\n" + DEVICE_INFO + "\n  " + DEVICE_MANUFACTURER +
+                " " + DEVICE_MODEL + "\n  " + ANDROID_VERSION;
         Intent contactUsIntent = new Intent(Intent.ACTION_SENDTO);
         contactUsIntent.setData(Uri.parse("mailto:"));
         contactUsIntent.putExtra(Intent.EXTRA_EMAIL, DEVELOPER_EMAIL);
         contactUsIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
-        Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string.select_email_app));
+        Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string
+                .select_email_app));
         startActivity(chooser);
         return false;
     }
 
+    /**
+     * Handles the click operation of the Navigation Drawer by first closing the Drawer if it was
+     * open and then choosing which method to call based on which menu item was clicked.
+     *
+     * @param menuItem the selected item
+     * @return true to display the item as the selected item
+     */
     private boolean processNavItemSelection(MenuItem menuItem) {
         mDrawerLayout.closeDrawers();
         boolean selected = false;
