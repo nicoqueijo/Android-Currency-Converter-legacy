@@ -16,7 +16,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_error_black_24dp" />
+            android:src="@drawable/ic_error" />
 
         <TextView
             android:layout_width="300dp"
