@@ -29,6 +29,9 @@
     <string name="select_email_app">Seleccione aplicación de email</string>
     <string name="light">Claro</string>
     <string name="dark">Oscuro</string>
+    <string name="error">Error</string>
+    <string name="empty_list">Lista vacía</string>
+    <string name="click_to_add">Presione el botón + para agregar</string>
 
     <!-- The names of the currencies -->
     <string name="USDAED">Dírham de los EAU</string>
@@ -191,4 +194,5 @@
     <string name="USDZAR">Rand Sudafricano</string>
     <string name="USDZMW">Kwacha Zambiano</string>
     <string name="USDZWL">Dólar Zimbabuense</string>
+
 </resources>

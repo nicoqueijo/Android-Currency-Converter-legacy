@@ -31,20 +31,9 @@
     <string name="spanish">Español</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
-    <!-- NOT YET TRANSLATED-->
     <string name="error">Error</string>
-
-    <!-- The currencies we don't want to track e.g. silver and gold -->
-    <string-array name="exclusion_list">
-        <item>USDBTC</item>
-        <item>USDBYR</item>
-        <item>USDCLF</item>
-        <item>USDCUC</item>
-        <item>USDXAG</item>
-        <item>USDXAU</item>
-        <item>USDXDR</item>
-        <item>USDZMK</item>
-    </string-array>
+    <string name="empty_list">Empty list</string>
+    <string name="click_to_add">Press the + button to add</string>
 
     <!-- The names of the currencies -->
     <string name="USDAED">Emirati Dirham</string>
@@ -207,4 +196,17 @@
     <string name="USDZAR">South African Rand</string>
     <string name="USDZMW">Zambian Kwacha</string>
     <string name="USDZWL">Zimbabwean Dollar</string>
+
+    <!-- The currencies we don't want to track e.g. silver and gold -->
+    <string-array name="exclusion_list">
+        <item>USDBTC</item>
+        <item>USDBYR</item>
+        <item>USDCLF</item>
+        <item>USDCUC</item>
+        <item>USDXAG</item>
+        <item>USDXAU</item>
+        <item>USDXDR</item>
+        <item>USDZMK</item>
+    </string-array>
+
 </resources>
