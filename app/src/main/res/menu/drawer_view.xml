@@ -48,6 +48,7 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_item_last_updated"
+            android:checkable="false"
             android:title="" />
     </group>
 </menu>

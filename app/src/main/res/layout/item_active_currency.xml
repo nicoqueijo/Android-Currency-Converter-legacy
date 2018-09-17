@@ -10,7 +10,7 @@
         android:id="@+id/item_background"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/colorRed"
+        android:background="@color/red"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"

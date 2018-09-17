@@ -7,10 +7,10 @@
     <gradient
         android:angle="45"
         android:endColor="@android:color/white"
-        android:startColor="@color/colorPrimary" />
+        android:startColor="@color/primary" />
 
     <stroke
         android:width="2dp"
-        android:color="@color/colorPrimaryDark" />
+        android:color="@color/primary_dark" />
 
 </shape>
