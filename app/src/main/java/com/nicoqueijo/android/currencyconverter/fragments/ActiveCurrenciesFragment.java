@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
+import com.nicoqueijo.android.currencyconverter.helpers.CustomRecyclerView;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -46,7 +47,8 @@ public class ActiveCurrenciesFragment extends Fragment {
     private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
     private SharedPreferences mSharedPreferencesRates;
 
-    private RecyclerView mRecyclerView;
+    private CustomRecyclerView mRecyclerView;
+    private View mEmptyListView;
     private ActiveCurrenciesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
@@ -129,6 +131,8 @@ public class ActiveCurrenciesFragment extends Fragment {
      */
     private void initViewsAndAdapters(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_currencies);
+        mEmptyListView = view.findViewById(R.id.container_empty_list);
+        mRecyclerView.showIfEmpty(mEmptyListView);
         mFloatingActionButton = view.findViewById(R.id.floating_action_button);
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ActiveCurrenciesAdapter(getContext(), mActiveCurrencies,
