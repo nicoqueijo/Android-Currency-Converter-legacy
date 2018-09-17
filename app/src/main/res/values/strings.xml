@@ -15,14 +15,18 @@
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="last_update">Last updated: %1$s</string>
     <string name="no_internet">No internet connection</string>
-    <string name="network_unavailable">Network currently unavailable</string>
+    <string name="no_connection_title">No Connection</string>
+    <string name="no_connection_description">We could not establish a connection with our servers.
+        Please try again when you are connected to the internet.</string>
     <string name="refresh">Refresh</string>
     <string name="tap_to_close">Tap again to close app</string>
     <string name="search">Search</string>
     <string name="item_removed">Item removed</string>
     <string name="undo">Undo</string>
     <string name="fetching_data">Fetching data…</string>
-    <string name="error_message">An error has occurred.</string>
+    <string name="error_title">Error Occurred</string>
+    <string name="error_description">An error has occurred while attempting to retrieve the data
+        from the internet. Expand to show more information.</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
     <string name="share_via">Share via</string>

@@ -15,14 +15,18 @@
     <string name="nav_drawer_close">Cerrar el cajón de navegación</string>
     <string name="last_update">Última actualización: %1$s</string>
     <string name="no_internet">Sin conexión a Internet</string>
-    <string name="network_unavailable">Red no está disponible</string>
+    <string name="no_connection_title">Sin Conexión</string>
+    <string name="no_connection_description">No pudimos establecer una conexión con nuestros servidores.
+        Por favor, inténtelo de nuevo cuando esté conectado al internet.</string>
     <string name="refresh">Actualizar</string>
     <string name="tap_to_close">Toque nuevamente para cerrar la aplicación</string>
     <string name="search">Buscar</string>
     <string name="item_removed">Elemento eliminado</string>
     <string name="undo">Deshacer</string>
     <string name="fetching_data">Obteniendo datos…</string>
-    <string name="error_message">Se ha producido un error</string>
+    <string name="error_title">Error Producido</string>
+    <string name="error_desctiption">Se ha producido un error al intentar recuperar los datos
+         desde del internet. Expande para mostrar más información.</string>
     <string name="show">Mostrar</string>
     <string name="hide">Ocultar</string>
     <string name="share_via">Compartir via</string>
