@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,6 +134,7 @@ public class ActiveCurrenciesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_active_currencies);
         mEmptyListView = view.findViewById(R.id.container_empty_list);
         mRecyclerView.showIfEmpty(mEmptyListView);
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mFloatingActionButton = view.findViewById(R.id.floating_action_button);
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ActiveCurrenciesAdapter(getContext(), mActiveCurrencies,
