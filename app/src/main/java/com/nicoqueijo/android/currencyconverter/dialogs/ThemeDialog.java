@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.nicoqueijo.android.currencyconverter.R;
@@ -36,8 +35,6 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
 
     public static final String TAG = ThemeDialog.class.getSimpleName();
 
-    private LinearLayout mLightOption;
-    private LinearLayout mDarkOption;
     private RadioButton mLightRadioButton;
     private RadioButton mDarkRadioButton;
 
@@ -58,34 +55,31 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
         Utility.roundDialogCorners(this);
         initViews(view);
         restoreSavedTheme();
-        disableRadioButtons();
-        mLightOption.setOnClickListener(this);
-        mDarkOption.setOnClickListener(this);
         return view;
+    }
+
+    /**
+     * Initializes the Dialog's views and registers the onClickListeners.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    public void initViews(View view) {
+        mLightRadioButton = view.findViewById(R.id.radio_button_light);
+        mDarkRadioButton = view.findViewById(R.id.radio_button_dark);
+        mLightRadioButton.setOnClickListener(this);
+        mDarkRadioButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.container_theme_light:
+            case R.id.radio_button_light:
                 changeTheme(mLightRadioButton, Theme.LIGHT);
                 break;
-            case R.id.container_theme_dark:
+            case R.id.radio_button_dark:
                 changeTheme(mDarkRadioButton, Theme.DARK);
                 break;
         }
-    }
-
-    /**
-     * Initializes the Dialog's views.
-     *
-     * @param view the root view of the inflated hierarchy
-     */
-    public void initViews(View view) {
-        mLightOption = view.findViewById(R.id.container_theme_light);
-        mDarkOption = view.findViewById(R.id.container_theme_dark);
-        mLightRadioButton = view.findViewById(R.id.choice_light);
-        mDarkRadioButton = view.findViewById(R.id.choice_dark);
     }
 
     /**
@@ -98,27 +92,13 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
         int savedTheme = mSharedPreferences.getInt("theme", defaultTheme);
         if (savedTheme == R.style.AppThemeDark) {
             mDarkRadioButton.setChecked(true);
-            mActiveRadioButton.push(mDarkRadioButton);
         } else {
             mLightRadioButton.setChecked(true);
-            mActiveRadioButton.push(mLightRadioButton);
         }
     }
 
     /**
-     * Sets all RadioButtons to be unclickable because their clicks are handled by their parent
-     * view.
-     */
-    public void disableRadioButtons() {
-        mLightRadioButton.setClickable(false);
-        mDarkRadioButton.setClickable(false);
-    }
-
-    /**
-     * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
-     * pressed at a time, a stack is used to pop a button and push another when the user presses
-     * buttons. When a button is pressed it pops the previous button (if any) and pushes the pressed
-     * button. The theme of the pressed button is saved to SharedPreferences and the app theme is
+     * Saves the theme of the pressed RadioButton to SharedPreferences and the app theme is
      * changed to the new theme. The host activity is recreated to update the views with the new
      * theme and this dialog is dismissed.
      *
@@ -126,14 +106,6 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
      * @param theme               the theme the user selected.
      */
     private void changeTheme(RadioButton selectedRadioButton, Theme theme) {
-        if (mActiveRadioButton.peek() == selectedRadioButton) {
-            dismiss();
-            return;
-        }
-        if (!mActiveRadioButton.isEmpty()) {
-            mActiveRadioButton.pop().setChecked(false);
-        }
-        mActiveRadioButton.push(selectedRadioButton);
         selectedRadioButton.setChecked(true);
         saveTheme(theme);
         getActivity().setTheme(theme.getTheme());

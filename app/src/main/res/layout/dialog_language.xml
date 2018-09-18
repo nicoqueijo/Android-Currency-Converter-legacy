@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:background="@drawable/background_dialog"
+    android:elevation="24dp"
     android:orientation="vertical">
 
     <TextView
@@ -26,83 +26,24 @@
         android:id="@+id/radio_group_language"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="24dp">
 
-        <LinearLayout
-            android:id="@+id/container_language_english"
+        <RadioButton
+            android:id="@+id/radio_button_english"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="24dp">
+            android:layout_height="48dp"
+            android:paddingStart="32dp"
+            android:text="@string/english"
+            android:textSize="16dp" />
 
-            <RadioButton
-                android:id="@+id/choice_english"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.CardView
-                android:layout_width="36dp"
-                android:layout_height="26dp"
-                android:layout_marginStart="20dp"
-                app:cardCornerRadius="2dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/english" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:text="@string/english"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/container_language_spanish"
+        <RadioButton
+            android:id="@+id/radio_button_spanish"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="24dp">
-
-            <RadioButton
-                android:id="@+id/choice_spanish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.CardView
-                android:layout_width="36dp"
-                android:layout_height="26dp"
-                android:layout_marginStart="20dp"
-                app:cardCornerRadius="2dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/spanish" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:text="@string/spanish"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+            android:layout_height="48dp"
+            android:paddingStart="32dp"
+            android:text="@string/spanish"
+            android:textSize="16dp" />
 
     </RadioGroup>
 

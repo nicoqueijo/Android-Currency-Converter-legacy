@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.nicoqueijo.android.currencyconverter.R;
@@ -40,8 +39,6 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
 
     public static final String TAG = DialogFragment.class.getSimpleName();
 
-    private LinearLayout mEnglishOption;
-    private LinearLayout mSpanishOption;
     private RadioButton mEnglishRadioButton;
     private RadioButton mSpanishRadioButton;
 
@@ -62,34 +59,31 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
         Utility.roundDialogCorners(this);
         initViews(view);
         restoreSavedLanguage();
-        disableRadioButtons();
-        mEnglishOption.setOnClickListener(this);
-        mSpanishOption.setOnClickListener(this);
         return view;
+    }
+
+    /**
+     * Initializes the Dialog's views and registers the onClickListeners.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    public void initViews(View view) {
+        mEnglishRadioButton = view.findViewById(R.id.radio_button_english);
+        mSpanishRadioButton = view.findViewById(R.id.radio_button_spanish);
+        mEnglishRadioButton.setOnClickListener(this);
+        mSpanishRadioButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.container_language_english:
+            case R.id.radio_button_english:
                 changeLanguage(mEnglishRadioButton, Language.ENGLISH);
                 break;
-            case R.id.container_language_spanish:
+            case R.id.radio_button_spanish:
                 changeLanguage(mSpanishRadioButton, Language.SPANISH);
                 break;
         }
-    }
-
-    /**
-     * Initializes the Dialog's views.
-     *
-     * @param view the root view of the inflated hierarchy
-     */
-    public void initViews(View view) {
-        mEnglishOption = view.findViewById(R.id.container_language_english);
-        mSpanishOption = view.findViewById(R.id.container_language_spanish);
-        mEnglishRadioButton = view.findViewById(R.id.choice_english);
-        mSpanishRadioButton = view.findViewById(R.id.choice_spanish);
     }
 
     /**
@@ -103,27 +97,13 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
         String savedLanguage = mSharedPreferences.getString("language", systemLanguage);
         if (savedLanguage.equals(Language.SPANISH.getLanguage())) {
             mSpanishRadioButton.setChecked(true);
-            mActiveRadioButton.push(mSpanishRadioButton);
         } else {
             mEnglishRadioButton.setChecked(true);
-            mActiveRadioButton.push(mEnglishRadioButton);
         }
     }
 
     /**
-     * Sets all RadioButtons to be unclickable because their clicks are handled by their parent
-     * view.
-     */
-    public void disableRadioButtons() {
-        mEnglishRadioButton.setClickable(false);
-        mSpanishRadioButton.setClickable(false);
-    }
-
-    /**
-     * All the RadioButtons are grouped manually using a stack. Since only one radio button can be
-     * pressed at a time, a stack is used to pop a button and push another when the user presses
-     * buttons. When a button is pressed it pops the previous button (if any) and pushes the pressed
-     * button. The language of the pressed button is saved to SharedPreferences and the locale is
+     * Saves the language of the pressed RadioButton to SharedPreferences and the locale is
      * changed to the new language. The host activity is recreated to update the views with the new
      * language and this dialog is dismissed.
      *
@@ -131,14 +111,6 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
      * @param language            the language the user selected.
      */
     private void changeLanguage(RadioButton selectedRadioButton, Language language) {
-        if (mActiveRadioButton.peek() == selectedRadioButton) {
-            dismiss();
-            return;
-        }
-        if (!mActiveRadioButton.isEmpty()) {
-            mActiveRadioButton.pop().setChecked(false);
-        }
-        mActiveRadioButton.push(selectedRadioButton);
         selectedRadioButton.setChecked(true);
         saveLanguage(language);
         MainActivity hostActivity = (MainActivity) getActivity();
