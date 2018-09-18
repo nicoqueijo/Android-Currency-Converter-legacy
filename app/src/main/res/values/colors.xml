@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#673AB7</color>
-    <color name="primary_dark">#512DA8</color>
-    <color name="primary_light">#D1C4E9</color>
-    <color name="accent">#E040FB</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
+    <color name="primary">#6700A5</color>
+    <color name="primary_dark">#480075</color>
+    <color name="primary_light">#530785</color>
+    <color name="accent">#9B00FF</color>
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>
+
+    <!--Color palette primary-->
+    <color name="purple_50">#F3E0FF</color>
+    <color name="purple_100">#E1B3FF</color>
+    <color name="purple_200">#CD80FF</color>
+    <color name="purple_300">#B94DFF</color>
+    <color name="purple_400">#AA26FF</color>
+    <color name="purple_500">#9B00FF</color>
+    <color name="purple_600">#9300FF</color>
+    <color name="purple_700">#8900FF</color>
+    <color name="purple_800">#7F00FF</color>
+    <color name="purple_900">#6D00FF</color>
+    <color name="purple_A100">#FFFFFF</color>
+    <color name="purple_A200">#F7F2FF</color>
+    <color name="purple_A400">#D7BFFF</color>
+    <color name="purple_A700">#C7A6FF</color>
+
+    <!--Color palette secondary-->
+    <color name="pink_50">#FAE4EC</color>
+    <color name="pink_100">#F3BBCF</color>
+    <color name="pink_200">#EC8DB0</color>
+    <color name="pink_300">#E45F90</color>
+    <color name="pink_400">#DE3D78</color>
+    <color name="pink_500">#D81B60</color>
+    <color name="pink_600">#D41858</color>
+    <color name="pink_700">#CE144E</color>
+    <color name="pink_800">#C81044</color>
+    <color name="pink_900">#BF0833</color>
+    <color name="pink_A100">#FFE9ED</color>
+    <color name="pink_A200">#FFB6C4</color>
+    <color name="pink_A400">#FF839A</color>
+    <color name="pink_A700">#FF6986</color>
 </resources>
