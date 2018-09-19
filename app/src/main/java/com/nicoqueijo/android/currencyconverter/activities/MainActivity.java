@@ -31,7 +31,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
@@ -45,6 +44,7 @@ import com.nicoqueijo.android.currencyconverter.fragments.VolleyErrorFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.nicoqueijo.android.currencyconverter.singletons.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,11 +66,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final String API_BASE_URL = "http://apilayer.net/api/live";
-    private static final String API_KEY_PARAM = "?access_key=";
-    private static String apiKey;
-    private static final String API_FORMAT_PARAM = "&format=1";
-    private String apiFullUrl;
+    private FragmentManager fragmentManager = getSupportFragmentManager();
 
     public static String sharedPrefsSettingsFilename;
     public static String sharedPrefsRatesFilename;
@@ -86,11 +82,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private MenuItem mLastUpdatedView;
     private Toast mCloseAppToast;
 
-    private FragmentManager fragmentManager = getSupportFragmentManager();
-
-    private RequestQueue volleyRequestQueue;
-    private StringRequest stringRequest;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_name);
         initViews();
-        initApiKey();
-        apiFullUrl = API_BASE_URL + API_KEY_PARAM + apiKey + API_FORMAT_PARAM;
         appLaunchSetup();
     }
 
@@ -440,16 +429,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Initializes the Volley request queue, makes the API call, and adds the request to volley's
-     * request queue.
-     */
-    private void makeApiCall() {
-        volleyRequestQueue = Volley.newRequestQueue(this);
-        initVolleyStringRequest();
-        volleyRequestQueue.add(stringRequest);
-    }
-
-    /**
      * Checks when the exchange rate data was last updated to display in the navigation footer.
      *
      * @return time in milliseconds since the exchange rates were last updated or -1 if it was
@@ -499,56 +478,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Initializes the API key from a local private file that is not tracked by Git for obvious
-     * reasons.
+     * Gets the API key from a local private file that is not tracked by Git for obvious reasons.
      */
-    private void initApiKey() {
-        apiKey = getResources().getString(R.string.api_key);
-    }
-
-    /**
-     * Attempts to request a string response from the provided URL.
-     * If a response is received we first check if its "success" key returned true. If it did we
-     * can update our local exchange rate values and load the Fragment that performs the
-     * conversions. If false is returned or we receive an error from the request we extract the
-     * error message from the response and load a Fragment that shows the user information about
-     * the error.
-     */
-    private void initVolleyStringRequest() {
-        stringRequest = new StringRequest(Request.Method.GET, apiFullUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if (success) {
-                                updateSharedPreferencesExchangeRates(jsonObject);
-                                checkForLastUpdate();
-                                Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
-                                        .newInstance();
-                                replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment
-                                        .TAG);
-                            } else {
-                                final int INDENT_SPACES = 4;
-                                JSONObject error = jsonObject.getJSONObject("error");
-                                String errorMessage = error.toString(INDENT_SPACES);
-                                Fragment volleyErrorFragment = VolleyErrorFragment
-                                        .newInstance(errorMessage);
-                                replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String errorMessage = error.toString();
-                Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
-                replaceFragment(errorFragment, VolleyErrorFragment.TAG);
-            }
-        });
+    private String getApiKey() {
+        return getResources().getString(R.string.api_key);
     }
 
     /**
@@ -626,5 +559,69 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private boolean activityHasExistingData() {
         return fragmentManager.findFragmentById(R.id.content_frame) != null &&
                 !(fragmentManager.findFragmentById(R.id.content_frame) instanceof ErrorFragment);
+    }
+
+    /**
+     * Initializes the Volley request queue, makes the API call, and adds the request to volley's
+     * request queue.
+     */
+    private void makeApiCall() {
+        RequestQueue volleyRequestQueue = VolleySingleton.getInstance(this).getRequestQueue();
+        StringRequest stringRequest = initVolleyStringRequest();
+        volleyRequestQueue.add(stringRequest);
+    }
+
+    /**
+     * Attempts to request a string response from the provided URL.
+     * If a response is received we first check if its "success" key returned true. If it did we
+     * can update our local exchange rate values and load the Fragment that performs the
+     * conversions. If false is returned or we receive an error from the request we extract the
+     * error message from the response and load a Fragment that shows the user information about
+     * the error.
+     *
+     * @return the string request for retrieving the response body at the given URL.
+     */
+    private StringRequest initVolleyStringRequest() {
+        final String API_BASE_URL = "http://apilayer.net/api/live";
+        final String API_KEY_PARAM = "?access_key=";
+        final String API_KEY = getApiKey();
+        final String API_FORMAT_PARAM = "&format=1";
+        final String API_FULL_URL = API_BASE_URL + API_KEY_PARAM + API_KEY + API_FORMAT_PARAM;
+        StringRequest stringRequest;
+        stringRequest = new StringRequest(Request.Method.GET, API_FULL_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            if (success) {
+                                updateSharedPreferencesExchangeRates(jsonObject);
+                                checkForLastUpdate();
+                                Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
+                                        .newInstance();
+                                replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment
+                                        .TAG);
+                            } else {
+                                final int INDENT_SPACES = 4;
+                                JSONObject error = jsonObject.getJSONObject("error");
+                                String errorMessage = error.toString(INDENT_SPACES);
+                                Fragment volleyErrorFragment = VolleyErrorFragment
+                                        .newInstance(errorMessage);
+                                replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String errorMessage = error.toString();
+                Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
+                replaceFragment(errorFragment, VolleyErrorFragment.TAG);
+            }
+        });
+        return stringRequest;
     }
 }
