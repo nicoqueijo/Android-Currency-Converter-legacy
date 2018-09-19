@@ -25,16 +25,12 @@ import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
-import java.util.ArrayList;
-
 /**
  * Fragment used to search, filter, and add exchange rates to the ActiveCurrenciesFragment.
  */
 public class SelectCurrenciesFragment extends Fragment {
 
     public static final String TAG = SelectCurrenciesFragment.class.getSimpleName();
-
-    ArrayList<Currency> mAllCurrencies;
 
     private MainActivity hostingActivity;
     private Toolbar mToolbar;
@@ -45,27 +41,18 @@ public class SelectCurrenciesFragment extends Fragment {
     private DragScrollBar mDragScrollBar;
 
     /**
-     * * Factory method to create a new instance of this Fragment using the provided parameters.
+     * Factory method to create a new instance of this Fragment using the provided parameters.
      *
-     * @param allCurrencies the list of all available currencies.
      * @return a new instance of Fragment
      */
-    public static SelectCurrenciesFragment newInstance(ArrayList<Currency> allCurrencies) {
-        SelectCurrenciesFragment selectCurrenciesFragment = new SelectCurrenciesFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ActiveCurrenciesFragment.ARG_ALL_CURRENCIES, allCurrencies);
-        selectCurrenciesFragment.setArguments(args);
-        return selectCurrenciesFragment;
+    public static SelectCurrenciesFragment newInstance() {
+        return new SelectCurrenciesFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpFragment();
-        if (getArguments() != null) {
-            mAllCurrencies = getArguments().getParcelableArrayList(ActiveCurrenciesFragment
-                    .ARG_ALL_CURRENCIES);
-        }
     }
 
     @Nullable
@@ -152,7 +139,7 @@ public class SelectCurrenciesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_select_currencies);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
-        mAdapter = new SelectCurrenciesAdapter(this, mAllCurrencies);
+        mAdapter = new SelectCurrenciesAdapter(this);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

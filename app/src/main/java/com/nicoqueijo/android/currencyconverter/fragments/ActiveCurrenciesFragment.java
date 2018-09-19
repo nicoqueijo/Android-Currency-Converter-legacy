@@ -26,11 +26,10 @@ import com.nicoqueijo.android.currencyconverter.helpers.CustomRecyclerView;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -44,7 +43,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
     public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
-    private ArrayList<Currency> mAllCurrencies = new ArrayList<>();
+    private ArrayList<Currency> mAllCurrencies;
     private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
     private SharedPreferences mSharedPreferencesRates;
 
@@ -68,7 +67,7 @@ public class ActiveCurrenciesFragment extends Fragment {
         super.onAttach(context);
         mSharedPreferencesRates = getContext().getSharedPreferences(MainActivity
                 .sharedPrefsRatesFilename, MODE_PRIVATE);
-        initAndSortCurrencies();
+        mAllCurrencies = CurrenciesSingleton.getInstance(getContext()).getCurrencies();
     }
 
     @Override
@@ -107,25 +106,6 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Retrieves the exchange rates stored in SharedPrefs, initializes the currency list with their
-     * values, and sorts the list.
-     */
-    private void initAndSortCurrencies() {
-        Map<String, ?> keys = mSharedPreferencesRates.getAll();
-        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            String currencyCode = entry.getKey();
-            double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
-            mAllCurrencies.add(new Currency(currencyCode, exchangeRate));
-        }
-        Collections.sort(mAllCurrencies, new Comparator<Currency>() {
-            @Override
-            public int compare(Currency currency1, Currency currency2) {
-                return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
-            }
-        });
-    }
-
-    /**
      * Initializes the views and sets up the adapters.
      *
      * @param view the root view of the inflated hierarchy
@@ -161,8 +141,7 @@ public class ActiveCurrenciesFragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 if (fragmentManager.findFragmentByTag(SelectCurrenciesFragment.TAG) == null) {
-                    Fragment selectCurrencyFragment = SelectCurrenciesFragment
-                            .newInstance(mAllCurrencies);
+                    Fragment selectCurrencyFragment = SelectCurrenciesFragment.newInstance();
                     fragmentTransaction.add(R.id.content_frame, selectCurrencyFragment,
                             SelectCurrenciesFragment.TAG);
                     fragmentTransaction.addToBackStack(null);

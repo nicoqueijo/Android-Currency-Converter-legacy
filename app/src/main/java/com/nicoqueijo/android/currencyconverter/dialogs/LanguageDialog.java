@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
@@ -39,6 +40,7 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
 
     public static final String TAG = DialogFragment.class.getSimpleName();
 
+    private RadioGroup mRadioGroup;
     private RadioButton mEnglishRadioButton;
     private RadioButton mSpanishRadioButton;
 
@@ -68,6 +70,7 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
      * @param view the root view of the inflated hierarchy
      */
     public void initViews(View view) {
+        mRadioGroup = view.findViewById(R.id.radio_group_language);
         mEnglishRadioButton = view.findViewById(R.id.radio_button_english);
         mSpanishRadioButton = view.findViewById(R.id.radio_button_spanish);
         mEnglishRadioButton.setOnClickListener(this);
@@ -78,10 +81,10 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.radio_button_english:
-                changeLanguage(mEnglishRadioButton, Language.ENGLISH);
+                changeLanguage(Language.ENGLISH);
                 break;
             case R.id.radio_button_spanish:
-                changeLanguage(mSpanishRadioButton, Language.SPANISH);
+                changeLanguage(Language.SPANISH);
                 break;
         }
     }
@@ -107,11 +110,9 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
      * changed to the new language. The host activity is recreated to update the views with the new
      * language and this dialog is dismissed.
      *
-     * @param selectedRadioButton the RadioButton pressed.
-     * @param language            the language the user selected.
+     * @param language the language the user selected.
      */
-    private void changeLanguage(RadioButton selectedRadioButton, Language language) {
-        selectedRadioButton.setChecked(true);
+    private void changeLanguage(Language language) {
         saveLanguage(language);
         MainActivity hostActivity = (MainActivity) getActivity();
         hostActivity.setLocale(language.getLanguage());

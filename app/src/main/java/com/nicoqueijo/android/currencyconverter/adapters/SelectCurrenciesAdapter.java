@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.adapters;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.fragments.SelectCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
 import java.util.ArrayList;
@@ -31,20 +33,20 @@ public class SelectCurrenciesAdapter extends
     public static final String TAG = SelectCurrenciesAdapter.class.getSimpleName();
 
     private SelectCurrenciesFragment mSelectCurrenciesFragment;
-    private List<Currency> mCurrencies;
-    private List<Currency> mCurrenciesFull;
+    private ArrayList<Currency> mCurrencies;
+    private ArrayList<Currency> mCurrenciesFull;
 
     /**
      * Constructor for the adapter.
      *
-     * @param selectCurrenciesFragment the selectCurrenciesFragment Fragment hosting this RecyclerView
-     * @param allCurrencies               the list of all available currencies
+     * @param selectCurrenciesFragment the Fragment hosting this adapter's RecyclerView.
      */
-    public SelectCurrenciesAdapter(SelectCurrenciesFragment selectCurrenciesFragment,
-                                   List<Currency> allCurrencies) {
-        mSelectCurrenciesFragment = selectCurrenciesFragment;
-        mCurrencies = new ArrayList<>(allCurrencies);
-        mCurrenciesFull = new ArrayList<>(allCurrencies);
+    public SelectCurrenciesAdapter(Fragment selectCurrenciesFragment) {
+        mSelectCurrenciesFragment = (SelectCurrenciesFragment) selectCurrenciesFragment;
+        mCurrencies = new ArrayList<>(CurrenciesSingleton.getInstance(selectCurrenciesFragment
+                .getContext()).getCurrencies());
+        mCurrenciesFull = new ArrayList<>(CurrenciesSingleton.getInstance(selectCurrenciesFragment
+                .getContext()).getCurrencies());
     }
 
     @NonNull
@@ -52,8 +54,7 @@ public class SelectCurrenciesAdapter extends
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_selectable_currency, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
