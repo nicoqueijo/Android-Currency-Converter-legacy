@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
+    android:background="?android:colorBackground"
     android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingEnd="16dp"
@@ -43,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/text_color"
                 android:textSize="18sp"
                 tools:text="USD" />
 
@@ -51,7 +52,7 @@
                 android:id="@+id/currency_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp"
                 tools:text="United States Dollar" />
 

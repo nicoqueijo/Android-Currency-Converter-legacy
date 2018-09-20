@@ -38,4 +38,8 @@
     <color name="pink_A200">#FFB6C4</color>
     <color name="pink_A400">#FF839A</color>
     <color name="pink_A700">#FF6986</color>
+
+    <color name="local_cast_primary_dark">#7B1FA2</color>
+    <color name="local_cast_primary">#9C27B0</color>
+    <color name="local_cast_accent">#FFC107</color>
 </resources>

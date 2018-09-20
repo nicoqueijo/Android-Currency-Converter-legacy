@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,7 +35,7 @@
         android:id="@+id/item_foreground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="?android:colorBackground"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
@@ -69,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingLeft="16dp"
+                android:textColor="?attr/text_color"
                 android:textSize="24sp"
                 tools:text="USD" />
 
@@ -89,6 +89,7 @@
                 android:gravity="right|center_vertical"
                 android:inputType="numberDecimal"
                 android:minWidth="100dp"
+                android:textColor="?attr/text_color"
                 android:textSize="20sp" />
 
         </FrameLayout>

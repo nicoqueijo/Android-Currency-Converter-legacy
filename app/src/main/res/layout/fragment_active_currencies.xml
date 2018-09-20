@@ -2,7 +2,8 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground">
 
     <LinearLayout
         android:id="@+id/container_empty_list"
@@ -26,7 +27,7 @@
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:text="@string/empty_list"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/text_color"
             android:textSize="20sp" />
 
         <TextView
@@ -37,7 +38,7 @@
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:text="@string/click_to_add"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/text_color"
             android:textSize="18sp" />
 
     </LinearLayout>
