@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="ic_list" format="reference" />
+    <attr name="ic_no_connection" format="reference" />
+    <attr name="ic_error" format="reference" />
 
     <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="ic_list">@drawable/ic_light_list</item>
+        <item name="ic_no_connection">@drawable/ic_light_no_connection</item>
+        <item name="ic_error">@drawable/ic_light_error</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="ic_list">@drawable/ic_dark_list</item>
+        <item name="ic_no_connection">@drawable/ic_dark_no_connection</item>
+        <item name="ic_error">@drawable/ic_dark_error</item>
     </style>
 
 </resources>
