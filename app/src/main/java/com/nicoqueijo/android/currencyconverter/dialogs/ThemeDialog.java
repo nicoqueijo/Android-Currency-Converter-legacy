@@ -74,10 +74,10 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.radio_button_light:
-                changeTheme(Theme.LIGHT);
+                changeTheme(mLightRadioButton, Theme.LIGHT);
                 break;
             case R.id.radio_button_dark:
-                changeTheme(Theme.DARK);
+                changeTheme(mDarkRadioButton, Theme.DARK);
                 break;
         }
     }
@@ -92,8 +92,10 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
         int savedTheme = mSharedPreferences.getInt("theme", defaultTheme);
         if (savedTheme == R.style.AppThemeDark) {
             mDarkRadioButton.setChecked(true);
+            mActiveRadioButton.push(mDarkRadioButton);
         } else {
             mLightRadioButton.setChecked(true);
+            mActiveRadioButton.push(mLightRadioButton);
         }
     }
 
@@ -102,9 +104,14 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
      * changed to the new theme. The host activity is recreated to update the views with the new
      * theme and this dialog is dismissed.
      *
-     * @param theme the theme the user selected.
+     * @param selectedRadioButton the button pushed that triggered this method.
+     * @param theme               the theme the user selected.
      */
-    private void changeTheme(Theme theme) {
+    private void changeTheme(RadioButton selectedRadioButton, Theme theme) {
+        if (mActiveRadioButton.pop() == selectedRadioButton) {
+            dismiss();
+            return;
+        }
         saveTheme(theme);
         getActivity().setTheme(theme.getTheme());
         getActivity().recreate();

@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
@@ -40,7 +40,6 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
 
     public static final String TAG = DialogFragment.class.getSimpleName();
 
-    private RadioGroup mRadioGroup;
     private RadioButton mEnglishRadioButton;
     private RadioButton mSpanishRadioButton;
 
@@ -70,7 +69,6 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
      * @param view the root view of the inflated hierarchy
      */
     public void initViews(View view) {
-        mRadioGroup = view.findViewById(R.id.radio_group_language);
         mEnglishRadioButton = view.findViewById(R.id.radio_button_english);
         mSpanishRadioButton = view.findViewById(R.id.radio_button_spanish);
         mEnglishRadioButton.setOnClickListener(this);
@@ -81,12 +79,33 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.radio_button_english:
-                changeLanguage(Language.ENGLISH);
+                changeLanguage(mEnglishRadioButton, Language.ENGLISH);
                 break;
             case R.id.radio_button_spanish:
-                changeLanguage(Language.SPANISH);
+                changeLanguage(mSpanishRadioButton, Language.SPANISH);
                 break;
         }
+    }
+
+    /**
+     * Saves the language of the pressed RadioButton to SharedPreferences and the locale is
+     * changed to the new language. The host activity is recreated to update the views with the
+     * new language and this dialog is dismissed.
+     *
+     * @param selectedRadioButton the button pushed that triggered this method.
+     * @param language            the language the user selected.
+     */
+    private void changeLanguage(RadioButton selectedRadioButton, Language language) {
+        if (mActiveRadioButton.pop() == selectedRadioButton) {
+            dismiss();
+            return;
+        }
+        saveLanguage(language);
+        MainActivity hostActivity = (MainActivity) getActivity();
+        hostActivity.setLocale(language.getLanguage());
+        hostActivity.recreate();
+        Log.d(TAG, "changeLanguage: ");
+        dismiss();
     }
 
     /**
@@ -100,24 +119,11 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
         String savedLanguage = mSharedPreferences.getString("language", systemLanguage);
         if (savedLanguage.equals(Language.SPANISH.getLanguage())) {
             mSpanishRadioButton.setChecked(true);
+            mActiveRadioButton.push(mSpanishRadioButton);
         } else {
             mEnglishRadioButton.setChecked(true);
+            mActiveRadioButton.push(mEnglishRadioButton);
         }
-    }
-
-    /**
-     * Saves the language of the pressed RadioButton to SharedPreferences and the locale is
-     * changed to the new language. The host activity is recreated to update the views with the new
-     * language and this dialog is dismissed.
-     *
-     * @param language the language the user selected.
-     */
-    private void changeLanguage(Language language) {
-        saveLanguage(language);
-        MainActivity hostActivity = (MainActivity) getActivity();
-        hostActivity.setLocale(language.getLanguage());
-        hostActivity.recreate();
-        dismiss();
     }
 
     /**
