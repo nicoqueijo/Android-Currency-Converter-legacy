@@ -2,7 +2,6 @@
 <resources>
     <color name="primary">#6700A5</color>
     <color name="primary_dark">#480075</color>
-    <color name="primary_light">#530785</color>
     <color name="accent">#9B00FF</color>
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>

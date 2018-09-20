@@ -40,7 +40,7 @@
             android:hyphenationFrequency="none"
             android:text="@string/error_description"
             android:textColor="?attr/text_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/show_button"

@@ -36,6 +36,6 @@ public class ConnectionErrorFragment extends ErrorFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_no_internet, container, false);
+        return inflater.inflate(R.layout.fragment_no_connection, container, false);
     }
 }
