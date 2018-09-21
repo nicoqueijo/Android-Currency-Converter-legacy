@@ -32,7 +32,7 @@ public class SelectCurrenciesFragment extends Fragment {
 
     public static final String TAG = SelectCurrenciesFragment.class.getSimpleName();
 
-    private MainActivity hostingActivity;
+    private MainActivity mHostingActivity;
     private Toolbar mToolbar;
     private SearchView mSearchView;
     private RecyclerView mRecyclerView;
@@ -78,7 +78,7 @@ public class SelectCurrenciesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        hostingActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams
+        mHostingActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams
                 .SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
@@ -102,8 +102,8 @@ public class SelectCurrenciesFragment extends Fragment {
      */
     private void setUpFragment() {
         setHasOptionsMenu(true);
-        hostingActivity = (MainActivity) getActivity();
-        mToolbar = hostingActivity.findViewById(R.id.toolbar);
+        mHostingActivity = (MainActivity) getActivity();
+        mToolbar = mHostingActivity.findViewById(R.id.toolbar);
     }
 
     /**

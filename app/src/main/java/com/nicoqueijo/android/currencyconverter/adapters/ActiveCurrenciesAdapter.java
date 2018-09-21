@@ -123,6 +123,7 @@ public class ActiveCurrenciesAdapter extends
         notifyItemRemoved(position);
         Snackbar snackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
                 Snackbar.LENGTH_LONG);
+        Utility.styleSnackbar(snackbar, mContext);
         snackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

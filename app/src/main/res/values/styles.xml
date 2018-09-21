@@ -14,7 +14,7 @@
         <item name="ic_no_connection">@drawable/ic_light_no_connection</item>
         <item name="ic_error">@drawable/ic_light_error</item>
         <item name="android:navigationBarColor">@color/primary</item>
-        <item name="android:colorControlHighlight">@color/purple_A700</item>
+        <item name="android:colorControlHighlight">@color/accent</item>
         <item name="text_color">@android:color/black</item>
         <item name="icon_color">@android:color/black</item>
     </style>
@@ -27,7 +27,7 @@
         <item name="ic_no_connection">@drawable/ic_dark_no_connection</item>
         <item name="ic_error">@drawable/ic_dark_error</item>
         <item name="android:navigationBarColor">@color/primary</item>
-        <item name="android:colorControlHighlight">@color/purple_A700</item>
+        <item name="android:colorControlHighlight">@color/accent</item>
         <item name="text_color">@android:color/white</item>
         <item name="icon_color">@android:color/white</item>
     </style>

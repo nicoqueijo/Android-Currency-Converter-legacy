@@ -77,7 +77,10 @@ public abstract class ErrorFragment extends Fragment {
      * Shows the Snackbar notifying there is no internet connection.
      */
     public void showNoInternetSnackbar() {
-        Snackbar.make(this.getView(), R.string.no_internet, Snackbar.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(this.getView(), R.string.no_internet,
+                Snackbar.LENGTH_SHORT);
+        Utility.styleSnackbar(snackbar, getContext());
+        snackbar.show();
     }
 
     /**

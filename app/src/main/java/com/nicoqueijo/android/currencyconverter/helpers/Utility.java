@@ -7,8 +7,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
+import android.widget.TextView;
 
+import com.nicoqueijo.android.currencyconverter.R;
+
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -100,5 +106,48 @@ public final class Utility {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * Gets the resource id of the current theme.
+     *
+     * @param context application environment.
+     * @return the resource id as an int.
+     */
+    private static int getThemeId(Context context) {
+        try {
+            Class<?> wrapper = Context.class;
+            Method method = wrapper.getMethod("getThemeResId");
+            method.setAccessible(true);
+            return (Integer) method.invoke(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Changes the Snackbar's colors based on the currently set theme.
+     *
+     * @param snackbar the Snackbar to style.
+     * @param context  environment where this Snackbar resides.
+     */
+    public static void styleSnackbar(Snackbar snackbar, Context context) {
+        int themeId = getThemeId(context);
+        View snackbarView = snackbar.getView();
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        TextView textView = snackbarView.findViewById(snackbarTextId);
+        switch (themeId) {
+            case R.style.AppThemeDark:
+                textView.setTextColor(Color.BLACK);
+                snackbarView.setBackgroundColor(Color.WHITE);
+                snackbar.setActionTextColor(snackbar.getContext().getResources()
+                        .getColor(R.color.purple_800));
+                break;
+            case R.style.AppThemeLight:
+                snackbar.setActionTextColor(snackbar.getContext().getResources()
+                        .getColor(R.color.purple_200));
+                break;
+        }
     }
 }
