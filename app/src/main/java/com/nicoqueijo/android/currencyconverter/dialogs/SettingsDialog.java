@@ -8,6 +8,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.RadioButton;
 
+import com.nicoqueijo.android.currencyconverter.R;
+
 import java.util.Stack;
 
 /**
@@ -26,6 +28,12 @@ public abstract class SettingsDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         mSharedPreferences = getActivity().getSharedPreferences(getActivity().getPackageName()
                 .concat(".settings"), Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow().setWindowAnimations(R.style.dialog_animation_slide);
     }
 
     public abstract void initViews(View view);

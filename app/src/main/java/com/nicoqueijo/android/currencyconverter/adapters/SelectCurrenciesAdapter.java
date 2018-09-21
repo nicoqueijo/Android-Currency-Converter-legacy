@@ -155,6 +155,7 @@ public class SelectCurrenciesAdapter extends
             return filterResults;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mCurrencies.clear();
