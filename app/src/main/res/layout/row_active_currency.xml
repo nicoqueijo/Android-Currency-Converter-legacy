@@ -6,7 +6,7 @@
     android:layout_height="56dp">
 
     <RelativeLayout
-        android:id="@+id/item_background"
+        android:id="@+id/row_background"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/red"
@@ -32,10 +32,11 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/item_foreground"
+        android:id="@+id/row_foreground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:colorBackground"
+        android:background="@drawable/background_item_ripple"
+        android:longClickable="true"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"

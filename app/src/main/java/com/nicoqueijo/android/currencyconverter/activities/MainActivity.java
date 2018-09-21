@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             return true;
         }
         fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction.hide(visibleFragment);
         fragmentTransaction.show(fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG));
         fragmentTransaction.commit();
@@ -232,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             return false;
         }
         fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction.hide(visibleFragment);
         Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
         if (sourceCodeFragment == null) {
@@ -538,6 +540,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             if (fragment != null && fragment.isVisible()) {
                 if (fragment instanceof SelectCurrenciesFragment) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right);
                     fragmentTransaction.remove(fragment);
                     fragmentManager.popBackStack();
                     fragmentTransaction.commit();

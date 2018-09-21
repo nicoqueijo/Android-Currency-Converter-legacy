@@ -82,7 +82,7 @@ public class ActiveCurrenciesAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_active_currency, parent, false);
+                .inflate(R.layout.row_active_currency, parent, false);
         return new ViewHolder(view);
     }
 
@@ -151,8 +151,8 @@ public class ActiveCurrenciesAdapter extends
 
         ViewHolder(View itemView) {
             super(itemView);
-            mItemBackground = itemView.findViewById(R.id.item_background);
-            mItemForeground = itemView.findViewById(R.id.item_foreground);
+            mItemBackground = itemView.findViewById(R.id.row_background);
+            mItemForeground = itemView.findViewById(R.id.row_foreground);
             mDeleteIconStart = itemView.findViewById(R.id.delete_icon_start);
             mDeleteIconEnd = itemView.findViewById(R.id.delete_icon_end);
             mFlagImage = itemView.findViewById(R.id.flag);
