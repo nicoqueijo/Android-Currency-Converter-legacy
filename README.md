@@ -23,7 +23,7 @@ Currency conversion tool using live exchange rates.
 * Filter by name
 
 ## Screenshots
-https://github.com/nicoqueijo/Android-Currency-Converter/graphics/screenshots/
+https://github.com/nicoqueijo/Android-Currency-Converter/tree/master/graphics/screenshots
 
 ## Built with
 * <a href="https://github.com/google/volley" target="_blank">Volley</a> - An HTTP library that makes networking for Android apps easier and, most importantly, faster.
