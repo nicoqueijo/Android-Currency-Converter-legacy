@@ -12,8 +12,6 @@ Currency conversion tool using live exchange rates.
   <img src="graphics/demos/demo_2.gif" hspace="10" width="250" /> 
 </p>
 
-![hustlin_erd](https://github.com/nicoqueijo/Android-Currency-Converter/blob/master/graphics/flowcharts/app_launch_flowchart.pdf)
-
 ## Features
 * Conversions use real time exchange rate values
 * Supports over 160 exchange rates
