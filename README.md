@@ -1,4 +1,28 @@
-Under development. More coming soon.
+# Currency Converter
+Currency conversion tool using live exchange rates.
+
+## Installation
+<a href="https://play.google.com/store/apps/details?id=com.nicoqueijo.android.currencyconverter" target="_blank">
+<img src="graphics/google_play_images/google_play.png" a_blank href="https://play.google.com/store/apps/details?id=com.nicoqueijo.cityskylinequiz">
+</a>
+
+## Demo
+<p float="left">
+  <img src="graphics/demos/demo_1.gif" hspace="10" width="250" />
+  <img src="graphics/demos/demo_2.gif" hspace="10" width="250" /> 
+</p>
+
+## Features
+* Conversions use real time exchange rate values
+* Simple Material Design
+* Languages: English/Spanish
+* Themes: Light/Dark
+* Swipe to delete
+* Drag to reorder
+* Filter by name
+
+## Screenshots
+https://github.com/nicoqueijo/Android-Currency-Converter/graphics/screenshots/
 
 ## Built with
 * <a href="https://github.com/google/volley" target="_blank">Volley</a> - An HTTP library that makes networking for Android apps easier and, most importantly, faster.
