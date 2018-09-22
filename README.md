@@ -14,6 +14,7 @@ Currency conversion tool using live exchange rates.
 
 ## Features
 * Conversions use real time exchange rate values
+* Supports over 160 exchange rates
 * Simple Material Design
 * Languages: English/Spanish
 * Themes: Light/Dark
