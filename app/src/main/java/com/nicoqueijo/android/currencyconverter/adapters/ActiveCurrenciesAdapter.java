@@ -94,8 +94,13 @@ public class ActiveCurrenciesAdapter extends
         holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
-        String formattedConversionValue = mDecimalFormatter.format(conversionValue).equals
-                ("0" + mDecimalSeparator + "00") ? "0" : mDecimalFormatter.format(conversionValue);
+        String formattedConversionValue = "";
+        try {
+            formattedConversionValue = mDecimalFormatter.format(conversionValue).equals("0" +
+                    mDecimalSeparator + "00") ? "0" : mDecimalFormatter.format(conversionValue);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
         holder.mConversionValueEditText.setText(formattedConversionValue);
         mOnBind = false;
     }
