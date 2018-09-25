@@ -116,7 +116,7 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
      */
     private void restoreSavedLanguage() {
         String systemLanguage = Locale.getDefault().getLanguage();
-        String savedLanguage = mSharedPreferences.getString("language", systemLanguage);
+        String savedLanguage = mSharedPrefsSettings.getString("language", systemLanguage);
         if (savedLanguage.equals(Language.SPANISH.getLanguage())) {
             mSpanishRadioButton.setChecked(true);
             mActiveRadioButton.push(mSpanishRadioButton);
@@ -132,7 +132,7 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
      * @param language the language the user selected.
      */
     private void saveLanguage(Language language) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        SharedPreferences.Editor editor = mSharedPrefsSettings.edit();
         editor.putString("language", language.getLanguage());
         editor.apply();
     }

@@ -46,12 +46,12 @@ public class CurrenciesSingleton {
      * @param context Information about application environment. Needed to get SharedPrefs.
      */
     private void initAndSortCurrencies(Context context) {
-        SharedPreferences mSharedPreferencesRates = context.getSharedPreferences(MainActivity
+        SharedPreferences mSharedPrefsRates = context.getSharedPreferences(MainActivity
                 .sharedPrefsRatesFilename, MODE_PRIVATE);
-        Map<String, ?> keys = mSharedPreferencesRates.getAll();
+        Map<String, ?> keys = mSharedPrefsRates.getAll();
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
             String currencyCode = entry.getKey();
-            double exchangeRate = Utility.getDouble(mSharedPreferencesRates, entry.getKey(), 0.0);
+            double exchangeRate = Utility.getDouble(mSharedPrefsRates, entry.getKey(), 0.0);
             mCurrencies.add(new Currency(currencyCode, exchangeRate));
         }
         Collections.sort(mCurrencies, new Comparator<Currency>() {

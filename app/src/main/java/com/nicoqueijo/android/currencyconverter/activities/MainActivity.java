@@ -459,11 +459,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @throws JSONException in case a key being fetched doesn't exist.
      */
     private void updateSharedPreferencesExchangeRates(JSONObject jsonObject) throws JSONException {
-        SharedPreferences.Editor mSharedPreferencesEditor = mSharedPrefsTime.edit();
+        SharedPreferences.Editor mSharedPrefsEditor = mSharedPrefsTime.edit();
         long timestamp = jsonObject.getLong("timestamp");
-        mSharedPreferencesEditor.putLong("timestamp", timestamp);
-        mSharedPreferencesEditor.apply();
-        mSharedPreferencesEditor = mSharedPrefsRates.edit();
+        mSharedPrefsEditor.putLong("timestamp", timestamp);
+        mSharedPrefsEditor.apply();
+        mSharedPrefsEditor = mSharedPrefsRates.edit();
         Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
@@ -474,9 +474,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 continue;
             }
             double value = rates.getDouble(key);
-            Utility.putDouble(mSharedPreferencesEditor, key, value);
+            Utility.putDouble(mSharedPrefsEditor, key, value);
         }
-        mSharedPreferencesEditor.apply();
+        mSharedPrefsEditor.apply();
     }
 
     /**

@@ -89,7 +89,7 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
      */
     private void restoreSavedTheme() {
         int defaultTheme = R.style.AppThemeLight;
-        int savedTheme = mSharedPreferences.getInt("theme", defaultTheme);
+        int savedTheme = mSharedPrefsSettings.getInt("theme", defaultTheme);
         if (savedTheme == R.style.AppThemeDark) {
             mDarkRadioButton.setChecked(true);
             mActiveRadioButton.push(mDarkRadioButton);
@@ -124,7 +124,7 @@ public class ThemeDialog extends SettingsDialog implements View.OnClickListener 
      * @param theme the theme the user selected.
      */
     private void saveTheme(Theme theme) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        SharedPreferences.Editor editor = mSharedPrefsSettings.edit();
         editor.putInt("theme", theme.getTheme());
         editor.apply();
     }
