@@ -23,13 +23,15 @@ public class DatabaseConstants {
     public class TableActiveCurrencies {
 
         public static final String TABLE_NAME = "active_currencies";
-        public static final String COLUMN_ORDER = "order";
+        public static final String COLUMN_ORDER = "currency_order";
+        public static final String COLUMN_CURRENCY_CODE = "currency_code";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + " ("
                 + COLUMN_ORDER + " INTEGER PRIMARY KEY, "
-                + "FOREIGN KEY(" + TableAllCurrencies.COLUMN_CURRENCY_CODE + ") REFERENCES "
+                + COLUMN_CURRENCY_CODE + " TEXT, "
+                + "FOREIGN KEY (" + COLUMN_CURRENCY_CODE + ") REFERENCES "
                 + TableAllCurrencies.TABLE_NAME
-                + "(" + TableAllCurrencies.COLUMN_CURRENCY_CODE + ") " + ") ";
+                + "(" + TableAllCurrencies.COLUMN_CURRENCY_CODE + ")" + ");";
     }
 }
