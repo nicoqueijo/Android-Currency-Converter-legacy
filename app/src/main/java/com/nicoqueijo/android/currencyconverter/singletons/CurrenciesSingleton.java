@@ -21,6 +21,8 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class CurrenciesSingleton {
 
+    public static final String TAG = CurrenciesSingleton.class.getSimpleName();
+
     private static CurrenciesSingleton mInstance;
     private ArrayList<Currency> mCurrencies = new ArrayList<>();
 
@@ -40,6 +42,7 @@ public class CurrenciesSingleton {
     }
 
     /**
+     * /////////////////////////////// EDIT THIS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      * Retrieves the exchange rates stored in SharedPrefs, initializes the currency list with their
      * values, and sorts the list.
      *

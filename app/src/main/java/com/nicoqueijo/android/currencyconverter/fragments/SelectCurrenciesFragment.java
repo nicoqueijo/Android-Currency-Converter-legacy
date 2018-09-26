@@ -107,6 +107,23 @@ public class SelectCurrenciesFragment extends Fragment {
     }
 
     /**
+     * Initializes the views and sets up the adapters.
+     *
+     * @param view the root view of the inflated hierarchy
+     */
+    private void initViewsAdaptersAndListeners(View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_view_select_currencies);
+        mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
+        mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
+        mAdapter = new SelectCurrenciesAdapter(this);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL));
+    }
+
+    /**
      * Sets up the menu for this Fragment.
      *
      * @param menu     The options menu in which you place your items.
@@ -128,23 +145,6 @@ public class SelectCurrenciesFragment extends Fragment {
                 return false;
             }
         });
-    }
-
-    /**
-     * Initializes the views and sets up the adapters.
-     *
-     * @param view the root view of the inflated hierarchy
-     */
-    private void initViewsAdaptersAndListeners(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_select_currencies);
-        mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
-        mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
-        mAdapter = new SelectCurrenciesAdapter(this);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                DividerItemDecoration.VERTICAL));
     }
 
     /**

@@ -16,7 +16,7 @@ public class DatabaseConstants {
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + " ("
                 + COLUMN_CURRENCY_CODE + " TEXT PRIMARY KEY, "
-                + COLUMN_CURRENCY_VALUE + " INTEGER"
+                + COLUMN_CURRENCY_VALUE + " REAL"
                 + ");";
     }
 

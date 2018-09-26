@@ -34,7 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseConstants;
+import com.nicoqueijo.android.currencyconverter.databases.DatabaseConstants.TableAllCurrencies;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
@@ -456,6 +456,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
+     * /////////////////////////////// EDIT THIS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      * Extracts the timestamp and exchange rates from the JSON object and saves them locally via
      * SharedPreferences. It skips over few exchange rates that are not of interest; e.g. silver.
      *
@@ -476,10 +477,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
         JSONArray keys = rates.names();
-        database.beginTransaction();
-        ContentValues contentValues = new ContentValues();
         String key;
         double value;
+        ContentValues contentValues = new ContentValues();
+        database.beginTransaction();
         for (int i = 0; i < keys.length(); i++) {
             key = keys.getString(i);
             if (exclusionList.contains(key)) {
@@ -487,9 +488,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             }
             value = rates.getDouble(key);
             ///////////////////////////////////////////////////////////////////////////////////////////
-            contentValues.put(DatabaseConstants.TableAllCurrencies.COLUMN_CURRENCY_CODE, key);
-            contentValues.put(DatabaseConstants.TableAllCurrencies.COLUMN_CURRENCY_VALUE, value);
-            database.insert(DatabaseConstants.TableAllCurrencies.TABLE_NAME, null, contentValues);
+            contentValues.put(TableAllCurrencies.COLUMN_CURRENCY_CODE, key);
+            contentValues.put(TableAllCurrencies.COLUMN_CURRENCY_VALUE, value);
+            database.insert(TableAllCurrencies.TABLE_NAME, null, contentValues);
             ///////////////////////////////////////////////////////////////////////////////////////////
 //            Utility.putDouble(mSharedPrefsEditor, key, value);
         }
