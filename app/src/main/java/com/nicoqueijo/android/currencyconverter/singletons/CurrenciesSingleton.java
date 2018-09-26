@@ -47,6 +47,7 @@ public class CurrenciesSingleton {
     private void initAndSortCurrencies(Context context) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
+        database.beginTransaction();
         Cursor cursor = database.query(
                 EntryAllCurrencies.TABLE_NAME,
                 new String[]{
@@ -57,32 +58,18 @@ public class CurrenciesSingleton {
                 null,
                 null,
                 EntryAllCurrencies.COLUMN_CURRENCY_CODE + " ASC");
-
         int col_currency_code = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_CODE);
         int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_VALUE);
         String currencyCode;
         double exchangeRate;
-
         while (cursor.moveToNext()) {
             currencyCode = cursor.getString(col_currency_code);
             exchangeRate = cursor.getDouble(col_currency_value);
             mCurrencies.add(new Currency(currencyCode, exchangeRate));
         }
         cursor.close();
-
-//        SharedPreferences mSharedPrefsRates = context.getSharedPreferences(MainActivity
-//                .sharedPrefsRatesFilename, MODE_PRIVATE);
-//        Map<String, ?> keys = mSharedPrefsRates.getAll();
-//        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-//            String currencyCode = entry.getKey();
-//            double exchangeRate = Utility.getDouble(mSharedPrefsRates, entry.getKey(), 0.0);
-//            mCurrencies.add(new Currency(currencyCode, exchangeRate));
-//        }
-//        Collections.sort(mCurrencies, new Comparator<Currency>() {
-//            @Override
-//            public int compare(Currency currency1, Currency currency2) {
-//                return currency1.getCurrencyCode().compareTo(currency2.getCurrencyCode());
-//            }
-//        });
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
     }
 }

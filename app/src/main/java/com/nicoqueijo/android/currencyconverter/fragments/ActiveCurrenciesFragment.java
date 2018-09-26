@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryActiveCurrencies;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
@@ -36,8 +34,6 @@ import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static android.content.Context.MODE_PRIVATE;
-
 /**
  * Fragment that allows the user to add/remove/reorder exchange rates and perform conversions.
  */
@@ -49,7 +45,6 @@ public class ActiveCurrenciesFragment extends Fragment {
 
     private ArrayList<Currency> mAllCurrencies;
     private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
-    private SharedPreferences mSharedPrefsRates;
 
     private CustomRecyclerView mRecyclerView;
     private View mEmptyListView;
@@ -69,8 +64,6 @@ public class ActiveCurrenciesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mSharedPrefsRates = getContext().getSharedPreferences(MainActivity
-                .sharedPrefsRatesFilename, MODE_PRIVATE);
         mAllCurrencies = CurrenciesSingleton.getInstance(getContext()).getCurrencies();
     }
 
@@ -191,16 +184,6 @@ public class ActiveCurrenciesFragment extends Fragment {
      * conflicts.
      */
     private void saveActiveCurrenciesToSharedPrefs() {
-//        SharedPreferences sharedPrefsActiveRates = getActivity().getSharedPreferences
-//                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
-//        SharedPreferences.Editor sharedPrefsEditor = sharedPrefsActiveRates.edit();
-//        sharedPrefsEditor.clear();
-//        for (int i = 0; i < mActiveCurrencies.size(); i++) {
-//            Currency currency = mActiveCurrencies.get(i);
-//            sharedPrefsEditor.putInt(currency.getCurrencyCode(), i);
-//        }
-//        sharedPrefsEditor.apply();
-
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         database.beginTransaction();
@@ -212,8 +195,6 @@ public class ActiveCurrenciesFragment extends Fragment {
             contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER, i);
             contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_CODE, currencyCode);
             database.insert(EntryActiveCurrencies.TABLE_NAME, null, contentValues);
-//            Currency currency = mActiveCurrencies.get(i);
-//            sharedPrefsEditor.putInt(currency.getCurrencyCode(), i);
         }
         database.setTransactionSuccessful();
         database.endTransaction();
@@ -226,10 +207,9 @@ public class ActiveCurrenciesFragment extends Fragment {
      * they appeared.
      */
     private void restoreActiveCurrenciesFromSharedPrefs() {
-
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
-
+        database.beginTransaction();
         String rawQuery = "SELECT" +
                 " active_currencies.currency_order," +
                 " active_currencies.currency_code," +
@@ -238,13 +218,10 @@ public class ActiveCurrenciesFragment extends Fragment {
                 " INNER JOIN all_currencies" +
                 " WHERE all_currencies.currency_code =  active_currencies.currency_code";
         Cursor cursor = database.rawQuery(rawQuery, null);
-
         Currency[] savedActiveCurrencies = new Currency[cursor.getCount()];
-
         int col_currency_order = cursor.getColumnIndex(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER);
         int col_currency_code = cursor.getColumnIndex(EntryActiveCurrencies.COLUMN_CURRENCY_CODE);
         int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_VALUE);
-
         int order;
         String currencyCode;
         double exchangeRate;
@@ -259,21 +236,8 @@ public class ActiveCurrenciesFragment extends Fragment {
         }
         mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
         cursor.close();
-
-
-//        SharedPreferences sharedPrefsActiveRates = getActivity().getSharedPreferences
-//                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
-//        Map<String, ?> keys = sharedPrefsActiveRates.getAll();
-//        Currency[] savedActiveCurrencies = new Currency[keys.size()];
-//        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-//            String currencyCode = entry.getKey();
-//            double exchangeRate = Utility.getDouble(mSharedPrefsRates, entry.getKey(), 0.0);
-//            int order = sharedPrefsActiveRates.getInt(entry.getKey(), 0);
-//            Currency currency = new Currency(currencyCode, exchangeRate);
-//            currency = mAllCurrencies.get(mAllCurrencies.indexOf(currency));
-//            savedActiveCurrencies[order] = currency;
-//            mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
-//        }
-//        mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
     }
 }

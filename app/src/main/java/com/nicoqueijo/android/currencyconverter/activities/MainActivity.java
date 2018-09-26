@@ -73,10 +73,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     public static String sharedPrefsSettingsFilename;
-    public static String sharedPrefsRatesFilename;
     public static String sharedPrefsTimeFilename;
     private SharedPreferences mSharedPrefsSettings;
-    private SharedPreferences mSharedPrefsRates;
     private SharedPreferences mSharedPrefsTime;
 
     private Toolbar mToolbar;
@@ -102,10 +100,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private void initSharedPrefs() {
         sharedPrefsSettingsFilename = getPackageName().concat(".settings");
-        sharedPrefsRatesFilename = getPackageName().concat(".rates");
         sharedPrefsTimeFilename = getPackageName().concat(".time");
         mSharedPrefsSettings = getSharedPreferences(sharedPrefsSettingsFilename, MODE_PRIVATE);
-        mSharedPrefsRates = getSharedPreferences(sharedPrefsRatesFilename, MODE_PRIVATE);
         mSharedPrefsTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
     }
 
@@ -468,11 +464,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPrefsEditor.putLong("timestamp", timestamp);
         mSharedPrefsEditor.apply();
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        ///////////////////////////////////////////////////////////////////////////////////////////
-//        mSharedPrefsEditor = mSharedPrefsRates.edit();
         Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
@@ -480,6 +471,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         String key;
         double value;
         ContentValues contentValues = new ContentValues();
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
         database.beginTransaction();
         for (int i = 0; i < keys.length(); i++) {
             key = keys.getString(i);
@@ -487,14 +480,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 continue;
             }
             value = rates.getDouble(key);
-            ///////////////////////////////////////////////////////////////////////////////////////////
             contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, key);
             contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, value);
             database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
-            ///////////////////////////////////////////////////////////////////////////////////////////
-//            Utility.putDouble(mSharedPrefsEditor, key, value);
         }
-//        mSharedPrefsEditor.apply();
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
