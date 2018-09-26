@@ -1,13 +1,13 @@
 package com.nicoqueijo.android.currencyconverter.databases;
 
-public class DatabaseConstants {
+public class DatabaseContract {
 
-    public static final String TAG = DatabaseConstants.class.getSimpleName();
+    public static final String TAG = DatabaseContract.class.getSimpleName();
 
     public static final String DATABASE_NAME = "currencies.db";
     public static final int VERSION_NUMBER = 1;
 
-    public class TableAllCurrencies {
+    public class EntryAllCurrencies {
 
         public static final String TABLE_NAME = "all_currencies";
         public static final String COLUMN_CURRENCY_CODE = "currency_code";
@@ -20,18 +20,18 @@ public class DatabaseConstants {
                 + ");";
     }
 
-    public class TableActiveCurrencies {
+    public class EntryActiveCurrencies {
 
         public static final String TABLE_NAME = "active_currencies";
-        public static final String COLUMN_ORDER = "currency_order";
+        public static final String COLUMN_CURRENCY_ORDER = "currency_order";
         public static final String COLUMN_CURRENCY_CODE = "currency_code";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + " ("
-                + COLUMN_ORDER + " INTEGER PRIMARY KEY, "
+                + COLUMN_CURRENCY_ORDER + " INTEGER PRIMARY KEY, "
                 + COLUMN_CURRENCY_CODE + " TEXT, "
                 + "FOREIGN KEY (" + COLUMN_CURRENCY_CODE + ") REFERENCES "
-                + TableAllCurrencies.TABLE_NAME
-                + "(" + TableAllCurrencies.COLUMN_CURRENCY_CODE + ")" + ");";
+                + EntryAllCurrencies.TABLE_NAME
+                + "(" + EntryAllCurrencies.COLUMN_CURRENCY_CODE + ")" + ");";
     }
 }

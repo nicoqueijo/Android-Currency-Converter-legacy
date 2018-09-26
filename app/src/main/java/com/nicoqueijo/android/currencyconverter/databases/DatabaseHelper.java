@@ -10,13 +10,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TAG = DatabaseHelper.class.getSimpleName();
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DatabaseConstants.DATABASE_NAME, null, DatabaseConstants.VERSION_NUMBER);
+        super(context, DatabaseContract.DATABASE_NAME, null, DatabaseContract.VERSION_NUMBER);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseConstants.TableAllCurrencies.CREATE_TABLE);
-        db.execSQL(DatabaseConstants.TableActiveCurrencies.CREATE_TABLE);
+        db.execSQL(DatabaseContract.EntryAllCurrencies.CREATE_TABLE);
+        db.execSQL(DatabaseContract.EntryActiveCurrencies.CREATE_TABLE);
     }
 
     @Override

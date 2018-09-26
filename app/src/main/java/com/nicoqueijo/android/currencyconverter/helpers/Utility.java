@@ -49,6 +49,7 @@ public final class Utility {
     }
 
     /**
+     * After migrating to SQLite this method is obsolete but preserved just in case.
      * Stores doubles in SharedPreferences without losing precision.
      * Credit: https://stackoverflow.com/a/18098090/5906793
      *
@@ -62,6 +63,7 @@ public final class Utility {
     }
 
     /**
+     * After migrating to SQLite this method is obsolete but preserved just in case.
      * Retrieves doubles in SharedPreferences without losing precision.
      * Credit: https://stackoverflow.com/a/18098090/5906793
      *
@@ -163,5 +165,4 @@ public final class Utility {
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
     */
-
 }

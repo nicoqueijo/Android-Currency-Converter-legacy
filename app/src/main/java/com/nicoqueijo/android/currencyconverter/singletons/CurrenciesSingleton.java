@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseConstants.TableAllCurrencies;
+import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 
@@ -48,18 +48,18 @@ public class CurrenciesSingleton {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
         Cursor cursor = database.query(
-                TableAllCurrencies.TABLE_NAME,
+                EntryAllCurrencies.TABLE_NAME,
                 new String[]{
-                        TableAllCurrencies.COLUMN_CURRENCY_CODE,
-                        TableAllCurrencies.COLUMN_CURRENCY_VALUE},
+                        EntryAllCurrencies.COLUMN_CURRENCY_CODE,
+                        EntryAllCurrencies.COLUMN_CURRENCY_VALUE},
                 null,
                 null,
                 null,
                 null,
-                TableAllCurrencies.COLUMN_CURRENCY_CODE + " ASC");
+                EntryAllCurrencies.COLUMN_CURRENCY_CODE + " ASC");
 
-        int col_currency_code = cursor.getColumnIndex(TableAllCurrencies.COLUMN_CURRENCY_CODE);
-        int col_currency_value = cursor.getColumnIndex(TableAllCurrencies.COLUMN_CURRENCY_VALUE);
+        int col_currency_code = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_CODE);
+        int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_VALUE);
         String currencyCode;
         double exchangeRate;
 

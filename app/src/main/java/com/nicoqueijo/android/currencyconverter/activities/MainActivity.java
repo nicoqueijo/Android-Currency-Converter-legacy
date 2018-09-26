@@ -34,7 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseConstants.TableAllCurrencies;
+import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
@@ -488,9 +488,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             }
             value = rates.getDouble(key);
             ///////////////////////////////////////////////////////////////////////////////////////////
-            contentValues.put(TableAllCurrencies.COLUMN_CURRENCY_CODE, key);
-            contentValues.put(TableAllCurrencies.COLUMN_CURRENCY_VALUE, value);
-            database.insert(TableAllCurrencies.TABLE_NAME, null, contentValues);
+            contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, key);
+            contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, value);
+            database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
             ///////////////////////////////////////////////////////////////////////////////////////////
 //            Utility.putDouble(mSharedPrefsEditor, key, value);
         }
