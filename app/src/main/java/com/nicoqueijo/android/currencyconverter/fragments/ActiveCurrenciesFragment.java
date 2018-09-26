@@ -1,7 +1,9 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +24,8 @@ import android.view.inputmethod.InputMethodManager;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
+import com.nicoqueijo.android.currencyconverter.databases.DatabaseConstants.TableActiveCurrencies;
+import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.CustomRecyclerView;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -186,15 +190,33 @@ public class ActiveCurrenciesFragment extends Fragment {
      * conflicts.
      */
     private void saveActiveCurrenciesToSharedPrefs() {
-        SharedPreferences sharedPrefsActiveRates = getActivity().getSharedPreferences
-                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
-        SharedPreferences.Editor sharedPrefsEditor = sharedPrefsActiveRates.edit();
-        sharedPrefsEditor.clear();
+//        SharedPreferences sharedPrefsActiveRates = getActivity().getSharedPreferences
+//                (getActivity().getPackageName().concat(".active_rates"), MODE_PRIVATE);
+//        SharedPreferences.Editor sharedPrefsEditor = sharedPrefsActiveRates.edit();
+//        sharedPrefsEditor.clear();
+//        for (int i = 0; i < mActiveCurrencies.size(); i++) {
+//            Currency currency = mActiveCurrencies.get(i);
+//            sharedPrefsEditor.putInt(currency.getCurrencyCode(), i);
+//        }
+//        sharedPrefsEditor.apply();
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        database.beginTransaction();
+        database.execSQL("DELETE FROM " + TableActiveCurrencies.TABLE_NAME);
+        ContentValues contentValues = new ContentValues();
+        String currencyCode;
         for (int i = 0; i < mActiveCurrencies.size(); i++) {
-            Currency currency = mActiveCurrencies.get(i);
-            sharedPrefsEditor.putInt(currency.getCurrencyCode(), i);
+            currencyCode = mActiveCurrencies.get(i).getCurrencyCode();
+            contentValues.put(TableActiveCurrencies.COLUMN_ORDER, i);
+            contentValues.put(TableActiveCurrencies.COLUMN_CURRENCY_CODE, currencyCode);
+            database.insert(TableActiveCurrencies.TABLE_NAME, null, contentValues);
+//            Currency currency = mActiveCurrencies.get(i);
+//            sharedPrefsEditor.putInt(currency.getCurrencyCode(), i);
         }
-        sharedPrefsEditor.apply();
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
     }
 
     /**
