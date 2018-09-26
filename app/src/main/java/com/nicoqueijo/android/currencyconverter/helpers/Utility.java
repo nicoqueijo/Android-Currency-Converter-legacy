@@ -22,6 +22,7 @@ import java.math.RoundingMode;
  * Provides useful, general-purpose methods to be used across the project.
  */
 public final class Utility {
+
     /**
      * Retrieves string resources using a String instead of an int.
      * Credit: https://stackoverflow.com/a/11595723/5906793
@@ -150,4 +151,17 @@ public final class Utility {
                 break;
         }
     }
+
+    /*
+    Leaving these here for quick copy+paste when I need to measure performance.
+
+        long startTime = System.nanoTime();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
+        long startTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime);
+    */
+
 }

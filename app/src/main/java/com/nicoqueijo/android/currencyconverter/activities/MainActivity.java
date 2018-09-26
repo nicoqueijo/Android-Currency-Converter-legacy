@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.databases.DatabaseConstants;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
@@ -87,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
         initSharedPrefs();
         setLocaleAndTheme();
         setContentView(R.layout.activity_main);
@@ -467,20 +467,36 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPrefsEditor.putLong("timestamp", timestamp);
         mSharedPrefsEditor.apply();
-        mSharedPrefsEditor = mSharedPrefsRates.edit();
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        ///////////////////////////////////////////////////////////////////////////////////////////
+//        mSharedPrefsEditor = mSharedPrefsRates.edit();
         Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
         JSONArray keys = rates.names();
+        database.beginTransaction();
+        ContentValues contentValues = new ContentValues();
+        String key;
+        double value;
         for (int i = 0; i < keys.length(); i++) {
-            String key = keys.getString(i);
+            key = keys.getString(i);
             if (exclusionList.contains(key)) {
                 continue;
             }
-            double value = rates.getDouble(key);
-            Utility.putDouble(mSharedPrefsEditor, key, value);
+            value = rates.getDouble(key);
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            contentValues.put(DatabaseConstants.TableAllCurrencies.COLUMN_CURRENCY_CODE, key);
+            contentValues.put(DatabaseConstants.TableAllCurrencies.COLUMN_CURRENCY_VALUE, value);
+            database.insert(DatabaseConstants.TableAllCurrencies.TABLE_NAME, null, contentValues);
+            ///////////////////////////////////////////////////////////////////////////////////////////
+//            Utility.putDouble(mSharedPrefsEditor, key, value);
         }
-        mSharedPrefsEditor.apply();
+//        mSharedPrefsEditor.apply();
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
     }
 
     /**
