@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +103,6 @@ public class LanguageDialog extends SettingsDialog implements View.OnClickListen
         MainActivity hostActivity = (MainActivity) getActivity();
         hostActivity.setLocale(language.getLanguage());
         hostActivity.recreate();
-        Log.d(TAG, "changeLanguage: ");
         dismiss();
     }
 

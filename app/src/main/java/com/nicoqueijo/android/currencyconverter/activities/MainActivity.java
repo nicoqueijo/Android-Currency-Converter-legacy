@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -452,18 +453,22 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * /////////////////////////////// EDIT THIS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     * Extracts the timestamp and exchange rates from the JSON object and saves them locally via
-     * SharedPreferences. It skips over few exchange rates that are not of interest; e.g. silver.
+     * Extracts the timestamp from the JSON object received from the API call and saves it locally
+     * using SharedPrefs.
+     * <p>
+     * Extracts the exchange rates from the JSON object received from the API call and saved them
+     * locally using an SQLite database. It skips over few exchange rates that are not of interest;
+     * e.g. silver.
      *
      * @param jsonObject the JSON object containing the exchange rates and timestamp.
      * @throws JSONException in case a key being fetched doesn't exist.
      */
-    private void updateSharedPreferencesExchangeRates(JSONObject jsonObject) throws JSONException {
+    private void persistTimestampAndExchangeRates(JSONObject jsonObject) throws JSONException {
         SharedPreferences.Editor mSharedPrefsEditor = mSharedPrefsTime.edit();
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPrefsEditor.putLong("timestamp", timestamp);
         mSharedPrefsEditor.apply();
+
         Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
@@ -471,22 +476,26 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         String key;
         double value;
         ContentValues contentValues = new ContentValues();
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        database.beginTransaction();
-        for (int i = 0; i < keys.length(); i++) {
-            key = keys.getString(i);
-            if (exclusionList.contains(key)) {
-                continue;
+        try {
+            DatabaseHelper databaseHelper = new DatabaseHelper(this);
+            SQLiteDatabase database = databaseHelper.getWritableDatabase();
+            database.beginTransaction();
+            for (int i = 0; i < keys.length(); i++) {
+                key = keys.getString(i);
+                value = rates.getDouble(key);
+                if (exclusionList.contains(key)) {
+                    continue;
+                }
+                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, key);
+                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, value);
+                database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
             }
-            value = rates.getDouble(key);
-            contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, key);
-            contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, value);
-            database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            database.close();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
         }
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        database.close();
     }
 
     /**
@@ -610,7 +619,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
-                                updateSharedPreferencesExchangeRates(jsonObject);
+                                persistTimestampAndExchangeRates(jsonObject);
                                 checkForLastUpdate();
                                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
                                         .newInstance();

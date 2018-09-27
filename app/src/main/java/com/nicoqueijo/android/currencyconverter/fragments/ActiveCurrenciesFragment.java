@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -82,7 +83,7 @@ public class ActiveCurrenciesFragment extends Fragment {
             mActiveCurrencies = savedInstanceState.getParcelableArrayList(ARG_ACTIVE_CURRENCIES);
             mAllCurrencies = savedInstanceState.getParcelableArrayList(ARG_ALL_CURRENCIES);
         } else {
-            restoreActiveCurrenciesFromSharedPrefs();
+            restoreActiveCurrencies();
         }
     }
 
@@ -99,7 +100,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        saveActiveCurrenciesToSharedPrefs();
+        persistActiveCurrencies();
     }
 
     /**
@@ -178,66 +179,77 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * * /////////////////////////////// EDIT THIS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     * Saves the list of active currencies to shared prefs maintaining the order in which they
-     * appear. Does this by first clearing what was already inside the shared prefs to avoid
-     * conflicts.
+     * Saves the list of active currencies to an SQlite database table maintaining the order in
+     * which they appear. Does this by first deleting everything from the table to avoid conflicts.
      */
-    private void saveActiveCurrenciesToSharedPrefs() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        database.beginTransaction();
-        database.execSQL("DELETE FROM " + EntryActiveCurrencies.TABLE_NAME);
-        ContentValues contentValues = new ContentValues();
-        String currencyCode;
-        for (int i = 0; i < mActiveCurrencies.size(); i++) {
-            currencyCode = mActiveCurrencies.get(i).getCurrencyCode();
-            contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER, i);
-            contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_CODE, currencyCode);
-            database.insert(EntryActiveCurrencies.TABLE_NAME, null, contentValues);
+    private void persistActiveCurrencies() {
+        try {
+            DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+            SQLiteDatabase database = databaseHelper.getWritableDatabase();
+            database.beginTransaction();
+            database.execSQL("DELETE FROM " + EntryActiveCurrencies.TABLE_NAME);
+            ContentValues contentValues = new ContentValues();
+            String currencyCode;
+            for (int i = 0; i < mActiveCurrencies.size(); i++) {
+                currencyCode = mActiveCurrencies.get(i).getCurrencyCode();
+                contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER, i);
+                contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_CODE, currencyCode);
+                database.insert(EntryActiveCurrencies.TABLE_NAME, null, contentValues);
+            }
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            database.close();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
         }
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        database.close();
     }
 
     /**
-     * * /////////////////////////////// EDIT THIS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     * Restores the list of active currencies from shared prefs maintaining the order in which
-     * they appeared.
+     * Restores the list of active currencies from the SQLite database maintaining the order in
+     * which they appeared. Does this by querying the active_currencies database table and loading
+     * its content onto the array that will serve as the adapter's data set.
+     * Uses rawQuery instead of query to make an inner join because the currency code column is a
+     * foreign key.
      */
-    private void restoreActiveCurrenciesFromSharedPrefs() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        SQLiteDatabase database = databaseHelper.getReadableDatabase();
-        database.beginTransaction();
-        String rawQuery = "SELECT" +
-                " active_currencies.currency_order," +
-                " active_currencies.currency_code," +
-                " all_currencies.currency_value" +
-                " FROM active_currencies" +
-                " INNER JOIN all_currencies" +
-                " WHERE all_currencies.currency_code =  active_currencies.currency_code";
-        Cursor cursor = database.rawQuery(rawQuery, null);
-        Currency[] savedActiveCurrencies = new Currency[cursor.getCount()];
-        int col_currency_order = cursor.getColumnIndex(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER);
-        int col_currency_code = cursor.getColumnIndex(EntryActiveCurrencies.COLUMN_CURRENCY_CODE);
-        int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_VALUE);
-        int order;
-        String currencyCode;
-        double exchangeRate;
-        Currency currency;
-        while (cursor.moveToNext()) {
-            order = cursor.getInt(col_currency_order);
-            currencyCode = cursor.getString(col_currency_code);
-            exchangeRate = cursor.getDouble(col_currency_value);
-            currency = new Currency(currencyCode, exchangeRate);
-            savedActiveCurrencies[order] = currency;
-            mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
+    private void restoreActiveCurrencies() {
+        try {
+            DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+            SQLiteDatabase database = databaseHelper.getReadableDatabase();
+            database.beginTransaction();
+            String rawQuery = "SELECT" +
+                    " active_currencies.currency_order," +
+                    " active_currencies.currency_code," +
+                    " all_currencies.currency_value" +
+                    " FROM active_currencies" +
+                    " INNER JOIN all_currencies" +
+                    " WHERE all_currencies.currency_code =  active_currencies.currency_code";
+            Cursor cursor = database.rawQuery(rawQuery, null);
+            Currency[] savedActiveCurrencies = new Currency[cursor.getCount()];
+            int col_currency_order = cursor.getColumnIndex(EntryActiveCurrencies
+                    .COLUMN_CURRENCY_ORDER);
+            int col_currency_code = cursor.getColumnIndex(EntryActiveCurrencies
+                    .COLUMN_CURRENCY_CODE);
+            int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies
+                    .COLUMN_CURRENCY_VALUE);
+            int order;
+            String currencyCode;
+            double exchangeRate;
+            Currency currency;
+            while (cursor.moveToNext()) {
+                order = cursor.getInt(col_currency_order);
+                currencyCode = cursor.getString(col_currency_code);
+                exchangeRate = cursor.getDouble(col_currency_value);
+                currency = new Currency(currencyCode, exchangeRate);
+                savedActiveCurrencies[order] = currency;
+                mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
+            }
+            mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
+            cursor.close();
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            database.close();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
         }
-        mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
-        cursor.close();
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        database.close();
     }
 }
