@@ -473,16 +473,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                 .getStringArray(R.array.exclusion_list)));
         JSONObject rates = jsonObject.getJSONObject("quotes");
         JSONArray keys = rates.names();
-        String key;
-        double value;
         ContentValues contentValues = new ContentValues();
         try {
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
             database.beginTransaction();
             for (int i = 0; i < keys.length(); i++) {
-                key = keys.getString(i);
-                value = rates.getDouble(key);
+                String key = keys.getString(i);
+                double value = rates.getDouble(key);
                 if (exclusionList.contains(key)) {
                     continue;
                 }

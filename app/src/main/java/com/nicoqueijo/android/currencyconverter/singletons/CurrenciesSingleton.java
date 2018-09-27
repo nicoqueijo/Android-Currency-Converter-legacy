@@ -61,11 +61,9 @@ public class CurrenciesSingleton {
                     EntryAllCurrencies.COLUMN_CURRENCY_CODE + " ASC");
             int col_currency_code = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_CODE);
             int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_VALUE);
-            String currencyCode;
-            double exchangeRate;
             while (cursor.moveToNext()) {
-                currencyCode = cursor.getString(col_currency_code);
-                exchangeRate = cursor.getDouble(col_currency_value);
+                String currencyCode = cursor.getString(col_currency_code);
+                double exchangeRate = cursor.getDouble(col_currency_value);
                 mCurrencies.add(new Currency(currencyCode, exchangeRate));
             }
             cursor.close();

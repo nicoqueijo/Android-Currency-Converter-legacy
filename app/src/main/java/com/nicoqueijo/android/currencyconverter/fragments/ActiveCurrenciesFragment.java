@@ -179,7 +179,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Saves the list of active currencies to an SQlite database table maintaining the order in
+     * Saves the list of active currencies to an SQLite database table maintaining the order in
      * which they appear. Does this by first deleting everything from the table to avoid conflicts.
      */
     private void persistActiveCurrencies() {
@@ -189,9 +189,8 @@ public class ActiveCurrenciesFragment extends Fragment {
             database.beginTransaction();
             database.execSQL("DELETE FROM " + EntryActiveCurrencies.TABLE_NAME);
             ContentValues contentValues = new ContentValues();
-            String currencyCode;
             for (int i = 0; i < mActiveCurrencies.size(); i++) {
-                currencyCode = mActiveCurrencies.get(i).getCurrencyCode();
+                String currencyCode = mActiveCurrencies.get(i).getCurrencyCode();
                 contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER, i);
                 contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_CODE, currencyCode);
                 database.insert(EntryActiveCurrencies.TABLE_NAME, null, contentValues);
