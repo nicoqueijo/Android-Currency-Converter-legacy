@@ -24,7 +24,7 @@ public class CurrenciesSingleton {
     private ArrayList<Currency> mCurrencies = new ArrayList<>();
 
     private CurrenciesSingleton(Context context) {
-        initAndSortCurrencies(context);
+        retrieveAndInitCurrencies(context);
     }
 
     public static synchronized CurrenciesSingleton getInstance(Context context) {
@@ -40,11 +40,11 @@ public class CurrenciesSingleton {
 
     /**
      * Retrieves the exchange rates stored in the SQLite database and initializes the currency list
-     * with their values
+     * with their values.
      *
      * @param context Information about application environment. Needed to open database.
      */
-    private void initAndSortCurrencies(Context context) {
+    private void retrieveAndInitCurrencies(Context context) {
         try {
             DatabaseHelper databaseHelper = new DatabaseHelper(context);
             SQLiteDatabase database = databaseHelper.getReadableDatabase();

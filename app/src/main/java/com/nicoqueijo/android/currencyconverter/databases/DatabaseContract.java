@@ -4,9 +4,6 @@ public class DatabaseContract {
 
     public static final String TAG = DatabaseContract.class.getSimpleName();
 
-    public static final String DATABASE_NAME = "currencies.db";
-    public static final int VERSION_NUMBER = 1;
-
     public class EntryAllCurrencies {
 
         public static final String TABLE_NAME = "all_currencies";
