@@ -455,26 +455,31 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     /**
      * Extracts the timestamp from the JSON object received from the API call and saves it locally
      * using SharedPrefs.
-     * <p>
-     * Extracts the exchange rates from the JSON object received from the API call and saved them
-     * locally using an SQLite database. It skips over few exchange rates that are not of interest;
-     * e.g. silver.
      *
-     * @param jsonObject the JSON object containing the exchange rates and timestamp.
+     * @param jsonObject the JSON object containing the timestamp.
      * @throws JSONException in case a key being fetched doesn't exist.
      */
-    private void persistTimestampAndExchangeRates(JSONObject jsonObject) throws JSONException {
+    private void persistTimestamp(JSONObject jsonObject) throws JSONException {
         SharedPreferences.Editor mSharedPrefsEditor = mSharedPrefsTime.edit();
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPrefsEditor.putLong("timestamp", timestamp);
         mSharedPrefsEditor.apply();
+    }
 
-        Set<String> exclusionList = new HashSet<>(Arrays.asList(getResources()
-                .getStringArray(R.array.exclusion_list)));
-        JSONObject rates = jsonObject.getJSONObject("quotes");
-        JSONArray keys = rates.names();
-        ContentValues contentValues = new ContentValues();
+    /**
+     * Extracts the exchange rates from the JSON object received from the API call and saved them
+     * locally using an SQLite database. It skips over few exchange rates that are not of interest;
+     * e.g. silver.
+     *
+     * @param jsonObject the JSON object containing the exchange rates.
+     */
+    private void persistExchangeRates(JSONObject jsonObject) {
         try {
+            Set<String> exclusionList = new HashSet<>(Arrays.asList(this.getResources()
+                    .getStringArray(R.array.exclusion_list)));
+            JSONObject rates = jsonObject.getJSONObject("quotes");
+            JSONArray keys = rates.names();
+            ContentValues contentValues = new ContentValues();
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
             database.beginTransaction();
@@ -491,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             database.setTransactionSuccessful();
             database.endTransaction();
             database.close();
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -617,7 +622,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
-                                persistTimestampAndExchangeRates(jsonObject);
+                                persistTimestamp(jsonObject);
+                                persistExchangeRates(jsonObject);
                                 checkForLastUpdate();
                                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
                                         .newInstance();
