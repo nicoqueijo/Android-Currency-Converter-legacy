@@ -231,15 +231,12 @@ public class ActiveCurrenciesFragment extends Fragment {
                     .COLUMN_CURRENCY_CODE);
             int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies
                     .COLUMN_CURRENCY_VALUE);
-            int order;
-            String currencyCode;
-            double exchangeRate;
-            Currency currency;
             while (cursor.moveToNext()) {
-                order = cursor.getInt(col_currency_order);
-                currencyCode = cursor.getString(col_currency_code);
-                exchangeRate = cursor.getDouble(col_currency_value);
-                currency = new Currency(currencyCode, exchangeRate);
+                int order = cursor.getInt(col_currency_order);
+                String currencyCode = cursor.getString(col_currency_code);
+                double exchangeRate = cursor.getDouble(col_currency_value);
+                Currency currency = new Currency(currencyCode, exchangeRate);
+                currency = mAllCurrencies.get(mAllCurrencies.indexOf(currency));
                 savedActiveCurrencies[order] = currency;
                 mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
             }
