@@ -395,33 +395,33 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * Else, we place a splash screen Fragment on the content frame while we decide how to further
      * proceed.
      * If we have internet connection and our exchange rate data has not been
-     * updated for at least twelve hours then we make an API call to get fresh data. The method
+     * updated for at least thirty minutes then we make an API call to get fresh data. The method
      * responsible for making the API call replaces this Fragment with an appropriate Fragment
      * depending on the result of the call.
-     * If our exchange rate data has been updated within the past six hours then we simply load the
-     * Fragment that displays them with their current local values.
+     * If our exchange rate data has been updated within the past thirty minutes then we simply load
+     * the Fragment that displays them with their current local values.
      * In the case that we have no internet we do the following. If we have local exchange rate
      * values then we load a Fragment to display them. If we don't have any values locally then we
      * load a Fragment that notifies the user that we have no internet connection.
      */
     public void appLaunchSetup() {
-        long timeOfLastUpdate = checkForLastUpdate();
+        long timeElapsedSinceLastUpdate = checkForLastUpdate();
         if (activityHasExistingData()) {
             return;
         }
         final long EMPTY_SHARED_PREFS = -1L;
-        final long TWELVE_HOURS = 43200000L;
+        final long THIRTY_MINUTES = 1800000L;
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
         replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
-            if (timeOfLastUpdate > TWELVE_HOURS || timeOfLastUpdate == EMPTY_SHARED_PREFS) {
+            if (timeElapsedSinceLastUpdate > THIRTY_MINUTES || timeElapsedSinceLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
                 replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment.TAG);
             }
         } else {
-            if (timeOfLastUpdate != EMPTY_SHARED_PREFS) {
+            if (timeElapsedSinceLastUpdate != EMPTY_SHARED_PREFS) {
                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
                 replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment.TAG);
             } else {
@@ -467,9 +467,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Extracts the exchange rates from the JSON object received from the API call and saved them
-     * locally using an SQLite database. It skips over few exchange rates that are not of interest;
-     * e.g. silver.
+     * Extracts the exchange rates from the JSON object received from the API call and saves them
+     * locally using an SQLite database. Deletes everything in the table first because apparently
+     * the insert statement doesn't replace existing values with new data. Also skips over few
+     * exchange rates that are not of interest; e.g. silver.
      *
      * @param jsonObject the JSON object containing the exchange rates.
      */
@@ -482,6 +483,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             ContentValues contentValues = new ContentValues();
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
+            database.execSQL("DELETE FROM " + EntryAllCurrencies.TABLE_NAME);
             database.beginTransaction();
             for (int i = 0; i < keys.length(); i++) {
                 String key = keys.getString(i);
