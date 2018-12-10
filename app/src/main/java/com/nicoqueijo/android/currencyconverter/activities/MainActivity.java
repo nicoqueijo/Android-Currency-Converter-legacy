@@ -53,16 +53,12 @@ import com.nicoqueijo.android.currencyconverter.models.ApiEndpoint;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.nicoqueijo.android.currencyconverter.singletons.VolleySingleton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -469,6 +465,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
+     * ====================================================EDIT THIS========================================================================================
      * Extracts the exchange rates from the JSON object received from the API call and saves them
      * locally using an SQLite database. Deletes everything in the table first because apparently
      * the insert statement doesn't replace existing values with new data. Also skips over few
@@ -481,29 +478,20 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         ApiEndpoint apiEndpoint = gson.fromJson(jsonObject.toString(), ApiEndpoint.class);
         apiEndpoint.getQuotes().currenciesToList();
         try {
-            Set<String> exclusionList = new HashSet<>(Arrays.asList(this.getResources()
-                    .getStringArray(R.array.exclusion_list)));
-            JSONObject rates = jsonObject.getJSONObject("quotes");
-            JSONArray keys = rates.names();
             ContentValues contentValues = new ContentValues();
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
             database.execSQL("DELETE FROM " + EntryAllCurrencies.TABLE_NAME);
             database.beginTransaction();
-            for (int i = 0; i < keys.length(); i++) {
-                String key = keys.getString(i);
-                double value = rates.getDouble(key);
-                if (exclusionList.contains(key)) {
-                    continue;
-                }
-                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, key);
-                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, value);
+            for (Currency currency : apiEndpoint.getQuotes().getCurrencies()) {
+                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, currency.getCurrencyCode());
+                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, currency.getExchangeRate());
                 database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
             }
             database.setTransactionSuccessful();
             database.endTransaction();
             database.close();
-        } catch (SQLiteException | JSONException e) {
+        } catch (SQLiteException e) {
             e.printStackTrace();
         }
     }

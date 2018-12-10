@@ -170,6 +170,14 @@ public class ExchangeRates {
     private double USDZMW;
     private double USDZWL;
 
+    public List<Currency> getCurrencies() {
+        return currencies;
+    }
+
+    public void setCurrencies(List<Currency> currencies) {
+        this.currencies = currencies;
+    }
+
     public void currenciesToList() {
         Field[] fields = ExchangeRates.class.getDeclaredFields();
         for (Field field : fields) {
