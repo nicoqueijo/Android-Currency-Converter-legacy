@@ -34,6 +34,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
@@ -48,6 +49,7 @@ import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.VolleyErrorFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
+import com.nicoqueijo.android.currencyconverter.models.ApiEndpoint;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.nicoqueijo.android.currencyconverter.singletons.VolleySingleton;
 
@@ -475,6 +477,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @param jsonObject the JSON object containing the exchange rates.
      */
     private void persistExchangeRates(JSONObject jsonObject) {
+        Gson gson = new Gson();
+        ApiEndpoint apiEndpoint = gson.fromJson(jsonObject.toString(), ApiEndpoint.class);
+        apiEndpoint.getQuotes().currenciesToList();
         try {
             Set<String> exclusionList = new HashSet<>(Arrays.asList(this.getResources()
                     .getStringArray(R.array.exclusion_list)));
