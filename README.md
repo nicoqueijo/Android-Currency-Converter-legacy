@@ -30,6 +30,7 @@ https://github.com/nicoqueijo/Android-Currency-Converter/tree/master/graphics/sc
 
 ## Built with
 * <a href="https://github.com/google/volley" target="_blank">Volley</a> - An HTTP library that makes networking for Android apps easier and, most importantly, faster.
+* <a href="https://github.com/google/gson" target="_blank">Gson</a> - A Java serialization/deserialization library to convert Java Objects into JSON and back.
 * <a href="https://github.com/bosphere/Android-FadingEdgeLayout" target="_blank">FadingEdgeLayout</a> - A versatile layout that fades its edges regardless of child view type.
 * <a href="https://github.com/turing-tech/MaterialScrollBar" target="_blank">MaterialScrollBar</a> - An Android library that brings the Material Design 5.1 scrollbar to pre-5.1 devices. Designed for Android's recyclerView.
 
