@@ -412,7 +412,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
         replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
-            if (timeElapsedSinceLastUpdate > THIRTY_MINUTES || timeElapsedSinceLastUpdate == EMPTY_SHARED_PREFS) {
+            if (timeElapsedSinceLastUpdate > THIRTY_MINUTES || timeElapsedSinceLastUpdate ==
+                    EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
@@ -465,11 +466,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * ====================================================EDIT THIS========================================================================================
-     * Extracts the exchange rates from the JSON object received from the API call and saves them
-     * locally using an SQLite database. Deletes everything in the table first because apparently
-     * the insert statement doesn't replace existing values with new data. Also skips over few
-     * exchange rates that are not of interest; e.g. silver.
+     * Extracts the exchange rates from the JSON object received from the API call using the GSON
+     * library and saves them locally using an SQLite database. Deletes everything in the table
+     * first because apparently the insert statement doesn't replace existing values with new data.
      *
      * @param jsonObject the JSON object containing the exchange rates.
      */
@@ -484,8 +483,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             database.execSQL("DELETE FROM " + EntryAllCurrencies.TABLE_NAME);
             database.beginTransaction();
             for (Currency currency : apiEndpoint.getQuotes().getCurrencies()) {
-                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE, currency.getCurrencyCode());
-                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE, currency.getExchangeRate());
+                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE,
+                        currency.getCurrencyCode());
+                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE,
+                        currency.getExchangeRate());
                 database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
             }
             database.setTransactionSuccessful();

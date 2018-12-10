@@ -4,7 +4,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Model class for the nested "quotes" object in the API endpoint containing all the exchange rates.
+ * Needs to have the same fields as the "quotes" object in order to map it using GSON hence the
+ * individual double fields.
+ */
 public class ExchangeRates {
+
+    public static final String TAG = ExchangeRates.class.getSimpleName();
 
     private static final int AMOUNT_OF_CURRENCIES = 160;
     private List<Currency> currencies = new ArrayList<>(AMOUNT_OF_CURRENCIES);
@@ -170,6 +177,7 @@ public class ExchangeRates {
     private double USDZMW;
     private double USDZWL;
 
+    // Getters and setters are defined below.
     public List<Currency> getCurrencies() {
         return currencies;
     }
@@ -178,6 +186,10 @@ public class ExchangeRates {
         this.currencies = currencies;
     }
 
+    /**
+     * Takes all the double fields in this object and adds them to a list of Currency objects.
+     * Does this by using Java's Reflection API to obtain each field's name and value.
+     */
     public void currenciesToList() {
         Field[] fields = ExchangeRates.class.getDeclaredFields();
         for (Field field : fields) {
