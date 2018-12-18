@@ -19,6 +19,9 @@ android {
     lintOptions {
         disable 'MissingTranslation'
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {

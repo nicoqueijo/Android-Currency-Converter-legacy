@@ -18,10 +18,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
+import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBinding;
 import com.nicoqueijo.android.currencyconverter.helpers.CustomEditText;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -81,18 +81,20 @@ public class ActiveCurrenciesAdapter extends
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_active_currency, parent, false);
-        return new ViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        RowActiveCurrencyBinding binding = RowActiveCurrencyBinding.inflate(inflater,
+                parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.bind(mActiveCurrencies.get(position));
         mOnBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
-        holder.mCurrencyCode.setText(currentCurrency.getTrimmedCurrencyCode());
-        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
-                .getCurrencyCode().toLowerCase(), mContext));
+//        holder.mCurrencyCode.setText(currentCurrency.getTrimmedCurrencyCode());
+//        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
+//                .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
         String formattedConversionValue = "";
         try {
@@ -146,22 +148,25 @@ public class ActiveCurrenciesAdapter extends
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
+        RowActiveCurrencyBinding mBinding;
+
         public RelativeLayout mRowBackground;
         public LinearLayout mRowForeground;
         public ImageView mDeleteIconStart;
         public ImageView mDeleteIconEnd;
-        public ImageView mFlag;
-        public TextView mCurrencyCode;
+        //        public ImageView mFlag;
+//        public TextView mCurrencyCode;
         public CustomEditText mConversionValue;
 
-        ViewHolder(View itemView) {
-            super(itemView);
+        ViewHolder(RowActiveCurrencyBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
             mRowBackground = itemView.findViewById(R.id.row_background);
             mRowForeground = itemView.findViewById(R.id.row_foreground);
             mDeleteIconStart = itemView.findViewById(R.id.delete_icon_start);
             mDeleteIconEnd = itemView.findViewById(R.id.delete_icon_end);
-            mFlag = itemView.findViewById(R.id.flag);
-            mCurrencyCode = itemView.findViewById(R.id.currency_code);
+//            mFlag = itemView.findViewById(R.id.flag);
+//            mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mConversionValue = itemView.findViewById(R.id.conversion_value);
 
             String hint = "0" + mDecimalSeparator + "00";
@@ -170,6 +175,10 @@ public class ActiveCurrenciesAdapter extends
             mConversionValue.setKeyListener(DigitsKeyListener
                     .getInstance("0123456789" + mDecimalSeparator));
             mConversionValue.addTextChangedListener(this);
+        }
+
+        public void bind(Currency currency) {
+            mBinding.setCurrency(currency);
         }
 
         @Override

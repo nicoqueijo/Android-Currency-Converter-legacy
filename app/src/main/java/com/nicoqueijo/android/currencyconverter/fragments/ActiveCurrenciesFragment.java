@@ -137,14 +137,14 @@ public class ActiveCurrenciesFragment extends Fragment {
             public void onClick(View v) {
                 hideKeyboard();
                 FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager.findFragmentByTag(SelectCurrenciesFragment.TAG) == null) {
+                if (fragmentManager.findFragmentByTag(SelectableCurrenciesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right, android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right);
-                    Fragment selectCurrencyFragment = SelectCurrenciesFragment.newInstance();
+                    Fragment selectCurrencyFragment = SelectableCurrenciesFragment.newInstance();
                     fragmentTransaction.add(R.id.content_frame, selectCurrencyFragment,
-                            SelectCurrenciesFragment.TAG);
+                            SelectableCurrenciesFragment.TAG);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }

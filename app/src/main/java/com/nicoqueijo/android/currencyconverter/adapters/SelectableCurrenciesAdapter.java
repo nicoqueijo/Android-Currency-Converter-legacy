@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.fragments.SelectCurrenciesFragment;
+import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectableCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
@@ -26,13 +24,13 @@ import java.util.List;
  * Implements Filterable to search and filter the long list of exchange rates.
  * Implements INameableAdapter to return the first char of the current element being scrolled.
  */
-public class SelectCurrenciesAdapter extends
-        RecyclerView.Adapter<SelectCurrenciesAdapter.ViewHolder>
+public class SelectableCurrenciesAdapter extends
+        RecyclerView.Adapter<SelectableCurrenciesAdapter.ViewHolder>
         implements Filterable, INameableAdapter {
 
-    public static final String TAG = SelectCurrenciesAdapter.class.getSimpleName();
+    public static final String TAG = SelectableCurrenciesAdapter.class.getSimpleName();
 
-    private SelectCurrenciesFragment mSelectCurrenciesFragment;
+    private SelectableCurrenciesFragment mSelectableCurrenciesFragment;
     private ArrayList<Currency> mCurrencies;
     private ArrayList<Currency> mCurrenciesFull;
 
@@ -41,8 +39,8 @@ public class SelectCurrenciesAdapter extends
      *
      * @param selectCurrenciesFragment the Fragment hosting this adapter's RecyclerView.
      */
-    public SelectCurrenciesAdapter(Fragment selectCurrenciesFragment) {
-        mSelectCurrenciesFragment = (SelectCurrenciesFragment) selectCurrenciesFragment;
+    public SelectableCurrenciesAdapter(Fragment selectCurrenciesFragment) {
+        mSelectableCurrenciesFragment = (SelectableCurrenciesFragment) selectCurrenciesFragment;
         mCurrencies = new ArrayList<>(CurrenciesSingleton.getInstance(selectCurrenciesFragment
                 .getContext()).getCurrencies());
         mCurrenciesFull = new ArrayList<>(CurrenciesSingleton.getInstance(selectCurrenciesFragment
@@ -52,21 +50,23 @@ public class SelectCurrenciesAdapter extends
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_selectable_currency, parent, false);
-        return new ViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        RowSelectableCurrencyBinding binding = RowSelectableCurrencyBinding.inflate(inflater,
+                parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
-                .getCurrencyCode().toLowerCase(), mSelectCurrenciesFragment.getContext()));
-        holder.mCurrencyCode.setText(mCurrencies.get(position).getTrimmedCurrencyCode());
-        holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
-                .getCurrencyCode(), mSelectCurrenciesFragment.getContext()));
-        boolean currencyIsSelected = mCurrencies.get(position).isSelected();
-        holder.itemView.setClickable(!currencyIsSelected);
-        holder.mCheckMark.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
+        holder.bind(mCurrencies.get(position));
+//        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
+//                .getCurrencyCode().toLowerCase(), mSelectableCurrenciesFragment.getContext()));
+//        holder.mCurrencyCode.setText(mCurrencies.get(position).getTrimmedCurrencyCode());
+//        holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
+//                .getCurrencyCode(), mSelectableCurrenciesFragment.getContext()));
+//        boolean currencyIsSelected = mCurrencies.get(position).isSelected();
+//        holder.itemView.setClickable(!currencyIsSelected);
+//        holder.mCheckMark.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -97,27 +97,33 @@ public class SelectCurrenciesAdapter extends
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView mFlag;
-        TextView mCurrencyCode;
-        TextView mCurrencyName;
-        ImageView mCheckMark;
+        RowSelectableCurrencyBinding mBinding;
 
-        ViewHolder(View itemView) {
-            super(itemView);
+//        ImageView mFlag;
+//        TextView mCurrencyCode;
+//        TextView mCurrencyName;
+//        ImageView mCheckMark;
+
+        ViewHolder(RowSelectableCurrencyBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
             itemView.setOnClickListener(this);
-            mFlag = itemView.findViewById(R.id.flag);
-            mCurrencyCode = itemView.findViewById(R.id.currency_code);
-            mCurrencyName = itemView.findViewById(R.id.currency_name);
-            mCheckMark = itemView.findViewById(R.id.check_mark);
+//            mFlag = itemView.findViewById(R.id.flag);
+//            mCurrencyCode = itemView.findViewById(R.id.currency_code);
+//            mCurrencyName = itemView.findViewById(R.id.currency_name);
+//            mCheckMark = itemView.findViewById(R.id.check_mark);
+        }
+
+        public void bind(Currency currency) {
+            mBinding.setCurrency(currency);
         }
 
         @Override
         public void onClick(View v) {
             Currency selectedCurrency = mCurrencies.get(getAdapterPosition());
             selectedCurrency.setSelected(true);
-            mSelectCurrenciesFragment.sendActiveCurrency(selectedCurrency);
-            mSelectCurrenciesFragment.getFragmentManager().popBackStack();
-
+            mSelectableCurrenciesFragment.sendActiveCurrency(selectedCurrency);
+            mSelectableCurrenciesFragment.getFragmentManager().popBackStack();
         }
     }
 
@@ -143,7 +149,7 @@ public class SelectCurrenciesAdapter extends
                 for (Currency currency : mCurrenciesFull) {
                     currencyCode = currency.getTrimmedCurrencyCode().toLowerCase();
                     currencyName = Utility.getStringResourceByName(currency.getCurrencyCode(),
-                            mSelectCurrenciesFragment.getContext()).toLowerCase();
+                            mSelectableCurrenciesFragment.getContext()).toLowerCase();
                     if (currencyCode.contains(filterPattern) ||
                             currencyName.contains(filterPattern)) {
                         filteredList.add(currency);

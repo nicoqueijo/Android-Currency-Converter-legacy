@@ -19,7 +19,7 @@ import android.view.inputmethod.EditorInfo;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
-import com.nicoqueijo.android.currencyconverter.adapters.SelectCurrenciesAdapter;
+import com.nicoqueijo.android.currencyconverter.adapters.SelectableCurrenciesAdapter;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
@@ -28,15 +28,15 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar;
 /**
  * Fragment used to search, filter, and add exchange rates to the ActiveCurrenciesFragment.
  */
-public class SelectCurrenciesFragment extends Fragment {
+public class SelectableCurrenciesFragment extends Fragment {
 
-    public static final String TAG = SelectCurrenciesFragment.class.getSimpleName();
+    public static final String TAG = SelectableCurrenciesFragment.class.getSimpleName();
 
     private MainActivity mHostingActivity;
     private Toolbar mToolbar;
     private SearchView mSearchView;
     private RecyclerView mRecyclerView;
-    private SelectCurrenciesAdapter mAdapter;
+    private SelectableCurrenciesAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private DragScrollBar mDragScrollBar;
 
@@ -45,8 +45,8 @@ public class SelectCurrenciesFragment extends Fragment {
      *
      * @return a new instance of Fragment
      */
-    public static SelectCurrenciesFragment newInstance() {
-        return new SelectCurrenciesFragment();
+    public static SelectableCurrenciesFragment newInstance() {
+        return new SelectableCurrenciesFragment();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class SelectCurrenciesFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view_select_currencies);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
-        mAdapter = new SelectCurrenciesAdapter(this);
+        mAdapter = new SelectableCurrenciesAdapter(this);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

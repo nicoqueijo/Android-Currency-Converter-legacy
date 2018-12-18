@@ -44,7 +44,7 @@ import com.nicoqueijo.android.currencyconverter.fragments.ActiveCurrenciesFragme
 import com.nicoqueijo.android.currencyconverter.fragments.ConnectionErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.ErrorFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.LoadingCurrenciesFragment;
-import com.nicoqueijo.android.currencyconverter.fragments.SelectCurrenciesFragment;
+import com.nicoqueijo.android.currencyconverter.fragments.SelectableCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.SourceCodeFragment;
 import com.nicoqueijo.android.currencyconverter.fragments.VolleyErrorFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -546,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     /**
      * Returns the Fragment that is currently visible to the user. Does this by iterating through
      * the active Fragments and determining which one is in memory and is visible. If this is the
-     * SelectCurrenciesFragment we remove it and pop it from the stack since this Fragment is
+     * SelectableCurrenciesFragment we remove it and pop it from the stack since this Fragment is
      * really a supplement to the ActiveCurrenciesFragment.
      *
      * @return the Fragment currently being displayed or null of no Fragments in manager.
@@ -556,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         Fragment visibleFragment = null;
         for (Fragment fragment : fragments) {
             if (fragment != null && fragment.isVisible()) {
-                if (fragment instanceof SelectCurrenciesFragment) {
+                if (fragment instanceof SelectableCurrenciesFragment) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right);

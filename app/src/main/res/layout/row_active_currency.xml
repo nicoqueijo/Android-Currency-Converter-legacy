@@ -1,101 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="56dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
-        android:id="@+id/row_background"
+    <data>
+
+        <import type="com.nicoqueijo.android.currencyconverter.helpers.Utility" />
+
+        <variable
+            name="currency"
+            type="com.nicoqueijo.android.currencyconverter.models.Currency" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/red"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp">
+        android:layout_height="56dp">
 
-        <ImageView
-            android:id="@+id/delete_icon_start"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:src="@drawable/ic_delete" />
+        <RelativeLayout
+            android:id="@+id/row_background"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/red"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
 
-        <ImageView
-            android:id="@+id/delete_icon_end"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_delete" />
+            <ImageView
+                android:id="@+id/delete_icon_start"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_delete" />
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/delete_icon_end"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_delete" />
 
-    <LinearLayout
-        android:id="@+id/row_foreground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_item_ripple"
-        android:longClickable="true"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp">
+        </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:id="@+id/row_foreground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_item_ripple"
+            android:longClickable="true"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="50dp"
-                android:layout_height="37dp"
-                app:cardCornerRadius="2dp">
-
-                <ImageView
-                    android:id="@+id/flag"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    tools:src="@drawable/usdusd" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:id="@+id/currency_code"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="16dp"
-                android:textColor="?attr/text_color"
-                android:textSize="24sp"
-                tools:text="USD" />
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="50dp"
+                    android:layout_height="37dp"
+                    app:cardCornerRadius="2dp">
+
+                    <ImageView
+                        android:id="@+id/flag"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@{Utility.getDrawableResourceByName(currency.currencyCode, context)}"
+                        tools:src="@drawable/usdusd" />
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:id="@+id/currency_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingLeft="16dp"
+                    android:text="@{currency.trimmedCurrencyCode}"
+                    android:textColor="?attr/text_color"
+                    android:textSize="24sp"
+                    tools:text="USD" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingLeft="16dp">
+
+                <com.nicoqueijo.android.currencyconverter.helpers.CustomEditText
+                    android:id="@+id/conversion_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@android:color/transparent"
+                    android:gravity="right|center_vertical"
+                    android:inputType="numberDecimal"
+                    android:minWidth="100dp"
+                    android:textColor="?attr/text_color"
+                    android:textSize="20sp" />
+
+            </FrameLayout>
 
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingLeft="16dp">
-
-            <com.nicoqueijo.android.currencyconverter.helpers.CustomEditText
-                android:id="@+id/conversion_value"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right|center_vertical"
-                android:background="@android:color/transparent"
-                android:gravity="right|center_vertical"
-                android:inputType="numberDecimal"
-                android:minWidth="100dp"
-                android:textColor="?attr/text_color"
-                android:textSize="20sp" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-</FrameLayout>
+    </FrameLayout>
+</layout>
 
