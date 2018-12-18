@@ -90,8 +90,8 @@ public class ActiveCurrenciesAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         mOnBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
-        holder.mCurrencyCodeTextView.setText(currentCurrency.getTrimmedCurrencyCode());
-        holder.mFlagImage.setImageResource(Utility.getDrawableResourceByName(currentCurrency
+        holder.mCurrencyCode.setText(currentCurrency.getTrimmedCurrencyCode());
+        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
                 .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
         String formattedConversionValue = "";
@@ -101,7 +101,7 @@ public class ActiveCurrenciesAdapter extends
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        holder.mConversionValueEditText.setText(formattedConversionValue);
+        holder.mConversionValue.setText(formattedConversionValue);
         mOnBind = false;
     }
 
@@ -146,30 +146,30 @@ public class ActiveCurrenciesAdapter extends
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
-        public RelativeLayout mItemBackground;
-        public LinearLayout mItemForeground;
+        public RelativeLayout mRowBackground;
+        public LinearLayout mRowForeground;
         public ImageView mDeleteIconStart;
         public ImageView mDeleteIconEnd;
-        public ImageView mFlagImage;
-        public TextView mCurrencyCodeTextView;
-        public CustomEditText mConversionValueEditText;
+        public ImageView mFlag;
+        public TextView mCurrencyCode;
+        public CustomEditText mConversionValue;
 
         ViewHolder(View itemView) {
             super(itemView);
-            mItemBackground = itemView.findViewById(R.id.row_background);
-            mItemForeground = itemView.findViewById(R.id.row_foreground);
+            mRowBackground = itemView.findViewById(R.id.row_background);
+            mRowForeground = itemView.findViewById(R.id.row_foreground);
             mDeleteIconStart = itemView.findViewById(R.id.delete_icon_start);
             mDeleteIconEnd = itemView.findViewById(R.id.delete_icon_end);
-            mFlagImage = itemView.findViewById(R.id.flag);
-            mCurrencyCodeTextView = itemView.findViewById(R.id.currency_code);
-            mConversionValueEditText = itemView.findViewById(R.id.conversion_value);
+            mFlag = itemView.findViewById(R.id.flag);
+            mCurrencyCode = itemView.findViewById(R.id.currency_code);
+            mConversionValue = itemView.findViewById(R.id.conversion_value);
 
             String hint = "0" + mDecimalSeparator + "00";
-            mConversionValueEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-            mConversionValueEditText.setHint(hint);
-            mConversionValueEditText.setKeyListener(DigitsKeyListener
+            mConversionValue.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            mConversionValue.setHint(hint);
+            mConversionValue.setKeyListener(DigitsKeyListener
                     .getInstance("0123456789" + mDecimalSeparator));
-            mConversionValueEditText.addTextChangedListener(this);
+            mConversionValue.addTextChangedListener(this);
         }
 
         @Override
@@ -281,8 +281,8 @@ public class ActiveCurrenciesAdapter extends
                             .length() > 2) {
                 mVibrator.vibrate(25L);
                 itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
-                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
-                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                mConversionValue.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValue.setSelection(mConversionValue.getText().length());
                 return true;
             }
             return false;
@@ -306,8 +306,8 @@ public class ActiveCurrenciesAdapter extends
             if (occurrences > 1) {
                 mVibrator.vibrate(25L);
                 itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
-                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
-                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                mConversionValue.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValue.setSelection(mConversionValue.getText().length());
                 return true;
             }
             return false;
@@ -330,8 +330,8 @@ public class ActiveCurrenciesAdapter extends
             if (inputString.length() > MAX_DIGITS_ALLOWED && !mOnBind) {
                 mVibrator.vibrate(VIBRATION_LENGTH);
                 itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
-                mConversionValueEditText.setText(inputString.substring(0, inputString.length() - 1));
-                mConversionValueEditText.setSelection(mConversionValueEditText.getText().length());
+                mConversionValue.setText(inputString.substring(0, inputString.length() - 1));
+                mConversionValue.setSelection(mConversionValue.getText().length());
                 return true;
             }
             return false;

@@ -66,7 +66,7 @@ public class SelectCurrenciesAdapter extends
                 .getCurrencyCode(), mSelectCurrenciesFragment.getContext()));
         boolean currencyIsSelected = mCurrencies.get(position).isSelected();
         holder.itemView.setClickable(!currencyIsSelected);
-        holder.mCheck.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
+        holder.mCheckMark.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -95,12 +95,12 @@ public class SelectCurrenciesAdapter extends
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView mFlag;
         TextView mCurrencyCode;
         TextView mCurrencyName;
-        ImageView mCheck;
+        ImageView mCheckMark;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -108,7 +108,7 @@ public class SelectCurrenciesAdapter extends
             mFlag = itemView.findViewById(R.id.flag);
             mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mCurrencyName = itemView.findViewById(R.id.currency_name);
-            mCheck = itemView.findViewById(R.id.check_mark);
+            mCheckMark = itemView.findViewById(R.id.check_mark);
         }
 
         @Override

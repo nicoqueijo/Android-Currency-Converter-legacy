@@ -58,7 +58,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (viewHolder != null) {
                 final View foregroundView = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder)
-                        .mItemForeground;
+                        .mRowForeground;
                 getDefaultUIUtil().onSelected(foregroundView);
             }
         } else {
@@ -72,7 +72,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
                                 int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             final View foregroundView = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder)
-                    .mItemForeground;
+                    .mRowForeground;
             getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
         } else {
@@ -84,7 +84,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         final View foregroundView = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder)
-                .mItemForeground;
+                .mRowForeground;
         getDefaultUIUtil().clearView(foregroundView);
     }
 
@@ -93,7 +93,7 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             ActiveCurrenciesAdapter.ViewHolder thisHolder = ((ActiveCurrenciesAdapter.ViewHolder) viewHolder);
-            final View foregroundView = thisHolder.mItemForeground;
+            final View foregroundView = thisHolder.mRowForeground;
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
             final int DELETE_ICON_START_VISIBILITY = dX > 0.0 ? View.VISIBLE : View.INVISIBLE;
