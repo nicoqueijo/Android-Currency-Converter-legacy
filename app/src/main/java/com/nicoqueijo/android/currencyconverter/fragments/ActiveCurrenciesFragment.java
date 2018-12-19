@@ -142,8 +142,8 @@ public class ActiveCurrenciesFragment extends Fragment {
                     fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right, android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right);
-                    Fragment selectCurrencyFragment = SelectableCurrenciesFragment.newInstance();
-                    fragmentTransaction.add(R.id.content_frame, selectCurrencyFragment,
+                    Fragment selectableCurrencyFragment = SelectableCurrenciesFragment.newInstance();
+                    fragmentTransaction.add(R.id.content_frame, selectableCurrencyFragment,
                             SelectableCurrenciesFragment.TAG);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();

@@ -37,13 +37,13 @@ public class SelectableCurrenciesAdapter extends
     /**
      * Constructor for the adapter.
      *
-     * @param selectCurrenciesFragment the Fragment hosting this adapter's RecyclerView.
+     * @param selectableCurrenciesFragment the Fragment hosting this adapter's RecyclerView.
      */
-    public SelectableCurrenciesAdapter(Fragment selectCurrenciesFragment) {
-        mSelectableCurrenciesFragment = (SelectableCurrenciesFragment) selectCurrenciesFragment;
-        mCurrencies = new ArrayList<>(CurrenciesSingleton.getInstance(selectCurrenciesFragment
+    public SelectableCurrenciesAdapter(Fragment selectableCurrenciesFragment) {
+        mSelectableCurrenciesFragment = (SelectableCurrenciesFragment) selectableCurrenciesFragment;
+        mCurrencies = new ArrayList<>(CurrenciesSingleton.getInstance(selectableCurrenciesFragment
                 .getContext()).getCurrencies());
-        mCurrenciesFull = new ArrayList<>(CurrenciesSingleton.getInstance(selectCurrenciesFragment
+        mCurrenciesFull = new ArrayList<>(CurrenciesSingleton.getInstance(selectableCurrenciesFragment
                 .getContext()).getCurrencies());
     }
 

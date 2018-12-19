@@ -59,7 +59,7 @@ public class SelectableCurrenciesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_select_currency, container, false);
+        View view = inflater.inflate(R.layout.fragment_selectable_currency, container, false);
         initViewsAdaptersAndListeners(view);
         return view;
     }
@@ -112,7 +112,7 @@ public class SelectableCurrenciesFragment extends Fragment {
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAdaptersAndListeners(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_select_currencies);
+        mRecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies);
         mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
         mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
         mAdapter = new SelectableCurrenciesAdapter(this);
