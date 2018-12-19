@@ -92,9 +92,6 @@ public class ActiveCurrenciesAdapter extends
         holder.bind(mActiveCurrencies.get(position));
         mOnBind = true;
         Currency currentCurrency = mActiveCurrencies.get(position);
-//        holder.mCurrencyCode.setText(currentCurrency.getTrimmedCurrencyCode());
-//        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(currentCurrency
-//                .getCurrencyCode().toLowerCase(), mContext));
         BigDecimal conversionValue = currentCurrency.getConversionValue();
         String formattedConversionValue = "";
         try {
@@ -154,8 +151,6 @@ public class ActiveCurrenciesAdapter extends
         public LinearLayout mRowForeground;
         public ImageView mDeleteIconStart;
         public ImageView mDeleteIconEnd;
-        //        public ImageView mFlag;
-//        public TextView mCurrencyCode;
         public CustomEditText mConversionValue;
 
         ViewHolder(RowActiveCurrencyBinding binding) {
@@ -165,8 +160,6 @@ public class ActiveCurrenciesAdapter extends
             mRowForeground = itemView.findViewById(R.id.row_foreground);
             mDeleteIconStart = itemView.findViewById(R.id.delete_icon_start);
             mDeleteIconEnd = itemView.findViewById(R.id.delete_icon_end);
-//            mFlag = itemView.findViewById(R.id.flag);
-//            mCurrencyCode = itemView.findViewById(R.id.currency_code);
             mConversionValue = itemView.findViewById(R.id.conversion_value);
 
             String hint = "0" + mDecimalSeparator + "00";

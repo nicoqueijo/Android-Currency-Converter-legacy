@@ -59,14 +59,6 @@ public class SelectableCurrenciesAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(mCurrencies.get(position));
-//        holder.mFlag.setImageResource(Utility.getDrawableResourceByName(mCurrencies.get(position)
-//                .getCurrencyCode().toLowerCase(), mSelectableCurrenciesFragment.getContext()));
-//        holder.mCurrencyCode.setText(mCurrencies.get(position).getTrimmedCurrencyCode());
-//        holder.mCurrencyName.setText(Utility.getStringResourceByName(mCurrencies.get(position)
-//                .getCurrencyCode(), mSelectableCurrenciesFragment.getContext()));
-//        boolean currencyIsSelected = mCurrencies.get(position).isSelected();
-//        holder.itemView.setClickable(!currencyIsSelected);
-//        holder.mCheckMark.setVisibility(currencyIsSelected ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -99,19 +91,10 @@ public class SelectableCurrenciesAdapter extends
 
         RowSelectableCurrencyBinding mBinding;
 
-//        ImageView mFlag;
-//        TextView mCurrencyCode;
-//        TextView mCurrencyName;
-//        ImageView mCheckMark;
-
         ViewHolder(RowSelectableCurrencyBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
             itemView.setOnClickListener(this);
-//            mFlag = itemView.findViewById(R.id.flag);
-//            mCurrencyCode = itemView.findViewById(R.id.currency_code);
-//            mCurrencyName = itemView.findViewById(R.id.currency_name);
-//            mCheckMark = itemView.findViewById(R.id.check_mark);
         }
 
         public void bind(Currency currency) {

@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -10,6 +11,7 @@ import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nicoqueijo.android.currencyconverter.R;
@@ -46,6 +48,17 @@ public final class Utility {
      */
     public static int getDrawableResourceByName(String name, Context context) {
         return context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+    }
+
+    /**
+     * Used to manipulate how a resource value is set to an image view using Data Binding.
+     *
+     * @param imageView the imageView to be displayed
+     * @param resource  the resource id of the drawable
+     */
+    @BindingAdapter({"android:src"})
+    public static void setImageViewResource(ImageView imageView, int resource) {
+        imageView.setImageResource(resource);
     }
 
     /**

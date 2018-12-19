@@ -412,8 +412,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
         replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
-            if (timeElapsedSinceLastUpdate > THIRTY_MINUTES || timeElapsedSinceLastUpdate ==
-                    EMPTY_SHARED_PREFS) {
+            if (timeElapsedSinceLastUpdate > THIRTY_MINUTES ||
+                    timeElapsedSinceLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
