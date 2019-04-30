@@ -408,11 +408,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             return;
         }
         final long EMPTY_SHARED_PREFS = -1L;
-        final long THIRTY_MINUTES = 1800000L;
+        final long SIX_HOURS = 21600000L;
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
         replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
-            if (timeElapsedSinceLastUpdate > THIRTY_MINUTES ||
+            if (timeElapsedSinceLastUpdate > SIX_HOURS ||
                     timeElapsedSinceLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {
