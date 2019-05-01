@@ -233,7 +233,7 @@ public class ActiveCurrenciesAdapter extends
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                double numberAsDouble = number.doubleValue();
+                double numberAsDouble = number != null ? number.doubleValue() : 0;
                 focusedCurrency.setConversionValue(new BigDecimal(numberAsDouble));
                 for (int i = 0; i < mActiveCurrencies.size(); i++) {
                     if (i == getAdapterPosition()) {
