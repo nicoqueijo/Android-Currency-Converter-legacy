@@ -16,8 +16,8 @@ public class Currency implements Parcelable {
 
     private String currencyCode;
     private double exchangeRate;
-    private BigDecimal conversionValue;
-    private boolean selected;
+    private BigDecimal conversionValue = new BigDecimal(0.0);
+    private boolean selected = false;
 
     /**
      * Constructor for creating Currency objects.
@@ -28,8 +28,6 @@ public class Currency implements Parcelable {
     public Currency(String currencyCode, double exchangeRate) {
         this.currencyCode = currencyCode;
         this.exchangeRate = exchangeRate;
-        this.conversionValue = new BigDecimal(0.0);
-        this.selected = false;
     }
 
     // Getters and setters are defined below.
