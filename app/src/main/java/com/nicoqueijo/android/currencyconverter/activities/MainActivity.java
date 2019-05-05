@@ -59,6 +59,7 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 
 /**
@@ -498,10 +499,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Gets the API key from a local private file that is not tracked by Git for obvious reasons.
+     * Gets a random API key from a list of API keys.
+     *
+     * @return an API key
      */
     private String getApiKey() {
-        return getResources().getString(R.string.api_key);
+        String[] apiKeys = getResources().getStringArray(R.array.api_keys);
+        int random = new Random().nextInt(apiKeys.length);
+        return apiKeys[random];
     }
 
     /**
