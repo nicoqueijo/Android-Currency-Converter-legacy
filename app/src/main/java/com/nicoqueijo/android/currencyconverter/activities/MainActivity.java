@@ -394,10 +394,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * Else, we place a splash screen Fragment on the content frame while we decide how to further
      * proceed.
      * If we have internet connection and our exchange rate data has not been
-     * updated for at least thirty minutes then we make an API call to get fresh data. The method
+     * updated for at least 24 hours then we make an API call to get fresh data. The method
      * responsible for making the API call replaces this Fragment with an appropriate Fragment
      * depending on the result of the call.
-     * If our exchange rate data has been updated within the past thirty minutes then we simply load
+     * If our exchange rate data has been updated within the past 24 hours then we simply load
      * the Fragment that displays them with their current local values.
      * In the case that we have no internet we do the following. If we have local exchange rate
      * values then we load a Fragment to display them. If we don't have any values locally then we
@@ -409,11 +409,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             return;
         }
         final long EMPTY_SHARED_PREFS = -1L;
-        final long SIX_HOURS = 21600000L;
+        final long TWENTY_FOUR_HOURS = 86400000L;
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
         replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
-            if (timeElapsedSinceLastUpdate > SIX_HOURS ||
+            if (timeElapsedSinceLastUpdate > TWENTY_FOUR_HOURS ||
                     timeElapsedSinceLastUpdate == EMPTY_SHARED_PREFS) {
                 makeApiCall();
             } else {

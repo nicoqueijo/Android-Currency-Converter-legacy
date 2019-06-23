@@ -6,7 +6,7 @@ android {
         applicationId "com.nicoqueijo.android.currencyconverter"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 6
+        versionCode 8
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
