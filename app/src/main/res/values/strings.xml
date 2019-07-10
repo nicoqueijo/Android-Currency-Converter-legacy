@@ -201,7 +201,7 @@
     <string name="USDZMW">Zambian Kwacha</string>
     <string name="USDZWL">Zimbabwean Dollar</string>
 
-    <!-- The currencies we don't want to track e.g. silver and gold -->
+    <!-- The items we don't want to track. These can be commodities, cryptocurrencies, or outdated national currencies e.g. gold, bitcoin, etc -->
     <string-array name="exclusion_list">
         <item>USDBTC</item>
         <item>USDBYR</item>
