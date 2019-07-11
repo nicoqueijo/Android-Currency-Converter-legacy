@@ -277,11 +277,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * with another Fragment.
      */
     private boolean processNavItemShare() {
-        final String PACKAGE_NAME = getPackageName();
-        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
+        final String packageName = getPackageName();
+        final String googlePlayWebUrl = "https://play.google.com/store/apps/details?id=";
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        String googlePlayLink = GOOGLE_PLAY_WEB_URL + PACKAGE_NAME;
+        String googlePlayLink = googlePlayWebUrl + packageName;
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         shareIntent.putExtra(Intent.EXTRA_TEXT, googlePlayLink);
         Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_via));
@@ -297,16 +297,16 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * with another Fragment.
      */
     private boolean processNavItemRateApp() {
-        final String PACKAGE_NAME = getPackageName();
-        final String GOOGLE_PLAY_MARKET_URL = "market://details?id=";
-        final String GOOGLE_PLAY_WEB_URL = "https://play.google.com/store/apps/details?id=";
+        final String packageName = getPackageName();
+        final String googlePlayMarketUrl = "market://details?id=";
+        final String googlePlayWebUrl = "https://play.google.com/store/apps/details?id=";
         Intent rateAppIntent = new Intent(Intent.ACTION_VIEW);
-        rateAppIntent.setData(Uri.parse(GOOGLE_PLAY_MARKET_URL + PACKAGE_NAME));
+        rateAppIntent.setData(Uri.parse(googlePlayMarketUrl + packageName));
         try {
             startActivity(rateAppIntent);
         } catch (ActivityNotFoundException e) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_WEB_URL
-                    + PACKAGE_NAME));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayWebUrl
+                    + packageName));
             startActivity(intent);
         }
         return false;
@@ -321,18 +321,18 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * with another Fragment.
      */
     private boolean processNavItemContactUs() {
-        final String[] DEVELOPER_EMAIL = new String[]{"queijonicolas@gmail.com"};
-        final String DEVICE_INFO = "Device info:";
-        final String DEVICE_MANUFACTURER = Build.MANUFACTURER;
-        final String DEVICE_MODEL = Build.MODEL;
-        final String ANDROID_VERSION = "Android version " + Build.VERSION.SDK_INT;
-        final String EMAIL_TEMPLATE = "\n\n\n" + DEVICE_INFO + "\n  " + DEVICE_MANUFACTURER +
-                " " + DEVICE_MODEL + "\n  " + ANDROID_VERSION;
+        final String[] developerEmail = new String[]{"queijonicolas@gmail.com"};
+        final String deviceInfo = "Device info:";
+        final String deviceManufacturer = Build.MANUFACTURER;
+        final String deviceModel = Build.MODEL;
+        final String androidVersion = "Android version " + Build.VERSION.SDK_INT;
+        final String emailTemplate = "\n\n\n" + deviceInfo + "\n  " + deviceManufacturer +
+                " " + deviceModel + "\n  " + androidVersion;
         Intent contactUsIntent = new Intent(Intent.ACTION_SENDTO);
         contactUsIntent.setData(Uri.parse("mailto:"));
-        contactUsIntent.putExtra(Intent.EXTRA_EMAIL, DEVELOPER_EMAIL);
+        contactUsIntent.putExtra(Intent.EXTRA_EMAIL, developerEmail);
         contactUsIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-        contactUsIntent.putExtra(Intent.EXTRA_TEXT, EMAIL_TEMPLATE);
+        contactUsIntent.putExtra(Intent.EXTRA_TEXT, emailTemplate);
         Intent chooser = Intent.createChooser(contactUsIntent, getString(R.string
                 .select_email_app));
         startActivity(chooser);
@@ -408,20 +408,20 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         if (activityHasExistingData()) {
             return;
         }
-        final long EMPTY_SHARED_PREFS = -1L;
-        final long TWENTY_FOUR_HOURS = 86400000L;
+        final long emptySharedPrefs = -1L;
+        final long twentyFourHours = 86400000L;
         Fragment loadingExchangeRatesFragment = LoadingCurrenciesFragment.newInstance();
         replaceFragment(loadingExchangeRatesFragment, LoadingCurrenciesFragment.TAG);
         if (Utility.isNetworkAvailable(this)) {
-            if (timeElapsedSinceLastUpdate > TWENTY_FOUR_HOURS ||
-                    timeElapsedSinceLastUpdate == EMPTY_SHARED_PREFS) {
+            if (timeElapsedSinceLastUpdate > twentyFourHours ||
+                    timeElapsedSinceLastUpdate == emptySharedPrefs) {
                 makeApiCall();
             } else {
                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
                 replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment.TAG);
             }
         } else {
-            if (timeElapsedSinceLastUpdate != EMPTY_SHARED_PREFS) {
+            if (timeElapsedSinceLastUpdate != emptySharedPrefs) {
                 Fragment activeCurrenciesFragment = ActiveCurrenciesFragment.newInstance();
                 replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment.TAG);
             } else {
@@ -609,13 +609,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @return the string request for retrieving the response body at the given URL.
      */
     private StringRequest initVolleyStringRequest() {
-        final String API_BASE_URL = "http://apilayer.net/api/live";
-        final String API_KEY_PARAM = "?access_key=";
-        final String API_KEY = getApiKey();
-        final String API_FORMAT_PARAM = "&format=1";
-        final String API_FULL_URL = API_BASE_URL + API_KEY_PARAM + API_KEY + API_FORMAT_PARAM;
+
+        final String apiBaseUrl = "http://openexchangerates.org/api/";
+        final String apiExchangeRatesEndpoint = "latest.json";
+        final String apiKeyParam = "?app_id=";
+        final String apiKey = getApiKey();
+        final String apiFullUrl = apiBaseUrl + apiExchangeRatesEndpoint + apiKeyParam + apiKey;
         StringRequest stringRequest;
-        stringRequest = new StringRequest(Request.Method.GET, API_FULL_URL,
+        stringRequest = new StringRequest(Request.Method.GET, apiFullUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -631,9 +632,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                 replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment
                                         .TAG);
                             } else {
-                                final int INDENT_SPACES = 4;
+                                final int indentSpaces = 4;
                                 JSONObject error = jsonObject.getJSONObject("error");
-                                String errorMessage = error.toString(INDENT_SPACES);
+                                String errorMessage = error.toString(indentSpaces);
                                 Fragment volleyErrorFragment = VolleyErrorFragment
                                         .newInstance(errorMessage);
                                 replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);

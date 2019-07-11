@@ -1,7 +1,8 @@
 package com.nicoqueijo.android.currencyconverter.models;
 
+import com.google.common.collect.Lists;
+
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public class ExchangeRates {
     public static final String TAG = ExchangeRates.class.getSimpleName();
 
     private static final int AMOUNT_OF_CURRENCIES = 160;
-    private List<Currency> currencies = new ArrayList<>(AMOUNT_OF_CURRENCIES);
+    private List<Currency> currencies = Lists.newArrayListWithCapacity(AMOUNT_OF_CURRENCIES);
 
     private double USDAED;
     private double USDAFN;

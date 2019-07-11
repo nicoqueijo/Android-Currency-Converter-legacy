@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.common.collect.Lists;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryActiveCurrencies;
@@ -45,7 +46,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
     private ArrayList<Currency> mAllCurrencies;
-    private ArrayList<Currency> mActiveCurrencies = new ArrayList<>();
+    private ArrayList<Currency> mActiveCurrencies = Lists.newArrayList();
 
     private CustomRecyclerView mRecyclerView;
     private View mEmptyListView;

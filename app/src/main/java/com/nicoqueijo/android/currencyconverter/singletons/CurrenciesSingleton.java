@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import com.google.common.collect.Lists;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
@@ -21,7 +22,7 @@ public class CurrenciesSingleton {
     public static final String TAG = CurrenciesSingleton.class.getSimpleName();
 
     private static CurrenciesSingleton mInstance;
-    private ArrayList<Currency> mCurrencies = new ArrayList<>();
+    private ArrayList<Currency> mCurrencies = Lists.newArrayList();
 
     private CurrenciesSingleton(Context context) {
         retrieveAndInitCurrencies(context);

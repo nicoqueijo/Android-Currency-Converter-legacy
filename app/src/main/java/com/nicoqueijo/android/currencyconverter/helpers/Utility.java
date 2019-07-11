@@ -98,8 +98,8 @@ public final class Utility {
      * @return the rounded value
      */
     public static BigDecimal roundBigDecimal(BigDecimal value) {
-        final int DECIMAL_PLACES = 2;
-        return value.setScale(DECIMAL_PLACES, RoundingMode.CEILING);
+        final int decimalPlaces = 2;
+        return value.setScale(decimalPlaces, RoundingMode.CEILING);
     }
 
     /**

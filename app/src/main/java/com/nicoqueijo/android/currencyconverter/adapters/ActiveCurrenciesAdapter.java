@@ -324,13 +324,13 @@ public class ActiveCurrenciesAdapter extends
          * @return whether adding an additional digit may cause overflow
          */
         private boolean causesOverflow(CharSequence s) {
-            final int MAX_DIGITS_ALLOWED = 10;
-            final long VIBRATION_LENGTH = 1L;
-            final String ANY_NON_DIGIT_REGEX = "\\D";
+            final int maxDigitsAllowed = 10;
+            final long vibrationLength = 1L;
+            final String anyNonDigitRegex = "\\D";
             String inputString = s.toString();
-            inputString = inputString.replaceAll(ANY_NON_DIGIT_REGEX, "");
-            if (inputString.length() > MAX_DIGITS_ALLOWED && !mOnBind) {
-                mVibrator.vibrate(VIBRATION_LENGTH);
+            inputString = inputString.replaceAll(anyNonDigitRegex, "");
+            if (inputString.length() > maxDigitsAllowed && !mOnBind) {
+                mVibrator.vibrate(vibrationLength);
                 itemView.findViewById(R.id.conversion_value).startAnimation(mAnimShake);
                 mConversionValue.setText(inputString.substring(0, inputString.length() - 1));
                 mConversionValue.setSelection(mConversionValue.getText().length());

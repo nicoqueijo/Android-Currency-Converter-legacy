@@ -96,10 +96,10 @@ public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
             final View foregroundView = thisHolder.mRowForeground;
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
-            final int DELETE_ICON_START_VISIBILITY = dX > 0.0 ? View.VISIBLE : View.INVISIBLE;
-            final int DELETE_ICON_END_VISIBILITY = dX < 0.0 ? View.VISIBLE : View.INVISIBLE;
-            thisHolder.mDeleteIconStart.setVisibility(DELETE_ICON_START_VISIBILITY);
-            thisHolder.mDeleteIconEnd.setVisibility(DELETE_ICON_END_VISIBILITY);
+            final int deleteIconStartVisibility = dX > 0.0 ? View.VISIBLE : View.INVISIBLE;
+            final int deleteIconEndVisibility = dX < 0.0 ? View.VISIBLE : View.INVISIBLE;
+            thisHolder.mDeleteIconStart.setVisibility(deleteIconStartVisibility);
+            thisHolder.mDeleteIconEnd.setVisibility(deleteIconEndVisibility);
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

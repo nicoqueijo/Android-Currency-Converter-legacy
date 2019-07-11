@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import com.google.common.collect.Lists;
 import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding;
 import com.nicoqueijo.android.currencyconverter.fragments.SelectableCurrenciesFragment;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -41,10 +42,10 @@ public class SelectableCurrenciesAdapter extends
      */
     public SelectableCurrenciesAdapter(Fragment selectableCurrenciesFragment) {
         mSelectableCurrenciesFragment = (SelectableCurrenciesFragment) selectableCurrenciesFragment;
-        mCurrencies = new ArrayList<>(CurrenciesSingleton.getInstance(selectableCurrenciesFragment
-                .getContext()).getCurrencies());
-        mCurrenciesFull = new ArrayList<>(CurrenciesSingleton.getInstance(selectableCurrenciesFragment
-                .getContext()).getCurrencies());
+        mCurrencies = Lists.newArrayList(CurrenciesSingleton
+                .getInstance(selectableCurrenciesFragment.getContext()).getCurrencies());
+        mCurrenciesFull = Lists.newArrayList(CurrenciesSingleton
+                .getInstance(selectableCurrenciesFragment.getContext()).getCurrencies());
     }
 
     @NonNull
@@ -122,7 +123,7 @@ public class SelectableCurrenciesAdapter extends
     private Filter currenciesFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Currency> filteredList = new ArrayList<>();
+            List<Currency> filteredList = Lists.newArrayList();
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(mCurrenciesFull);
             } else {

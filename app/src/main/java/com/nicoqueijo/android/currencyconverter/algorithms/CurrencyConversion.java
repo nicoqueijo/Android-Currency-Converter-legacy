@@ -32,8 +32,8 @@ public class CurrencyConversion {
      * @return the amount converted to USD.
      */
     private static BigDecimal convertAnyCurrencyToDollar(BigDecimal amount, double fromRate) {
-        final int SCALE = 50;
-        return (amount.divide(BigDecimal.valueOf(fromRate), SCALE, RoundingMode.HALF_UP));
+        final int scale = 50;
+        return (amount.divide(BigDecimal.valueOf(fromRate), scale, RoundingMode.HALF_UP));
     }
 
     /**
