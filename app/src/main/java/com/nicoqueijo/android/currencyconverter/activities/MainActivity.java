@@ -476,14 +476,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private void persistExchangeRates(JSONObject jsonObject) {
         Gson gson = new Gson();
         ApiEndpoint apiEndpoint = gson.fromJson(jsonObject.toString(), ApiEndpoint.class);
-        apiEndpoint.getQuotes().currenciesToList();
+        apiEndpoint.getRates().currenciesToList();
         try {
             ContentValues contentValues = new ContentValues();
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
             database.execSQL("DELETE FROM " + EntryAllCurrencies.TABLE_NAME);
             database.beginTransaction();
-            for (Currency currency : apiEndpoint.getQuotes().getCurrencies()) {
+            for (Currency currency : apiEndpoint.getRates().getCurrencies()) {
                 contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE,
                         currency.getCurrencyCode());
                 contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE,
@@ -622,8 +622,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if (success) {
+                            boolean error = jsonObject.has("error");
+                            if (!error) {
                                 persistTimestamp(jsonObject);
                                 persistExchangeRates(jsonObject);
                                 checkForLastUpdate();
@@ -633,8 +633,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
                                         .TAG);
                             } else {
                                 final int indentSpaces = 4;
-                                JSONObject error = jsonObject.getJSONObject("error");
-                                String errorMessage = error.toString(indentSpaces);
+                                JSONObject errorDescription = jsonObject.getJSONObject("description");
+                                String errorMessage = errorDescription.toString(indentSpaces);
                                 Fragment volleyErrorFragment = VolleyErrorFragment
                                         .newInstance(errorMessage);
                                 replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);

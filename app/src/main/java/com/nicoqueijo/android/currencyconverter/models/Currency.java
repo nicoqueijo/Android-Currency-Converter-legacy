@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class Currency implements Parcelable {
 
     public static final String TAG = Currency.class.getSimpleName();
-    public static final int CURRENCY_CODE_STARTING_INDEX = 3;
+    public static final int CURRENCY_CODE_STARTING_INDEX = 4;
 
     private String currencyCode;
     private double exchangeRate;
@@ -71,10 +71,9 @@ public class Currency implements Parcelable {
 
     /**
      * Fetches the actual currency code.
-     * The currency codes in shared_prefs and strings xml files are stored with "USD" preceded
-     * to them as that's how they come from the API. For example the British Pound currency code
-     * (GDP) is stored as "USDGDP". To access the actual currency code we must substring "USDGDP"
-     * from index 3 onwards to retrieve "GDP".
+     * The currency codes in shared_prefs and strings xml files are stored with "USD_" preceded
+     * to them. For example the British Pound currency code (GDP) is stored as "USD_GDP". To access
+     * the actual currency code we must substring "USD_GDP" from index 3 onwards to retrieve "GDP".
      *
      * @return the trimmed currency code
      */
