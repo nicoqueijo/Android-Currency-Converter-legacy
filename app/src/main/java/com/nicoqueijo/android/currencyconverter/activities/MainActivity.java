@@ -600,16 +600,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     /**
      * Attempts to request a string response from the provided URL.
-     * If a response is received we first check if its "success" key returned true. If it did we
+     * If a response is received we first check if an error wasn't returned. If it wasn't we
      * can update our local exchange rate values and load the Fragment that performs the
-     * conversions. If false is returned or we receive an error from the request we extract the
-     * error message from the response and load a Fragment that shows the user information about
-     * the error.
+     * conversions. If we received an error from the request we extract the error message from
+     * the response and load a Fragment that shows the user information about the error.
      *
      * @return the string request for retrieving the response body at the given URL.
      */
     private StringRequest initVolleyStringRequest() {
-
         final String apiBaseUrl = "http://openexchangerates.org/api/";
         final String apiExchangeRatesEndpoint = "latest.json";
         final String apiKeyParam = "?app_id=";
