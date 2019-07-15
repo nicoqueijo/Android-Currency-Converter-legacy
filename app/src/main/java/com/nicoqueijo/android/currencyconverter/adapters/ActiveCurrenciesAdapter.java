@@ -47,6 +47,7 @@ public class ActiveCurrenciesAdapter extends
     private Context mContext;
     private List<Currency> mActiveCurrencies;
     private FloatingActionButton mFloatingActionButton;
+    private Snackbar snackbar;
     private boolean mOnBind;
 
     private NumberFormat mNumberFormatter;
@@ -125,7 +126,7 @@ public class ActiveCurrenciesAdapter extends
         swipedCurrency.setConversionValue(new BigDecimal(0.0));
         mActiveCurrencies.remove(position);
         notifyItemRemoved(position);
-        Snackbar snackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
+        snackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
                 Snackbar.LENGTH_LONG);
         Utility.styleSnackbar(snackbar, mContext);
         snackbar.setAction(R.string.undo, new View.OnClickListener() {
@@ -138,6 +139,15 @@ public class ActiveCurrenciesAdapter extends
             }
         });
         snackbar.show();
+    }
+
+    /**
+     * Dismisses the snackbar if it is shown.
+     */
+    public void dismissSnackbar() {
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
     }
 
     /**

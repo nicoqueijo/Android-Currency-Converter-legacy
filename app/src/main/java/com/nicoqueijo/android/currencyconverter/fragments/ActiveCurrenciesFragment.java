@@ -137,6 +137,7 @@ public class ActiveCurrenciesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
+                mAdapter.dismissSnackbar();
                 FragmentManager fragmentManager = getFragmentManager();
                 if (fragmentManager.findFragmentByTag(SelectableCurrenciesFragment.TAG) == null) {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
