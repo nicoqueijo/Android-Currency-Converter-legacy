@@ -47,7 +47,7 @@ public class ActiveCurrenciesAdapter extends
     private Context mContext;
     private List<Currency> mActiveCurrencies;
     private FloatingActionButton mFloatingActionButton;
-    private Snackbar snackbar;
+    private Snackbar mSnackbar;
     private boolean mOnBind;
 
     private NumberFormat mNumberFormatter;
@@ -126,10 +126,10 @@ public class ActiveCurrenciesAdapter extends
         swipedCurrency.setConversionValue(new BigDecimal(0.0));
         mActiveCurrencies.remove(position);
         notifyItemRemoved(position);
-        snackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
+        mSnackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
                 Snackbar.LENGTH_LONG);
-        Utility.styleSnackbar(snackbar, mContext);
-        snackbar.setAction(R.string.undo, new View.OnClickListener() {
+        Utility.styleSnackbar(mSnackbar, mContext);
+        mSnackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 swipedCurrency.setConversionValue(conversionValue);
@@ -138,15 +138,15 @@ public class ActiveCurrenciesAdapter extends
                 notifyItemInserted(position);
             }
         });
-        snackbar.show();
+        mSnackbar.show();
     }
 
     /**
-     * Dismisses the snackbar if it is shown.
+     * Dismisses the Snackbar if it is shown.
      */
     public void dismissSnackbar() {
-        if (snackbar != null && snackbar.isShown()) {
-            snackbar.dismiss();
+        if (mSnackbar != null && mSnackbar.isShown()) {
+            mSnackbar.dismiss();
         }
     }
 
