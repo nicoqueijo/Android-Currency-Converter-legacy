@@ -3,13 +3,13 @@ package com.nicoqueijo.android.currencyconverter.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.DialogFragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -151,7 +151,8 @@ public final class Utility {
     public static void styleSnackbar(Snackbar snackbar, Context context) {
         int themeId = getThemeId(context);
         View snackbarView = snackbar.getView();
-        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        int snackbarTextId = com.google.android.material.R.id.snackbar_text;
+//        int snackbarTextId = android.support.design.R.id.snackbar_text;
         TextView textView = snackbarView.findViewById(snackbarTextId);
         switch (themeId) {
             case R.style.AppThemeDark:

@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 /**
  * Extension to EditText for the purpose of overriding the onSelectionChanged method.
  */
-public class CustomEditText extends android.support.v7.widget.AppCompatEditText {
+public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText {
 
     // Required constructors
     public CustomEditText(Context context) {
