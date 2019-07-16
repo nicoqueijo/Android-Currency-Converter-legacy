@@ -6,22 +6,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.collect.Lists;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
@@ -45,9 +49,11 @@ public class ActiveCurrenciesFragment extends Fragment {
     public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
     public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
+    private int fabClicks = 0;
     private ArrayList<Currency> mAllCurrencies;
     private ArrayList<Currency> mActiveCurrencies = Lists.newArrayList();
 
+    private InterstitialAd mInterstitialAd;
     private CustomRecyclerView mRecyclerView;
     private View mEmptyListView;
     private ActiveCurrenciesAdapter mAdapter;
@@ -93,6 +99,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_active_currencies, container, false);
+        initInterstitialAds();
         initViewsAndAdapters(view);
         setUpFabOnClickListener();
         return view;
@@ -102,6 +109,21 @@ public class ActiveCurrenciesFragment extends Fragment {
     public void onStop() {
         super.onStop();
         persistActiveCurrencies();
+    }
+
+    /**
+     * Initializes the interstitial ad configurations.
+     */
+    private void initInterstitialAds() {
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial_test));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
     }
 
     /**
@@ -136,6 +158,7 @@ public class ActiveCurrenciesFragment extends Fragment {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                processInterstitialAd();
                 hideKeyboard();
                 mAdapter.dismissSnackbar();
                 FragmentManager fragmentManager = getFragmentManager();
@@ -152,6 +175,18 @@ public class ActiveCurrenciesFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * Shows an interstitial ad every 4 clicks of the FloatingActionButton granted the ad has loaded.
+     */
+    private void processInterstitialAd() {
+        fabClicks++;
+        if (fabClicks % 4 == 0) {
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            }
+        }
     }
 
     /**
