@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * Initialises the banner ad configurations.
      */
     private void initAdMob() {
+        MobileAds.initialize(this, getResources().getString(R.string.app_id));
         AdView adView = findViewById(R.id.banner_ad);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
