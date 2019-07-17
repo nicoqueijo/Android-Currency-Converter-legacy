@@ -150,9 +150,9 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Sets the onClickListener for the FloatingActionButton. Dismisses the keyboard if showing.
-     * Then loads up the Fragment that allows exchange rates to be selected adding it to the
-     * backstack.
+     * Sets the onClickListener for the FloatingActionButton. Determines whether to show an
+     * interstitial ad, dismisses the keyboard and snackbar if showing, and then loads up the
+     * Fragment that allows exchange rates to be selected adding it to the backstack.
      */
     private void setUpFabOnClickListener() {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -161,20 +161,28 @@ public class ActiveCurrenciesFragment extends Fragment {
                 processInterstitialAd();
                 hideKeyboard();
                 mAdapter.dismissSnackbar();
-                FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager.findFragmentByTag(SelectableCurrenciesFragment.TAG) == null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
-                            android.R.anim.slide_out_right, android.R.anim.slide_in_left,
-                            android.R.anim.slide_out_right);
-                    Fragment selectableCurrencyFragment = SelectableCurrenciesFragment.newInstance();
-                    fragmentTransaction.add(R.id.content_frame, selectableCurrencyFragment,
-                            SelectableCurrenciesFragment.TAG);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
+                addFragment();
             }
         });
+    }
+
+    /**
+     * Adds the SelectableCurrenciesFragment to enable the user to add a currency to the set of
+     * active currencies.
+     */
+    private void addFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.findFragmentByTag(SelectableCurrenciesFragment.TAG) == null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right, android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right);
+            Fragment selectableCurrencyFragment = SelectableCurrenciesFragment.newInstance();
+            fragmentTransaction.add(R.id.content_frame, selectableCurrencyFragment,
+                    SelectableCurrenciesFragment.TAG);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
     }
 
     /**
