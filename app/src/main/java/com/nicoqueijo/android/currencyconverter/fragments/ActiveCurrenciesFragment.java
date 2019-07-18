@@ -186,14 +186,24 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Shows an interstitial ad every 4 clicks of the FloatingActionButton granted the ad has loaded.
+     * Shows an interstitial ad on the second click and then every 5 clicks of the
+     * FloatingActionButton.
      */
     private void processInterstitialAd() {
+        if (fabClicks == 1) {
+            showInterstitialAd();
+        } else if ((fabClicks % 5 == 0) && (fabClicks != 0)) {
+            showInterstitialAd();
+        }
         fabClicks++;
-        if (fabClicks % 4 == 0) {
-            if (mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
-            }
+    }
+
+    /**
+     * Shows an interstitial ad if it is loaded.
+     */
+    private void showInterstitialAd() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
         }
     }
 
