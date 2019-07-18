@@ -1,14 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
@@ -34,11 +35,7 @@ public class SelectableCurrenciesFragment extends Fragment {
 
     private MainActivity mHostingActivity;
     private Toolbar mToolbar;
-    private SearchView mSearchView;
-    private RecyclerView mRecyclerView;
     private SelectableCurrenciesAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private DragScrollBar mDragScrollBar;
 
     /**
      * Factory method to create a new instance of this Fragment using the provided parameters.
@@ -112,14 +109,14 @@ public class SelectableCurrenciesFragment extends Fragment {
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAdaptersAndListeners(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies);
-        mDragScrollBar = view.findViewById(R.id.drag_scroll_bar);
-        mDragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies);
+        DragScrollBar dragScrollBar = view.findViewById(R.id.drag_scroll_bar);
+        dragScrollBar.setIndicator(new AlphabetIndicator(getContext()), true);
         mAdapter = new SelectableCurrenciesAdapter(this);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL));
     }
 
@@ -131,9 +128,9 @@ public class SelectableCurrenciesFragment extends Fragment {
      */
     public void initMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
-        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        mSearchView.setImeOptions(EditorInfo.IME_ACTION_GO);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_GO);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;

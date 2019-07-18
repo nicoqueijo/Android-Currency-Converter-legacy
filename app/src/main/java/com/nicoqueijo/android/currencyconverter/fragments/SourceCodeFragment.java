@@ -1,14 +1,14 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.core.view.GravityCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
@@ -31,6 +38,7 @@ public class SourceCodeFragment extends Fragment implements
 
     public static final String TAG = SourceCodeFragment.class.getSimpleName();
 
+    private Toolbar mToolbar;
     private WebView mWebView;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -44,6 +52,12 @@ public class SourceCodeFragment extends Fragment implements
         return new SourceCodeFragment();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setUpFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -53,6 +67,46 @@ public class SourceCodeFragment extends Fragment implements
         setUpWebClientsAndSwipeLayout();
         handleBackPress();
         return view;
+    }
+
+    /**
+     * Removes the Open-in-browser menu item when this Fragment's view is destroyed as it is no
+     * longer needed and would be irrelevant when other Fragment's take over the content frame.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        try {
+            mToolbar.getMenu().removeItem(R.id.open_in_browser);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_open_in_browser, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent sourceCodeIntent = new Intent(Intent.ACTION_VIEW);
+        sourceCodeIntent.setData(Uri.parse("https://github.com/nicoqueijo"));
+        Intent sourceCodeChooser = Intent.createChooser(sourceCodeIntent,
+                getString(R.string.launch_browser));
+        startActivity(sourceCodeChooser);
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Gets the reference to the hosting activity and the toolbar. Notifies this Fragment that it
+     * has a menu.
+     */
+    private void setUpFragment() {
+        setHasOptionsMenu(true);
+        MainActivity hostingActivity = (MainActivity) getActivity();
+        mToolbar = hostingActivity.findViewById(R.id.open_in_browser);
     }
 
     /**

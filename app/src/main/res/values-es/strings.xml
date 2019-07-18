@@ -21,6 +21,8 @@
     <string name="refresh">Actualizar</string>
     <string name="tap_to_close">Toque nuevamente para cerrar la aplicación</string>
     <string name="search">Buscar</string>
+    <string name="open_in_browser">Abrir en el navegador</string>
+    <string name="launch_browser">Seleccione aplicación de navegador</string>
     <string name="item_removed">Elemento eliminado</string>
     <string name="undo">Deshacer</string>
     <string name="fetching_data">Obteniendo datos…</string>

@@ -21,6 +21,8 @@
     <string name="refresh">Refresh</string>
     <string name="tap_to_close">Tap again to close app</string>
     <string name="search">Search</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="launch_browser">Select browser app</string>
     <string name="item_removed">Item removed</string>
     <string name="undo">Undo</string>
     <string name="fetching_data">Fetching data…</string>
