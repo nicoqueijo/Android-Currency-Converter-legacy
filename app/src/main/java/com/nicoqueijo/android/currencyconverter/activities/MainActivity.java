@@ -34,8 +34,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     private SharedPreferences mSharedPrefsSettings;
     private SharedPreferences mSharedPrefsTime;
 
+    private InterstitialAd mInterstitialAd;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
     public DrawerLayout mDrawerLayout;
@@ -94,20 +97,43 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         initSharedPrefs();
         setLocaleAndTheme();
         setContentView(R.layout.activity_main);
-        initAdMob();
+        initAds();
         setTitle(R.string.app_name);
         initViews();
         appLaunchSetup();
     }
 
     /**
-     * Initialises the banner ad configurations.
+     * Initializes the ad configurations.
      */
-    private void initAdMob() {
+    private void initAds() {
+        initBannerAd();
+        initInterstitialAd();
+    }
+
+    /**
+     * Initializes the banner ad configurations.
+     */
+    private void initBannerAd() {
         MobileAds.initialize(this, getResources().getString(R.string.app_id));
         AdView adView = findViewById(R.id.banner_ad);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+    }
+
+    /**
+     * Initializes the interstitial ad configurations.
+     */
+    private void initInterstitialAd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial_test));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd = null;
+            }
+        });
     }
 
     /**
@@ -230,19 +256,23 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * If this menu item is check it means that its Fragment is visible so we can return. If the
-     * visible Fragment is an error Fragment we show a Snackbar notifying no internet connection.
-     * Otherwise we hide the visible Fragment and create and show this Fragment.
+     * Shows an interstitial ad if the user hasn't seen one for this button click. If this menu
+     * item is checked it means that its Fragment is visible so we can return. If the visible
+     * Fragment is an error Fragment we show a Snackbar notifying no internet connection. Otherwise
+     * we hide the visible Fragment and create and show this Fragment.
      *
      * @param menuItem the selected item
      * @return true to display the item as the selected item
      */
     private boolean processNavItemSourceCode(MenuItem menuItem) {
-        FragmentTransaction fragmentTransaction;
-        Fragment visibleFragment = getVisibleFragment();
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
         if (menuItem.isChecked()) {
             return true;
         }
+        FragmentTransaction fragmentTransaction;
+        Fragment visibleFragment = getVisibleFragment();
         if (visibleFragment instanceof ErrorFragment) {
             ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
             return false;
@@ -514,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Gets a random API key from a list of API keys.
+     * Gets a random API key from a set of API keys.
      *
      * @return an API key
      */

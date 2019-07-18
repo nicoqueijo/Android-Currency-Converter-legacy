@@ -99,7 +99,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_active_currencies, container, false);
-        initInterstitialAds();
+        initInterstitialAd();
         initViewsAndAdapters(view);
         setUpFabOnClickListener();
         return view;
@@ -114,7 +114,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     /**
      * Initializes the interstitial ad configurations.
      */
-    private void initInterstitialAds() {
+    private void initInterstitialAd() {
         mInterstitialAd = new InterstitialAd(getActivity());
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial_test));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
