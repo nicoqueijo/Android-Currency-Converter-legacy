@@ -1,5 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.activities;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
@@ -78,10 +79,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
-    public static String sharedPrefsSettingsFilename;
-    public static String sharedPrefsTimeFilename;
-    private SharedPreferences mSharedPrefsSettings;
-    private SharedPreferences mSharedPrefsTime;
+    public static String sharedPrefsPropertiesFilename;
+    private SharedPreferences mSharedPrefsProperties;
 
     private InterstitialAd mInterstitialAd;
     private Toolbar mToolbar;
@@ -137,13 +136,11 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     }
 
     /**
-     * Initializes the SharedPreferences objects.
+     * Initializes the SharedPreferences object.
      */
     private void initSharedPrefs() {
-        sharedPrefsSettingsFilename = getPackageName().concat(".settings");
-        sharedPrefsTimeFilename = getPackageName().concat(".time");
-        mSharedPrefsSettings = getSharedPreferences(sharedPrefsSettingsFilename, MODE_PRIVATE);
-        mSharedPrefsTime = getSharedPreferences(sharedPrefsTimeFilename, MODE_PRIVATE);
+        sharedPrefsPropertiesFilename = getPackageName().concat(".properties");
+        mSharedPrefsProperties = getSharedPreferences(sharedPrefsPropertiesFilename, MODE_PRIVATE);
     }
 
     /**
@@ -151,13 +148,14 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private void setLocaleAndTheme() {
         String deviceLanguage = Locale.getDefault().getLanguage();
-        setLocale(mSharedPrefsSettings.getString("language", deviceLanguage));
-        setTheme(mSharedPrefsSettings.getInt("theme", ThemeDialog.Theme.LIGHT.getTheme()));
+        setLocale(mSharedPrefsProperties.getString("language", deviceLanguage));
+        setTheme(mSharedPrefsProperties.getInt("theme", ThemeDialog.Theme.LIGHT.getTheme()));
     }
 
     /**
      * Initializes the views.
      */
+    @SuppressLint("ShowToast")
     private void initViews() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -484,7 +482,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private long checkForLastUpdate() {
         long currentTime = System.currentTimeMillis();
-        long timestamp = mSharedPrefsTime.getLong("timestamp", 0L) * 1000;
+        long timestamp = mSharedPrefsProperties.getLong("timestamp", 0L) * 1000;
         if (timestamp != 0L) {
             Date date = new Date(timestamp);
             java.text.SimpleDateFormat simpleDateFormat =
@@ -505,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @throws JSONException in case a key being fetched doesn't exist.
      */
     private void persistTimestamp(JSONObject jsonObject) throws JSONException {
-        SharedPreferences.Editor mSharedPrefsEditor = mSharedPrefsTime.edit();
+        SharedPreferences.Editor mSharedPrefsEditor = mSharedPrefsProperties.edit();
         long timestamp = jsonObject.getLong("timestamp");
         mSharedPrefsEditor.putLong("timestamp", timestamp);
         mSharedPrefsEditor.apply();

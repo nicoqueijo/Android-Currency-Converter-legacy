@@ -20,14 +20,14 @@ public abstract class SettingsDialog extends DialogFragment {
 
     public static final String TAG = SettingsDialog.class.getSimpleName();
 
-    public SharedPreferences mSharedPrefsSettings;
+    public SharedPreferences mSharedPrefsProperties;
     public Stack<RadioButton> mActiveRadioButton = new Stack<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPrefsSettings = getActivity().getSharedPreferences(getActivity().getPackageName()
-                .concat(".settings"), Context.MODE_PRIVATE);
+        mSharedPrefsProperties = getActivity().getSharedPreferences(getActivity().getPackageName()
+                .concat(".properties"), Context.MODE_PRIVATE);
     }
 
     @Override
