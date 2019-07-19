@@ -20,8 +20,8 @@ public abstract class SettingsDialog extends DialogFragment {
 
     public static final String TAG = SettingsDialog.class.getSimpleName();
 
-    public SharedPreferences mSharedPrefsProperties;
-    public Stack<RadioButton> mActiveRadioButton = new Stack<>();
+    SharedPreferences mSharedPrefsProperties;
+    Stack<RadioButton> mActiveRadioButton = new Stack<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

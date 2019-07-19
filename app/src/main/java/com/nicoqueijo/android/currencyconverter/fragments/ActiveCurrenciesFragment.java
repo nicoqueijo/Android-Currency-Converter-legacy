@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -39,6 +40,7 @@ import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * Fragment that allows the user to add/remove/reorder exchange rates and perform conversions.
@@ -46,18 +48,18 @@ import java.util.Arrays;
 public class ActiveCurrenciesFragment extends Fragment {
 
     public static final String TAG = ActiveCurrenciesFragment.class.getSimpleName();
-    public static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
-    public static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
+    private static final String ARG_ALL_CURRENCIES = "arg_all_currencies";
+    private static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
     private int fabClicks = 0;
+    private SharedPreferences mSharedPrefsProperties = getActivity()
+            .getSharedPreferences(getActivity().getPackageName()
+                    .concat(".properties"), Context.MODE_PRIVATE);
     private ArrayList<Currency> mAllCurrencies;
     private ArrayList<Currency> mActiveCurrencies = Lists.newArrayList();
 
     private InterstitialAd mInterstitialAd;
-    private CustomRecyclerView mRecyclerView;
-    private View mEmptyListView;
     private ActiveCurrenciesAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
 
     /**
@@ -89,6 +91,9 @@ public class ActiveCurrenciesFragment extends Fragment {
         if (savedInstanceState != null) {
             mActiveCurrencies = savedInstanceState.getParcelableArrayList(ARG_ACTIVE_CURRENCIES);
             mAllCurrencies = savedInstanceState.getParcelableArrayList(ARG_ALL_CURRENCIES);
+        } else if (mSharedPrefsProperties.getBoolean("first_launch", true)) {
+            mSharedPrefsProperties.edit().putBoolean("first_launch", false).apply();
+            populateDefaultCurrencies();
         } else {
             restoreActiveCurrencies();
         }
@@ -132,21 +137,21 @@ public class ActiveCurrenciesFragment extends Fragment {
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAndAdapters(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view_active_currencies);
-        mEmptyListView = view.findViewById(R.id.container_empty_list);
-        mRecyclerView.showIfEmpty(mEmptyListView);
-        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        CustomRecyclerView recyclerView = view.findViewById(R.id.recycler_view_active_currencies);
+        View emptyListView = view.findViewById(R.id.container_empty_list);
+        recyclerView.showIfEmpty(emptyListView);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mFloatingActionButton = view.findViewById(R.id.floating_action_button);
-        mLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ActiveCurrenciesAdapter(getContext(), mActiveCurrencies,
                 mFloatingActionButton);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL));
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new SwipeAndDragHelper(mAdapter,
                 0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
     /**
@@ -256,6 +261,19 @@ public class ActiveCurrenciesFragment extends Fragment {
         } catch (SQLiteException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * -Make default items in list USD + user's local currency
+     * 	-See how to retrieve user's country -> Currency.getInstance(Locale.getDefault())
+     * 		-If user's local currency is USD or an unlisted currency
+     * 			Default to: USD, EUR, JPY, GBP
+     * 		-Else
+     * 			Show USD and user's local currency
+     */
+    private void populateDefaultCurrencies() {
+        java.util.Currency localCurrency = java.util.Currency.getInstance(Locale.getDefault());
+        // Finish this method
     }
 
     /**
