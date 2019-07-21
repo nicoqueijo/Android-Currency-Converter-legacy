@@ -28,6 +28,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
 import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryActiveCurrencies;
@@ -41,6 +42,7 @@ import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Fragment that allows the user to add/remove/reorder exchange rates and perform conversions.
@@ -52,9 +54,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     private static final String ARG_ACTIVE_CURRENCIES = "arg_active_currencies";
 
     private int fabClicks = 0;
-    private SharedPreferences mSharedPrefsProperties = getActivity()
-            .getSharedPreferences(getActivity().getPackageName()
-                    .concat(".properties"), Context.MODE_PRIVATE);
+    private SharedPreferences mSharedPrefsProperties;
     private ArrayList<Currency> mAllCurrencies;
     private ArrayList<Currency> mActiveCurrencies = Lists.newArrayList();
 
@@ -75,6 +75,8 @@ public class ActiveCurrenciesFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mAllCurrencies = CurrenciesSingleton.getInstance(getContext()).getCurrencies();
+        mSharedPrefsProperties = getActivity().getSharedPreferences(getActivity()
+                .getPackageName().concat(".properties"), Context.MODE_PRIVATE);
     }
 
     @Override
@@ -264,16 +266,36 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * -Make default items in list USD + user's local currency
-     * 	-See how to retrieve user's country -> Currency.getInstance(Locale.getDefault())
-     * 		-If user's local currency is USD or an unlisted currency
-     * 			Default to: USD, EUR, JPY, GBP
-     * 		-Else
-     * 			Show USD and user's local currency
+     * If this is the first launch of the app this method populates the list of active currencies
+     * with some default values depending on the user's local currency.
+     * If the user's local currency is USD or a currency not supported by the API service we
+     * populate the four most traded currencies which are USD, EUR, JPY, and GBP.
+     * Otherwise we populate USD alongside the user's local currency.
      */
     private void populateDefaultCurrencies() {
-        java.util.Currency localCurrency = java.util.Currency.getInstance(Locale.getDefault());
-        // Finish this method
+        String localCurrencyCode = java.util.Currency
+                .getInstance(Locale.getDefault()).getCurrencyCode();
+        Currency localCurrency = new Currency("USD_" + localCurrencyCode);
+        Set<Currency> defaultCurrencies = Sets.newHashSet();
+        Currency usd = mAllCurrencies.get(mAllCurrencies.indexOf(new Currency("USD_USD")));
+        usd.setSelected(true);
+        defaultCurrencies.add(usd);
+        if (localCurrencyCode.equals("USD") || !(mAllCurrencies.contains(localCurrency))) {
+            Currency eur = mAllCurrencies.get(mAllCurrencies.indexOf(new Currency("USD_EUR")));
+            eur.setSelected(true);
+            defaultCurrencies.add(eur);
+            Currency jpy = mAllCurrencies.get(mAllCurrencies.indexOf(new Currency("USD_JPY")));
+            jpy.setSelected(true);
+            defaultCurrencies.add(jpy);
+            Currency gbp = mAllCurrencies.get(mAllCurrencies.indexOf(new Currency("USD_GBP")));
+            gbp.setSelected(true);
+            defaultCurrencies.add(gbp);
+        } else {
+            localCurrency = mAllCurrencies.get(mAllCurrencies.indexOf(localCurrency));
+            localCurrency.setSelected(true);
+            defaultCurrencies.add(localCurrency);
+        }
+        mActiveCurrencies.addAll(defaultCurrencies);
     }
 
     /**

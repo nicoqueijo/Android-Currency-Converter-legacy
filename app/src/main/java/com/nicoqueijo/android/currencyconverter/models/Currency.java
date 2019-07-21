@@ -20,7 +20,8 @@ public class Currency implements Parcelable {
     private boolean selected = false;
 
     /**
-     * Constructor for creating Currency objects.
+     * Constructor for creating Currency objects with the currency code and exchange rate value.
+     * Usually used with data straight from the API.
      *
      * @param currencyCode currency code as it comes from API
      * @param exchangeRate exchange rate as it comes from API
@@ -28,6 +29,15 @@ public class Currency implements Parcelable {
     public Currency(String currencyCode, double exchangeRate) {
         this.currencyCode = currencyCode;
         this.exchangeRate = exchangeRate;
+    }
+
+    /**
+     * Constructor for creating Currency objects with just the currency code.
+     *
+     * @param currencyCode currency code.
+     */
+    public Currency(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
     // Getters and setters are defined below.
@@ -65,8 +75,18 @@ public class Currency implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
         Currency currency = (Currency) obj;
         return currency.getCurrencyCode().equals(this.currencyCode);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + currencyCode.hashCode();
+        return result;
     }
 
     /**
