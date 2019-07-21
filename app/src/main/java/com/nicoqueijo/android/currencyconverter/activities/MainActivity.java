@@ -76,12 +76,10 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
-    private FragmentManager fragmentManager = getSupportFragmentManager();
-
     public static String sharedPrefsPropertiesFilename;
-    private SharedPreferences mSharedPrefsProperties;
 
+    private FragmentManager mFragmentManager = getSupportFragmentManager();
+    private SharedPreferences mSharedPrefsProperties;
     private InterstitialAd mInterstitialAd;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
@@ -245,10 +243,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             }
             return true;
         }
-        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction.hide(visibleFragment);
-        fragmentTransaction.show(fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG));
+        fragmentTransaction.show(mFragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG));
         fragmentTransaction.commit();
         return true;
     }
@@ -275,10 +273,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             ((ErrorFragment) visibleFragment).showNoInternetSnackbar();
             return false;
         }
-        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentTransaction.hide(visibleFragment);
-        Fragment sourceCodeFragment = fragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
+        Fragment sourceCodeFragment = mFragmentManager.findFragmentByTag(SourceCodeFragment.TAG);
         if (sourceCodeFragment == null) {
             sourceCodeFragment = SourceCodeFragment.newInstance();
             fragmentTransaction.add(R.id.content_frame, sourceCodeFragment, SourceCodeFragment.TAG);
@@ -297,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private boolean processNavItemLanguage() {
         DialogFragment languageDialog = LanguageDialog.newInstance();
-        languageDialog.show(fragmentManager, LanguageDialog.TAG);
+        languageDialog.show(mFragmentManager, LanguageDialog.TAG);
         return false;
     }
 
@@ -309,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private boolean processNavItemTheme() {
         DialogFragment themeDialog = ThemeDialog.newInstance();
-        themeDialog.show(fragmentManager, ThemeDialog.TAG);
+        themeDialog.show(mFragmentManager, ThemeDialog.TAG);
         return false;
     }
 
@@ -392,8 +390,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
+        } else if (mFragmentManager.getBackStackEntryCount() > 0) {
+            mFragmentManager.popBackStack();
         } else if (!mCloseAppToast.getView().isShown()) {
             mCloseAppToast.show();
         } else {
@@ -560,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @param tag      identifier for this transaction.
      */
     private void replaceFragment(Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment, tag);
         fragmentTransaction.commit();
     }
@@ -587,7 +585,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     @Override
     public void passSelectedCurrency(Currency currency) {
         ActiveCurrenciesFragment activeCurrenciesFragment = (ActiveCurrenciesFragment)
-                fragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG);
+                mFragmentManager.findFragmentByTag(ActiveCurrenciesFragment.TAG);
         activeCurrenciesFragment.addActiveCurrency(currency);
     }
 
@@ -600,16 +598,16 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @return the Fragment currently being displayed or null of no Fragments in manager.
      */
     private Fragment getVisibleFragment() {
-        List<Fragment> fragments = fragmentManager.getFragments();
+        List<Fragment> fragments = mFragmentManager.getFragments();
         Fragment visibleFragment = null;
         for (Fragment fragment : fragments) {
             if (fragment != null && fragment.isVisible()) {
                 if (fragment instanceof SelectableCurrenciesFragment) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right);
                     fragmentTransaction.remove(fragment);
-                    fragmentManager.popBackStack();
+                    mFragmentManager.popBackStack();
                     fragmentTransaction.commit();
                     continue;
                 }
@@ -627,8 +625,8 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @return true if method description holds.
      */
     private boolean activityHasExistingData() {
-        return fragmentManager.findFragmentById(R.id.content_frame) != null &&
-                !(fragmentManager.findFragmentById(R.id.content_frame) instanceof ErrorFragment);
+        return mFragmentManager.findFragmentById(R.id.content_frame) != null &&
+                !(mFragmentManager.findFragmentById(R.id.content_frame) instanceof ErrorFragment);
     }
 
     /**
