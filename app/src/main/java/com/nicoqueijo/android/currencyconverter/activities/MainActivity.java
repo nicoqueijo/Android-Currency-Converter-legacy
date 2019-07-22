@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private void initInterstitialAd() {
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial_test));
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override

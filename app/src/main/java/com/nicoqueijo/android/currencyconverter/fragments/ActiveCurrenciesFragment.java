@@ -123,7 +123,7 @@ public class ActiveCurrenciesFragment extends Fragment {
      */
     private void initInterstitialAd() {
         mInterstitialAd = new InterstitialAd(getActivity());
-        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial_test));
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -276,7 +276,7 @@ public class ActiveCurrenciesFragment extends Fragment {
         String localCurrencyCode = java.util.Currency
                 .getInstance(Locale.getDefault()).getCurrencyCode();
         Currency localCurrency = new Currency("USD_" + localCurrencyCode);
-        Set<Currency> defaultCurrencies = Sets.newHashSet();
+        Set<Currency> defaultCurrencies = Sets.newLinkedHashSet();
         Currency usd = mAllCurrencies.get(mAllCurrencies.indexOf(new Currency("USD_USD")));
         usd.setSelected(true);
         defaultCurrencies.add(usd);
