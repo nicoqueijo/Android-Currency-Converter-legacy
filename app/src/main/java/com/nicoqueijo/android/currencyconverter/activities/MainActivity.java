@@ -649,13 +649,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * @return the string request for retrieving the response body at the given URL.
      */
     private StringRequest initVolleyStringRequest() {
-        final String apiBaseUrl = "http://openexchangerates.org/api/";
-        final String apiExchangeRatesEndpoint = "latest.json";
-        final String apiKeyParam = "?app_id=";
-        final String apiKey = getApiKey();
-        final String apiFullUrl = apiBaseUrl + apiExchangeRatesEndpoint + apiKeyParam + apiKey;
+        String url = Uri.parse("http://openexchangerates.org/api/latest.json")
+                .buildUpon().appendQueryParameter("app_id", getApiKey()).build().toString();
         StringRequest stringRequest;
-        stringRequest = new StringRequest(Request.Method.GET, apiFullUrl,
+        stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
