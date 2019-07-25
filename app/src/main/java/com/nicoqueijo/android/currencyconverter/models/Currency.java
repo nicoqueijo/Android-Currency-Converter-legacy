@@ -93,7 +93,7 @@ public class Currency implements Parcelable {
      * Fetches the actual currency code.
      * The currency codes in shared_prefs and strings xml files are stored with "USD_" preceded
      * to them. For example the British Pound currency code (GDP) is stored as "USD_GDP". To access
-     * the actual currency code we must substring "USD_GDP" from index 3 onwards to retrieve "GDP".
+     * the actual currency code we must substring "USD_GDP" from index 4 onwards to retrieve "GDP".
      *
      * @return the trimmed currency code
      */
