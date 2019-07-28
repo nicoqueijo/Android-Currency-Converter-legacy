@@ -5,9 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "active_currency")
-//foreignKeys = @ForeignKey(entity = AllCurrency.class,
-//        parentColumns = "currency_code", childColumns = "currency_code")
+@Entity(tableName = "active_currency", foreignKeys = @ForeignKey(entity = AllCurrency.class,
+        parentColumns = "currency_code", childColumns = "currency_code"))
 public class ActiveCurrency {
 
     @PrimaryKey

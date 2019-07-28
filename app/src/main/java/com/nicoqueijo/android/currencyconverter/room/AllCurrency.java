@@ -1,17 +1,16 @@
 package com.nicoqueijo.android.currencyconverter.room;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "all_currency")
-// indices = {@Index(value = {"currency_code"}, unique = true)}
 public class AllCurrency {
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "currency_code")
-//    index = true
     private String currencyCode;
     @ColumnInfo(name = "currency_value")
     private double currencyValue;
