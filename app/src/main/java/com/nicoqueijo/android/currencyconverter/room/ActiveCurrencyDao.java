@@ -20,7 +20,7 @@ public interface ActiveCurrencyDao {
     @Delete
     void delete(ActiveCurrency currency);
 
-    @Query("SELECT * FROM active_currency")
+    @Query("SELECT * FROM active_currency ORDER BY currency_order ASC")
     List<ActiveCurrency> getActiveCurrencies();
 
     @Query("DELETE FROM active_currency")

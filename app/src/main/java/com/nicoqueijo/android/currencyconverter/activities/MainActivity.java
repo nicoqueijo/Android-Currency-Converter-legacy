@@ -2,14 +2,11 @@ package com.nicoqueijo.android.currencyconverter.activities;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,8 +40,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveCurrenciesFragment;
@@ -58,6 +53,9 @@ import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.ApiEndpoint;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.nicoqueijo.android.currencyconverter.room.AllCurrency;
+import com.nicoqueijo.android.currencyconverter.room.AllCurrencyDao;
+import com.nicoqueijo.android.currencyconverter.room.CurrencyDatabase;
 import com.nicoqueijo.android.currencyconverter.singletons.VolleySingleton;
 
 import org.json.JSONException;
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      */
     private void initInterstitialAd() {
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial));
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id_interstitial_test));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -518,7 +516,15 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         Gson gson = new Gson();
         ApiEndpoint apiEndpoint = gson.fromJson(jsonObject.toString(), ApiEndpoint.class);
         apiEndpoint.getRates().currenciesToList();
-        try {
+
+        CurrencyDatabase currencyDatabase = CurrencyDatabase.getInstance(this);
+        AllCurrencyDao allCurrencyDao = currencyDatabase.getAllCurrencyDao();
+        allCurrencyDao.deleteAll();
+        for (Currency currency : apiEndpoint.getRates().getCurrencies()) {
+            allCurrencyDao.insert(new AllCurrency(currency.getCurrencyCode(), currency.getExchangeRate()));
+        }
+
+        /*try {
             ContentValues contentValues = new ContentValues();
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SQLiteDatabase database = databaseHelper.getWritableDatabase();
@@ -536,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             database.close();
         } catch (SQLiteException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**

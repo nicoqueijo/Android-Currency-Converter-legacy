@@ -2,11 +2,9 @@ package com.nicoqueijo.android.currencyconverter.room;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "active_currency", foreignKeys = @ForeignKey(entity = AllCurrency.class,
-        parentColumns = "currency_code", childColumns = "currency_code"))
+@Entity(tableName = "active_currency")
 public class ActiveCurrency {
 
     @PrimaryKey

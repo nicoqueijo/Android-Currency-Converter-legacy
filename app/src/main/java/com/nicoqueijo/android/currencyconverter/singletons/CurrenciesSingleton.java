@@ -1,16 +1,15 @@
 package com.nicoqueijo.android.currencyconverter.singletons;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 
 import com.google.common.collect.Lists;
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseContract.EntryAllCurrencies;
-import com.nicoqueijo.android.currencyconverter.databases.DatabaseHelper;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
+import com.nicoqueijo.android.currencyconverter.room.AllCurrency;
+import com.nicoqueijo.android.currencyconverter.room.AllCurrencyDao;
+import com.nicoqueijo.android.currencyconverter.room.CurrencyDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Singleton class for the main data set of the app which is the list of currencies along with
@@ -46,7 +45,14 @@ public class CurrenciesSingleton {
      * @param context Information about application environment. Needed to open database.
      */
     private void retrieveAndInitCurrencies(Context context) {
-        try {
+        CurrencyDatabase currencyDatabase = CurrencyDatabase.getInstance(context);
+        AllCurrencyDao allCurrencyDao = currencyDatabase.getAllCurrencyDao();
+        List<AllCurrency> allCurrencies = allCurrencyDao.getAllCurrencies();
+        for (AllCurrency allCurrency : allCurrencies) {
+            mCurrencies.add(new Currency(allCurrency.getCurrencyCode(), allCurrency.getCurrencyValue()));
+        }
+
+       /* try {
             DatabaseHelper databaseHelper = new DatabaseHelper(context);
             SQLiteDatabase database = databaseHelper.getReadableDatabase();
             database.beginTransaction();
@@ -73,6 +79,6 @@ public class CurrenciesSingleton {
             database.close();
         } catch (SQLiteException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

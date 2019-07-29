@@ -13,13 +13,14 @@ public abstract class CurrencyDatabase extends RoomDatabase {
     public abstract ActiveCurrencyDao getActiveCurrencyDao();
 
     private static final String DATABASE_NAME = "currency.db";
-    private static CurrencyDatabase instance;
+    private static CurrencyDatabase mInstance;
 
     public static synchronized CurrencyDatabase getInstance(Context context) {
-        if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(),
-                    CurrencyDatabase.class, DATABASE_NAME).fallbackToDestructiveMigration().build();
+        if (mInstance == null) {
+            mInstance = Room.databaseBuilder(context.getApplicationContext(),
+                    CurrencyDatabase.class, DATABASE_NAME).allowMainThreadQueries()
+                    .fallbackToDestructiveMigration().build();
         }
-        return instance;
+        return mInstance;
     }
 }

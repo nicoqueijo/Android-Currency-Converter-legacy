@@ -20,10 +20,8 @@ public interface AllCurrencyDao {
     @Delete
     void delete(AllCurrency currency);
 
-    @Query("SELECT active_currency.currency_order, active_currency.currency_code, " +
-            "all_currency.currency_value FROM active_currency INNER JOIN all_currency " +
-            "WHERE all_currency.currency_code =  active_currency.currency_code")
-    List<ActiveCurrency> getActiveCurrencies();
+    @Query("SELECT * FROM all_currency ORDER BY currency_code ASC")
+    List<AllCurrency> getAllCurrencies();
 
     @Query("DELETE FROM all_currency")
     void deleteAll();
