@@ -253,25 +253,6 @@ public class ActiveCurrenciesFragment extends Fragment {
         for (int i = 0; i < mActiveCurrencies.size(); i++) {
             activeCurrencyDao.insert(new ActiveCurrency(i, mActiveCurrencies.get(i).getCurrencyCode()));
         }
-
-        /*try {
-            DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-            SQLiteDatabase database = databaseHelper.getWritableDatabase();
-            database.beginTransaction();
-            database.execSQL("DELETE FROM " + EntryActiveCurrencies.TABLE_NAME);
-            ContentValues contentValues = new ContentValues();
-            for (int i = 0; i < mActiveCurrencies.size(); i++) {
-                String currencyCode = mActiveCurrencies.get(i).getCurrencyCode();
-                contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_ORDER, i);
-                contentValues.put(EntryActiveCurrencies.COLUMN_CURRENCY_CODE, currencyCode);
-                database.insert(EntryActiveCurrencies.TABLE_NAME, null, contentValues);
-            }
-            database.setTransactionSuccessful();
-            database.endTransaction();
-            database.close();
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }*/
     }
 
     /**
@@ -324,42 +305,5 @@ public class ActiveCurrenciesFragment extends Fragment {
             mActiveCurrencies.add(mAllCurrencies.get(mAllCurrencies.indexOf(currency)));
             mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
         }
-
-        /*try {
-            DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-            SQLiteDatabase database = databaseHelper.getReadableDatabase();
-            database.beginTransaction();
-            String rawQuery = "SELECT" +
-                    " active_currencies.currency_order," +
-                    " active_currencies.currency_code," +
-                    " all_currencies.currency_value" +
-                    " FROM active_currencies" +
-                    " INNER JOIN all_currencies" +
-                    " WHERE all_currencies.currency_code =  active_currencies.currency_code";
-            Cursor cursor = database.rawQuery(rawQuery, null);
-            Currency[] savedActiveCurrencies = new Currency[cursor.getCount()];
-            int col_currency_order = cursor.getColumnIndex(EntryActiveCurrencies
-                    .COLUMN_CURRENCY_ORDER);
-            int col_currency_code = cursor.getColumnIndex(EntryActiveCurrencies
-                    .COLUMN_CURRENCY_CODE);
-            int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies
-                    .COLUMN_CURRENCY_VALUE);
-            while (cursor.moveToNext()) {
-                int order = cursor.getInt(col_currency_order);
-                String currencyCode = cursor.getString(col_currency_code);
-                double exchangeRate = cursor.getDouble(col_currency_value);
-                Currency currency = new Currency(currencyCode, exchangeRate);
-                currency = mAllCurrencies.get(mAllCurrencies.indexOf(currency));
-                savedActiveCurrencies[order] = currency;
-                mAllCurrencies.get(mAllCurrencies.indexOf(currency)).setSelected(true);
-            }
-            mActiveCurrencies.addAll(Arrays.asList(savedActiveCurrencies));
-            cursor.close();
-            database.setTransactionSuccessful();
-            database.endTransaction();
-            database.close();
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }*/
     }
 }

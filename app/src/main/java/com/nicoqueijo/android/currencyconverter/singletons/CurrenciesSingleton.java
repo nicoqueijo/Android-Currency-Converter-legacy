@@ -51,34 +51,5 @@ public class CurrenciesSingleton {
         for (AllCurrency allCurrency : allCurrencies) {
             mCurrencies.add(new Currency(allCurrency.getCurrencyCode(), allCurrency.getCurrencyValue()));
         }
-
-       /* try {
-            DatabaseHelper databaseHelper = new DatabaseHelper(context);
-            SQLiteDatabase database = databaseHelper.getReadableDatabase();
-            database.beginTransaction();
-            Cursor cursor = database.query(
-                    EntryAllCurrencies.TABLE_NAME,
-                    new String[]{
-                            EntryAllCurrencies.COLUMN_CURRENCY_CODE,
-                            EntryAllCurrencies.COLUMN_CURRENCY_VALUE},
-                    null,
-                    null,
-                    null,
-                    null,
-                    EntryAllCurrencies.COLUMN_CURRENCY_CODE + " ASC");
-            int col_currency_code = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_CODE);
-            int col_currency_value = cursor.getColumnIndex(EntryAllCurrencies.COLUMN_CURRENCY_VALUE);
-            while (cursor.moveToNext()) {
-                String currencyCode = cursor.getString(col_currency_code);
-                double exchangeRate = cursor.getDouble(col_currency_value);
-                mCurrencies.add(new Currency(currencyCode, exchangeRate));
-            }
-            cursor.close();
-            database.setTransactionSuccessful();
-            database.endTransaction();
-            database.close();
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }*/
     }
 }

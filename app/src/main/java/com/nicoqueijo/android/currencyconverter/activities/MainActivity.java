@@ -523,26 +523,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         for (Currency currency : apiEndpoint.getRates().getCurrencies()) {
             allCurrencyDao.insert(new AllCurrency(currency.getCurrencyCode(), currency.getExchangeRate()));
         }
-
-        /*try {
-            ContentValues contentValues = new ContentValues();
-            DatabaseHelper databaseHelper = new DatabaseHelper(this);
-            SQLiteDatabase database = databaseHelper.getWritableDatabase();
-            database.execSQL("DELETE FROM " + EntryAllCurrencies.TABLE_NAME);
-            database.beginTransaction();
-            for (Currency currency : apiEndpoint.getRates().getCurrencies()) {
-                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_CODE,
-                        currency.getCurrencyCode());
-                contentValues.put(EntryAllCurrencies.COLUMN_CURRENCY_VALUE,
-                        currency.getExchangeRate());
-                database.insert(EntryAllCurrencies.TABLE_NAME, null, contentValues);
-            }
-            database.setTransactionSuccessful();
-            database.endTransaction();
-            database.close();
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }*/
     }
 
     /**
