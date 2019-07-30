@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.room;
+package com.nicoqueijo.android.currencyconverter.databases;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,6 +8,9 @@ import androidx.room.Update;
 
 import java.util.List;
 
+/**
+ * Data access object for the "active_currencies" table.
+ */
 @Dao
 public interface ActiveCurrencyDao {
 

@@ -18,6 +18,12 @@ public class ExchangeRates {
     private static final int AMOUNT_OF_CURRENCIES = 159;
     private List<Currency> currencies = Lists.newArrayListWithCapacity(AMOUNT_OF_CURRENCIES);
 
+    /**
+     * Since the currency code for the Turkish lira is "TRY" and "try" is a Java reserved keyword
+     * I am unable to use this as a variable name. Therefore to maintain consistency I appended
+     * "USD_" to all currency variable names and mapped the currency code (that comes from the API)
+     * to each variable using the @SerializedName annotation.
+     */
     @SerializedName("AED")
     private double USD_AED;
     @SerializedName("AFN")

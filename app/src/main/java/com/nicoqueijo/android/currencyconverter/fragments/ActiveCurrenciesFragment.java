@@ -1,11 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,17 +27,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
+import com.nicoqueijo.android.currencyconverter.databases.ActiveCurrency;
+import com.nicoqueijo.android.currencyconverter.databases.ActiveCurrencyDao;
+import com.nicoqueijo.android.currencyconverter.databases.CurrencyDatabase;
 import com.nicoqueijo.android.currencyconverter.helpers.CustomRecyclerView;
 import com.nicoqueijo.android.currencyconverter.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
-import com.nicoqueijo.android.currencyconverter.room.ActiveCurrency;
-import com.nicoqueijo.android.currencyconverter.room.ActiveCurrencyDao;
-import com.nicoqueijo.android.currencyconverter.room.AllCurrencyDao;
-import com.nicoqueijo.android.currencyconverter.room.CurrencyDatabase;
 import com.nicoqueijo.android.currencyconverter.singletons.CurrenciesSingleton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -243,7 +237,7 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Saves the list of active currencies to an SQLite database table maintaining the order in
+     * Saves the list of active currencies to the Room database table maintaining the order in
      * which they appear. Does this by first deleting everything from the table to avoid conflicts.
      */
     private void persistActiveCurrencies() {
@@ -289,14 +283,11 @@ public class ActiveCurrenciesFragment extends Fragment {
     }
 
     /**
-     * Restores the list of active currencies from the SQLite database maintaining the order in
-     * which they appeared. Does this by querying the active_currencies database table and loading
-     * its content onto the array that will serve as the adapter's data set.
-     * Uses rawQuery instead of query to make an inner join because the currency code column is a
-     * foreign key.
+     * Restores the list of active currencies from the Room database maintaining the order in
+     * which they appeared. Does this by querying the active_currencies table and loading its
+     * content onto the array that will serve as the adapter's data set.
      */
     private void restoreActiveCurrencies() {
-
         CurrencyDatabase currencyDatabase = CurrencyDatabase.getInstance(getContext());
         ActiveCurrencyDao activeCurrencyDao = currencyDatabase.getActiveCurrencyDao();
         List<ActiveCurrency> activeCurrencies = activeCurrencyDao.getActiveCurrencies();

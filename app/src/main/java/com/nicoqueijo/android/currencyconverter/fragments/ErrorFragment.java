@@ -1,14 +1,15 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.core.view.GravityCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.activities.MainActivity;
 import com.nicoqueijo.android.currencyconverter.helpers.Utility;
@@ -21,9 +22,8 @@ public abstract class ErrorFragment extends Fragment {
 
     public static final String TAG = ErrorFragment.class.getSimpleName();
 
-    public MainActivity hostingActivity;
-    public Toolbar mToolbar;
-    public ImageView mRefreshMenuItem;
+    private MainActivity hostingActivity;
+    private Toolbar mToolbar;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -49,10 +49,10 @@ public abstract class ErrorFragment extends Fragment {
      */
     public void initMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_refresh, menu);
-        mRefreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
-        mRefreshMenuItem.setImageResource(R.drawable.ic_refresh);
-        mRefreshMenuItem.setPadding(24, 24, 24, 24);
-        mRefreshMenuItem.setOnClickListener(new View.OnClickListener() {
+        ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
+        refreshMenuItem.setImageResource(R.drawable.ic_refresh);
+        refreshMenuItem.setPadding(24, 24, 24, 24);
+        refreshMenuItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 processRefreshClick();

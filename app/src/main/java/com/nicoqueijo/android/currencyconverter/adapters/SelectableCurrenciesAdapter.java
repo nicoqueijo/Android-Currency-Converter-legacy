@@ -1,13 +1,14 @@
 package com.nicoqueijo.android.currencyconverter.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.common.collect.Lists;
 import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding;

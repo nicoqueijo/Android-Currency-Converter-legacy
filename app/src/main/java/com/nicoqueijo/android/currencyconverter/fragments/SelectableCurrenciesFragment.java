@@ -126,7 +126,7 @@ public class SelectableCurrenciesFragment extends Fragment {
      * @param menu     The options menu in which you place your items.
      * @param inflater used to instantiate menu XML files into Menu objects.
      */
-    public void initMenu(Menu menu, MenuInflater inflater) {
+    private void initMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setImeOptions(EditorInfo.IME_ACTION_GO);

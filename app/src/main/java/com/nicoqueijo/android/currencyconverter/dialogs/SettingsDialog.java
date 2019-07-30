@@ -3,10 +3,11 @@ package com.nicoqueijo.android.currencyconverter.dialogs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.View;
 import android.widget.RadioButton;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.nicoqueijo.android.currencyconverter.R;
 

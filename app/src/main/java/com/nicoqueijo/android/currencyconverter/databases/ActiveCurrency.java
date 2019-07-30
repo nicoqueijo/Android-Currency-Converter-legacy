@@ -1,9 +1,13 @@
-package com.nicoqueijo.android.currencyconverter.room;
+package com.nicoqueijo.android.currencyconverter.databases;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Class representing the "active_currency" table.
+ * These are the user's currencies of interest which were selected from the list of all currencies.
+ */
 @Entity(tableName = "active_currency")
 public class ActiveCurrency {
 

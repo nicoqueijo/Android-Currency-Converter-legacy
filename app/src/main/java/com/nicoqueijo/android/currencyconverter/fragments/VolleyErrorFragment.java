@@ -1,14 +1,15 @@
 package com.nicoqueijo.android.currencyconverter.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.dialogs.VolleyErrorDialog;
@@ -23,7 +24,6 @@ public class VolleyErrorFragment extends ErrorFragment implements View.OnClickLi
     public static final String ARG_ERROR_MESSAGE = "arg_error_message";
 
     private String mErrorMessage;
-    private Button mShowButton;
 
     /**
      * Factory method to create a new instance of this Fragment using the provided parameters.
@@ -63,8 +63,8 @@ public class VolleyErrorFragment extends ErrorFragment implements View.OnClickLi
      * @param view the root view of the inflated hierarchy
      */
     private void initViewsAndListeners(View view) {
-        mShowButton = view.findViewById(R.id.show_button);
-        mShowButton.setOnClickListener(this);
+        Button showButton = view.findViewById(R.id.show_button);
+        showButton.setOnClickListener(this);
     }
 
     /**

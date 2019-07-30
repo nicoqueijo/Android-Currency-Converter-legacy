@@ -1,10 +1,11 @@
 package com.nicoqueijo.android.currencyconverter.helpers;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Extending the default RecyclerView in order to implement AdapterDataObserver to listen for

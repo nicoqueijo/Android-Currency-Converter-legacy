@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Class dedicated to perform currency conversions.
+ * Class dedicated to performing currency conversions.
  * Exchange rates are quoted in values against the US dollar.
  */
 public class CurrencyConversion {

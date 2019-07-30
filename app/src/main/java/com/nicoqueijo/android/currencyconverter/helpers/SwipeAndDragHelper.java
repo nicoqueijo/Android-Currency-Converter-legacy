@@ -1,17 +1,17 @@
 package com.nicoqueijo.android.currencyconverter.helpers;
 
 import android.graphics.Canvas;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.nicoqueijo.android.currencyconverter.adapters.ActiveCurrenciesAdapter;
 
 /**
  * Implements the functionality of swipe to dismiss and drag & drop support to RecyclerView along
  * with a background layout.
- * Credit: https://www.androidhive.info/2017/09/android-recyclerview-swipe-delete-undo-using-
- * itemtouchhelper/
+ * Credit: https://www.androidhive.info/2017/09/android-recyclerview-swipe-delete-undo-using-itemtouchhelper/
  */
 public class SwipeAndDragHelper extends ItemTouchHelper.SimpleCallback {
 

@@ -2,10 +2,6 @@ package com.nicoqueijo.android.currencyconverter.adapters;
 
 import android.content.Context;
 import android.os.Vibrator;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
@@ -19,6 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.nicoqueijo.android.currencyconverter.R;
 import com.nicoqueijo.android.currencyconverter.algorithms.CurrencyConversion;
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBinding;
@@ -50,10 +51,8 @@ public class ActiveCurrenciesAdapter extends
     private Snackbar mSnackbar;
     private boolean mOnBind;
 
-    private NumberFormat mNumberFormatter;
     private DecimalFormat mDecimalFormatter;
     private String mDecimalSeparator;
-    private String mConversionPattern = "###,##0.00";
     private Animation mAnimShake;
     private Vibrator mVibrator;
 
@@ -69,9 +68,10 @@ public class ActiveCurrenciesAdapter extends
         mContext = context;
         mActiveCurrencies = activeCurrencies;
         mFloatingActionButton = floatingActionButton;
-        mNumberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
-        mDecimalFormatter = (DecimalFormat) mNumberFormatter;
-        mDecimalFormatter.applyPattern(mConversionPattern);
+        NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault());
+        mDecimalFormatter = (DecimalFormat) numberFormatter;
+        String conversionPattern = "###,##0.00";
+        mDecimalFormatter.applyPattern(conversionPattern);
         mDecimalSeparator = String.valueOf(mDecimalFormatter
                 .getDecimalFormatSymbols()
                 .getDecimalSeparator());

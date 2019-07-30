@@ -1,10 +1,14 @@
-package com.nicoqueijo.android.currencyconverter.room;
+package com.nicoqueijo.android.currencyconverter.databases;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Class representing the "all_currency" table.
+ * These are all the currencies provided by the API.
+ */
 @Entity(tableName = "all_currency")
 public class AllCurrency {
 

@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.google.common.collect.Lists;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
-import com.nicoqueijo.android.currencyconverter.room.AllCurrency;
-import com.nicoqueijo.android.currencyconverter.room.AllCurrencyDao;
-import com.nicoqueijo.android.currencyconverter.room.CurrencyDatabase;
+import com.nicoqueijo.android.currencyconverter.databases.AllCurrency;
+import com.nicoqueijo.android.currencyconverter.databases.AllCurrencyDao;
+import com.nicoqueijo.android.currencyconverter.databases.CurrencyDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,10 @@ public class CurrenciesSingleton {
     }
 
     /**
-     * Retrieves the exchange rates stored in the SQLite database and initializes the currency list
+     * Retrieves the exchange rates stored in the Room database and initializes the currency list
      * with their values.
      *
-     * @param context Information about application environment. Needed to open database.
+     * @param context Information about application environment needed to open the database.
      */
     private void retrieveAndInitCurrencies(Context context) {
         CurrencyDatabase currencyDatabase = CurrencyDatabase.getInstance(context);

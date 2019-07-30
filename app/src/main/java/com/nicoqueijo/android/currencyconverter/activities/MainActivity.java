@@ -40,6 +40,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.nicoqueijo.android.currencyconverter.R;
+import com.nicoqueijo.android.currencyconverter.databases.AllCurrency;
+import com.nicoqueijo.android.currencyconverter.databases.AllCurrencyDao;
+import com.nicoqueijo.android.currencyconverter.databases.CurrencyDatabase;
 import com.nicoqueijo.android.currencyconverter.dialogs.LanguageDialog;
 import com.nicoqueijo.android.currencyconverter.dialogs.ThemeDialog;
 import com.nicoqueijo.android.currencyconverter.fragments.ActiveCurrenciesFragment;
@@ -53,9 +56,6 @@ import com.nicoqueijo.android.currencyconverter.helpers.Utility;
 import com.nicoqueijo.android.currencyconverter.interfaces.ICommunicator;
 import com.nicoqueijo.android.currencyconverter.models.ApiEndpoint;
 import com.nicoqueijo.android.currencyconverter.models.Currency;
-import com.nicoqueijo.android.currencyconverter.room.AllCurrency;
-import com.nicoqueijo.android.currencyconverter.room.AllCurrencyDao;
-import com.nicoqueijo.android.currencyconverter.room.CurrencyDatabase;
 import com.nicoqueijo.android.currencyconverter.singletons.VolleySingleton;
 
 import org.json.JSONException;
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     /**
      * Start an implicit Intent for the user to contact the developer via an email app. The subject
-     * is prefilled with the app's name and the body is prefilled with the device manufacturer,
+     * is pre-filled with the app's name and the body is pre-filled with the device manufacturer,
      * model, and the Android API level.
      *
      * @return false because we are merely triggering an Intent and not changing the content frame
@@ -507,7 +507,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     /**
      * Extracts the exchange rates from the JSON object received from the API call using the GSON
-     * library and saves them locally using an SQLite database. Deletes everything in the table
+     * library and saves them locally using a Room database. Deletes everything in the table
      * first because apparently the insert statement doesn't replace existing values with new data.
      *
      * @param jsonObject the JSON object containing the exchange rates.
@@ -516,7 +516,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         Gson gson = new Gson();
         ApiEndpoint apiEndpoint = gson.fromJson(jsonObject.toString(), ApiEndpoint.class);
         apiEndpoint.getRates().currenciesToList();
-
         CurrencyDatabase currencyDatabase = CurrencyDatabase.getInstance(this);
         AllCurrencyDao allCurrencyDao = currencyDatabase.getAllCurrencyDao();
         allCurrencyDao.deleteAll();
