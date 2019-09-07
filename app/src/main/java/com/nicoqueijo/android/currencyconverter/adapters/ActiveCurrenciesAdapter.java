@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -129,14 +128,11 @@ public class ActiveCurrenciesAdapter extends
         mSnackbar = Snackbar.make(mFloatingActionButton, R.string.item_removed,
                 Snackbar.LENGTH_LONG);
         Utility.styleSnackbar(mSnackbar, mContext);
-        mSnackbar.setAction(R.string.undo, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                swipedCurrency.setConversionValue(conversionValue);
-                swipedCurrency.setSelected(true);
-                mActiveCurrencies.add(position, swipedCurrency);
-                notifyItemInserted(position);
-            }
+        mSnackbar.setAction(R.string.undo, v -> {
+            swipedCurrency.setConversionValue(conversionValue);
+            swipedCurrency.setSelected(true);
+            mActiveCurrencies.add(position, swipedCurrency);
+            notifyItemInserted(position);
         });
         mSnackbar.show();
     }

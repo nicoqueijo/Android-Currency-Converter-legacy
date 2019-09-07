@@ -151,12 +151,7 @@ public class SourceCodeFragment extends Fragment implements
                 mProgressBar.setProgress(newProgress);
             }
         });
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mWebView.reload();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mWebView.reload());
     }
 
     /**
@@ -164,21 +159,19 @@ public class SourceCodeFragment extends Fragment implements
      * Credit: https://stackoverflow.com/a/47710213/5906793
      */
     private void handleBackPress() {
-        mWebView.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                MainActivity hostActivity = (MainActivity) getActivity();
-                if (hostActivity.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    hostActivity.mDrawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                }
-                if (keyCode == KeyEvent.KEYCODE_BACK
-                        && event.getAction() == MotionEvent.ACTION_UP
-                        && mWebView.canGoBack()) {
-                    mWebView.goBack();
-                    return true;
-                }
-                return false;
+        mWebView.setOnKeyListener((v, keyCode, event) -> {
+            MainActivity hostActivity = (MainActivity) getActivity();
+            if (hostActivity.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                hostActivity.mDrawerLayout.closeDrawer(GravityCompat.START);
+                return true;
             }
+            if (keyCode == KeyEvent.KEYCODE_BACK
+                    && event.getAction() == MotionEvent.ACTION_UP
+                    && mWebView.canGoBack()) {
+                mWebView.goBack();
+                return true;
+            }
+            return false;
         });
     }
 

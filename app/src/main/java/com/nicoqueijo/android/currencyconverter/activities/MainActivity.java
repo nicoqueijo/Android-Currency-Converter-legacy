@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,8 +28,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -168,13 +165,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
      * Sets the listeners for navigation drawer.
      */
     private void initListeners() {
-        mNavigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        return processNavItemSelection(menuItem);
-                    }
-                });
+        mNavigationView.setNavigationItemSelectedListener(this::processNavItemSelection);
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close) {
@@ -637,40 +628,33 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         String url = Uri.parse("http://openexchangerates.org/api/latest.json")
                 .buildUpon().appendQueryParameter("app_id", getApiKey()).build().toString();
         StringRequest stringRequest;
-        stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean error = jsonObject.has("error");
-                            if (!error) {
-                                persistTimestamp(jsonObject);
-                                persistExchangeRates(jsonObject);
-                                checkForLastUpdate();
-                                Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
-                                        .newInstance();
-                                replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment
-                                        .TAG);
-                            } else {
-                                final int indentSpaces = 4;
-                                JSONObject errorDescription = jsonObject.getJSONObject("description");
-                                String errorMessage = errorDescription.toString(indentSpaces);
-                                Fragment volleyErrorFragment = VolleyErrorFragment
-                                        .newInstance(errorMessage);
-                                replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String errorMessage = error.toString();
-                Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
-                replaceFragment(errorFragment, VolleyErrorFragment.TAG);
+        stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                boolean error = jsonObject.has("error");
+                if (!error) {
+                    persistTimestamp(jsonObject);
+                    persistExchangeRates(jsonObject);
+                    checkForLastUpdate();
+                    Fragment activeCurrenciesFragment = ActiveCurrenciesFragment
+                            .newInstance();
+                    replaceFragment(activeCurrenciesFragment, ActiveCurrenciesFragment
+                            .TAG);
+                } else {
+                    final int indentSpaces = 4;
+                    JSONObject errorDescription = jsonObject.getJSONObject("description");
+                    String errorMessage = errorDescription.toString(indentSpaces);
+                    Fragment volleyErrorFragment = VolleyErrorFragment
+                            .newInstance(errorMessage);
+                    replaceFragment(volleyErrorFragment, VolleyErrorFragment.TAG);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+        }, error -> {
+            String errorMessage = error.toString();
+            Fragment errorFragment = VolleyErrorFragment.newInstance(errorMessage);
+            replaceFragment(errorFragment, VolleyErrorFragment.TAG);
         });
         return stringRequest;
     }

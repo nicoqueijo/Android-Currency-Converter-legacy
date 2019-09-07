@@ -158,14 +158,11 @@ public class ActiveCurrenciesFragment extends Fragment {
      * Fragment that allows exchange rates to be selected adding it to the backstack.
      */
     private void setUpFabOnClickListener() {
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processInterstitialAd();
-                hideKeyboard();
-                mAdapter.dismissSnackbar();
-                addFragment();
-            }
+        mFloatingActionButton.setOnClickListener(v -> {
+            processInterstitialAd();
+            hideKeyboard();
+            mAdapter.dismissSnackbar();
+            addFragment();
         });
     }
 

@@ -3,10 +3,10 @@ package com.nicoqueijo.android.currencyconverter.singletons;
 import android.content.Context;
 
 import com.google.common.collect.Lists;
-import com.nicoqueijo.android.currencyconverter.models.Currency;
 import com.nicoqueijo.android.currencyconverter.databases.AllCurrency;
 import com.nicoqueijo.android.currencyconverter.databases.AllCurrencyDao;
 import com.nicoqueijo.android.currencyconverter.databases.CurrencyDatabase;
+import com.nicoqueijo.android.currencyconverter.models.Currency;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.fragments;
 
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -52,12 +51,7 @@ public abstract class ErrorFragment extends Fragment {
         ImageView refreshMenuItem = (ImageView) menu.findItem(R.id.refresh).getActionView();
         refreshMenuItem.setImageResource(R.drawable.ic_refresh);
         refreshMenuItem.setPadding(24, 24, 24, 24);
-        refreshMenuItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processRefreshClick();
-            }
-        });
+        refreshMenuItem.setOnClickListener(v -> processRefreshClick());
     }
 
     /**

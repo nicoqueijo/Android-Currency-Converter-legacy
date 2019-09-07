@@ -7,6 +7,7 @@ import com.nicoqueijo.android.currencyconverter.models.Currency;
  * SelectableCurrenciesFragment this interface is used to notify the ActiveCurrenciesFragment
  * so it can be added to its list. This is done via the MainActivity.
  */
+@FunctionalInterface
 public interface ICommunicator {
     void passSelectedCurrency(Currency currency);
 }
