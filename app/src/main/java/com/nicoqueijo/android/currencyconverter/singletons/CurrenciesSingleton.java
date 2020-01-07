@@ -13,8 +13,9 @@ import java.util.List;
 
 /**
  * Singleton class for the main data set of the app which is the list of currencies along with
- * their exchange rate values so we can use the same ArrayList<Currency> instance throughout the
- * whole lifetime of the app instead of passing the object throughout Fragments.
+ * their exchange rate values. This serves as an in-memory dataset repository so we can use the
+ * same ArrayList<Currency> instance throughout the whole lifetime of the app instead of passing
+ * the object throughout Fragments.
  */
 public class CurrenciesSingleton {
 
