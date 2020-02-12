@@ -108,8 +108,8 @@ public final class Utility {
      * Credit: https://stackoverflow.com/a/28937224/5906793
      */
     public static void roundDialogCorners(DialogFragment dialogFragment) {
-        dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color
-                .TRANSPARENT));
+        dialogFragment.getDialog().getWindow()
+                .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     /**
