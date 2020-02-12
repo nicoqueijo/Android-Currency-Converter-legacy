@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
@@ -30,18 +32,17 @@ android {
 }
 
 dependencies {
-    def room_version = "2.2.2" // 2.1.0 for latest stable version
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation 'androidx.room:room-runtime:2.2.3'
+    annotationProcessor 'androidx.room:room-compiler:2.2.3'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.android.gms:play-services-ads:18.3.0'
     implementation 'com.github.turing-tech:MaterialScrollBar:13.3.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha02'
+    implementation 'com.google.android.material:material:1.2.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.bosphere.android-fadingedgelayout:fadingedgelayout:1.0.0'
@@ -52,4 +53,5 @@ dependencies {
 
     // Debug database through a browser. Documentation: https://github.com/amitshekhariitbhu/Android-Debug-Database
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

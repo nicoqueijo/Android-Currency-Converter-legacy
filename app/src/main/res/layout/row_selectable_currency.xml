@@ -7,86 +7,85 @@
 
         <import type="android.view.View" />
 
-        <import type="com.nicoqueijo.android.currencyconverter.helpers.Utility" />
+        <import type="com.nicoqueijo.android.currencyconverter.java.helpers.Utility" />
 
         <variable
             name="currency"
-            type="com.nicoqueijo.android.currencyconverter.models.Currency" />
+            type="com.nicoqueijo.android.currencyconverter.java.models.Currency" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="?android:colorBackground"
         android:clickable="@{!currency.selected}"
-        android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
         android:paddingBottom="8dp">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="50dp"
+            android:layout_height="37dp"
+            app:cardCornerRadius="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/flag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@{Utility.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
+                tools:src="@drawable/usd_usd" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/currency_code"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:fontFamily="sans-serif-medium"
+            android:paddingLeft="16dp"
+            android:text="@{currency.trimmedCurrencyCode}"
+            android:textColor="?attr/text_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/currency_name"
+            app:layout_constraintEnd_toStartOf="@+id/check_mark"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="USD" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="50dp"
-                android:layout_height="37dp"
-                android:layout_gravity="center_vertical"
-                app:cardCornerRadius="2dp">
-
-                <ImageView
-                    android:id="@+id/flag"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@{Utility.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
-                    tools:src="@drawable/usd_usd" />
-
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="16dp">
-
-                <TextView
-                    android:id="@+id/currency_code"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@{currency.trimmedCurrencyCode}"
-                    android:textColor="?attr/text_color"
-                    android:textSize="18sp"
-                    tools:text="USD" />
-
-                <TextView
-                    android:id="@+id/currency_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{Utility.getStringResourceByName(currency.currencyCode, context)}"
-                    android:textColor="?attr/text_color"
-                    android:textSize="16sp"
-                    tools:text="United States Dollar" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/currency_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ellipsize="end"
+            android:paddingLeft="16dp"
+            android:singleLine="true"
+            android:text="@{Utility.getStringResourceByName(currency.currencyCode, context)}"
+            android:textColor="?attr/text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/check_mark"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/currency_code"
+            tools:text="United States Dollar" />
 
         <ImageView
             android:id="@+id/check_mark"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
             android:src="@drawable/ic_check"
-            android:visibility="@{currency.selected ? View.VISIBLE : View.INVISIBLE}" />
+            android:visibility="@{currency.selected ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

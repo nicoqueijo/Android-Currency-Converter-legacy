@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.nicoqueijo.android.currencyconverter.helpers.Utility" />
+        <import type="com.nicoqueijo.android.currencyconverter.java.helpers.Utility" />
 
         <variable
             name="currency"
-            type="com.nicoqueijo.android.currencyconverter.models.Currency" />
+            type="com.nicoqueijo.android.currencyconverter.java.models.Currency" />
     </data>
 
     <FrameLayout
@@ -94,7 +94,7 @@
                 android:layout_weight="1"
                 android:paddingLeft="16dp">
 
-                <com.nicoqueijo.android.currencyconverter.helpers.CustomEditText
+                <com.nicoqueijo.android.currencyconverter.java.helpers.CustomEditText
                     android:id="@+id/conversion_value"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
