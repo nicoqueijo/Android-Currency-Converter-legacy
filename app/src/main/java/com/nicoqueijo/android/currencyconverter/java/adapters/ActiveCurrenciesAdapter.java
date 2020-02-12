@@ -11,17 +11,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.nicoqueijo.android.currencyconverter.R;
-import com.nicoqueijo.android.currencyconverter.java.algorithms.CurrencyConversion;
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBinding;
+import com.nicoqueijo.android.currencyconverter.java.algorithms.CurrencyConversion;
 import com.nicoqueijo.android.currencyconverter.java.helpers.CustomEditText;
 import com.nicoqueijo.android.currencyconverter.java.helpers.SwipeAndDragHelper;
 import com.nicoqueijo.android.currencyconverter.java.helpers.Utility;
@@ -153,8 +152,8 @@ public class ActiveCurrenciesAdapter extends
 
         RowActiveCurrencyBinding mBinding;
 
-        public RelativeLayout mRowBackground;
-        public LinearLayout mRowForeground;
+        public ConstraintLayout mRowBackground;
+        public ConstraintLayout mRowForeground;
         public ImageView mDeleteIconStart;
         public ImageView mDeleteIconEnd;
         public CustomEditText mConversionValue;
