@@ -6,6 +6,18 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 class ExchangeRates {
 
+    val currencies: List<Currency>
+        get() {
+            val currencies = mutableListOf<Currency>()
+            val declaredFields = this.javaClass.declaredFields
+            for (field in declaredFields) {
+                val currencyCode = field.name
+                val exchangeRate = field.get(this) as Double
+                currencies.add(Currency(currencyCode, exchangeRate))
+            }
+            return currencies
+        }
+
     @Json(name = "AED")
     internal var USD_AED: Double = 0.0
     @Json(name = "AFN")

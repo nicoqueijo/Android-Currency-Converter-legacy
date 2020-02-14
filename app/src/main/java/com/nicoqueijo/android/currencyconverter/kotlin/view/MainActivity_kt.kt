@@ -196,6 +196,7 @@ class MainActivity_kt : AppCompatActivity() {
         val moshi: Moshi = Moshi.Builder().build()
         val jsonAdapter: JsonAdapter<ApiEndPoint> = moshi.adapter(ApiEndPoint::class.java)
         val apiEndPoint: ApiEndPoint? = jsonAdapter.fromJson(json)
+        val currencies = apiEndPoint?.exchangeRates?.currencies
 
     }
 
