@@ -2,11 +2,9 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import java.math.BigDecimal
 
-data class Currency(val currencyCode: String, val exchangeRate: Double = 0.0) {
+class Currency(val currencyCode: String, val exchangeRate: Double) {
 
-    @Transient
     var conversionValue: BigDecimal = BigDecimal(0.0)
-    @Transient
     var isSelected: Boolean = false
 
     val trimmedCurrencyCode: String
