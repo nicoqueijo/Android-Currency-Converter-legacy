@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.data
+package com.nicoqueijo.android.currencyconverter.kotlin.models
 
 import java.math.BigDecimal
 

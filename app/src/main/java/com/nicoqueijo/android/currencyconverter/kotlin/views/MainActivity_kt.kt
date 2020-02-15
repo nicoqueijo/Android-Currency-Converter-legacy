@@ -1,11 +1,15 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.view
+package com.nicoqueijo.android.currencyconverter.kotlin.views
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.data.ApiEndPoint
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
+import com.nicoqueijo.android.currencyconverter.kotlin.models.ApiEndPoint
+import com.nicoqueijo.android.currencyconverter.kotlin.services.ExchangeRatesService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainActivity_kt : AppCompatActivity() {
 
@@ -193,10 +197,24 @@ class MainActivity_kt : AppCompatActivity() {
   }
 }
         """.trimIndent()
-        val moshi: Moshi = Moshi.Builder().build()
-        val jsonAdapter: JsonAdapter<ApiEndPoint> = moshi.adapter(ApiEndPoint::class.java)
-        val apiEndPoint: ApiEndPoint? = jsonAdapter.fromJson(json)
-        val currencies = apiEndPoint?.exchangeRates?.currencies
+//        val moshi: Moshi = Moshi.Builder().build()
+//        val jsonAdapter: JsonAdapter<ApiEndPoint> = moshi.adapter(ApiEndPoint::class.java)
+//        val apiEndPoint: ApiEndPoint? = jsonAdapter.fromJson(json)
+//        val currencies = apiEndPoint?.exchangeRates?.currencies
+
+        val retrofit: Retrofit = Retrofit.Builder().baseUrl("https://openexchangerates.org/").addConverterFactory(MoshiConverterFactory.create()).build()
+        val exchangeRatesService: ExchangeRatesService = retrofit.create(ExchangeRatesService::class.java)
+        exchangeRatesService.getExchangeRates("https://openexchangerates.org/api/latest.json?app_id=".plus("5904c71a4d15419c81ab69319355d331"))
+                .enqueue(object :Callback<ApiEndPoint> {
+                    override fun onFailure(call: Call<ApiEndPoint>, t: Throwable) {
+                        println(t.message)
+                    }
+
+                    override fun onResponse(call: Call<ApiEndPoint>, response: Response<ApiEndPoint>) {
+                        println(response.body()?.exchangeRates?.currencies)
+                    }
+                })
+
 
     }
 

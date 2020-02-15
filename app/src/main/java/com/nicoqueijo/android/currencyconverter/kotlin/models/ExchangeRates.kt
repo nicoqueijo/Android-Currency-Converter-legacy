@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.data
+package com.nicoqueijo.android.currencyconverter.kotlin.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -10,9 +10,9 @@ class ExchangeRates {
         get() {
             val currencies = mutableListOf<Currency>()
             val declaredFields = this.javaClass.declaredFields
-            for (field in declaredFields) {
-                val currencyCode = field.name
-                val exchangeRate = field.get(this) as Double
+            for (property in declaredFields) {
+                val currencyCode = property.name
+                val exchangeRate = property.get(this) as Double
                 currencies.add(Currency(currencyCode, exchangeRate))
             }
             return currencies

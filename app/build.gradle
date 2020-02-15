@@ -39,6 +39,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     implementation 'com.squareup.moshi:moshi:1.9.2'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
     implementation 'com.android.volley:volley:1.1.1'
