@@ -5,218 +5,44 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.models.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.services.ExchangeRatesService
+import kotlinx.android.synthetic.main.activity_main_kt.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
 
 class MainActivity_kt : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val json: String = """
-            {
-  "disclaimer": "Usage subject to terms: https://openexchangerates.org/terms",
-  "license": "https://openexchangerates.org/license",
-  "timestamp": 1581627600,
-  "base": "USD",
-  "rates": {
-    "AED": 3.67305,
-    "AFN": 77.199999,
-    "ALL": 112.45,
-    "AMD": 478.596258,
-    "ANG": 1.790322,
-    "AOA": 494.7555,
-    "ARS": 61.3097,
-    "AUD": 1.488249,
-    "AWG": 1.8,
-    "AZN": 1.7025,
-    "BAM": 1.798886,
-    "BBD": 2,
-    "BDT": 84.95828,
-    "BGN": 1.802397,
-    "BHD": 0.376951,
-    "BIF": 1891,
-    "BMD": 1,
-    "BND": 1.389443,
-    "BOB": 6.906036,
-    "BRL": 4.3542,
-    "BSD": 1,
-    "BTC": 0.000097812928,
-    "BTN": 71.29562,
-    "BWP": 10.966871,
-    "BYN": 2.19978,
-    "BZD": 2.016,
-    "CAD": 1.326249,
-    "CDF": 1685,
-    "CHF": 0.979377,
-    "CLF": 0.028866,
-    "CLP": 794.000356,
-    "CNH": 6.98874,
-    "CNY": 6.9774,
-    "COP": 3393.04429,
-    "CRC": 569.861641,
-    "CUC": 1,
-    "CUP": 25.75,
-    "CVE": 102.15,
-    "CZK": 22.9541,
-    "DJF": 178.05,
-    "DKK": 6.891745,
-    "DOP": 53.46,
-    "DZD": 120.702742,
-    "EGP": 15.6996,
-    "ERN": 14.999711,
-    "ETB": 32.12,
-    "EUR": 0.922467,
-    "FJD": 2.19645,
-    "FKP": 0.766374,
-    "GBP": 0.766374,
-    "GEL": 2.87,
-    "GGP": 0.766374,
-    "GHS": 5.371162,
-    "GIP": 0.766374,
-    "GMD": 51.0575,
-    "GNF": 9445,
-    "GTQ": 7.631158,
-    "GYD": 209.042825,
-    "HKD": 7.76773,
-    "HNL": 24.829999,
-    "HRK": 6.871657,
-    "HTG": 100.799995,
-    "HUF": 311.47572,
-    "IDR": 13703,
-    "ILS": 3.42377,
-    "IMP": 0.766374,
-    "INR": 71.329051,
-    "IQD": 1190,
-    "IRR": 42105,
-    "ISK": 127.009998,
-    "JEP": 0.766374,
-    "JMD": 141.432878,
-    "JOD": 0.709,
-    "JPY": 109.784,
-    "KES": 100.55,
-    "KGS": 69.850384,
-    "KHR": 4072.5,
-    "KMF": 454.049973,
-    "KPW": 900,
-    "KRW": 1184.1,
-    "KWD": 0.304856,
-    "KYD": 0.833445,
-    "KZT": 377.09212,
-    "LAK": 8905,
-    "LBP": 1513,
-    "LKR": 181.503437,
-    "LRD": 196.550012,
-    "LSL": 14.95,
-    "LYD": 1.410642,
-    "MAD": 9.7155,
-    "MDL": 17.700768,
-    "MGA": 3695,
-    "MKD": 56.769085,
-    "MMK": 1451.228971,
-    "MNT": 2753.021927,
-    "MOP": 8.001566,
-    "MRO": 357,
-    "MRU": 37.36,
-    "MUR": 37.196219,
-    "MVR": 15.46,
-    "MWK": 730,
-    "MXN": 18.6041,
-    "MYR": 4.1415,
-    "MZN": 64.315,
-    "NAD": 14.95,
-    "NGN": 363,
-    "NIO": 34.2,
-    "NOK": 9.252044,
-    "NPR": 114.072664,
-    "NZD": 1.552331,
-    "OMR": 0.384967,
-    "PAB": 1,
-    "PEN": 3.3845,
-    "PGK": 3.3805,
-    "PHP": 50.474614,
-    "PKR": 154.5,
-    "PLN": 3.917257,
-    "PYG": 6528.72128,
-    "QAR": 3.641,
-    "RON": 4.3957,
-    "RSD": 108.4,
-    "RUB": 63.6834,
-    "RWF": 930,
-    "SAR": 3.750697,
-    "SBD": 8.267992,
-    "SCR": 13.699755,
-    "SDG": 51.65,
-    "SEK": 9.67438,
-    "SGD": 1.389948,
-    "SHP": 0.766374,
-    "SLL": 7602.998519,
-    "SOS": 588,
-    "SRD": 7.458,
-    "SSP": 130.26,
-    "STD": 22052.77227,
-    "STN": 22.7,
-    "SVC": 8.7508,
-    "SYP": 514.99441,
-    "SZL": 14.95,
-    "THB": 31.108086,
-    "TJS": 9.696933,
-    "TMT": 3.5,
-    "TND": 2.8495,
-    "TOP": 2.314374,
-    "TRY": 6.0421,
-    "TTD": 6.762803,
-    "TWD": 30.012997,
-    "TZS": 2310.4,
-    "UAH": 24.466316,
-    "UGX": 3667.584274,
-    "USD": 1,
-    "UYU": 37.91418,
-    "UZS": 9535,
-    "VEF": 248487.642241,
-    "VES": 73438.206201,
-    "VND": 23277.520964,
-    "VUV": 117.897131,
-    "WST": 2.668169,
-    "XAF": 605.098485,
-    "XAG": 0.05666051,
-    "XAU": 0.00063428,
-    "XCD": 2.70255,
-    "XDR": 0.730412,
-    "XOF": 605.098485,
-    "XPD": 0.00041161,
-    "XPF": 110.079558,
-    "XPT": 0.00103094,
-    "YER": 250.349961,
-    "ZAR": 14.9448,
-    "ZMW": 14.697292,
-    "ZWL": 322.000001
-  }
-}
-        """.trimIndent()
-//        val moshi: Moshi = Moshi.Builder().build()
-//        val jsonAdapter: JsonAdapter<ApiEndPoint> = moshi.adapter(ApiEndPoint::class.java)
-//        val apiEndPoint: ApiEndPoint? = jsonAdapter.fromJson(json)
-//        val currencies = apiEndPoint?.exchangeRates?.currencies
+        setContentView(R.layout.activity_main_kt)
 
-        val retrofit: Retrofit = Retrofit.Builder().baseUrl("https://openexchangerates.org/").addConverterFactory(MoshiConverterFactory.create()).build()
-        val exchangeRatesService: ExchangeRatesService = retrofit.create(ExchangeRatesService::class.java)
-        exchangeRatesService.getExchangeRates("https://openexchangerates.org/api/latest.json?app_id=".plus("5904c71a4d15419c81ab69319355d331"))
-                .enqueue(object :Callback<ApiEndPoint> {
+        val retrofit: Retrofit = Retrofit.Builder()
+                .baseUrl("https://openexchangerates.org/")
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+        val exchangeRatesService: ExchangeRatesService = retrofit
+                .create(ExchangeRatesService::class.java)
+        exchangeRatesService
+                .getExchangeRates(getApiKey())
+                .enqueue(object : Callback<ApiEndPoint> {
                     override fun onFailure(call: Call<ApiEndPoint>, t: Throwable) {
-                        println(t.message)
+                        view_code.text = t.message
                     }
 
                     override fun onResponse(call: Call<ApiEndPoint>, response: Response<ApiEndPoint>) {
-                        println(response.body()?.exchangeRates?.currencies)
+                        view_code.append(response.code().toString())
+                        view_body.append(response.body()?.exchangeRates?.currencies.toString())
                     }
                 })
-
-
     }
 
+    private fun getApiKey(): String {
+        val apiKeys = resources.getStringArray(R.array.api_keys)
+        val random = Random().nextInt(apiKeys.size)
+        return apiKeys[random]
+    }
 
 }

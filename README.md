@@ -8,33 +8,20 @@ Currency conversion tool using live exchange rates.
 
 ## Demo
 <p float="left">
-  <img src="graphics/demos/demo_1.gif" hspace="10" width="250" />
-  <img src="graphics/demos/demo_2.gif" hspace="10" width="250" /> 
+
 </p>
 
 ## Features
-* Conversions use real time exchange rate values
-* Supports over 150 currencies
-* Simple Material Design
-* Languages: English/Spanish
-* Themes: Light/Dark
-* Swipe to delete
-* Drag to reorder
-* Filter by name
+
 
 ## Screenshots
-https://github.com/nicoqueijo/Android-Currency-Converter/tree/master/graphics/screenshots
+
 
 ## Flowchart
-<img src="graphics/flowcharts/app_launch_flowchart.png">
+
 
 ## Built with
-* <a href="https://developer.android.com/topic/libraries/architecture/room" target="_blank">Room</a> - Provides an abstraction layer over SQLite to allow fluent database access while harnessing the full power of SQLite.
-* <a href="https://developers.google.com/admob/android/quick-start" target="_blank">Google AdMob</a> - A mobile advertising platform that you can use to generate revenue from your app.
-* <a href="https://github.com/google/volley" target="_blank">Volley</a> - An HTTP library that makes networking for Android apps easier and, most importantly, faster.
-* <a href="https://github.com/google/gson" target="_blank">Gson</a> - A Java serialization/deserialization library to convert Java Objects into JSON and back.
-* <a href="https://github.com/bosphere/Android-FadingEdgeLayout" target="_blank">FadingEdgeLayout</a> - A versatile layout that fades its edges regardless of child view type.
-* <a href="https://github.com/turing-tech/MaterialScrollBar" target="_blank">MaterialScrollBar</a> - An Android library that brings the Material Design 5.1 scrollbar to pre-5.1 devices. Designed for Android's recyclerView.
+
 
 ## Acknowledgments
 * App icon made by Freepik from www.flaticon.com

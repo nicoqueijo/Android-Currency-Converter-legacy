@@ -27,4 +27,6 @@ class Currency(val currencyCode: String, val exchangeRate: Double) {
         const val CURRENCY_CODE_STARTING_INDEX = 4
     }
 
+    override fun toString() = "{$currencyCode : $exchangeRate}"
+
 }

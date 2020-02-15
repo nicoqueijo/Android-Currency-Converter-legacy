@@ -18,6 +18,8 @@ class ExchangeRates {
             return currencies
         }
 
+    override fun toString() = currencies.toString()
+
     @Json(name = "AED")
     internal var USD_AED: Double = 0.0
     @Json(name = "AFN")
