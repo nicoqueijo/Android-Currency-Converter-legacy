@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 class ApiEndPoint {
 
     @Json(name = "timestamp")
-    internal var timestamp: Long = 0L
+    internal var timestamp = 0L
 
     @Json(name = "rates")
     internal var exchangeRates: ExchangeRates? = null

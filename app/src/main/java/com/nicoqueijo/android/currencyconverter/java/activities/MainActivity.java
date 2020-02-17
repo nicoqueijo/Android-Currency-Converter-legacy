@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     /**
      * Extracts the exchange rates from the JSON object received from the API call using the GSON
      * library and saves them locally using a Room database. Deletes everything in the table
-     * first because apparently the insert statement doesn't replace existing values with new data.
+     * first because apparently the insert statement doesn't replace existing values with new data. To fix need to put: @Insert(onConflict = OnConflictStrategy.REPLACE)
      *
      * @param jsonObject the JSON object containing the exchange rates.
      */

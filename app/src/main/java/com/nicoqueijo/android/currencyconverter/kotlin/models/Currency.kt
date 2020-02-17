@@ -1,13 +1,26 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.models
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
-class Currency(val currencyCode: String, val exchangeRate: Double) {
+@Entity(tableName = "currency")
+class Currency(@PrimaryKey
+               @ColumnInfo(name = "currency_code")
+               val currencyCode: String,
+               @ColumnInfo(name = "exchange_rate")
+               val exchangeRate: Double) {
 
-    var conversionValue: BigDecimal = BigDecimal(0.0)
-    var isSelected: Boolean = false
+    @Ignore
+    var conversionValue = BigDecimal(0.0)
+    @ColumnInfo(name = "is_selected")
+    var isSelected = false
+    @ColumnInfo(name = "order")
+    var order = -1
 
-    val trimmedCurrencyCode: String
+    val trimmedCurrencyCode
         get() = currencyCode.substring(CURRENCY_CODE_STARTING_INDEX)
 
     override fun equals(other: Any?): Boolean {
@@ -18,15 +31,13 @@ class Currency(val currencyCode: String, val exchangeRate: Double) {
         return true
     }
 
-    override fun hashCode(): Int {
-        return currencyCode.hashCode()
-    }
-
-    companion object {
-        val TAG = Currency::class.java.simpleName
-        const val CURRENCY_CODE_STARTING_INDEX = 4
-    }
+    override fun hashCode() = currencyCode.hashCode()
 
     override fun toString() = "{$currencyCode : $exchangeRate}"
+
+    companion object {
+        val TAG: String = Currency::class.java.simpleName
+        const val CURRENCY_CODE_STARTING_INDEX = 4
+    }
 
 }

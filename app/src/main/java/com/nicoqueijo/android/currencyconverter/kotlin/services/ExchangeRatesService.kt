@@ -5,6 +5,8 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+// https://openexchangerates.org/api/latest.json?app_id={app_id}
+
 interface ExchangeRatesService {
 
     @GET("api/latest.json")

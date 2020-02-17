@@ -22,8 +22,10 @@ public abstract class CurrencyDatabase extends RoomDatabase {
     public static synchronized CurrencyDatabase getInstance(Context context) {
         if (mInstance == null) {
             mInstance = Room.databaseBuilder(context.getApplicationContext(),
-                    CurrencyDatabase.class, DATABASE_NAME).allowMainThreadQueries()
-                    .fallbackToDestructiveMigration().build();
+                    CurrencyDatabase.class, DATABASE_NAME)
+                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
         return mInstance;
     }
