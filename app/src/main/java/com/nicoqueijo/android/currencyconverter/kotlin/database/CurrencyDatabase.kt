@@ -25,7 +25,6 @@ abstract class CurrencyDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context): CurrencyDatabase {
             return Room.databaseBuilder(context, CurrencyDatabase::class.java, DATABASE_NAME)
-                    .allowMainThreadQueries() // Remove this later
                     .build()
         }
     }

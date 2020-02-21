@@ -1,17 +1,17 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.views
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.database.CurrencyDatabase
-import com.nicoqueijo.android.currencyconverter.kotlin.models.ApiEndPoint
-import com.nicoqueijo.android.currencyconverter.kotlin.services.ExchangeRatesService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import com.nicoqueijo.android.currencyconverter.kotlin.services.RetrofitFactory
+import kotlinx.android.synthetic.main.activity_main_kt.*
+import kotlinx.coroutines.*
 import java.util.*
+
+
+const val TAG = "MeinActiviti"
 
 class MainActivity_kt : AppCompatActivity() {
 
@@ -19,35 +19,73 @@ class MainActivity_kt : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
 
-        val currencyDatabase: CurrencyDatabase = CurrencyDatabase.getInstance(applicationContext)
-        val dao = currencyDatabase.currencyDao()
-        val currencies = dao.getAllCurrencies()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            Log.d(TAG, "${Thread.currentThread()}")
+//            val response = RetrofitFactory
+//                    .getRetrofitService()
+//                    .getExchangeRates(getApiKey())
+//
+//            withContext(Dispatchers.Main) {
+//                Log.d(TAG, "${Thread.currentThread()}")
+//                if (response.isSuccessful) {
+//                    view_body.text = response
+//                            .body()
+//                            ?.exchangeRates
+//                            .toString()
+//                } else {
+//                    view_body.text = getString(R.string.error_description)
+//                }
+//            }
+//        }
 
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d(TAG, "${Thread.currentThread()}")
+            val response = CurrencyDatabase
+                    .getInstance(applicationContext)
+                    .currencyDao()
+                    .getAllCurrencies()
+                    .toString()
 
-        val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl("https://openexchangerates.org/")
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
-        val exchangeRatesService: ExchangeRatesService = retrofit
-                .create(ExchangeRatesService::class.java)
-        exchangeRatesService
-                .getExchangeRates(getApiKey())
-                .enqueue(object : Callback<ApiEndPoint> {
-                    override fun onResponse(call: Call<ApiEndPoint>, response: Response<ApiEndPoint>) {
+            withContext(Dispatchers.Main) {
+                Log.d(TAG, "${Thread.currentThread()}")
+                view_body.text = response
+            }
+        }
 
-                        response.body()?.exchangeRates?.currencies
-                        response.body()?.exchangeRates?.currencies
+//        CoroutineScope(Dispatchers.Main).launch {
+//            Log.d(TAG, "${Thread.currentThread()}")
+//            mockNetworkCall()
+//            view_body.text = "HELLO WORLD"
+//        }
 
-//                        view_code.append(response.code().toString())
-//                        view_body.append(response.body()?.exchangeRates?.currencies.toString())
-                    }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            Log.d(TAG, "Operation: db calls. Thread: ${Thread.currentThread()}")
+//            val currencyDatabase: CurrencyDatabase = CurrencyDatabase.getInstance(applicationContext)
+//            val dao = currencyDatabase.currencyDao()
+//            val currencies = dao.getAllCurrencies()
+//            CoroutineScope(Dispatchers.Main).launch {
+//                Log.d(TAG, "Operation: UI updated. Thread: ${Thread.currentThread()}")
+//                view_body.text = currencies.toString()
+//            }
+//        }
 
-                    override fun onFailure(call: Call<ApiEndPoint>, t: Throwable) {
+//        CoroutineScope(Dispatchers.Main).launch {
+//            println("Operation: call to getExchangeRatesFromServer(). Thread: ${Thread.currentThread()}")
+//            getExchangeRatesFromServer()
+//        }
 
+    }
 
-//                        view_code.text = t.message
-                    }
-                })
+    private suspend fun mockNetworkCall() {
+        runBlocking {
+            Log.d(TAG, "${Thread.currentThread()}")
+            delay(2000)
+        }
+    }
+
+    private suspend fun getExchangeRatesFromServer() = withContext(Dispatchers.IO) {
+        Log.d(TAG, "Operation: db calls. Thread: ${Thread.currentThread()}")
+        val response = RetrofitFactory.getRetrofitService().getExchangeRates(getApiKey())
     }
 
     private fun getApiKey(): String {

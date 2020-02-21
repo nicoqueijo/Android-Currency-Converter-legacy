@@ -10,11 +10,11 @@ import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
 interface CurrencyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert(currency: Currency?)
+    suspend fun upsert(currency: Currency?)
 
     @Query("SELECT * FROM currency ORDER BY 'currency_code' ASC")
-    fun getAllCurrencies(): List<Currency>
+    suspend fun getAllCurrencies(): List<Currency>
 
     @Query("SELECT * FROM currency WHERE is_selected = 'true' ORDER BY 'order' ASC")
-    fun getActiveCurrencies(): List<Currency>
+    suspend fun getActiveCurrencies(): List<Currency>
 }
