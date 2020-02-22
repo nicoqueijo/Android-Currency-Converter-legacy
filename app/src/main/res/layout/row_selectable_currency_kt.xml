@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.nicoqueijo.android.currencyconverter.java.helpers.Utility" />
+
+        <variable
+            name="currency"
+            type="com.nicoqueijo.android.currencyconverter.java.models.Currency" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="?android:colorBackground"
+        android:clickable="@{!currency.selected}"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="50dp"
+            android:layout_height="37dp"
+            app:cardCornerRadius="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/flag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@{Utility.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
+                tools:src="@drawable/usd_usd" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/currency_code"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="bottom"
+            android:paddingLeft="16dp"
+            android:text="@{currency.trimmedCurrencyCode}"
+            android:textColor="?attr/text_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/currency_name"
+            app:layout_constraintEnd_toStartOf="@+id/check_mark"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="USD" />
+
+        <TextView
+            android:id="@+id/currency_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ellipsize="end"
+            android:gravity="top"
+            android:paddingLeft="16dp"
+            android:singleLine="true"
+            android:text="@{Utility.getStringResourceByName(currency.currencyCode, context)}"
+            android:textColor="?attr/text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/check_mark"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/currency_code"
+            tools:text="United States Dollar" />
+
+        <ImageView
+            android:id="@+id/check_mark"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_check"
+            android:visibility="@{currency.selected ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

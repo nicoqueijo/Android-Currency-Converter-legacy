@@ -92,7 +92,7 @@ public class SourceCodeFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent sourceCodeIntent = new Intent(Intent.ACTION_VIEW);
-        sourceCodeIntent.setData(Uri.parse("https://github.com/nicoqueijo"));
+        sourceCodeIntent.setData(Uri.parse("https://github.com/nicoqueijo/Android-Currency-Converter"));
         Intent sourceCodeChooser = Intent.createChooser(sourceCodeIntent,
                 getString(R.string.launch_browser));
         startActivity(sourceCodeChooser);

@@ -38,19 +38,19 @@ class MainActivity_kt : AppCompatActivity() {
 //            }
 //        }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d(TAG, "${Thread.currentThread()}")
-            val response = CurrencyDatabase
-                    .getInstance(applicationContext)
-                    .currencyDao()
-                    .getAllCurrencies()
-                    .toString()
-
-            withContext(Dispatchers.Main) {
-                Log.d(TAG, "${Thread.currentThread()}")
-                view_body.text = response
-            }
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            Log.d(TAG, "${Thread.currentThread()}")
+//            val response = CurrencyDatabase
+//                    .getInstance(applicationContext)
+//                    .currencyDao()
+//                    .getAllCurrencies()
+//                    .toString()
+//
+//            withContext(Dispatchers.Main) {
+//                Log.d(TAG, "${Thread.currentThread()}")
+//                view_body.text = response
+//            }
+//        }
 
 //        CoroutineScope(Dispatchers.Main).launch {
 //            Log.d(TAG, "${Thread.currentThread()}")

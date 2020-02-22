@@ -4,7 +4,7 @@
 
     <!-- UI components -->
     <string name="app_name">Currency Converter</string>
-    <string name="convert">Convert</string>
+    <string name="convert">Converter</string>
     <string name="share">Share</string>
     <string name="language">Language</string>
     <string name="rate_app">Rate App</string>
@@ -220,5 +220,8 @@
         <item>USD_XPD</item>
         <item>USD_XPT</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

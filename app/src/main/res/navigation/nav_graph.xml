@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loadingCurrenciesFragment_kt">
+    <fragment
+        android:id="@+id/activeCurrenciesFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.ActiveCurrenciesFragment_kt"
+        android:label="ActiveCurrenciesFragment_kt" >
+        <action
+            android:id="@+id/action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt"
+            app:destination="@id/selectableCurrenciesFragment_kt" />
+    </fragment>
+    <fragment
+        android:id="@+id/loadingCurrenciesFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.LoadingCurrenciesFragment_kt"
+        android:label="LoadingCurrenciesFragment_kt" >
+        <action
+            android:id="@+id/action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt"
+            app:destination="@id/activeCurrenciesFragment_kt" />
+        <action
+            android:id="@+id/action_loadingCurrenciesFragment_kt_to_errorFragment_kt"
+            app:destination="@id/errorFragment_kt" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectableCurrenciesFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SelectableCurrenciesFragment_kt"
+        android:label="SelectableCurrenciesFragment_kt" />
+    <fragment
+        android:id="@+id/sourceCodeFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SourceCodeFragment_kt"
+        android:label="SourceCodeFragment_kt" />
+    <fragment
+        android:id="@+id/errorFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.ErrorFragment_kt"
+        android:label="ErrorFragment_kt" />
+</navigation>
