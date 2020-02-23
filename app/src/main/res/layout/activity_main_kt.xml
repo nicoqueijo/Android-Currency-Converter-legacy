@@ -78,6 +78,14 @@
             app:itemTextColor="?attr/text_color"
             app:menu="@menu/drawer_view_kt">
 
+            <TextView
+                android:padding="8dp"
+                android:gravity="center"
+                android:text="Last updated: 2020-02-21 13:45"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>

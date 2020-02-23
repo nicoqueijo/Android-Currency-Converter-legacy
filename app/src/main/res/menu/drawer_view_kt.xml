@@ -6,22 +6,12 @@
         android:id="@+id/nav_group_fragments"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_item_convert"
-            android:checked="true"
+            android:id="@+id/activeCurrenciesFragment_kt"
             android:icon="@drawable/ic_convert"
             android:title="@string/convert" />
         <item
-            android:id="@+id/nav_item_source_code"
+            android:id="@+id/sourceCodeFragment_kt"
             android:icon="@drawable/ic_source_code"
             android:title="@string/source_code" />
-    </group>
-    <group
-        android:id="@+id/nav_group_footer"
-        android:checkableBehavior="none">
-        <item
-            android:id="@+id/nav_item_last_updated"
-            android:checkable="false"
-            tools:title="Last updated: 2020-02-21 13:45"
-            android:title="Last updated: 2020-02-21 13:45" />
     </group>
 </menu>
