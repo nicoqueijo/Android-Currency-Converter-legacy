@@ -4,7 +4,7 @@
 
     <!-- UI components -->
     <string name="app_name">Convertidor de Moneda</string>
-    <string name="convert">Convertir</string>
+    <string name="converter">Convertir</string>
     <string name="share">Compartir</string>
     <string name="language">Idioma</string>
     <string name="rate_app">Calificar Aplicacion</string>

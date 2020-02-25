@@ -8,7 +8,7 @@
         <item
             android:id="@+id/activeCurrenciesFragment_kt"
             android:icon="@drawable/ic_convert"
-            android:title="@string/convert" />
+            android:title="@string/converter" />
         <item
             android:id="@+id/sourceCodeFragment_kt"
             android:icon="@drawable/ic_source_code"

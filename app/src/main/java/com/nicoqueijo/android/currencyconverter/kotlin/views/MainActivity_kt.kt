@@ -43,6 +43,12 @@ class MainActivity_kt : AppCompatActivity() {
         navController = findNavController(R.id.content_frame_kt)
         nav_view_menu_kt.setupWithNavController(navController)
 
+
+//        MobileAds.initialize(this, resources.getString(R.string.app_id))
+//        val adView = findViewById<AdView>(R.id.banner_ad_kt)
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
+
 //        setupActionBarWithNavController(navController, drawer_layout_kt)
 
 //        CoroutineScope(Dispatchers.IO).launch {
@@ -115,7 +121,7 @@ class MainActivity_kt : AppCompatActivity() {
 
     companion object {
         suspend fun mockExpensiveCall() {
-            delay(2000)
+            delay(500)
         }
     }
 }

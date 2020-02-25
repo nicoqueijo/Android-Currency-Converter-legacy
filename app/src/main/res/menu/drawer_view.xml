@@ -9,7 +9,7 @@
             android:id="@+id/nav_item_convert"
             android:checked="true"
             android:icon="@drawable/ic_convert"
-            android:title="@string/convert" />
+            android:title="@string/converter" />
         <item
             android:id="@+id/nav_item_source_code"
             android:icon="@drawable/ic_source_code"
