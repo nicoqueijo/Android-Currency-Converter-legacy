@@ -2,11 +2,12 @@ package com.nicoqueijo.android.currencyconverter.kotlin.views
 
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.services.RetrofitFactory
@@ -23,6 +24,8 @@ class MainActivity_kt : AppCompatActivity() {
 
     lateinit var navController: NavController
     lateinit var toolbar: Toolbar
+    lateinit var drawerLayout: DrawerLayout
+    lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +33,17 @@ class MainActivity_kt : AppCompatActivity() {
 
         toolbar = findViewById(R.id.toolbar_kt)
         setSupportActionBar(toolbar)
+        drawerLayout = findViewById(R.id.drawer_layout_kt)
+        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.nav_drawer_open, R.string.nav_drawer_close) {
+        }
+        actionBarDrawerToggle.syncState()
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+
         navController = findNavController(R.id.content_frame_kt)
         nav_view_menu_kt.setupWithNavController(navController)
-        setupActionBarWithNavController(navController, drawer_layout_kt)
 
+//        setupActionBarWithNavController(navController, drawer_layout_kt)
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            Log.d(TAG, "${Thread.currentThread()}")
