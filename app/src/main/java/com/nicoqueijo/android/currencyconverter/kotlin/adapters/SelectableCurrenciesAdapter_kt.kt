@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 // Also implement Filterable and INameableAdapter
-class SelectableCurrenciesAdapter : RecyclerView.Adapter<SelectableCurrenciesAdapter.ViewHolder>() {
+class SelectableCurrenciesAdapter_kt : RecyclerView.Adapter<SelectableCurrenciesAdapter_kt.ViewHolder>() {
 
     val list = listOf("One", "Two", "Three")
 
