@@ -6,17 +6,17 @@
     android:background="?android:colorBackground">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_selectable_currencies"
+        android:id="@+id/recycler_view_selectable_currencies_kt"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <com.turingtechnologies.materialscrollbar.DragScrollBar
-        android:id="@+id/drag_scroll_bar"
+        android:id="@+id/drag_scroll_bar_kt"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         app:msb_lightOnTouch="false"
-        app:msb_recyclerView="@id/recycler_view_selectable_currencies" />
+        app:msb_recyclerView="@id/recycler_view_selectable_currencies_kt" />
 
 </RelativeLayout>
 

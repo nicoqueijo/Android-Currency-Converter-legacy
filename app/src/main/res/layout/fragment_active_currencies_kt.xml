@@ -6,7 +6,7 @@
     android:background="?android:colorBackground">
 
     <LinearLayout
-        android:id="@+id/container_empty_list"
+        android:id="@+id/container_empty_list_kt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -44,14 +44,14 @@
     </LinearLayout>
 
     <com.bosphere.fadingedgelayout.FadingEdgeLayout
-        android:id="@+id/fading_edge_layout"
+        android:id="@+id/fading_edge_layout_kt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fel_edge="bottom"
         app:fel_size_bottom="86dp">
 
         <com.nicoqueijo.android.currencyconverter.kotlin.views.CustomRecyclerView_kt
-            android:id="@+id/recycler_view_active_currencies"
+            android:id="@+id/recycler_view_active_currencies_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -60,7 +60,7 @@
     </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/floating_action_button_kt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"

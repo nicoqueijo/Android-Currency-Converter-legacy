@@ -3,12 +3,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
+    android:id="@+id/main_layout_kt"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_kt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
@@ -21,13 +21,13 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+        android:id="@+id/drawer_layout_kt"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_kt"
         tools:context=".java.activities.MainActivity"
         tools:openDrawer="start">
 
@@ -40,19 +40,19 @@
                 android:layout_height="match_parent">
 
                 <fragment
-                    android:id="@+id/content_frame"
+                    android:id="@+id/content_frame_kt"
                     android:name="androidx.navigation.fragment.NavHostFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:defaultNavHost="true"
-                    app:layout_constraintBottom_toTopOf="@+id/banner_ad"
+                    app:layout_constraintBottom_toTopOf="@+id/banner_ad_kt"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:navGraph="@navigation/nav_graph" />
 
                 <com.google.android.gms.ads.AdView
-                    android:id="@+id/banner_ad"
+                    android:id="@+id/banner_ad_kt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -61,14 +61,14 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/content_frame" />
+                    app:layout_constraintTop_toBottomOf="@id/content_frame_kt" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view_menu"
+            android:id="@+id/nav_view_menu_kt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"

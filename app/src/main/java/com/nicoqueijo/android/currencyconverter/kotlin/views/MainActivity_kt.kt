@@ -3,11 +3,17 @@ package com.nicoqueijo.android.currencyconverter.kotlin.views
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.database.CurrencyDatabase
 import com.nicoqueijo.android.currencyconverter.kotlin.services.RetrofitFactory
 import kotlinx.android.synthetic.main.activity_main_kt.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -15,9 +21,19 @@ const val TAG = "MeinActiviti"
 
 class MainActivity_kt : AppCompatActivity() {
 
+    lateinit var navController: NavController
+    lateinit var toolbar: Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
+
+        toolbar = findViewById(R.id.toolbar_kt)
+        setSupportActionBar(toolbar)
+        navController = findNavController(R.id.content_frame_kt)
+        nav_view_menu_kt.setupWithNavController(navController)
+        setupActionBarWithNavController(navController, drawer_layout_kt)
+
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            Log.d(TAG, "${Thread.currentThread()}")
@@ -76,13 +92,6 @@ class MainActivity_kt : AppCompatActivity() {
 
     }
 
-    private suspend fun mockNetworkCall() {
-        runBlocking {
-            Log.d(TAG, "${Thread.currentThread()}")
-            delay(2000)
-        }
-    }
-
     private suspend fun getExchangeRatesFromServer() = withContext(Dispatchers.IO) {
         Log.d(TAG, "Operation: db calls. Thread: ${Thread.currentThread()}")
         val response = RetrofitFactory.getRetrofitService().getExchangeRates(getApiKey())
@@ -92,5 +101,11 @@ class MainActivity_kt : AppCompatActivity() {
         val apiKeys = resources.getStringArray(R.array.api_keys)
         val random = Random().nextInt(apiKeys.size)
         return apiKeys[random]
+    }
+
+    companion object {
+        suspend fun mockExpensiveCall() {
+            delay(2000)
+        }
     }
 }

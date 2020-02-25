@@ -25,7 +25,7 @@
         android:paddingBottom="8dp">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/cardView_kt"
             android:layout_width="50dp"
             android:layout_height="37dp"
             app:cardCornerRadius="2dp"
@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/flag"
+                android:id="@+id/flag_kt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
@@ -44,7 +44,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/currency_code"
+            android:id="@+id/currency_code_kt"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fontFamily="sans-serif-medium"
@@ -53,15 +53,15 @@
             android:text="@{currency.trimmedCurrencyCode}"
             android:textColor="?attr/text_color"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/currency_name"
-            app:layout_constraintEnd_toStartOf="@+id/check_mark"
+            app:layout_constraintBottom_toTopOf="@+id/currency_name_kt"
+            app:layout_constraintEnd_toStartOf="@+id/check_mark_kt"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintStart_toEndOf="@+id/cardView_kt"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="USD" />
 
         <TextView
-            android:id="@+id/currency_name"
+            android:id="@+id/currency_name_kt"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:ellipsize="end"
@@ -72,14 +72,14 @@
             android:textColor="?attr/text_color"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/check_mark"
+            app:layout_constraintEnd_toStartOf="@+id/check_mark_kt"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/currency_code"
+            app:layout_constraintStart_toEndOf="@+id/cardView_kt"
+            app:layout_constraintTop_toBottomOf="@+id/currency_code_kt"
             tools:text="United States Dollar" />
 
         <ImageView
-            android:id="@+id/check_mark"
+            android:id="@+id/check_mark_kt"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_check"

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <group
-        android:id="@+id/nav_group_fragments"
+        android:id="@+id/nav_group_fragments_kt"
         android:checkableBehavior="single">
         <item
             android:id="@+id/activeCurrenciesFragment_kt"

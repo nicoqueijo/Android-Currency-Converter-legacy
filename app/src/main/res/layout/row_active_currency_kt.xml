@@ -17,7 +17,7 @@
         android:layout_height="56dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/row_background"
+            android:id="@+id/row_background_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/red"
@@ -27,7 +27,7 @@
             android:paddingBottom="8dp">
 
             <ImageView
-                android:id="@+id/delete_icon_start"
+                android:id="@+id/delete_icon_start_kt"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_delete"
@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/delete_icon_end"
+                android:id="@+id/delete_icon_end_kt"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_delete"
@@ -47,7 +47,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/row_foreground"
+            android:id="@+id/row_foreground_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_item_ripple"
@@ -58,7 +58,7 @@
             android:paddingBottom="8dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/flag_card"
+                android:id="@+id/flag_card_kt"
                 android:layout_width="50dp"
                 android:layout_height="37dp"
                 app:cardCornerRadius="2dp"
@@ -67,7 +67,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/flag"
+                    android:id="@+id/flag_kt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
@@ -77,7 +77,7 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/currency_code"
+                android:id="@+id/currency_code_kt"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
@@ -86,12 +86,12 @@
                 android:textColor="?attr/text_color"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/flag_card"
+                app:layout_constraintStart_toEndOf="@+id/flag_card_kt"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="USD" />
 
             <com.nicoqueijo.android.currencyconverter.java.helpers.CustomEditText
-                android:id="@+id/conversion_value"
+                android:id="@+id/conversion_value_kt"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@android:color/transparent"
@@ -104,7 +104,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/currency_code"
+                app:layout_constraintStart_toEndOf="@+id/currency_code_kt"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
