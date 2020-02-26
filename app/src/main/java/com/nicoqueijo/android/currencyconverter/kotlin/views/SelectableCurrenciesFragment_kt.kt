@@ -1,14 +1,16 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.views
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.adapters.SelectableCurrenciesAdapter_kt
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
 
@@ -17,6 +19,7 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar
 class SelectableCurrenciesFragment_kt : Fragment() {
 
     lateinit var toolbar: Toolbar
+    lateinit var adapter: SelectableCurrenciesAdapter_kt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +30,46 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_selectable_currency_kt, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_selectable_currencies_kt)
-//        val dragScrollBar = view.findViewById<DragScrollBar>(R.id.drag_scroll_bar_kt)
-//        dragScrollBar.setIndicator(AlphabetIndicator(context), true)
-        // init adapter
-        val layoutManager = LinearLayoutManager(context)
+        initAdaptersAndListeners(view)
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        initMenu(menu, inflater)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        toolbar.menu.removeItem(R.id.search)
+    }
+
+    private fun initAdaptersAndListeners(view: View) {
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
+//        val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
+//        dragScrollBar.setIndicator(AlphabetIndicator(context), true)
+        adapter = SelectableCurrenciesAdapter_kt(context, MainActivity_kt.currencies)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context,
+                DividerItemDecoration.VERTICAL))
+    }
+
+    private fun initMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search_kt, menu)
+        val searchView = menu.findItem(R.id.search_kt).actionView as SearchView
+        searchView.imeOptions = EditorInfo.IME_ACTION_GO
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+//                adapter.getFilter().filter(newText)
+                return false
+            }
+        })
     }
 
 }

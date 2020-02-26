@@ -39,7 +39,13 @@
         android:id="@+id/selectableCurrenciesFragment_kt"
         android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SelectableCurrenciesFragment_kt"
         android:label="SelectableCurrenciesFragment_kt"
-        tools:layout="@layout/fragment_selectable_currency_kt" />
+        tools:layout="@layout/fragment_selectable_currency_kt">
+        <action
+            android:id="@+id/action_selectableCurrenciesFragment_kt_to_activeCurrenciesFragment_kt"
+            app:destination="@id/activeCurrenciesFragment_kt"
+            app:popUpTo="@+id/activeCurrenciesFragment_kt"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/sourceCodeFragment_kt"
         android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SourceCodeFragment_kt"
