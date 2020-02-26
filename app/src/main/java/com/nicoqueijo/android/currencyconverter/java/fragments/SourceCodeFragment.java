@@ -122,7 +122,7 @@ public class SourceCodeFragment extends Fragment implements
         webViewSettings.setJavaScriptEnabled(true);
         webViewSettings.setBuiltInZoomControls(true);
         webViewSettings.setDisplayZoomControls(false);
-        mWebView.loadUrl("https://github.com/nicoqueijo");
+        mWebView.loadUrl("https://github.com/nicoqueijo/Android-Currency-Converter");
         mWebView.getViewTreeObserver().addOnScrollChangedListener(this);
     }
 

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -28,10 +29,11 @@ const val TAG = "MeinActiviti"
 
 class MainActivity_kt : AppCompatActivity() {
 
-    var interstitialAd: InterstitialAd? = null
-    lateinit var navController: NavController
-    lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-    lateinit var closeAppToast: Toast
+    private var interstitialAd: InterstitialAd? = null
+    internal lateinit var drawerLayout: DrawerLayout
+    private lateinit var navController: NavController
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private lateinit var closeAppToast: Toast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,14 +72,15 @@ class MainActivity_kt : AppCompatActivity() {
     @SuppressLint("ShowToast")
     private fun initViews() {
         setSupportActionBar(toolbar_kt)
+        drawerLayout = findViewById(R.id.drawer_layout_kt)
         initListeners()
-        drawer_layout_kt.addDrawerListener(actionBarDrawerToggle)
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
         closeAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT)
     }
 
     private fun initListeners() {
-        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawer_layout_kt, toolbar_kt,
+        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar_kt,
                 R.string.nav_drawer_open, R.string.nav_drawer_close) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
@@ -93,8 +96,8 @@ class MainActivity_kt : AppCompatActivity() {
 
     // Restore this method when I have the navigation/backstack figured out
 //    override fun onBackPressed() {
-//        if (drawer_layout_kt.isDrawerOpen(GravityCompat.START)) {
-//            drawer_layout_kt.closeDrawer(GravityCompat.START)
+//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            drawerLayout.closeDrawer(GravityCompat.START)
 ////        } else if (mFragmentManager.getBackStackEntryCount() > 0) {
 ////            mFragmentManager.popBackStack()
 //        } else if (!closeAppToast.view.isShown) {

@@ -39,10 +39,11 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         initMenu(menu, inflater)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        toolbar.menu.removeItem(R.id.search)
-    }
+    // This might not be needed. Test to confirm.
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        toolbar.menu.removeItem(R.id.search)
+//    }
 
     private fun initAdaptersAndListeners(view: View) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
