@@ -32,6 +32,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
 
         override fun onClick(v: View?) {
             v?.findNavController()?.popBackStack()
+//            v?.findNavController()?.navigate(R.id.action_selectableCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
         }
     }
 

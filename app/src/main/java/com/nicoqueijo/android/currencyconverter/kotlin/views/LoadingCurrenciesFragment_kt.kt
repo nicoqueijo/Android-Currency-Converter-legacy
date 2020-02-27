@@ -25,8 +25,12 @@ class LoadingCurrenciesFragment_kt : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         CoroutineScope(Dispatchers.Main).launch {
             MainActivity_kt.mockExpensiveCall()
-//            findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
-            findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
+            val random = java.util.Random().nextBoolean()
+            if (random) {
+                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
+            } else {
+                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
+            }
         }
     }
 
