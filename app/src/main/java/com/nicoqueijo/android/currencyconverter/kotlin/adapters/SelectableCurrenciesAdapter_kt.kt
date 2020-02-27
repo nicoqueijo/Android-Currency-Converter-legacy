@@ -31,7 +31,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
         var checkMark: ImageView = itemView.findViewById(R.id.check_mark_kt)
 
         override fun onClick(v: View?) {
-            v?.findNavController()?.navigate(R.id.action_selectableCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
+            v?.findNavController()?.popBackStack()
         }
     }
 

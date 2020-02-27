@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapters.ActiveCurrenciesAdapter_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.utils.CustomRecyclerView_kt
 
 class ActiveCurrenciesFragment_kt : Fragment() {
 

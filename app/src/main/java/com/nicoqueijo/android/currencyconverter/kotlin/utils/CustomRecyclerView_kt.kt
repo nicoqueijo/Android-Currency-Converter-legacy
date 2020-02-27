@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.views
+package com.nicoqueijo.android.currencyconverter.kotlin.utils
 
 import android.content.Context
 import android.util.AttributeSet

@@ -50,7 +50,7 @@
         app:fel_edge="bottom"
         app:fel_size_bottom="86dp">
 
-        <com.nicoqueijo.android.currencyconverter.kotlin.views.CustomRecyclerView_kt
+        <com.nicoqueijo.android.currencyconverter.kotlin.utils.CustomRecyclerView_kt
             android:id="@+id/recycler_view_active_currencies_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

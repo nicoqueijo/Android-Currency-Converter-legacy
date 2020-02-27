@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nicoqueijo.android.currencyconverter.R
 import kotlinx.android.synthetic.main.activity_main_kt.*

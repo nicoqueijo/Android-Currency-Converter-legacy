@@ -11,11 +11,7 @@
         tools:layout="@layout/fragment_active_currencies_kt">
         <action
             android:id="@+id/action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt"
-            app:destination="@id/selectableCurrenciesFragment_kt"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_close_exit"
-            app:popEnterAnim="@anim/fragment_open_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
+            app:destination="@id/selectableCurrenciesFragment_kt" />
     </fragment>
     <fragment
         android:id="@+id/loadingCurrenciesFragment_kt"
@@ -25,13 +21,11 @@
         <action
             android:id="@+id/action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt"
             app:destination="@id/activeCurrenciesFragment_kt"
-            app:enterAnim="@anim/fragment_fade_enter"
             app:popUpTo="@+id/loadingCurrenciesFragment_kt"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loadingCurrenciesFragment_kt_to_errorFragment_kt"
             app:destination="@id/errorFragment_kt"
-            app:enterAnim="@anim/fragment_fade_enter"
             app:popUpTo="@+id/loadingCurrenciesFragment_kt"
             app:popUpToInclusive="true" />
     </fragment>
@@ -39,18 +33,13 @@
         android:id="@+id/selectableCurrenciesFragment_kt"
         android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SelectableCurrenciesFragment_kt"
         android:label="SelectableCurrenciesFragment_kt"
-        tools:layout="@layout/fragment_selectable_currency_kt">
-        <action
-            android:id="@+id/action_selectableCurrenciesFragment_kt_to_activeCurrenciesFragment_kt"
-            app:destination="@id/activeCurrenciesFragment_kt"
-            app:popUpTo="@+id/activeCurrenciesFragment_kt"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_selectable_currency_kt" />
     <fragment
         android:id="@+id/sourceCodeFragment_kt"
         android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SourceCodeFragment_kt"
         android:label="SourceCodeFragment_kt"
         tools:layout="@layout/fragment_source_code_kt" />
+
     <fragment
         android:id="@+id/errorFragment_kt"
         android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.ErrorFragment_kt"
@@ -58,7 +47,6 @@
         tools:layout="@layout/fragment_error_kt">
         <action
             android:id="@+id/action_errorFragment_kt_to_loadingCurrenciesFragment_kt"
-            app:destination="@id/loadingCurrenciesFragment_kt"
-            app:enterAnim="@anim/fragment_close_enter" />
+            app:destination="@id/loadingCurrenciesFragment_kt" />
     </fragment>
 </navigation>
