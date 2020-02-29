@@ -40,7 +40,8 @@ class MainActivity_kt : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             currencies = withContext(Dispatchers.Main) {
-                repository.getAllCurrencies()
+//                repository.getAllCurrencies()
+                repository.getActiveCurrencies()
             }
             val something = 9
         }

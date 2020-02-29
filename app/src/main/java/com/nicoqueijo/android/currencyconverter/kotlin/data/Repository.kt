@@ -15,12 +15,10 @@ const val NO_DATA = 0L
 
 class Repository(private val context: Context) {
 
+    private val retrofitService = RetrofitFactory.getRetrofitService()
+    private val currencyDao = CurrencyDatabase.getInstance(context).currencyDao()
     private val sharedPrefsProperties = context
             .getSharedPreferences(context.packageName.plus(".properties"), Context.MODE_PRIVATE)
-
-    private val currencyDao = CurrencyDatabase.getInstance(context).currencyDao()
-
-    private val retrofitService = RetrofitFactory.getRetrofitService()
 
     private val timeSinceLastUpdate: Long
         get() {
