@@ -3,12 +3,15 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 import android.content.Context
 import android.net.ConnectivityManager
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import retrofit2.Response
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.util.*
 
 const val TWENTY_FOUR_HOURS = 86400000L
-const val NO_DATA = -1L
+const val NO_DATA = 0L
 
 class Repository(private val context: Context) {
 
@@ -21,7 +24,7 @@ class Repository(private val context: Context) {
 
     private val timeSinceLastUpdate: Long
         get() {
-            val lastUpdateTime = sharedPrefsProperties.getLong("timestamp", NO_DATA)
+            val lastUpdateTime = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
             return if (lastUpdateTime != NO_DATA) {
                 System.currentTimeMillis() - lastUpdateTime
             } else {
@@ -29,28 +32,37 @@ class Repository(private val context: Context) {
             }
         }
 
-    internal fun getAllCurrencies(): List<Currency> {
+    internal suspend fun getAllCurrencies(): List<Currency> {
         if (isNetworkAvailable() &&
                 (timeSinceLastUpdate > TWENTY_FOUR_HOURS ||
                         timeSinceLastUpdate == NO_DATA)) {
-            val retrofitResponse = retrofitService.getExchangeRates(getApiKey())
+            val retrofitResponse: Response<ApiEndPoint>
+            try {
+                retrofitResponse = retrofitService.getExchangeRates(getApiKey())
+            } catch (e: SocketTimeoutException) {
+                throw SocketTimeoutException("Network request timed out.")
+            }
             if (retrofitResponse.isSuccessful) {
+                sharedPrefsProperties.edit()
+                        .putLong("timestamp", retrofitResponse.body()!!.timestamp)
+                        .apply()
+                retrofitResponse.body()?.timestamp
                 retrofitResponse.body()?.exchangeRates?.currencies?.forEach {
                     currencyDao.upsert(it)
                 }
             } else {
-                // We made a retrofit call but response wasn't in the 200s
-                throw IOException(retrofitResponse.errorBody().toString())
+                // Retrofit call executed but response wasn't in the 200s
+                throw IOException(retrofitResponse.errorBody()?.string())
             }
             return currencyDao.getAllCurrencies()
-        } else if (timeSinceLastUpdate == NO_DATA) {
+        } else if (timeSinceLastUpdate != NO_DATA) {
             return currencyDao.getAllCurrencies()
         } else {
-            throw IOException("Network unavailable and no local data found.")
+            throw IOException("Network is unavailable and no local data found.")
         }
     }
 
-    internal fun getActiveCurrencies(): List<Currency> {
+    internal suspend fun getActiveCurrencies(): List<Currency> {
         return currencyDao.getActiveCurrencies()
     }
 

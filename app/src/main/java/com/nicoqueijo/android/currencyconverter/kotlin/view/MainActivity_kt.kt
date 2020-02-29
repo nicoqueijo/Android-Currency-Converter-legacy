@@ -3,7 +3,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -16,12 +15,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.*
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
-import com.nicoqueijo.android.currencyconverter.kotlin.data.RetrofitFactory
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.android.synthetic.main.activity_main_kt.*
 import kotlinx.coroutines.*
-import java.util.*
-
 
 const val TAG = "MeinActiviti"
 
@@ -40,21 +36,20 @@ class MainActivity_kt : AppCompatActivity() {
         setContentView(R.layout.activity_main_kt)
 
         repository = Repository(this)
+        var currencies: List<Currency>
 
         CoroutineScope(Dispatchers.Main).launch {
-//            val data1 = repository.currencyDao.getAllCurrencies()
-//            val data2 = repository.retrofitService.getExchangeRates(getApiKey())
-//                    .body()
-//                    ?.exchangeRates
-//                    ?.currencies
+            currencies = withContext(Dispatchers.Main) {
+                repository.getAllCurrencies()
+            }
             val something = 9
         }
 
-        initAds()
-        initViews()
-
-        navController = findNavController(R.id.content_frame_kt)
-        nav_view_menu_kt.setupWithNavController(navController)
+//        initAds()
+//        initViews()
+//
+//        navController = findNavController(R.id.content_frame_kt)
+//        nav_view_menu_kt.setupWithNavController(navController)
     }
 
     private fun initAds() {
@@ -117,21 +112,6 @@ class MainActivity_kt : AppCompatActivity() {
 //            super.onBackPressed()
 //        }
 //    }
-
-    private suspend fun getExchangeRatesFromServer() = withContext(Dispatchers.IO) {
-        Log.d(TAG, "Operation: db calls. Thread: ${Thread.currentThread()}")
-        try {
-            val response = RetrofitFactory.getRetrofitService().getExchangeRates(getApiKey())
-        } catch (e: Exception) {
-            // It will fall here if no internet (?)
-        }
-    }
-
-    private fun getApiKey(): String {
-        val apiKeys = resources.getStringArray(R.array.api_keys)
-        val random = Random().nextInt(apiKeys.size)
-        return apiKeys[random]
-    }
 
     companion object {
 

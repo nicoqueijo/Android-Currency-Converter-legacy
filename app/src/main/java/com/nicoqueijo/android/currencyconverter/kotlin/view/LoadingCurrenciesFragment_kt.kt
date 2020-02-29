@@ -23,15 +23,17 @@ class LoadingCurrenciesFragment_kt : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        CoroutineScope(Dispatchers.Main).launch {
-            MainActivity_kt.mockExpensiveCall()
-            val random = java.util.Random().nextBoolean()
-            if (random) {
-                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
-            } else {
-                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
-            }
-        }
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            MainActivity_kt.mockExpensiveCall()
+//            val random = java.util.Random().nextBoolean()
+//            if (random) {
+//                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
+//            } else {
+//                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
+//            }
+//        }
+
     }
 
 

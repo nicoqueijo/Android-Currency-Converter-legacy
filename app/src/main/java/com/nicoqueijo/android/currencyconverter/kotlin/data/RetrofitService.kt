@@ -16,7 +16,7 @@ interface RetrofitService {
 }
 
 object RetrofitFactory {
-    const val BASE_URL = "https://openexchangerates.org/"
+    private const val BASE_URL = "https://openexchangerates.org/"
 
     fun getRetrofitService(): RetrofitService {
         return Retrofit.Builder()
