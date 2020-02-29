@@ -1,10 +1,10 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.database
+package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 
 @Dao
 interface CurrencyDao {

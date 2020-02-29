@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.views
+package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
 import android.view.*
@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.adapters.SelectableCurrenciesAdapter_kt
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator
-import com.turingtechnologies.materialscrollbar.DragScrollBar
+import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter_kt
 
 
 // Highlight 'Converter' in menu when we are in this Fragment

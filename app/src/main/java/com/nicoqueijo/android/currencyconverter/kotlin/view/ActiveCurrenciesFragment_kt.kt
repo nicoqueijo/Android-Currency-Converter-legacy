@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.views
+package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.content.Context
 import android.os.Bundle
@@ -16,9 +16,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.adapters.ActiveCurrenciesAdapter_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.utils.CustomRecyclerView_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 
 class ActiveCurrenciesFragment_kt : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.views
+package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

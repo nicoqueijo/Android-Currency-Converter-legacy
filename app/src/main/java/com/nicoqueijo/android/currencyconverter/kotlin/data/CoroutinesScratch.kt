@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.services
+package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 //        setupActionBarWithNavController(navController, drawer_layout_kt)
 

@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.adapters
+package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.java.helpers.Utility
-import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 
 
 // Also implement Filterable and INameableAdapter

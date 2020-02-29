@@ -1,11 +1,10 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.views
+package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 
 class ErrorFragment_kt : Fragment() {

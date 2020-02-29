@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.adapters
+package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.java.helpers.Utility
-import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.utils.CustomEditText_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
 
 
 class ActiveCurrenciesAdapter_kt(val context: Context?,

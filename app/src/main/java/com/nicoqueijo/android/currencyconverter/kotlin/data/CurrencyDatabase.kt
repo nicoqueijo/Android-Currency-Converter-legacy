@@ -1,11 +1,11 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.database
+package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.nicoqueijo.android.currencyconverter.kotlin.models.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 
 @Database(entities = [Currency::class], version = 1, exportSchema = false)
 abstract class CurrencyDatabase : RoomDatabase() {

@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.models
+package com.nicoqueijo.android.currencyconverter.kotlin.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

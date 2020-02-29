@@ -6,7 +6,7 @@
     app:startDestination="@id/loadingCurrenciesFragment_kt">
     <fragment
         android:id="@+id/loadingCurrenciesFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.LoadingCurrenciesFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.LoadingCurrenciesFragment_kt"
         android:label="LoadingCurrenciesFragment_kt"
         tools:layout="@layout/fragment_loading_currencies_kt">
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/errorFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.ErrorFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ErrorFragment_kt"
         android:label="ErrorFragment_kt"
         tools:layout="@layout/fragment_error_kt">
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/activeCurrenciesFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.ActiveCurrenciesFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment_kt"
         android:label="ActiveCurrenciesFragment_kt"
         tools:layout="@layout/fragment_active_currencies_kt">
         <action
@@ -42,12 +42,12 @@
     </fragment>
     <fragment
         android:id="@+id/selectableCurrenciesFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SelectableCurrenciesFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment_kt"
         android:label="SelectableCurrenciesFragment_kt"
         tools:layout="@layout/fragment_selectable_currency_kt" />
     <fragment
         android:id="@+id/sourceCodeFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.views.SourceCodeFragment_kt"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SourceCodeFragment_kt"
         android:label="SourceCodeFragment_kt"
         tools:layout="@layout/fragment_source_code_kt" />
 </navigation>

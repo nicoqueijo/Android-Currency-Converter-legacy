@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.models
+package com.nicoqueijo.android.currencyconverter.kotlin.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
