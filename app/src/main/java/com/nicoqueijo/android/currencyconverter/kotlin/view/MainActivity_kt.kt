@@ -36,39 +36,18 @@ class MainActivity_kt : AppCompatActivity() {
     private lateinit var closeAppToast: Toast
     private var interstitialAd: InterstitialAd? = null
 
-//    private lateinit var repository: Repository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
-        activityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
-//        activityViewModel.activeFragment.observe(this, Observer { activeFragment ->
-//            // Disable nav menu options clickable and show ‘No Internet Snackbar’ if on Error Fragment.
-//            navView.menu.forEach { menuItem ->
-//                menuItem.isEnabled = activeFragment != R.id.errorFragment_kt
-//            }
-//        })
+        activityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
         initAds()
         initViews()
-
-//        repository = Repository(this)
-        var currencies: List<Currency>
-
-//        CoroutineScope(Dispatchers.Main).launch {
-//            currencies = withContext(Dispatchers.Main) {
-//                //                repository.getAllCurrencies()
-//                activityViewModel.repository.getActiveCurrencies()
-//            }
-//            val something = 9
-//        }
-
+        
         navController = findNavController(R.id.content_frame_kt)
         navView.setupWithNavController(navController)
 
-
-        // If a Fragment already exists in the backstack, don't add it, simply load the one that already exists
         navView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawer(GravityCompat.START)
             when (activityViewModel.activeFragment.value) {
@@ -77,13 +56,22 @@ class MainActivity_kt : AppCompatActivity() {
                     false
                 }
                 R.id.loadingCurrenciesFragment_kt -> false
-
-                //////////////////////////////////////////////////////
-
                 R.id.activeCurrenciesFragment_kt -> {
-                    navController.navigate(menuItem.itemId)
-                    true
-                    // false
+                    when {
+                        menuItem.itemId == R.id.activeCurrenciesFragment_kt -> {
+                            true
+                        }
+                        activityViewModel.fragmentBackstackEntries.contains(menuItem.itemId) -> {
+                            navController.popBackStack(menuItem.itemId, false)
+                            activityViewModel.fragmentBackstackEntries.remove(R.id.activeCurrenciesFragment_kt)
+                            true
+                        }
+                        else -> {
+                            navController.navigate(menuItem.itemId)
+                            activityViewModel.fragmentBackstackEntries.add(menuItem.itemId)
+                            true
+                        }
+                    }
                 }
 
                 R.id.selectableCurrenciesFragment_kt -> {
@@ -92,55 +80,33 @@ class MainActivity_kt : AppCompatActivity() {
                     } else {
                         navController.navigate(menuItem.itemId)
                         true
-                        // false
                     }
                 }
 
                 R.id.sourceCodeFragment_kt -> {
-                    navController.navigate(menuItem.itemId)
-                    true
-                    // false
+                    when {
+                        menuItem.itemId == R.id.sourceCodeFragment_kt -> {
+                            true
+                        }
+                        activityViewModel.fragmentBackstackEntries.contains(menuItem.itemId) -> {
+                            navController.popBackStack(menuItem.itemId, false)
+                            activityViewModel.fragmentBackstackEntries.remove(R.id.sourceCodeFragment_kt)
+                            true
+                        }
+                        else -> {
+                            navController.navigate(menuItem.itemId)
+                            activityViewModel.fragmentBackstackEntries.add(menuItem.itemId)
+                            true
+                        }
+                    }
                 }
                 else -> {
                     false
                 }
-
-//                R.id.sourceCodeFragment_kt -> {
-//                    true
-//                }
-//                else -> {
-//                    if (activityViewModel.fragmentBackstackEntries.contains(menuItem.itemId)) {
-//                        navController.popBackStack(menuItem.itemId, false)
-//                        activityViewModel.fragmentBackstackEntries.remove(menuItem.itemId)
-//                    } else {
-//                        navController.navigate(menuItem.itemId)
-//                    }
-//                    true
-//                }
             }
-//            if (activityViewModel.activeFragment.value == R.id.errorFragment_kt) {
-//                // Don't navigate
-//                showNoInternetSnackbar()
-//                false
-//            } else {
-//                when (menuItem.itemId) {
-//                    R.id.activeCurrenciesFragment_kt -> {
-//                        navController.navigate(R.id.activeCurrenciesFragment_kt)
-//                        true
-//                    }
-//                    R.id.sourceCodeFragment_kt -> {
-//                        navController.navigate(R.id.sourceCodeFragment_kt)
-//                        true
-//                    }
-//                    else -> {
-//                        false
-//                    }
-//                }
-//            }
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            Log.v(TAG, "addOnDestinationChangedListener called: ${destination.label}")
             activityViewModel._activeFragment.postValue(destination.id)
             activityViewModel.fragmentBackstackEntries.add(destination.id)
         }
@@ -201,19 +167,18 @@ class MainActivity_kt : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
-    // Restore this method when I have the navigation/backstack figured out
-//    override fun onBackPressed() {
-//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawer(GravityCompat.START)
-////        } else if (mFragmentManager.getBackStackEntryCount() > 0) {
-////            mFragmentManager.popBackStack()
-//        }
-////        else if (!closeAppToast.view.isShown) {
-////            closeAppToast.show()
-////        } else {
-////            super.onBackPressed()
-////        }
-//    }
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else if (navController.backStack.size > 2) {
+            activityViewModel.fragmentBackstackEntries.remove(navController.currentDestination?.id!!)
+            navController.popBackStack()
+        } else if (!closeAppToast.view.isShown) {
+            closeAppToast.show()
+        } else {
+            super.onBackPressed()
+        }
+    }
 
     companion object {
 

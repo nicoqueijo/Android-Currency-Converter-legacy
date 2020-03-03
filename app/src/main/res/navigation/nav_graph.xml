@@ -53,5 +53,8 @@
             android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment_kt"
             android:label="SelectableCurrenciesFragment_kt"
             tools:layout="@layout/fragment_selectable_currency_kt" />
+        <action
+            android:id="@+id/action_global_sourceCodeFragment_kt"
+            app:destination="@id/sourceCodeFragment_kt" />
     </navigation>
 </navigation>

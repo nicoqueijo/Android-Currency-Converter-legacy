@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.nicoqueijo.android.currencyconverter.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -25,6 +26,7 @@ class LoadingCurrenciesFragment_kt : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         CoroutineScope(Dispatchers.IO).launch {
+            delay(250)
             try {
                 MainActivity_kt.activityViewModel.repository.getAllCurrencies()
                 CoroutineScope(Dispatchers.Main).launch {

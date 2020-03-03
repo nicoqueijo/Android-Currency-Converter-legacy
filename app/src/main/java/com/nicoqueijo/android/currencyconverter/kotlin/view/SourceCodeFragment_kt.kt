@@ -20,7 +20,6 @@ const val SOURCE_CODE_URL = "https://github.com/nicoqueijo/Android-Currency-Conv
 
 class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListener {
 
-    //    private lateinit var toobar: Toolbar
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -51,12 +50,6 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
         startActivity(sourceCodeChooser)
         return super.onOptionsItemSelected(item)
     }
-
-    // This might not be needed. Test to confirm.
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        toobar.menu.removeItem(R.id.open_in_browser)
-//    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initViews(view: View) {
