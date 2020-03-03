@@ -11,15 +11,16 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nicoqueijo.android.currencyconverter.R
 
+const val SOURCE_CODE_URL = "https://github.com/nicoqueijo/Android-Currency-Converter"
+
 class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListener {
 
-    private lateinit var toobar: Toolbar
+    //    private lateinit var toobar: Toolbar
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -45,9 +46,8 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val sourceCodeIntent = Intent(Intent.ACTION_VIEW)
-        sourceCodeIntent.data = Uri.parse("https://github.com/nicoqueijo/Android-Currency-Converter")
-        val sourceCodeChooser = Intent.createChooser(sourceCodeIntent,
-                getString(R.string.launch_browser))
+        sourceCodeIntent.data = Uri.parse(SOURCE_CODE_URL)
+        val sourceCodeChooser = Intent.createChooser(sourceCodeIntent, getString(R.string.launch_browser))
         startActivity(sourceCodeChooser)
         return super.onOptionsItemSelected(item)
     }
@@ -67,7 +67,7 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
         webViewSettings.javaScriptEnabled = true
         webViewSettings.builtInZoomControls = true
         webViewSettings.displayZoomControls = false
-        webView.loadUrl("https://github.com/nicoqueijo/Android-Currency-Converter")
+        webView.loadUrl(SOURCE_CODE_URL)
         webView.viewTreeObserver.addOnScrollChangedListener(this)
     }
 

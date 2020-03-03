@@ -64,7 +64,6 @@ class Repository(private val context: Context) {
         return currencyDao.getActiveCurrencies()
     }
 
-
     private fun getApiKey(): String {
         val apiKeys = context.resources.getStringArray(R.array.api_keys)
         val random = Random().nextInt(apiKeys.size)

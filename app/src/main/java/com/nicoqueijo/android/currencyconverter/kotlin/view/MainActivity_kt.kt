@@ -8,49 +8,103 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.*
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
+import com.nicoqueijo.android.currencyconverter.java.helpers.Utility
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import kotlinx.android.synthetic.main.activity_main_kt.*
-import kotlinx.coroutines.*
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
+import kotlinx.coroutines.delay
 
 const val TAG = "MeinActiviti"
 
 class MainActivity_kt : AppCompatActivity() {
 
-    private var interstitialAd: InterstitialAd? = null
     internal lateinit var drawerLayout: DrawerLayout
-    private lateinit var navController: NavController
+    private lateinit var toolbar: Toolbar
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private lateinit var navController: NavController
+    private lateinit var navView: NavigationView
     private lateinit var closeAppToast: Toast
+    private var interstitialAd: InterstitialAd? = null
 
-    private lateinit var repository: Repository
+//    private lateinit var repository: Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
+        activityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
-        repository = Repository(this)
+//        activityViewModel.activeFragment.observe(this, Observer { activeFragment ->
+//            // Disable nav menu options clickable and show ‘No Internet Snackbar’ if on Error Fragment.
+//            navView.menu.forEach { menuItem ->
+//                menuItem.isEnabled = activeFragment != R.id.errorFragment_kt
+//            }
+//        })
+
+        initAds()
+        initViews()
+
+//        repository = Repository(this)
         var currencies: List<Currency>
 
-        CoroutineScope(Dispatchers.Main).launch {
-            currencies = withContext(Dispatchers.Main) {
-//                repository.getAllCurrencies()
-                repository.getActiveCurrencies()
+//        CoroutineScope(Dispatchers.Main).launch {
+//            currencies = withContext(Dispatchers.Main) {
+//                //                repository.getAllCurrencies()
+//                activityViewModel.repository.getActiveCurrencies()
+//            }
+//            val something = 9
+//        }
+
+
+//
+        navController = findNavController(R.id.content_frame_kt)
+        navView.setupWithNavController(navController)
+
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            // Handle loading fragment
+            drawerLayout.closeDrawer(GravityCompat.START)
+            if (activityViewModel.activeFragment.value == R.id.errorFragment_kt) {
+                // Don't navigate
+                showNoInternetSnackbar()
+                false
+            } else {
+                when (menuItem.itemId) {
+                    R.id.activeCurrenciesFragment_kt -> {
+                        navController.navigate(R.id.activeCurrenciesFragment_kt)
+                        true
+                    }
+                    R.id.sourceCodeFragment_kt -> {
+                        navController.navigate(R.id.sourceCodeFragment_kt)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
             }
-            val something = 9
+
         }
 
-//        initAds()
-//        initViews()
-//
-//        navController = findNavController(R.id.content_frame_kt)
-//        nav_view_menu_kt.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            activityViewModel._activeFragment.postValue(destination.id)
+        }
+    }
+
+    fun showNoInternetSnackbar() {
+        val snackbar = Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet,
+                Snackbar.LENGTH_SHORT)
+        Utility.styleSnackbar(snackbar, this)
+        snackbar.show()
     }
 
     private fun initAds() {
@@ -60,7 +114,7 @@ class MainActivity_kt : AppCompatActivity() {
 
     private fun initBannerAd() {
         MobileAds.initialize(this, resources.getString(R.string.app_id))
-        val adView = findViewById<AdView>(R.id.banner_ad_kt)
+        val adView: AdView = findViewById(R.id.banner_ad_kt)
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
     }
@@ -78,17 +132,20 @@ class MainActivity_kt : AppCompatActivity() {
 
     @SuppressLint("ShowToast")
     private fun initViews() {
-        setSupportActionBar(toolbar_kt)
+        toolbar = findViewById(R.id.toolbar_kt)
+        setSupportActionBar(toolbar)
         drawerLayout = findViewById(R.id.drawer_layout_kt)
         initListeners()
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
+        navView = findViewById(R.id.nav_view_menu_kt)
         closeAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT)
     }
 
     private fun initListeners() {
-        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar_kt,
+        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close) {
+
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
                 hideKeyboard()
@@ -116,7 +173,9 @@ class MainActivity_kt : AppCompatActivity() {
 
     companion object {
 
-        val currencies = listOf(
+        lateinit var activityViewModel: MainActivityViewModel
+
+        val fakeCurrencies = listOf(
                 Currency("USD_AED", 3.6731),
                 Currency("USD_AFN", 76.400002),
                 Currency("USD_ALL", 110.05),
@@ -267,4 +326,5 @@ class MainActivity_kt : AppCompatActivity() {
             delay(500)
         }
     }
+
 }

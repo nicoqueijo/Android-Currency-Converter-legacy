@@ -31,7 +31,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies_kt, container, false)
-        currencies = MainActivity_kt.currencies
+        currencies = MainActivity_kt.fakeCurrencies
         initInterstitialAd()
         initViewsAndAdapters(view)
         setUpFabOnClickListener()

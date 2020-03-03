@@ -10,6 +10,7 @@ import com.nicoqueijo.android.currencyconverter.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 /**
  * A simple [Fragment] subclass.
@@ -23,18 +24,15 @@ class LoadingCurrenciesFragment_kt : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        CoroutineScope(Dispatchers.Main).launch {
-//            MainActivity_kt.mockExpensiveCall()
-//            val random = java.util.Random().nextBoolean()
-//            if (random) {
-//                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
-//            } else {
-//                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
-//            }
-//        }
-
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                MainActivity_kt.activityViewModel.repository.getAllCurrencies()
+                CoroutineScope(Dispatchers.Main).launch {
+                    findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
+                }
+            } catch (e: IOException) {
+                findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
+            }
+        }
     }
-
-
 }
