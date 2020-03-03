@@ -14,7 +14,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     lateinit var currencies: MutableLiveData<List<Currency>>
 
-     var _activeFragment: MutableLiveData<Int> = MutableLiveData(R.id.loadingCurrenciesFragment_kt)
+    var _activeFragment: MutableLiveData<Int> = MutableLiveData(R.id.loadingCurrenciesFragment_kt)
+
+    var fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
     val activeFragment: LiveData<Int>
         get() = _activeFragment

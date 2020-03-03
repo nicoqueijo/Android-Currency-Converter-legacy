@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -19,7 +20,6 @@ import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.java.helpers.Utility
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.delay
@@ -64,47 +64,90 @@ class MainActivity_kt : AppCompatActivity() {
 //            val something = 9
 //        }
 
-
-//
         navController = findNavController(R.id.content_frame_kt)
         navView.setupWithNavController(navController)
 
 
+        // If a Fragment already exists in the backstack, don't add it, simply load the one that already exists
         navView.setNavigationItemSelectedListener { menuItem ->
-            // Handle loading fragment
             drawerLayout.closeDrawer(GravityCompat.START)
-            if (activityViewModel.activeFragment.value == R.id.errorFragment_kt) {
-                // Don't navigate
-                showNoInternetSnackbar()
-                false
-            } else {
-                when (menuItem.itemId) {
-                    R.id.activeCurrenciesFragment_kt -> {
-                        navController.navigate(R.id.activeCurrenciesFragment_kt)
+            when (activityViewModel.activeFragment.value) {
+                R.id.errorFragment_kt -> {
+                    showNoInternetSnackbar()
+                    false
+                }
+                R.id.loadingCurrenciesFragment_kt -> false
+
+                //////////////////////////////////////////////////////
+
+                R.id.activeCurrenciesFragment_kt -> {
+                    navController.navigate(menuItem.itemId)
+                    true
+                    // false
+                }
+
+                R.id.selectableCurrenciesFragment_kt -> {
+                    if (menuItem.itemId == R.id.activeCurrenciesFragment_kt) {
                         true
-                    }
-                    R.id.sourceCodeFragment_kt -> {
-                        navController.navigate(R.id.sourceCodeFragment_kt)
+                    } else {
+                        navController.navigate(menuItem.itemId)
                         true
-                    }
-                    else -> {
-                        false
+                        // false
                     }
                 }
-            }
 
+                R.id.sourceCodeFragment_kt -> {
+                    navController.navigate(menuItem.itemId)
+                    true
+                    // false
+                }
+                else -> {
+                    false
+                }
+
+//                R.id.sourceCodeFragment_kt -> {
+//                    true
+//                }
+//                else -> {
+//                    if (activityViewModel.fragmentBackstackEntries.contains(menuItem.itemId)) {
+//                        navController.popBackStack(menuItem.itemId, false)
+//                        activityViewModel.fragmentBackstackEntries.remove(menuItem.itemId)
+//                    } else {
+//                        navController.navigate(menuItem.itemId)
+//                    }
+//                    true
+//                }
+            }
+//            if (activityViewModel.activeFragment.value == R.id.errorFragment_kt) {
+//                // Don't navigate
+//                showNoInternetSnackbar()
+//                false
+//            } else {
+//                when (menuItem.itemId) {
+//                    R.id.activeCurrenciesFragment_kt -> {
+//                        navController.navigate(R.id.activeCurrenciesFragment_kt)
+//                        true
+//                    }
+//                    R.id.sourceCodeFragment_kt -> {
+//                        navController.navigate(R.id.sourceCodeFragment_kt)
+//                        true
+//                    }
+//                    else -> {
+//                        false
+//                    }
+//                }
+//            }
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.v(TAG, "addOnDestinationChangedListener called: ${destination.label}")
             activityViewModel._activeFragment.postValue(destination.id)
+            activityViewModel.fragmentBackstackEntries.add(destination.id)
         }
     }
 
     fun showNoInternetSnackbar() {
-        val snackbar = Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet,
-                Snackbar.LENGTH_SHORT)
-        Utility.styleSnackbar(snackbar, this)
-        snackbar.show()
+        Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun initAds() {
@@ -164,11 +207,12 @@ class MainActivity_kt : AppCompatActivity() {
 //            drawerLayout.closeDrawer(GravityCompat.START)
 ////        } else if (mFragmentManager.getBackStackEntryCount() > 0) {
 ////            mFragmentManager.popBackStack()
-//        } else if (!closeAppToast.view.isShown) {
-//            closeAppToast.show()
-//        } else {
-//            super.onBackPressed()
 //        }
+////        else if (!closeAppToast.view.isShown) {
+////            closeAppToast.show()
+////        } else {
+////            super.onBackPressed()
+////        }
 //    }
 
     companion object {

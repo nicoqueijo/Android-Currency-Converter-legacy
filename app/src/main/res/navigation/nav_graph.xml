@@ -32,22 +32,26 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/activeCurrenciesFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment_kt"
-        android:label="ActiveCurrenciesFragment_kt"
-        tools:layout="@layout/fragment_active_currencies_kt">
-        <action
-            android:id="@+id/action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt"
-            app:destination="@id/selectableCurrenciesFragment_kt" />
-    </fragment>
-    <fragment
-        android:id="@+id/selectableCurrenciesFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment_kt"
-        android:label="SelectableCurrenciesFragment_kt"
-        tools:layout="@layout/fragment_selectable_currency_kt" />
-    <fragment
         android:id="@+id/sourceCodeFragment_kt"
         android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SourceCodeFragment_kt"
         android:label="SourceCodeFragment_kt"
         tools:layout="@layout/fragment_source_code_kt" />
+    <navigation
+        android:id="@+id/activeCurrenciesFragment_kt"
+        app:startDestination="@id/activeCurrenciesFragment_kt" >
+        <fragment
+            android:id="@+id/activeCurrenciesFragment_kt"
+            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment_kt"
+            android:label="ActiveCurrenciesFragment_kt"
+            tools:layout="@layout/fragment_active_currencies_kt">
+            <action
+                android:id="@+id/action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt"
+                app:destination="@id/selectableCurrenciesFragment_kt" />
+        </fragment>
+        <fragment
+            android:id="@+id/selectableCurrenciesFragment_kt"
+            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment_kt"
+            android:label="SelectableCurrenciesFragment_kt"
+            tools:layout="@layout/fragment_selectable_currency_kt" />
+    </navigation>
 </navigation>
