@@ -3,7 +3,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -39,41 +38,30 @@ class MainActivity_kt : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
-
         activityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-
         initAds()
         initViews()
-        
+        handleNavigation()
+    }
+
+    private fun handleNavigation() {
         navController = findNavController(R.id.content_frame_kt)
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            activityViewModel._activeFragment.postValue(destination.id)
+            activityViewModel.fragmentBackstackEntries.add(destination.id)
+        }
 
         navView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawer(GravityCompat.START)
             when (activityViewModel.activeFragment.value) {
-                R.id.errorFragment_kt -> {
-                    showNoInternetSnackbar()
-                    false
-                }
-                R.id.loadingCurrenciesFragment_kt -> false
                 R.id.activeCurrenciesFragment_kt -> {
-                    when {
-                        menuItem.itemId == R.id.activeCurrenciesFragment_kt -> {
-                            true
-                        }
-                        activityViewModel.fragmentBackstackEntries.contains(menuItem.itemId) -> {
-                            navController.popBackStack(menuItem.itemId, false)
-                            activityViewModel.fragmentBackstackEntries.remove(R.id.activeCurrenciesFragment_kt)
-                            true
-                        }
-                        else -> {
-                            navController.navigate(menuItem.itemId)
-                            activityViewModel.fragmentBackstackEntries.add(menuItem.itemId)
-                            true
-                        }
-                    }
+                    handleBackstack(menuItem.itemId, R.id.activeCurrenciesFragment_kt)
                 }
-
+                R.id.sourceCodeFragment_kt -> {
+                    handleBackstack(menuItem.itemId, R.id.sourceCodeFragment_kt)
+                }
                 R.id.selectableCurrenciesFragment_kt -> {
                     if (menuItem.itemId == R.id.activeCurrenciesFragment_kt) {
                         true
@@ -82,38 +70,34 @@ class MainActivity_kt : AppCompatActivity() {
                         true
                     }
                 }
-
-                R.id.sourceCodeFragment_kt -> {
-                    when {
-                        menuItem.itemId == R.id.sourceCodeFragment_kt -> {
-                            true
-                        }
-                        activityViewModel.fragmentBackstackEntries.contains(menuItem.itemId) -> {
-                            navController.popBackStack(menuItem.itemId, false)
-                            activityViewModel.fragmentBackstackEntries.remove(R.id.sourceCodeFragment_kt)
-                            true
-                        }
-                        else -> {
-                            navController.navigate(menuItem.itemId)
-                            activityViewModel.fragmentBackstackEntries.add(menuItem.itemId)
-                            true
-                        }
-                    }
+                R.id.errorFragment_kt -> {
+                    showNoInternetSnackbar()
+                    false
                 }
+                R.id.loadingCurrenciesFragment_kt -> false
                 else -> {
                     false
                 }
             }
         }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            activityViewModel._activeFragment.postValue(destination.id)
-            activityViewModel.fragmentBackstackEntries.add(destination.id)
-        }
     }
 
-    fun showNoInternetSnackbar() {
-        Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet, Snackbar.LENGTH_SHORT).show()
+    private fun handleBackstack(menuItemId: Int, activeFragment: Int): Boolean {
+        return when {
+            menuItemId == activeFragment -> {
+                true
+            }
+            activityViewModel.fragmentBackstackEntries.contains(menuItemId) -> {
+                navController.popBackStack(menuItemId, false)
+                activityViewModel.fragmentBackstackEntries.remove(activeFragment)
+                true
+            }
+            else -> {
+                navController.navigate(menuItemId)
+                activityViewModel.fragmentBackstackEntries.add(menuItemId)
+                true
+            }
+        }
     }
 
     private fun initAds() {
@@ -160,6 +144,10 @@ class MainActivity_kt : AppCompatActivity() {
                 hideKeyboard()
             }
         }
+    }
+
+    private fun showNoInternetSnackbar() {
+        Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun hideKeyboard() {
