@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
@@ -11,18 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter_kt
+import com.turingtechnologies.materialscrollbar.AlphabetIndicator
+import com.turingtechnologies.materialscrollbar.DragScrollBar
 
 
 // Highlight 'Converter' in menu when we are in this Fragment
 class SelectableCurrenciesFragment_kt : Fragment() {
 
-    lateinit var toolbar: Toolbar
     lateinit var adapter: SelectableCurrenciesAdapter_kt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        toolbar = activity!!.findViewById(R.id.toolbar_kt)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -37,16 +38,10 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         initMenu(menu, inflater)
     }
 
-    // This might not be needed. Test to confirm.
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        toolbar.menu.removeItem(R.id.search)
-//    }
-
     private fun initAdaptersAndListeners(view: View) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
-//        val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
-//        dragScrollBar.setIndicator(AlphabetIndicator(context), true)
+        val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
+        dragScrollBar.setIndicator(AlphabetIndicator(context), true)
         adapter = SelectableCurrenciesAdapter_kt(context, MainActivity_kt.fakeCurrencies)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
@@ -65,7 +60,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-//                adapter.getFilter().filter(newText)
+                adapter.filter.filter(newText)
                 return false
             }
         })

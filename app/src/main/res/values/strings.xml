@@ -28,7 +28,7 @@
     <string name="fetching_data">Fetching data…</string>
     <string name="error_title">Error Occurred</string>
     <string name="error_description">An error has occurred while attempting to retrieve the data
-        from the internet. Expand to show more information.</string>
+        from the internet.</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
     <string name="share_via">Share via</string>

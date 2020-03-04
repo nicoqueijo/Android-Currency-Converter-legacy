@@ -5,19 +5,26 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.common.collect.Lists
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.java.helpers.Utility
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.turingtechnologies.materialscrollbar.INameableAdapter
 
-
-// Also implement Filterable and INameableAdapter
 class SelectableCurrenciesAdapter_kt(val context: Context?,
-                                     val currencies: List<Currency>) :
-        RecyclerView.Adapter<SelectableCurrenciesAdapter_kt.ViewHolder>() {
+                                     currenciesArg: List<Currency>) :
+        RecyclerView.Adapter<SelectableCurrenciesAdapter_kt.ViewHolder>(),
+        INameableAdapter,
+        Filterable {
+
+    private var currencies: ArrayList<Currency> = ArrayList(currenciesArg)
+    private val currenciesFull: ArrayList<Currency> = ArrayList(currenciesArg)
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -32,7 +39,6 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
 
         override fun onClick(v: View?) {
             v?.findNavController()?.popBackStack()
-//            v?.findNavController()?.navigate(R.id.action_selectableCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
         }
     }
 
@@ -56,6 +62,49 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
         val currencyIsSelected: Boolean = currencies[position].isSelected
         holder.itemView.isClickable = !currencyIsSelected
         holder.checkMark.visibility = if (currencyIsSelected) View.VISIBLE else View.INVISIBLE
+    }
+
+    override fun getCharacterForElement(position: Int): Char {
+        return try {
+            currencies[position].currencyCode[Currency.CURRENCY_CODE_STARTING_INDEX]
+        } catch (exception: IndexOutOfBoundsException) {
+            ' '
+        }
+    }
+
+    override fun getFilter() = currenciesFilter
+
+    private val currenciesFilter: Filter = object : Filter() {
+        @SuppressLint("DefaultLocale")
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filteredList: MutableList<Currency> = Lists.newArrayList()
+            if (constraint == null || constraint.isEmpty()) {
+                filteredList.addAll(currenciesFull)
+            } else {
+                val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
+                var currencyCode: String
+                var currencyName: String
+                for (currency in currenciesFull) {
+                    currencyCode = currency.trimmedCurrencyCode.toLowerCase()
+                    currencyName = Utility.getStringResourceByName(currency.currencyCode, context).toLowerCase()
+                    if (currencyCode.contains(filterPattern) ||
+                            currencyName.contains(filterPattern)) {
+                        filteredList.add(currency)
+                    }
+                }
+            }
+            val filterResults = FilterResults()
+            filterResults.values = filteredList
+            return filterResults
+        }
+
+        override fun publishResults(constraint: CharSequence, results: FilterResults) {
+            with(currencies) {
+                clear()
+                addAll(results.values as List<Currency>)
+            }
+            notifyDataSetChanged()
+        }
     }
 
 }
