@@ -22,16 +22,14 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_k
 
 class ActiveCurrenciesFragment_kt : Fragment() {
 
-    lateinit var currencies: List<Currency>
-    lateinit var adapter: ActiveCurrenciesAdapter_kt
-    lateinit var interstitialAd: InterstitialAd
-    lateinit var floatingActionButton: FloatingActionButton
+    private lateinit var adapter: ActiveCurrenciesAdapter_kt
+    private lateinit var interstitialAd: InterstitialAd
+    private lateinit var floatingActionButton: FloatingActionButton
     private var fabClicks = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies_kt, container, false)
-        currencies = MainActivity_kt.fakeCurrencies
         initInterstitialAd()
         initViewsAndAdapters(view)
         setUpFabOnClickListener()
@@ -44,7 +42,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        adapter = ActiveCurrenciesAdapter_kt(context, currencies, floatingActionButton)
+        adapter = ActiveCurrenciesAdapter_kt(context, MainActivity_kt.activityViewModel.currencies, floatingActionButton)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))

@@ -9,6 +9,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.collect.Lists
@@ -18,7 +19,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.turingtechnologies.materialscrollbar.INameableAdapter
 
 class SelectableCurrenciesAdapter_kt(val context: Context?,
-                                     currenciesArg: List<Currency>) :
+                                     currenciesArg: MutableLiveData<List<Currency>>) :
         RecyclerView.Adapter<SelectableCurrenciesAdapter_kt.ViewHolder>(),
         INameableAdapter,
         Filterable {
@@ -26,7 +27,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
     private var currencies: ArrayList<Currency> = ArrayList(currenciesArg)
     private val currenciesFull: ArrayList<Currency> = ArrayList(currenciesArg)
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init {
             itemView.setOnClickListener(this)
@@ -82,13 +83,10 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
                 filteredList.addAll(currenciesFull)
             } else {
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
-                var currencyCode: String
-                var currencyName: String
-                for (currency in currenciesFull) {
-                    currencyCode = currency.trimmedCurrencyCode.toLowerCase()
-                    currencyName = Utility.getStringResourceByName(currency.currencyCode, context).toLowerCase()
-                    if (currencyCode.contains(filterPattern) ||
-                            currencyName.contains(filterPattern)) {
+                currenciesFull.forEach { currency ->
+                    val currencyCode = currency.trimmedCurrencyCode.toLowerCase()
+                    val currencyName = Utility.getStringResourceByName(currency.currencyCode, context).toLowerCase()
+                    if (currencyCode.contains(filterPattern) ||currencyName.contains(filterPattern)) {
                         filteredList.add(currency)
                     }
                 }

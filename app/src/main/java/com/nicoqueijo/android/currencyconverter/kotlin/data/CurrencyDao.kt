@@ -1,5 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,8 +14,8 @@ interface CurrencyDao {
     suspend fun upsert(currency: Currency?)
 
     @Query("SELECT * FROM currency ORDER BY currency_code ASC")
-    suspend fun getAllCurrencies(): List<Currency>
+    suspend fun getAllCurrencies(): LiveData<List<Currency>>
 
     @Query("SELECT * FROM currency WHERE is_selected = 1 ORDER BY 'order' ASC")
-    suspend fun getActiveCurrencies(): List<Currency>
+    suspend fun getActiveCurrencies(): LiveData<List<Currency>>
 }

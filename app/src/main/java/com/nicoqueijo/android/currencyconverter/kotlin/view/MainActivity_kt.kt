@@ -158,6 +158,7 @@ class MainActivity_kt : AppCompatActivity() {
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
+            // Document magic number or store in named variable
         } else if (navController.backStack.size > 2) {
             activityViewModel.fragmentBackstackEntries.remove(navController.currentDestination?.id!!)
             navController.popBackStack()

@@ -23,7 +23,7 @@ class ActiveCurrenciesAdapter_kt(val context: Context?,
 
 //    var onBind: Boolean = false
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var rowBackground: ConstraintLayout = itemView.findViewById(R.id.row_background_kt)
         var rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground_kt)
         var deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start_kt)

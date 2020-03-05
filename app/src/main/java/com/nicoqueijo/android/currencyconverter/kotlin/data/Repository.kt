@@ -5,6 +5,10 @@ import android.net.ConnectivityManager
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -30,10 +34,8 @@ class Repository(private val context: Context) {
             }
         }
 
-    internal suspend fun getAllCurrencies(): List<Currency> {
-        if (isNetworkAvailable() &&
-                (timeSinceLastUpdate > TWENTY_FOUR_HOURS ||
-                        timeSinceLastUpdate == NO_DATA)) {
+    internal suspend fun initCurrencies() {
+        if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
                 retrofitResponse = retrofitService.getExchangeRates(getApiKey())
@@ -44,7 +46,7 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                retrofitResponse.body()?.timestamp
+                retrofitResponse.body()?.timestamp // Not sure if this line does anything
                 retrofitResponse.body()?.exchangeRates?.currencies?.forEach {
                     currencyDao.upsert(it)
                 }
@@ -52,16 +54,23 @@ class Repository(private val context: Context) {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())
             }
-            return currencyDao.getAllCurrencies()
-        } else if (timeSinceLastUpdate != NO_DATA) {
-            return currencyDao.getAllCurrencies()
         } else {
             throw IOException("Network is unavailable and no local data found.")
         }
     }
 
-    internal suspend fun getActiveCurrencies(): List<Currency> {
-        return currencyDao.getActiveCurrencies()
+    internal fun getAllCurrencies() = runBlocking {
+        currencyDao.getAllCurrencies()
+    }
+
+    internal fun getActiveCurrencies() = runBlocking {
+        currencyDao.getActiveCurrencies()
+    }
+
+    internal fun upsertCurrency(currency: Currency) {
+        CoroutineScope(Dispatchers.IO).launch {
+            currencyDao.upsert(currency)
+        }
     }
 
     private fun getApiKey(): String {
@@ -75,4 +84,9 @@ class Repository(private val context: Context) {
         val activeNetworkInfo = connectivityManager.activeNetworkInfo
         return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
     }
+
+    private fun isDataStale() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
+
+    private fun isDataEmpty() = timeSinceLastUpdate == NO_DATA
+
 }

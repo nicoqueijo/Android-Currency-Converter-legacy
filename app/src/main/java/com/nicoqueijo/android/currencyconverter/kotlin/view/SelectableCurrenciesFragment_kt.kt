@@ -42,8 +42,9 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
         val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
-        adapter = SelectableCurrenciesAdapter_kt(context, MainActivity_kt.fakeCurrencies)
+        adapter = SelectableCurrenciesAdapter_kt(context, MainActivity_kt.activityViewModel.currencies)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context,

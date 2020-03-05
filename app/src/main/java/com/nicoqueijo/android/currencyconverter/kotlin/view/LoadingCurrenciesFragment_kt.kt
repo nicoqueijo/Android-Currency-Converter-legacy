@@ -26,9 +26,9 @@ class LoadingCurrenciesFragment_kt : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         CoroutineScope(Dispatchers.IO).launch {
-            delay(250)
+            delay(250) // So the user can actually see the splash screen for a moment
             try {
-                MainActivity_kt.activityViewModel.repository.getAllCurrencies()
+                MainActivity_kt.activityViewModel.repository.initCurrencies()
                 CoroutineScope(Dispatchers.Main).launch {
                     findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
                 }
