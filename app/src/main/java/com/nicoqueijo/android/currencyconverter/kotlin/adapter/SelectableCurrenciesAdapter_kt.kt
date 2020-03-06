@@ -44,9 +44,9 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
+        val itemView: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_selectable_currency_kt, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
@@ -55,14 +55,14 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
 
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.flag.setImageResource(Utility.getDrawableResourceByName(currencies[position]
-                .currencyCode.toLowerCase(), context))
-        holder.currencyCode.text = currencies[position].trimmedCurrencyCode
-        holder.currencyName.text = Utility.getStringResourceByName(currencies[position]
-                .currencyCode, context)
-        val currencyIsSelected: Boolean = currencies[position].isSelected
-        holder.itemView.isClickable = !currencyIsSelected
-        holder.checkMark.visibility = if (currencyIsSelected) View.VISIBLE else View.INVISIBLE
+        with(holder) {
+            val currencyIsSelected: Boolean = currencies[position].isSelected
+            itemView.isClickable = !currencyIsSelected
+            checkMark.visibility = if (currencyIsSelected) View.VISIBLE else View.INVISIBLE
+            currencyCode.text = currencies[position].trimmedCurrencyCode
+            currencyName.text = Utility.getStringResourceByName(currencies[position].currencyCode, context)
+            flag.setImageResource(Utility.getDrawableResourceByName(currencies[position].currencyCode.toLowerCase(), context))
+        }
     }
 
     override fun getCharacterForElement(position: Int): Char {
@@ -86,7 +86,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
                 currenciesFull.forEach { currency ->
                     val currencyCode = currency.trimmedCurrencyCode.toLowerCase()
                     val currencyName = Utility.getStringResourceByName(currency.currencyCode, context).toLowerCase()
-                    if (currencyCode.contains(filterPattern) ||currencyName.contains(filterPattern)) {
+                    if (currencyCode.contains(filterPattern) || currencyName.contains(filterPattern)) {
                         filteredList.add(currency)
                     }
                 }

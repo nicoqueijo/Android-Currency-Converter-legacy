@@ -13,13 +13,22 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     // Candidate for dependency injection
     val repository: Repository = Repository(application)
 
-    private val _currencies = repository.getAllCurrencies()
-    val currencies: LiveData<List<Currency>>
-        get() = _currencies
+    private val _allCurrencies = repository.getAllCurrencies()
+    val allCurrencies: LiveData<List<Currency>>
+        get() = _allCurrencies
+
+    private val _activeCurrencies = repository.getAllCurrencies()
+    val activeCurrencies: LiveData<List<Currency>>
+        get() = _activeCurrencies
+
+    fun upsertCurrency(currency: Currency) {
+        repository.upsertCurrency(currency)
+    }
 
     val _activeFragment: MutableLiveData<Int> = MutableLiveData(R.id.loadingCurrenciesFragment_kt)
     val activeFragment: LiveData<Int>
         get() = _activeFragment
+
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
 }
