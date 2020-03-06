@@ -9,23 +9,21 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.collect.Lists
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.java.helpers.Utility
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.turingtechnologies.materialscrollbar.INameableAdapter
 
-class SelectableCurrenciesAdapter_kt(val context: Context?,
-                                     currenciesArg: MutableLiveData<List<Currency>>) :
+class SelectableCurrenciesAdapter_kt(val context: Context?) :
         RecyclerView.Adapter<SelectableCurrenciesAdapter_kt.ViewHolder>(),
         INameableAdapter,
         Filterable {
 
-    private var currencies: ArrayList<Currency> = ArrayList(currenciesArg)
-    private val currenciesFull: ArrayList<Currency> = ArrayList(currenciesArg)
+    private lateinit var currenciesFull: ArrayList<Currency>
+    private var currencies = ArrayList(currenciesFull)
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -33,10 +31,10 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
             itemView.setOnClickListener(this)
         }
 
-        var flag: ImageView = itemView.findViewById(R.id.flag_kt)
-        var currencyCode: TextView = itemView.findViewById(R.id.currency_code_kt)
-        var currencyName: TextView = itemView.findViewById(R.id.currency_name_kt)
-        var checkMark: ImageView = itemView.findViewById(R.id.check_mark_kt)
+        val flag: ImageView = itemView.findViewById(R.id.flag_kt)
+        val currencyCode: TextView = itemView.findViewById(R.id.currency_code_kt)
+        val currencyName: TextView = itemView.findViewById(R.id.currency_name_kt)
+        val checkMark: ImageView = itemView.findViewById(R.id.check_mark_kt)
 
         override fun onClick(v: View?) {
             v?.findNavController()?.popBackStack()
@@ -55,14 +53,20 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
 
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val currency = currencies[position]
+        val isSelected = currency.isSelected
+        val code = currency.currencyCode
         with(holder) {
-            val currencyIsSelected: Boolean = currencies[position].isSelected
-            itemView.isClickable = !currencyIsSelected
-            checkMark.visibility = if (currencyIsSelected) View.VISIBLE else View.INVISIBLE
-            currencyCode.text = currencies[position].trimmedCurrencyCode
-            currencyName.text = Utility.getStringResourceByName(currencies[position].currencyCode, context)
-            flag.setImageResource(Utility.getDrawableResourceByName(currencies[position].currencyCode.toLowerCase(), context))
+            itemView.isClickable = !isSelected
+            checkMark.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
+            currencyCode.text = currency.trimmedCurrencyCode
+            currencyName.text = Utils.getStringResourceByName(code, context)
+            flag.setImageResource(Utils.getDrawableResourceByName(code.toLowerCase(), context))
         }
+    }
+
+    fun setCurrencies(currencies: List<Currency>) {
+        this.currenciesFull = ArrayList(currencies)
     }
 
     override fun getCharacterForElement(position: Int): Char {
@@ -85,7 +89,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?,
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
                 currenciesFull.forEach { currency ->
                     val currencyCode = currency.trimmedCurrencyCode.toLowerCase()
-                    val currencyName = Utility.getStringResourceByName(currency.currencyCode, context).toLowerCase()
+                    val currencyName = Utils.getStringResourceByName(currency.currencyCode, context).toLowerCase()
                     if (currencyCode.contains(filterPattern) || currencyName.contains(filterPattern)) {
                         filteredList.add(currency)
                     }

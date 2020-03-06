@@ -12,13 +12,13 @@ import java.math.RoundingMode
 
 object Utils {
 
-    fun getStringResourceByName(name: String, context: Context): String {
-        val resId = context.resources.getIdentifier(name, "string", context.packageName)
+    fun getStringResourceByName(name: String, context: Context?): String {
+        val resId = context!!.resources.getIdentifier(name, "string", context.packageName)
         return context.getString(resId)
     }
 
-    fun getDrawableResourceByName(name: String, context: Context): Int {
-        return context.resources.getIdentifier(name, "drawable", context.packageName)
+    fun getDrawableResourceByName(name: String, context: Context?): Int {
+        return context!!.resources.getIdentifier(name, "drawable", context.packageName)
     }
 
     @BindingAdapter("android:src")
