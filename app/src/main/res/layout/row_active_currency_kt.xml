@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.nicoqueijo.android.currencyconverter.java.helpers.Utility" />
+        <import type="com.nicoqueijo.android.currencyconverter.kotlin.util.Utils" />
 
         <variable
             name="currency"
-            type="com.nicoqueijo.android.currencyconverter.java.models.Currency" />
+            type="com.nicoqueijo.android.currencyconverter.kotlin.model.Currency" />
     </data>
 
     <FrameLayout
@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@{Utility.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
+                    android:src="@{Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
                     tools:src="@drawable/usd_usd" />
 
             </androidx.cardview.widget.CardView>

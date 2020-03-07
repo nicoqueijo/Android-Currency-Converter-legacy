@@ -45,8 +45,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RowSelectableCurrencyKtBinding.inflate(LayoutInflater.from(parent.context),
-                parent, false)
+        val binding = RowSelectableCurrencyKtBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

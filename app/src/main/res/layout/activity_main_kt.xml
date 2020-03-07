@@ -73,7 +73,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/navigation_header"
+            app:headerLayout="@layout/navigation_header_kt"
             app:itemIconTint="?attr/icon_color"
             app:itemTextColor="?attr/text_color"
             app:menu="@menu/drawer_view_kt">
