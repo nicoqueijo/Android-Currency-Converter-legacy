@@ -15,6 +15,7 @@ import com.google.common.collect.Lists
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
+import com.nicoqueijo.android.currencyconverter.kotlin.view.MainActivity_kt
 import com.turingtechnologies.materialscrollbar.INameableAdapter
 
 class SelectableCurrenciesAdapter_kt(val context: Context?) :
@@ -37,6 +38,9 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
         val checkMark: ImageView = itemView.findViewById(R.id.check_mark_kt)
 
         override fun onClick(v: View?) {
+            val selectedCurrency = currencies[adapterPosition]
+            selectedCurrency.isSelected = true
+            MainActivity_kt.activityViewModel.upsertCurrency(selectedCurrency)
             v?.findNavController()?.popBackStack()
         }
     }
