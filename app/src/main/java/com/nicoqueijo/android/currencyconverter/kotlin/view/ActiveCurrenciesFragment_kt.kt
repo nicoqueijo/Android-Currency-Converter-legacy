@@ -42,7 +42,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        adapter = ActiveCurrenciesAdapter_kt(context, MainActivity_kt.activityViewModel.currencies, floatingActionButton)
+        adapter = ActiveCurrenciesAdapter_kt(context, MainActivity_kt.fakeCurrencies, floatingActionButton)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))

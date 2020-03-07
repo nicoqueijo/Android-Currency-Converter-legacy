@@ -17,7 +17,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val allCurrencies: LiveData<List<Currency>>
         get() = _allCurrencies
 
-    private val _activeCurrencies = repository.getAllCurrencies()
+    private val _activeCurrencies = repository.getActiveCurrencies()
     val activeCurrencies: LiveData<List<Currency>>
         get() = _activeCurrencies
 

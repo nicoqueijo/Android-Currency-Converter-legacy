@@ -14,8 +14,8 @@ interface CurrencyDao {
     suspend fun upsert(currency: Currency?)
 
     @Query("SELECT * FROM currency ORDER BY currency_code ASC")
-    suspend fun getAllCurrencies(): LiveData<List<Currency>>
+    fun getAllCurrencies(): LiveData<List<Currency>>
 
     @Query("SELECT * FROM currency WHERE is_selected = 1 ORDER BY 'order' ASC")
-    suspend fun getActiveCurrencies(): LiveData<List<Currency>>
+    fun getActiveCurrencies(): LiveData<List<Currency>>
 }

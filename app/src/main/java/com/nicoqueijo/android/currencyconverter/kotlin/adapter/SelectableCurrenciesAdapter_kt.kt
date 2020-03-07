@@ -22,8 +22,8 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
         INameableAdapter,
         Filterable {
 
-    private lateinit var currenciesFull: ArrayList<Currency>
-    private var currencies = ArrayList(currenciesFull)
+    private var currenciesFull: ArrayList<Currency> = ArrayList()
+    private var currencies: ArrayList<Currency> = ArrayList()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -66,7 +66,11 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
     }
 
     fun setCurrencies(currencies: List<Currency>) {
+        if (this.currencies.isNullOrEmpty()) {
+            this.currencies = ArrayList(currencies)
+        }
         this.currenciesFull = ArrayList(currencies)
+        notifyDataSetChanged()
     }
 
     override fun getCharacterForElement(position: Int): Char {

@@ -16,7 +16,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 
 
-class ActiveCurrenciesAdapter_kt(val context: Context,
+class ActiveCurrenciesAdapter_kt(val context: Context?,
                                  val activeCurrencies: List<Currency>,
                                  val floatingActionButton: FloatingActionButton) :
         RecyclerView.Adapter<ActiveCurrenciesAdapter_kt.ViewHolder>() {

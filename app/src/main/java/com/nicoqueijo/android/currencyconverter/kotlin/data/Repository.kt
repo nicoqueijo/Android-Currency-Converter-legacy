@@ -8,7 +8,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -35,6 +34,7 @@ class Repository(private val context: Context) {
         }
 
     internal suspend fun initCurrencies() {
+        if (!isDataEmpty()) return
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
@@ -59,13 +59,9 @@ class Repository(private val context: Context) {
         }
     }
 
-    internal fun getAllCurrencies() = runBlocking {
-        currencyDao.getAllCurrencies()
-    }
+    internal fun getAllCurrencies() = currencyDao.getAllCurrencies()
 
-    internal fun getActiveCurrencies() = runBlocking {
-        currencyDao.getActiveCurrencies()
-    }
+    internal fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
 
     internal fun upsertCurrency(currency: Currency) {
         CoroutineScope(Dispatchers.IO).launch {

@@ -1,12 +1,11 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,12 +41,15 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
         val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
-        adapter = SelectableCurrenciesAdapter_kt(context)
         recyclerView.setHasFixedSize(true)
+        adapter = SelectableCurrenciesAdapter_kt(context)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context,
                 DividerItemDecoration.VERTICAL))
+        MainActivity_kt.activityViewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+            adapter.setCurrencies(currencies)
+        })
     }
 
     private fun initMenu(menu: Menu, inflater: MenuInflater) {
