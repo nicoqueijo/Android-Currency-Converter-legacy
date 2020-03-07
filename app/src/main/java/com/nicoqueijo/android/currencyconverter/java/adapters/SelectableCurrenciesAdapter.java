@@ -78,7 +78,8 @@ public class SelectableCurrenciesAdapter extends
     public Character getCharacterForElement(int position) {
         char firstCharacter;
         try {
-            firstCharacter = mCurrencies.get(position).getCurrencyCode()
+            firstCharacter = mCurrencies.get(position)
+                    .getCurrencyCode()
                     .charAt(Currency.CURRENCY_CODE_STARTING_INDEX);
         } catch (IndexOutOfBoundsException exception) {
             firstCharacter = ' ';
