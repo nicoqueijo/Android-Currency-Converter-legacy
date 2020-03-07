@@ -28,7 +28,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_selectable_currency_kt, container, false)
-        initAdaptersAndListeners(view)
+        initViewsAndAdapter(view)
         return view
     }
 
@@ -37,7 +37,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         initMenu(menu, inflater)
     }
 
-    private fun initAdaptersAndListeners(view: View) {
+    private fun initViewsAndAdapter(view: View) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
         val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)

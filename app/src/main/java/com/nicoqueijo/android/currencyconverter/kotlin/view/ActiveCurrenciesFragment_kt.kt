@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +18,6 @@ import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 
 class ActiveCurrenciesFragment_kt : Fragment() {
@@ -31,21 +31,24 @@ class ActiveCurrenciesFragment_kt : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies_kt, container, false)
         initInterstitialAd()
-        initViewsAndAdapters(view)
+        initViewsAndAdapter(view)
         setUpFabOnClickListener()
         return view
     }
 
-    private fun initViewsAndAdapters(view: View) {
+    private fun initViewsAndAdapter(view: View) {
         val recyclerView: CustomRecyclerView_kt = view.findViewById(R.id.recycler_view_active_currencies_kt)
         val emptyListView = view.findViewById<View>(R.id.container_empty_list_kt)
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        adapter = ActiveCurrenciesAdapter_kt(context, MainActivity_kt.fakeCurrencies, floatingActionButton)
+        adapter = ActiveCurrenciesAdapter_kt(context)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
+        MainActivity_kt.activityViewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+            adapter.setCurrencies(currencies)
+        })
     }
 
     private fun initInterstitialAd() {
