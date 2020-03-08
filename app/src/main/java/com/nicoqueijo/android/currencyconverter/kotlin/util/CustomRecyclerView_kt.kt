@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
  * which displays a hint on how to add new items using the FloatingActionButton.
  */
 class CustomRecyclerView_kt : RecyclerView {
-    private var mEmptyListView: View? = null
+    private lateinit var mEmptyListView: View
 
-    constructor(context: Context?) : super(context!!)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context!!, attrs, defStyle)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     /**
      * Whenever there is a change in the adapter data observer one of the following methods will be
@@ -69,7 +69,7 @@ class CustomRecyclerView_kt : RecyclerView {
      *
      * @param emptyListView the view to show when the RecyclerView is empty.
      */
-    fun showIfEmpty(emptyListView: View?) {
+    fun showIfEmpty(emptyListView: View) {
         mEmptyListView = emptyListView
     }
 
@@ -78,6 +78,6 @@ class CustomRecyclerView_kt : RecyclerView {
      * not.
      */
     private fun showEmptyListView() {
-        mEmptyListView!!.visibility = if (adapter!!.itemCount == 0) View.VISIBLE else View.GONE
+        mEmptyListView.visibility = if (adapter!!.itemCount == 0) View.VISIBLE else View.GONE
     }
 }

@@ -14,11 +14,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val repository: Repository = Repository(application)
 
     private val _allCurrencies = repository.getAllCurrencies()
-    val allCurrencies: LiveData<List<Currency>>
+    val allCurrencies: LiveData<MutableList<Currency>>
         get() = _allCurrencies
 
     private val _activeCurrencies = repository.getActiveCurrencies()
-    val activeCurrencies: LiveData<List<Currency>>
+    val activeCurrencies: LiveData<MutableList<Currency>>
         get() = _activeCurrencies
 
     fun upsertCurrency(currency: Currency) {
