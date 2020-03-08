@@ -34,7 +34,6 @@ class Repository(private val context: Context) {
         }
 
     internal suspend fun initCurrencies() {
-        if (!isDataEmpty()) return // This will never update stale data?
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
@@ -54,6 +53,8 @@ class Repository(private val context: Context) {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())
             }
+        } else if (!isDataEmpty()) {
+            return
         } else {
             throw IOException("Network is unavailable and no local data found.")
         }
