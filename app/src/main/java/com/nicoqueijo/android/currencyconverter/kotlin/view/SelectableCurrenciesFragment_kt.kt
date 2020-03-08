@@ -18,7 +18,7 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar
 // Highlight 'Converter' in menu when we are in this Fragment
 class SelectableCurrenciesFragment_kt : Fragment() {
 
-    lateinit var adapter: SelectableCurrenciesAdapter_kt
+    private lateinit var adapter: SelectableCurrenciesAdapter_kt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

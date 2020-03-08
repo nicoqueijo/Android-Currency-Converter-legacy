@@ -45,7 +45,6 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                retrofitResponse.body()?.timestamp // Not sure if this line does anything
                 retrofitResponse.body()?.exchangeRates?.currencies?.forEach {
                     currencyDao.upsert(it)
                 }

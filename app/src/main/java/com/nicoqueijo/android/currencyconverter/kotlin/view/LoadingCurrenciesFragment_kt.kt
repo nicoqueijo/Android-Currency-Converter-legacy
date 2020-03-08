@@ -26,7 +26,9 @@ class LoadingCurrenciesFragment_kt : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         CoroutineScope(Dispatchers.IO).launch {
-            delay(250) // So the user can actually see the splash screen for a moment
+            // Small delay so the user can actually see the splash screen
+            // for a moment as feedback of an attempt to retrieve data.
+            delay(250)
             try {
                 MainActivity_kt.activityViewModel.repository.initCurrencies()
                 CoroutineScope(Dispatchers.Main).launch {
