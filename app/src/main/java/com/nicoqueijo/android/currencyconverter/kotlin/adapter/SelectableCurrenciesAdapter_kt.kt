@@ -71,9 +71,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
     }
 
     fun setCurrencies(currencies: List<Currency>) {
-        if (this.currencies.isNullOrEmpty()) {
-            this.currencies = ArrayList(currencies)
-        }
+        this.currencies = ArrayList(currencies)
         this.currenciesFull = ArrayList(currencies)
         notifyDataSetChanged()
     }

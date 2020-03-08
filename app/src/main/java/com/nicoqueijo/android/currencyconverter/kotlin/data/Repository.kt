@@ -34,7 +34,7 @@ class Repository(private val context: Context) {
         }
 
     internal suspend fun initCurrencies() {
-        if (!isDataEmpty()) return
+        if (!isDataEmpty()) return // This will never update stale data?
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
