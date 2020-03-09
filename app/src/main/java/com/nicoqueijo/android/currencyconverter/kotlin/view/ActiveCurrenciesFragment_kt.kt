@@ -44,18 +44,13 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        adapter = ActiveCurrenciesAdapter_kt(context)
+        adapter = ActiveCurrenciesAdapter_kt(context, floatingActionButton)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
-
-
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
                 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
-
-
-
         MainActivity_kt.activityViewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })

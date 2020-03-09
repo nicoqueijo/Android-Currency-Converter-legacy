@@ -8,13 +8,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.view.MainActivity_kt
+import java.math.BigDecimal
 
 
-class ActiveCurrenciesAdapter_kt(val context: Context?) :
+class ActiveCurrenciesAdapter_kt(val context: Context?, val floatingActionButton: FloatingActionButton) :
         RecyclerView.Adapter<ActiveCurrenciesAdapter_kt.ViewHolder>(),
         SwipeAndDragHelper_kt.ActionCompletionContract {
 
@@ -70,6 +74,25 @@ class ActiveCurrenciesAdapter_kt(val context: Context?) :
     }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
+        val swipedCurrency = activeCurrencies[position]
+        val conversionValue = swipedCurrency.conversionValue
+        swipedCurrency.isSelected = false
+        swipedCurrency.conversionValue = BigDecimal(0.0)
 
+        MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
+
+//        activeCurrencies.removeAt(position)
+//        notifyItemRemoved(position)
+
+        val snackbar = Snackbar.make(floatingActionButton, R.string.item_removed, Snackbar.LENGTH_LONG)
+        snackbar.setAction(R.string.undo) {
+            swipedCurrency.conversionValue = conversionValue
+            swipedCurrency.isSelected = true
+            activeCurrencies.add(position, swipedCurrency)
+            MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
+
+//            notifyItemInserted(position)
+        }
+        snackbar.show()
     }
 }

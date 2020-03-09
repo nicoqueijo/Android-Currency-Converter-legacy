@@ -21,8 +21,8 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
         INameableAdapter,
         Filterable {
 
-    private var currenciesFull: ArrayList<Currency> = ArrayList()
-    private var currencies: ArrayList<Currency> = ArrayList()
+    private var selectableCurrencies: ArrayList<Currency> = ArrayList()
+    private var filteredCurrencies: ArrayList<Currency> = ArrayList()
 
     inner class ViewHolder(val binding: RowSelectableCurrencyKtBinding) :
             RecyclerView.ViewHolder(binding.root), View.OnClickListener {
@@ -37,7 +37,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
 //        val checkMark: ImageView = itemView.findViewById(R.id.check_mark_kt)
 
         override fun onClick(v: View?) {
-            val selectedCurrency = currencies[adapterPosition]
+            val selectedCurrency = filteredCurrencies[adapterPosition]
             selectedCurrency.isSelected = true
             MainActivity_kt.activityViewModel.upsertCurrency(selectedCurrency)
             v?.findNavController()?.popBackStack()
@@ -50,13 +50,13 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
     }
 
     override fun getItemCount(): Int {
-        return currencies.size
+        return filteredCurrencies.size
     }
 
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.binding.currency = currencies[position]
+        holder.binding.currency = filteredCurrencies[position]
 
 //        val currency = currencies[position]
 //        val isSelected = currency.isSelected
@@ -71,14 +71,14 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
     }
 
     fun setCurrencies(currencies: List<Currency>) {
-        this.currencies = ArrayList(currencies)
-        this.currenciesFull = ArrayList(currencies)
+        this.filteredCurrencies = ArrayList(currencies)
+        this.selectableCurrencies = ArrayList(currencies)
         notifyDataSetChanged()
     }
 
     override fun getCharacterForElement(position: Int): Char {
         return try {
-            currencies[position].currencyCode[Currency.CURRENCY_CODE_STARTING_INDEX]
+            filteredCurrencies[position].currencyCode[Currency.CURRENCY_CODE_STARTING_INDEX]
         } catch (exception: IndexOutOfBoundsException) {
             ' '
         }
@@ -91,10 +91,10 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val filteredList: MutableList<Currency> = Lists.newArrayList()
             if (constraint == null || constraint.isEmpty()) {
-                filteredList.addAll(currenciesFull)
+                filteredList.addAll(selectableCurrencies)
             } else {
                 val filterPattern = constraint.toString().toLowerCase().trim { it <= ' ' }
-                currenciesFull.forEach { currency ->
+                selectableCurrencies.forEach { currency ->
                     val currencyCode = currency.trimmedCurrencyCode.toLowerCase()
                     val currencyName = Utils.getStringResourceByName(currency.currencyCode, context).toLowerCase()
                     if (currencyCode.contains(filterPattern) || currencyName.contains(filterPattern)) {
@@ -108,7 +108,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
         }
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
-            with(currencies) {
+            with(filteredCurrencies) {
                 clear()
                 addAll(results.values as List<Currency>)
             }
