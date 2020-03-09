@@ -16,8 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nicoqueijo.android.currencyconverter.R
 
-const val SOURCE_CODE_URL = "https://github.com/nicoqueijo/Android-Currency-Converter"
-
 class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListener {
 
     private lateinit var webView: WebView
@@ -107,5 +105,9 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
 
     override fun onScrollChanged() {
         swipeRefreshLayout.isEnabled = webView.scrollY == 0
+    }
+
+    companion object {
+        private const val SOURCE_CODE_URL = "https://github.com/nicoqueijo/Android-Currency-Converter"
     }
 }

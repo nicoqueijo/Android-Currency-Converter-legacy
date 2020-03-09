@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -76,7 +77,20 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, val floatingActionButton
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
         val swipedCurrency = activeCurrencies[position]
         val conversionValue = swipedCurrency.conversionValue
+        val swipedCurrencyOrder = swipedCurrency.order
+
+        activeCurrencies.reversed()
+                .forEach { currency ->
+                    if (currency.order == swipedCurrencyOrder) {
+                        return@forEach
+                    }
+                    currency.order--
+                    Log.d("Nico", "$currency")
+                    MainActivity_kt.activityViewModel.upsertCurrency(currency)
+                }
+
         swipedCurrency.isSelected = false
+        swipedCurrency.order = -1
         swipedCurrency.conversionValue = BigDecimal(0.0)
 
         MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
@@ -88,6 +102,16 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, val floatingActionButton
         snackbar.setAction(R.string.undo) {
             swipedCurrency.conversionValue = conversionValue
             swipedCurrency.isSelected = true
+            swipedCurrency.order = activeCurrencies.count()
+
+            activeCurrencies.forEachIndexed { index, currency ->
+                if (index == swipedCurrencyOrder) {
+                    return@forEachIndexed
+                }
+                currency.order = index + 1
+                MainActivity_kt.activityViewModel.upsertCurrency(currency)
+            }
+
             activeCurrencies.add(position, swipedCurrency)
             MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
 

@@ -38,7 +38,11 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
 
         override fun onClick(v: View?) {
             val selectedCurrency = filteredCurrencies[adapterPosition]
+            val count = selectableCurrencies.asSequence()
+                    .filter { it.isSelected }
+                    .count()
             selectedCurrency.isSelected = true
+            selectedCurrency.order = count
             MainActivity_kt.activityViewModel.upsertCurrency(selectedCurrency)
             v?.findNavController()?.popBackStack()
         }

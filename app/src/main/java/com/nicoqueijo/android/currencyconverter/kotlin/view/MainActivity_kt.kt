@@ -23,8 +23,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.delay
 
-const val TAG = "MeinActiviti"
-
 class MainActivity_kt : AppCompatActivity() {
 
     internal lateinit var drawerLayout: DrawerLayout

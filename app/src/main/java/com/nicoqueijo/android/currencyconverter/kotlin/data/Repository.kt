@@ -13,9 +13,6 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.*
 
-const val TWENTY_FOUR_HOURS = 86400000L
-const val NO_DATA = 0L
-
 class Repository(private val context: Context) {
 
     private val retrofitService = RetrofitFactory.getRetrofitService()
@@ -84,5 +81,10 @@ class Repository(private val context: Context) {
     private fun isDataStale() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
 
     private fun isDataEmpty() = timeSinceLastUpdate == NO_DATA
+
+    companion object {
+        private const val TWENTY_FOUR_HOURS = 86400000L
+        private const val NO_DATA = 0L
+    }
 
 }

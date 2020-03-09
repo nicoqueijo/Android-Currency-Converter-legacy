@@ -33,11 +33,9 @@ class Currency(@PrimaryKey
 
     override fun hashCode() = currencyCode.hashCode()
 
-    override fun toString() = "{$currencyCode : $exchangeRate}"
+    override fun toString() = "{$currencyCode : $exchangeRate : $isSelected : $order}"
 
     companion object {
-        val TAG: String = Currency::class.java.simpleName
         const val CURRENCY_CODE_STARTING_INDEX = 4
     }
-
 }

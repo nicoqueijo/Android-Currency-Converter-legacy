@@ -45,8 +45,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         adapter = SelectableCurrenciesAdapter_kt(context)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context,
-                DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         MainActivity_kt.activityViewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })
