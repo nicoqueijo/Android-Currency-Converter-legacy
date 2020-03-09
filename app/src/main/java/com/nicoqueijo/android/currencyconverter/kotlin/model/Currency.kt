@@ -17,7 +17,7 @@ class Currency(@PrimaryKey
     var conversionValue = BigDecimal(0.0)
     @ColumnInfo(name = "is_selected")
     var isSelected = false
-    @ColumnInfo(name = "order")
+    @ColumnInfo(name = "_order")
     var order = -1
 
     val trimmedCurrencyCode

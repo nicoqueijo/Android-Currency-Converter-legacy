@@ -16,6 +16,6 @@ interface CurrencyDao {
     @Query("SELECT * FROM currency ORDER BY currency_code ASC")
     fun getAllCurrencies(): LiveData<MutableList<Currency>>
 
-    @Query("SELECT * FROM currency WHERE is_selected = 1 ORDER BY 'order' ASC")
+    @Query("SELECT * FROM currency WHERE is_selected = 1 ORDER BY _order ASC")
     fun getActiveCurrencies(): LiveData<MutableList<Currency>>
 }

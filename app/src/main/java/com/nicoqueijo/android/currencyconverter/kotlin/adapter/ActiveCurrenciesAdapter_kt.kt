@@ -19,7 +19,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.view.MainActivity_kt
 import java.math.BigDecimal
 
 
-class ActiveCurrenciesAdapter_kt(val context: Context?, val floatingActionButton: FloatingActionButton) :
+class ActiveCurrenciesAdapter_kt(val context: Context?, private val floatingActionButton: FloatingActionButton) :
         RecyclerView.Adapter<ActiveCurrenciesAdapter_kt.ViewHolder>(),
         SwipeAndDragHelper_kt.ActionCompletionContract {
 
@@ -85,8 +85,8 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, val floatingActionButton
                         return@forEach
                     }
                     currency.order--
-                    Log.d("Nico", "$currency")
                     MainActivity_kt.activityViewModel.upsertCurrency(currency)
+                    Log.d("Nico", "$currency")
                 }
 
         swipedCurrency.isSelected = false
