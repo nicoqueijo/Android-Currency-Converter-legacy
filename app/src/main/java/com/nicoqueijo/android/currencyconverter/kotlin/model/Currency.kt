@@ -6,18 +6,18 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
-@Entity(tableName = "currency")
+@Entity(tableName = "table_currency")
 class Currency(@PrimaryKey
-               @ColumnInfo(name = "currency_code")
+               @ColumnInfo(name = "column_currency_code")
                val currencyCode: String,
-               @ColumnInfo(name = "exchange_rate")
+               @ColumnInfo(name = "column_exchange_rate")
                val exchangeRate: Double) {
 
     @Ignore
     var conversionValue = BigDecimal(0.0)
-    @ColumnInfo(name = "is_selected")
+    @ColumnInfo(name = "column_is_selected")
     var isSelected = false
-    @ColumnInfo(name = "_order")
+    @ColumnInfo(name = "column_order")
     var order = -1
 
     val trimmedCurrencyCode
