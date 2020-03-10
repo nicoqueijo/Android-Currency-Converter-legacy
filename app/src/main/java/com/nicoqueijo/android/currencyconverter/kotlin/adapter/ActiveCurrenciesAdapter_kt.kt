@@ -76,8 +76,8 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, private val floatingActi
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
         val swipedCurrency = activeCurrencies[position]
-        val conversionValue = swipedCurrency.conversionValue
         val swipedCurrencyOrder = swipedCurrency.order
+//        val conversionValue = swipedCurrency.conversionValue
 
         activeCurrencies.reversed()
                 .forEach { currency ->
@@ -85,38 +85,42 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, private val floatingActi
                         return@forEach
                     }
                     currency.order--
+                    Log.d("Nico", "Shifting (swipe): $currency")
                     MainActivity_kt.activityViewModel.upsertCurrency(currency)
-                    Log.d("Nico", "$currency")
                 }
 
         swipedCurrency.isSelected = false
         swipedCurrency.order = -1
         swipedCurrency.conversionValue = BigDecimal(0.0)
-
+        Log.d("Nico", "Swiped: $swipedCurrency")
         MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
+        Log.d("Nico", "activeCurrencies after Swipe: $activeCurrencies")
 
 //        activeCurrencies.removeAt(position)
 //        notifyItemRemoved(position)
 
         val snackbar = Snackbar.make(floatingActionButton, R.string.item_removed, Snackbar.LENGTH_LONG)
         snackbar.setAction(R.string.undo) {
-            swipedCurrency.conversionValue = conversionValue
+//            swipedCurrency.conversionValue = conversionValue
             swipedCurrency.isSelected = true
-            swipedCurrency.order = activeCurrencies.count()
+            swipedCurrency.order = swipedCurrencyOrder
+            Log.d("Nico", "Recovered: $swipedCurrency")
+            MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
 
-            activeCurrencies.forEachIndexed { index, currency ->
-                if (index == swipedCurrencyOrder) {
-                    return@forEachIndexed
-                }
-                currency.order = index + 1
+            for (i in swipedCurrencyOrder until activeCurrencies.size) {
+                val currency = activeCurrencies[i]
+                currency.order++
+                Log.d("Nico", "Shifting (undo): $currency")
                 MainActivity_kt.activityViewModel.upsertCurrency(currency)
             }
-
-            activeCurrencies.add(position, swipedCurrency)
-            MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
+            Log.d("Nico", "activeCurrencies after Undo: $activeCurrencies")
 
 //            notifyItemInserted(position)
         }
+
+
+
+
         snackbar.show()
     }
 }

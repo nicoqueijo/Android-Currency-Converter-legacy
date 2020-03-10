@@ -8,14 +8,14 @@ import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
 class Currency(@PrimaryKey
-               @ColumnInfo(name = "column_currency_code")
+               @ColumnInfo(name = "column_currencyCode")
                val currencyCode: String,
-               @ColumnInfo(name = "column_exchange_rate")
+               @ColumnInfo(name = "column_exchangeRate")
                val exchangeRate: Double) {
 
     @Ignore
     var conversionValue = BigDecimal(0.0)
-    @ColumnInfo(name = "column_is_selected")
+    @ColumnInfo(name = "column_isSelected")
     var isSelected = false
     @ColumnInfo(name = "column_order")
     var order = -1
