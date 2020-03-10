@@ -22,6 +22,10 @@ class ErrorFragment_kt : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_refresh_kt, menu)
+        initMenuItem(menu)
+    }
+
+    private fun initMenuItem(menu: Menu) {
         val refreshMenuItem = menu.findItem(R.id.refresh_kt).actionView as ImageView
         refreshMenuItem.setImageResource(R.drawable.ic_refresh)
         refreshMenuItem.setPadding(24, 24, 24, 24)

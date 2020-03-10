@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,8 +22,11 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
 
 class ActiveCurrenciesFragment_kt : Fragment() {
+
+    private lateinit var viewModel: ActiveCurrenciesViewModel_kt
 
     private lateinit var adapter: ActiveCurrenciesAdapter_kt
     private lateinit var interstitialAd: InterstitialAd
@@ -32,6 +36,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies_kt, container, false)
+        viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel_kt::class.java)
         initInterstitialAd()
         initViewsAndAdapter(view)
         setUpFabOnClickListener()
