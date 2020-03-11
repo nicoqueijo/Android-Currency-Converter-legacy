@@ -19,9 +19,7 @@ import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
-import kotlinx.coroutines.delay
 
 class MainActivity_kt : AppCompatActivity() {
 
@@ -168,9 +166,7 @@ class MainActivity_kt : AppCompatActivity() {
     }
 
     companion object {
-
+        // Make this member and not static
         lateinit var activityViewModel: MainActivityViewModel
-
     }
-
 }

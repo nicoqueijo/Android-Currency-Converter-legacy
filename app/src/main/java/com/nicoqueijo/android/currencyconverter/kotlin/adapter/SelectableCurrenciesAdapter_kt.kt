@@ -43,6 +43,7 @@ class SelectableCurrenciesAdapter_kt(val context: Context?) :
                     .count()
             selectedCurrency.isSelected = true
             selectedCurrency.order = count
+
             MainActivity_kt.activityViewModel.upsertCurrency(selectedCurrency)
             v?.findNavController()?.popBackStack()
         }

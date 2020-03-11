@@ -11,7 +11,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     // Candidate for dependency injection
-    val repository: Repository = Repository(application)
+    private val repository = Repository(application)
 
     private val _allCurrencies = repository.getAllCurrencies()
     val allCurrencies: LiveData<MutableList<Currency>>
@@ -25,7 +25,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         repository.upsertCurrency(currency)
     }
 
-    val _activeFragment: MutableLiveData<Int> = MutableLiveData(R.id.loadingCurrenciesFragment_kt)
+    val _activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment_kt)
     val activeFragment: LiveData<Int>
         get() = _activeFragment
 

@@ -1,8 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -15,15 +13,13 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.view.MainActivity_kt
-import java.math.BigDecimal
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
 
 
-class ActiveCurrenciesAdapter_kt(val context: Context?, private val floatingActionButton: FloatingActionButton) :
+class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt,
+                                 private val floatingActionButton: FloatingActionButton) :
         RecyclerView.Adapter<ActiveCurrenciesAdapter_kt.ViewHolder>(),
         SwipeAndDragHelper_kt.ActionCompletionContract {
-
-    private var activeCurrencies = mutableListOf<Currency>()
 
 //    var onBind: Boolean = false
 
@@ -45,14 +41,12 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, private val floatingActi
     }
 
     override fun getItemCount(): Int {
-        return activeCurrencies.size
+        return viewModel.adapterActiveCurrencies.size
     }
 
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        holder.binding.currency = activeCurrencies[position]
-
+        holder.binding.currency = viewModel.adapterActiveCurrencies[position]
 //        mOnBind = true
 //        val currency = currencies[position]
 //        with(holder) {
@@ -63,64 +57,24 @@ class ActiveCurrenciesAdapter_kt(val context: Context?, private val floatingActi
     }
 
     fun setCurrencies(currencies: MutableList<Currency>) {
-        this.activeCurrencies = currencies
+        viewModel.adapterActiveCurrencies = currencies
         notifyDataSetChanged()
     }
 
     override fun onViewMoved(oldPosition: Int, newPosition: Int) {
-        val movingCurrency: Currency = activeCurrencies[oldPosition]
-        activeCurrencies.removeAt(oldPosition)
-        activeCurrencies.add(newPosition, movingCurrency)
+        viewModel.handleMove(oldPosition, newPosition)
         notifyItemMoved(oldPosition, newPosition)
     }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
-        val swipedCurrency = activeCurrencies[position]
-        val swipedCurrencyOrder = swipedCurrency.order
 //        val conversionValue = swipedCurrency.conversionValue
-
-        activeCurrencies.reversed()
-                .forEach { currency ->
-                    if (currency.order == swipedCurrencyOrder) {
-                        return@forEach
-                    }
-                    currency.order--
-                    Log.d("Nico", "Shifting (swipe): $currency")
-                    MainActivity_kt.activityViewModel.upsertCurrency(currency)
-                }
-
-        swipedCurrency.isSelected = false
-        swipedCurrency.order = -1
-        swipedCurrency.conversionValue = BigDecimal(0.0)
-        Log.d("Nico", "Swiped: $swipedCurrency")
-        MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
-        Log.d("Nico", "activeCurrencies after Swipe: $activeCurrencies")
-
+        viewModel.handleSwipe(position)
 //        activeCurrencies.removeAt(position)
 //        notifyItemRemoved(position)
 
-        val snackbar = Snackbar.make(floatingActionButton, R.string.item_removed, Snackbar.LENGTH_LONG)
-        snackbar.setAction(R.string.undo) {
-//            swipedCurrency.conversionValue = conversionValue
-            swipedCurrency.isSelected = true
-            swipedCurrency.order = swipedCurrencyOrder
-            Log.d("Nico", "Recovered: $swipedCurrency")
-            MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
-
-            for (i in swipedCurrencyOrder until activeCurrencies.size) {
-                val currency = activeCurrencies[i]
-                currency.order++
-                Log.d("Nico", "Shifting (undo): $currency")
-                MainActivity_kt.activityViewModel.upsertCurrency(currency)
-            }
-            Log.d("Nico", "activeCurrencies after Undo: $activeCurrencies")
-
-//            notifyItemInserted(position)
-        }
-
-
-
-
-        snackbar.show()
+        Snackbar.make(floatingActionButton, R.string.item_removed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo) {
+                    viewModel.handleSwipeUndo()
+                }.show()
     }
 }

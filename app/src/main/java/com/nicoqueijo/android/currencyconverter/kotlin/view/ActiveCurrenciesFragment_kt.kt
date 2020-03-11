@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -31,7 +30,6 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     private lateinit var adapter: ActiveCurrenciesAdapter_kt
     private lateinit var interstitialAd: InterstitialAd
     private lateinit var floatingActionButton: FloatingActionButton
-    private var fabClicks = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,15 +46,14 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         val emptyListView = view.findViewById<View>(R.id.container_empty_list_kt)
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        adapter = ActiveCurrenciesAdapter_kt(context, floatingActionButton)
+        adapter = ActiveCurrenciesAdapter_kt(viewModel, floatingActionButton)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = layoutManager
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
                 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
-        MainActivity_kt.activityViewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+        viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })
     }
@@ -81,12 +78,12 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     }
 
     private fun processInterstitialAd() {
-        if (fabClicks == 1) {
+        if (viewModel.fabClicks == 1) {
             showInterstitialAd()
-        } else if (fabClicks % 5 == 0 && fabClicks != 0) {
+        } else if (viewModel.fabClicks % 5 == 0 && viewModel.fabClicks != 0) {
             showInterstitialAd()
         }
-        fabClicks++
+        viewModel.fabClicks++
     }
 
     private fun showInterstitialAd() {
