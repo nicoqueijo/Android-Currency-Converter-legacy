@@ -1,9 +1,11 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.DialogFragment
@@ -47,5 +49,10 @@ object Utils {
     @JvmStatic
     fun roundDialogCorners(dialogFragment: DialogFragment) {
         dialogFragment.dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    fun hideKeyboard(activity: Activity?) {
+        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
     }
 }

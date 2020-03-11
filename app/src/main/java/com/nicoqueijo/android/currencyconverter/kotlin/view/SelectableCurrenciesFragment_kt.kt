@@ -6,17 +6,21 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel_kt
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
 
 
 // Highlight 'Converter' in menu when we are in this Fragment
 class SelectableCurrenciesFragment_kt : Fragment() {
+
+    private lateinit var viewModel: SelectableCurrenciesViewModel_kt
 
     private lateinit var adapter: SelectableCurrenciesAdapter_kt
 
@@ -28,6 +32,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_selectable_currency_kt, container, false)
+        viewModel = ViewModelProvider(this).get(SelectableCurrenciesViewModel_kt::class.java)
         initViewsAndAdapter(view)
         return view
     }
@@ -42,11 +47,11 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
         recyclerView.setHasFixedSize(true)
-        adapter = SelectableCurrenciesAdapter_kt(context)
+        adapter = SelectableCurrenciesAdapter_kt(viewModel)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
-        MainActivity_kt.activityViewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+        viewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })
     }

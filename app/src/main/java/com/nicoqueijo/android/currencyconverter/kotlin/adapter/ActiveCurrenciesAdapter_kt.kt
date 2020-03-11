@@ -40,9 +40,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return viewModel.adapterActiveCurrencies.size
-    }
+    override fun getItemCount() = viewModel.adapterActiveCurrencies.size
 
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.view.MainActivity_kt
 import java.math.BigDecimal
 import kotlin.properties.Delegates
 
@@ -18,7 +17,7 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
     val activeCurrencies: LiveData<MutableList<Currency>>
         get() = _activeCurrencies
 
-    fun upsertCurrency(currency: Currency) {
+    private fun upsertCurrency(currency: Currency) {
         repository.upsertCurrency(currency)
     }
 
@@ -41,14 +40,14 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
                     }
                     currency.order--
                     Log.d("Nico", "Shifting (swipe): $currency")
-                    MainActivity_kt.activityViewModel.upsertCurrency(currency)
+                    upsertCurrency(currency)
                 }
 
         swipedCurrency.isSelected = false
         swipedCurrency.order = -1
         swipedCurrency.conversionValue = BigDecimal(0.0)
         Log.d("Nico", "Swiped: $swipedCurrency")
-        MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
+        upsertCurrency(swipedCurrency)
         Log.d("Nico", "activeCurrencies after Swipe: $adapterActiveCurrencies")
 
     }
@@ -58,13 +57,13 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         swipedCurrency.isSelected = true
         swipedCurrency.order = swipedCurrencyOrder
         Log.d("Nico", "Recovered: $swipedCurrency")
-        MainActivity_kt.activityViewModel.upsertCurrency(swipedCurrency)
+        upsertCurrency(swipedCurrency)
 
         for (i in swipedCurrencyOrder until adapterActiveCurrencies.size) {
             val currency = adapterActiveCurrencies[i]
             currency.order++
             Log.d("Nico", "Shifting (undo): $currency")
-            MainActivity_kt.activityViewModel.upsertCurrency(currency)
+            upsertCurrency(currency)
         }
         Log.d("Nico", "activeCurrencies after Undo: $adapterActiveCurrencies")
 

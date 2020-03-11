@@ -21,6 +21,7 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
 
 class ActiveCurrenciesFragment_kt : Fragment() {
@@ -72,7 +73,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     private fun setUpFabOnClickListener() {
         floatingActionButton.setOnClickListener {
             processInterstitialAd()
-            hideKeyboard()
+            Utils.hideKeyboard(activity)
             findNavController().navigate(R.id.action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt)
         }
     }
@@ -90,10 +91,5 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         if (interstitialAd.isLoaded) {
             interstitialAd.show()
         }
-    }
-
-    private fun hideKeyboard() {
-        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
     }
 }
