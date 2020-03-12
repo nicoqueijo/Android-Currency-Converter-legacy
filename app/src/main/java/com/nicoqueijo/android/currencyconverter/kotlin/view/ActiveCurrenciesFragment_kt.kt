@@ -92,4 +92,8 @@ class ActiveCurrenciesFragment_kt : Fragment() {
             interstitialAd.show()
         }
     }
+
+    companion object {
+        const val TAG = "ActiveCurrencies"
+    }
 }

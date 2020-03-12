@@ -6,6 +6,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment_kt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import kotlin.properties.Delegates
 
@@ -30,25 +35,30 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
 
     fun handleSwipe(position: Int) {
         swipedCurrency = adapterActiveCurrencies[position]
+        Log.d(ActiveCurrenciesFragment_kt.TAG, "Swiped currency: $swipedCurrency")
         swipedCurrencyOrder = swipedCurrency.order
+        Log.d(ActiveCurrenciesFragment_kt.TAG, "Swiped currency order: $swipedCurrencyOrder")
 //        val conversionValue = swipedCurrency.conversionValue
 
-        adapterActiveCurrencies.reversed()
-                .forEach { currency ->
-                    if (currency.order == swipedCurrencyOrder) {
-                        return@forEach
+        Log.d(ActiveCurrenciesFragment_kt.TAG, "Active currencies: $adapterActiveCurrencies")
+        run loop@{
+            adapterActiveCurrencies
+                    .reversed()
+                    .forEach { currency ->
+                        if (currency.order == swipedCurrencyOrder) {
+                            return@loop
+                        }
+                        currency.order--
+                        Log.d(ActiveCurrenciesFragment_kt.TAG, "Shifting (swipe): $currency")
+                        upsertCurrency(currency)
                     }
-                    currency.order--
-                    Log.d("Nico", "Shifting (swipe): $currency")
-                    upsertCurrency(currency)
-                }
-
+        }
         swipedCurrency.isSelected = false
         swipedCurrency.order = -1
         swipedCurrency.conversionValue = BigDecimal(0.0)
-        Log.d("Nico", "Swiped: $swipedCurrency")
+        Log.d(ActiveCurrenciesFragment_kt.TAG, "Swiped: $swipedCurrency")
         upsertCurrency(swipedCurrency)
-        Log.d("Nico", "activeCurrencies after Swipe: $adapterActiveCurrencies")
+        Log.d(ActiveCurrenciesFragment_kt.TAG, "activeCurrencies after Swipe: $adapterActiveCurrencies")
 
     }
 
@@ -56,17 +66,15 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         //            swipedCurrency.conversionValue = conversionValue
         swipedCurrency.isSelected = true
         swipedCurrency.order = swipedCurrencyOrder
-        Log.d("Nico", "Recovered: $swipedCurrency")
+        Log.d(ActiveCurrenciesFragment_kt.TAG, "Recovered: $swipedCurrency")
         upsertCurrency(swipedCurrency)
 
         for (i in swipedCurrencyOrder until adapterActiveCurrencies.size) {
             val currency = adapterActiveCurrencies[i]
             currency.order++
-            Log.d("Nico", "Shifting (undo): $currency")
+            Log.d(ActiveCurrenciesFragment_kt.TAG, "Shifting (undo): $currency")
             upsertCurrency(currency)
         }
-        Log.d("Nico", "activeCurrencies after Undo: $adapterActiveCurrencies")
-
 //            notifyItemInserted(position)
     }
 

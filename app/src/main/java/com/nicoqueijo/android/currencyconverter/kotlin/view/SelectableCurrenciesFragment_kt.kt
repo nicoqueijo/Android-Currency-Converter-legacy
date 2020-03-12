@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
@@ -70,6 +71,10 @@ class SelectableCurrenciesFragment_kt : Fragment() {
                 return false
             }
         })
+    }
+
+    companion object {
+        const val TAG = "SelectableCurrencies"
     }
 
 }

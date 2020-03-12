@@ -13,5 +13,4 @@ class MainActivityViewModel_kt(application: Application) : AndroidViewModel(appl
         get() = _activeFragment
 
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
-
 }
