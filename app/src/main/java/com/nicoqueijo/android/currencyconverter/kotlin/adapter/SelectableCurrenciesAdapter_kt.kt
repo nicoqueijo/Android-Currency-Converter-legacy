@@ -72,7 +72,7 @@ class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrencies
                 clear()
                 addAll(results.values as List<Currency>)
             }
-            notifyDataSetChanged()
+            submitList(results.values as List<Currency>)
         }
     }
 }

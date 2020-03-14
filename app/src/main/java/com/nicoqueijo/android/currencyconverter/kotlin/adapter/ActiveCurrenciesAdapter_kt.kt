@@ -6,22 +6,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
 
 
 class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt,
                                  private val floatingActionButton: FloatingActionButton) :
-        RecyclerView.Adapter<ActiveCurrenciesAdapter_kt.ViewHolder>(),
+        ListAdapter<Currency, ActiveCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper_kt.ActionCompletionContract {
-
-//    var onBind: Boolean = false
 
     inner class ViewHolder(val binding: RowActiveCurrencyKtBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -32,7 +32,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         val flag: ImageView = itemView.findViewById(R.id.flag_kt)
         val currencyCode: TextView = itemView.findViewById(R.id.currency_code_kt)
 //        val conversionValue: CustomEditText_kt = itemView.findViewById(R.id.conversion_value_kt)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,36 +39,23 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = viewModel.adapterActiveCurrencies.size
-
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.currency = viewModel.adapterActiveCurrencies[position]
-//        mOnBind = true
-//        val currency = currencies[position]
-//        with(holder) {
-//            currencyCode.text = currency.trimmedCurrencyCode
-//            flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context))
-//        }
-//        mOnBind = false
     }
 
     fun setCurrencies(currencies: MutableList<Currency>) {
         viewModel.adapterActiveCurrencies = currencies
-        notifyDataSetChanged()
+        submitList(viewModel.adapterActiveCurrencies)
     }
 
     override fun onViewMoved(oldPosition: Int, newPosition: Int) {
         viewModel.handleMove(oldPosition, newPosition)
-//        notifyItemMoved(oldPosition, newPosition)
     }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
 //        val conversionValue = swipedCurrency.conversionValue
         viewModel.handleSwipe(position)
-//        activeCurrencies.removeAt(position)
-//        notifyItemRemoved(position)
-
         Snackbar.make(floatingActionButton, R.string.item_removed, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo) {
                     viewModel.handleSwipeUndo()

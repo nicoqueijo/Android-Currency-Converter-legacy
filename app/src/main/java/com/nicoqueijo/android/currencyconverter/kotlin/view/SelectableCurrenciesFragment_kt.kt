@@ -69,9 +69,4 @@ class SelectableCurrenciesFragment_kt : Fragment() {
             }
         })
     }
-
-    companion object {
-        const val TAG = "SelectableCurrencies"
-    }
-
 }
