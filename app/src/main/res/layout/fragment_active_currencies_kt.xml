@@ -57,6 +57,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="86dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_active_currency_kt" />
 
     </com.bosphere.fadingedgelayout.FadingEdgeLayout>

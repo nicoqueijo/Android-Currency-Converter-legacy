@@ -49,7 +49,6 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         adapter = ActiveCurrenciesAdapter_kt(viewModel, floatingActionButton)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
                 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)

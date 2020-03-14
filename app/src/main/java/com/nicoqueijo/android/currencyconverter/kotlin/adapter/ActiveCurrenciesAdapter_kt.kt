@@ -61,7 +61,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
 
     override fun onViewMoved(oldPosition: Int, newPosition: Int) {
         viewModel.handleMove(oldPosition, newPosition)
-        notifyItemMoved(oldPosition, newPosition)
+//        notifyItemMoved(oldPosition, newPosition)
     }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {

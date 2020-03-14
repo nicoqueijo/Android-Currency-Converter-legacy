@@ -79,8 +79,22 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
     }
 
     fun handleMove(oldPosition: Int, newPosition: Int) {
-        val movingCurrency: Currency = adapterActiveCurrencies[oldPosition]
-        adapterActiveCurrencies.removeAt(oldPosition)
-        adapterActiveCurrencies.add(newPosition, movingCurrency)
+        // a = b.also { b = a }
+//        adapterActiveCurrencies[oldPosition] = adapterActiveCurrencies[newPosition].also {
+//            adapterActiveCurrencies[newPosition] = adapterActiveCurrencies[oldPosition]
+//        }
+        adapterActiveCurrencies[oldPosition].order = adapterActiveCurrencies[newPosition].order.also {
+            adapterActiveCurrencies[newPosition].order = adapterActiveCurrencies[oldPosition].order
+        }
+        Log.d("HandleMove", "handle move called: Old Position: $oldPosition, New Position: $newPosition")
+
+//        upsertCurrency(adapterActiveCurrencies[oldPosition])
+//        upsertCurrency(adapterActiveCurrencies[newPosition])
+
+//        val movingCurrency = adapterActiveCurrencies[oldPosition]
+//
+//        adapterActiveCurrencies.removeAt(oldPosition)
+//
+//        adapterActiveCurrencies.add(newPosition, movingCurrency)
     }
 }
