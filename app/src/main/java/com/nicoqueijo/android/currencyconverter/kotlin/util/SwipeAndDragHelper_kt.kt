@@ -22,14 +22,14 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+        return makeMovementFlags(dragFlags, swipeFlags)
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (viewHolder != null) {
                 val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
-                ItemTouchHelper.Callback.getDefaultUIUtil().onSelected(foregroundView)
+                getDefaultUIUtil().onSelected(foregroundView)
             }
         } else {
             super.onSelectedChanged(viewHolder, actionState)
@@ -40,7 +40,7 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
                                  dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
-            ItemTouchHelper.Callback.getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive)
         } else {
             super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -49,7 +49,7 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
-        ItemTouchHelper.Callback.getDefaultUIUtil().clearView(foregroundView)
+        getDefaultUIUtil().clearView(foregroundView)
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
@@ -57,7 +57,7 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val thisHolder = viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder
             val foregroundView: View = thisHolder.rowForeground
-            ItemTouchHelper.Callback.getDefaultUIUtil().onDraw(c, recyclerView, foregroundView,
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView,
                     dX, dY, actionState, isCurrentlyActive)
             val deleteIconStartVisibility = if (dX > 0.0) View.VISIBLE else View.INVISIBLE
             val deleteIconEndVisibility = if (dX < 0.0) View.VISIBLE else View.INVISIBLE

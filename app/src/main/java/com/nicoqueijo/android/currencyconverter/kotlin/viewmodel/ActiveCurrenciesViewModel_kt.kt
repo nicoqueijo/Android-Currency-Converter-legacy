@@ -1,12 +1,10 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment_kt
 import java.math.BigDecimal
 import kotlin.properties.Delegates
 
@@ -67,5 +65,7 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         adapterActiveCurrencies[oldPosition].order = adapterActiveCurrencies[newPosition].order.also {
             adapterActiveCurrencies[newPosition].order = adapterActiveCurrencies[oldPosition].order
         }
+        upsertCurrency(adapterActiveCurrencies[oldPosition])
+        upsertCurrency(adapterActiveCurrencies[newPosition])
     }
 }
