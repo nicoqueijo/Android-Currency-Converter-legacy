@@ -65,7 +65,10 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         adapterActiveCurrencies[oldPosition].order = adapterActiveCurrencies[newPosition].order.also {
             adapterActiveCurrencies[newPosition].order = adapterActiveCurrencies[oldPosition].order
         }
-        upsertCurrency(adapterActiveCurrencies[oldPosition])
-        upsertCurrency(adapterActiveCurrencies[newPosition])
+    }
+
+    fun handleDrop(fromPosition: Int, toPosition: Int) {
+        upsertCurrency(adapterActiveCurrencies[fromPosition])
+        upsertCurrency(adapterActiveCurrencies[toPosition])
     }
 }

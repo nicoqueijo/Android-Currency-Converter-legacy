@@ -49,10 +49,10 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         submitList(viewModel.adapterActiveCurrencies)
     }
 
-    override fun onViewMoved(oldPosition: Int, newPosition: Int) {
-        viewModel.handleMove(oldPosition, newPosition)
-        setCurrencies(viewModel.adapterActiveCurrencies)
-    }
+//    override fun onViewMoved(oldPosition: Int, newPosition: Int) {
+//        viewModel.handleMove(oldPosition, newPosition)
+////        notifyItemMoved(oldPosition, newPosition)
+//    }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
 //        val conversionValue = swipedCurrency.conversionValue
@@ -62,4 +62,9 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
                     viewModel.handleSwipeUndo()
                 }.show()
     }
+
+//    override fun onViewDropped(fromPosition: Int, toPosition: Int) {
+//        viewModel.handleDrop(fromPosition, toPosition)
+//        setCurrencies(viewModel.adapterActiveCurrencies)
+//    }
 }
