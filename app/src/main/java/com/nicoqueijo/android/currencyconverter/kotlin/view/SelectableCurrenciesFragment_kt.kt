@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.SearchView
@@ -17,8 +16,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurre
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
 
-
-// Highlight 'Converter' in menu when we are in this Fragment
 class SelectableCurrenciesFragment_kt : Fragment() {
 
     private lateinit var viewModel: SelectableCurrenciesViewModel_kt

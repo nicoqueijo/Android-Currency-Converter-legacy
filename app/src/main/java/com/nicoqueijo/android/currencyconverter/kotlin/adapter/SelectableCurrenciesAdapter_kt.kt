@@ -7,14 +7,16 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel_kt
 import com.turingtechnologies.materialscrollbar.INameableAdapter
 
 class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrenciesViewModel_kt) :
-        RecyclerView.Adapter<SelectableCurrenciesAdapter_kt.ViewHolder>(),
+        ListAdapter<Currency, SelectableCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
         INameableAdapter,
         Filterable {
 
@@ -24,11 +26,6 @@ class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrencies
         init {
             itemView.setOnClickListener(this)
         }
-
-//        val flag: ImageView = itemView.findViewById(R.id.flag_kt)
-//        val currencyCode: TextView = itemView.findViewById(R.id.currency_code_kt)
-//        val currencyName: TextView = itemView.findViewById(R.id.currency_name_kt)
-//        val checkMark: ImageView = itemView.findViewById(R.id.check_mark_kt)
 
         override fun onClick(v: View?) {
             viewModel.handleOnClick(adapterPosition)
@@ -41,30 +38,15 @@ class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrencies
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = viewModel.adapterFilteredCurrencies.size
-
-
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.binding.currency = viewModel.adapterFilteredCurrencies[position]
-
-//        val currency = currencies[position]
-//        val isSelected = currency.isSelected
-//        val code = currency.currencyCode
-//        with(holder) {
-//            itemView.isClickable = !isSelected
-//            checkMark.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
-//            currencyCode.text = currency.trimmedCurrencyCode
-//            currencyName.text = Utils.getStringResourceByName(code, context)
-//            flag.setImageResource(Utils.getDrawableResourceByName(code.toLowerCase(), context))
-//        }
     }
 
     fun setCurrencies(currencies: List<Currency>) {
         viewModel.adapterFilteredCurrencies = ArrayList(currencies)
         viewModel.adapterSelectableCurrencies = ArrayList(currencies)
-        notifyDataSetChanged()
+        submitList(viewModel.adapterFilteredCurrencies)
     }
 
     override fun getCharacterForElement(position: Int): Char {
@@ -93,5 +75,4 @@ class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrencies
             notifyDataSetChanged()
         }
     }
-
 }
