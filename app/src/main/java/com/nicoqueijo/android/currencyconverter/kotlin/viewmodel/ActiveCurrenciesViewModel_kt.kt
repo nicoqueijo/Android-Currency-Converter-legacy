@@ -62,13 +62,21 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
     }
 
     fun handleMove(oldPosition: Int, newPosition: Int) {
-        adapterActiveCurrencies[oldPosition].order = adapterActiveCurrencies[newPosition].order.also {
-            adapterActiveCurrencies[newPosition].order = adapterActiveCurrencies[oldPosition].order
+        swapCurrencies(oldPosition, newPosition)
+    }
+
+    fun handleDrop() {
+        adapterActiveCurrencies.forEach { currency ->
+            upsertCurrency(currency)
         }
     }
 
-    fun handleDrop(fromPosition: Int, toPosition: Int) {
-        upsertCurrency(adapterActiveCurrencies[fromPosition])
-        upsertCurrency(adapterActiveCurrencies[toPosition])
+    private fun swapCurrencies(oldPosition: Int, newPosition: Int) {
+        adapterActiveCurrencies[oldPosition].order = adapterActiveCurrencies[newPosition].order.also {
+            adapterActiveCurrencies[newPosition].order = adapterActiveCurrencies[oldPosition].order
+        }
+        adapterActiveCurrencies[oldPosition] = adapterActiveCurrencies[newPosition].also {
+            adapterActiveCurrencies[newPosition] = adapterActiveCurrencies[oldPosition]
+        }
     }
 }

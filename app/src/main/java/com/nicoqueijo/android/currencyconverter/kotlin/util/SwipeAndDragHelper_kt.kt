@@ -9,21 +9,18 @@ import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesA
 class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompletionContract, dragDirs: Int, swipeDirs: Int) :
         ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 
-    var dragFrom = -1
-    var dragTo = -1
+    private var dragFrom = -1
+    private var dragTo = -1
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                         target: RecyclerView.ViewHolder): Boolean {
-        ///////////////////////////////////////////////
         val fromPosition = viewHolder.adapterPosition
         val toPosition = target.adapterPosition
         if (dragFrom == -1) {
             dragFrom = fromPosition
         }
         dragTo = toPosition
-        ///////////////////////////////////////////////
-
-//        actionCompletionContract.onViewMoved(fromPosition, toPosition)
+        actionCompletionContract.onViewMoved(fromPosition, toPosition)
         return true
     }
 
@@ -60,14 +57,11 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        ///////////////////////////////////////////////
         if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
-//            actionCompletionContract.onViewDropped(dragFrom, dragTo)
+            actionCompletionContract.onViewDropped()
         }
         dragTo = -1
         dragFrom = dragTo
-        ///////////////////////////////////////////////
-
         val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
         getDefaultUIUtil().clearView(foregroundView)
     }
@@ -89,8 +83,8 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
     }
 
     interface ActionCompletionContract {
-//        fun onViewMoved(oldPosition: Int, newPosition: Int)
+        fun onViewMoved(oldPosition: Int, newPosition: Int)
         fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int)
-//        fun onViewDropped(fromPosition: Int, toPosition: Int)
+        fun onViewDropped()
     }
 }

@@ -1,18 +1,16 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -39,6 +37,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         initInterstitialAd()
         initViewsAndAdapter(view)
         setUpFabOnClickListener()
+        Log.d("ActiveCurrency", "${viewModel.adapterActiveCurrencies}")
         return view
     }
 

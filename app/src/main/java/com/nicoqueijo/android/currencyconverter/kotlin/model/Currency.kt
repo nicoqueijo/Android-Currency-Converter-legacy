@@ -33,7 +33,7 @@ class Currency(@PrimaryKey
 
     override fun hashCode() = currencyCode.hashCode()
 
-    override fun toString() = "{$currencyCode : $exchangeRate : $isSelected : $order}"
+    override fun toString() = "{$currencyCode : $order}"
 
     companion object {
         const val CURRENCY_CODE_STARTING_INDEX = 4
