@@ -5,19 +5,29 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.util.*
 import kotlin.properties.Delegates
 
 class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(application) {
 
     // Candidate for dependency injection
     private val repository = Repository(application)
+
     private val _activeCurrencies = repository.getActiveCurrencies()
     val activeCurrencies: LiveData<MutableList<Currency>>
         get() = _activeCurrencies
 
-    private fun upsertCurrency(currency: Currency) {
-        repository.upsertCurrency(currency)
+    private fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
+
+    private suspend fun getCurrency(currencyCode: String) = repository.getCurrency(currencyCode)
+
+    private fun isFirstLaunch() = repository.isFirstLaunch
+    private fun setFirstLaunch(value: Boolean) {
+        repository.isFirstLaunch = value
     }
 
     var adapterActiveCurrencies = mutableListOf<Currency>()
@@ -66,8 +76,8 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
     }
 
     fun handleDrop() {
-        adapterActiveCurrencies.forEach { currency ->
-            upsertCurrency(currency)
+        adapterActiveCurrencies.forEach {
+            upsertCurrency(it)
         }
     }
 
@@ -77,6 +87,39 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         }
         adapterActiveCurrencies[oldPosition] = adapterActiveCurrencies[newPosition].also {
             adapterActiveCurrencies[newPosition] = adapterActiveCurrencies[oldPosition]
+        }
+    }
+
+    fun populateDefaultCurrencies() {
+        if (!isFirstLaunch()) return
+        CoroutineScope(Dispatchers.IO).launch {
+            setFirstLaunch(false)
+            val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
+            val defaultCurrencies = mutableSetOf<Currency?>()
+            val usd = getCurrency("USD_USD")
+            usd?.order = 0
+            usd?.isSelected = true
+            defaultCurrencies.add(usd)
+            val localCurrency = getCurrency(localCurrencyCode)
+            if (localCurrencyCode == "USD_USD" || localCurrency == null) {
+                val eur = getCurrency("USD_EUR")
+                eur?.order = 1
+                eur?.isSelected = true
+                val jpy = getCurrency("USD_JPY")
+                jpy?.order = 2
+                jpy?.isSelected = true
+                val gbp = getCurrency("USD_GBP")
+                gbp?.order = 3
+                gbp?.isSelected = true
+                defaultCurrencies.addAll(listOf(eur, jpy, gbp))
+            } else {
+                localCurrency.order = 1
+                localCurrency.isSelected = true
+                defaultCurrencies.add(localCurrency)
+            }
+            defaultCurrencies.forEach {
+                upsertCurrency(it)
+            }
         }
     }
 }

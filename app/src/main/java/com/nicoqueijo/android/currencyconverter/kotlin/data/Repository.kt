@@ -20,16 +20,6 @@ class Repository(private val context: Context) {
     private val sharedPrefsProperties = context
             .getSharedPreferences(context.packageName.plus(".properties"), Context.MODE_PRIVATE)
 
-    private val timeSinceLastUpdate: Long
-        get() {
-            val lastUpdateTime = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
-            return if (lastUpdateTime != NO_DATA) {
-                System.currentTimeMillis() - lastUpdateTime
-            } else {
-                NO_DATA
-            }
-        }
-
     internal suspend fun initCurrencies() {
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
@@ -42,8 +32,8 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
-                    currencyDao.upsert(currency)
+                retrofitResponse.body()?.exchangeRates?.currencies?.forEach {
+                    currencyDao.upsert(it)
                 }
             } else {
                 // Retrofit call executed but response wasn't in the 200s
@@ -56,15 +46,33 @@ class Repository(private val context: Context) {
         }
     }
 
-    internal fun getAllCurrencies() = currencyDao.getAllCurrencies()
+    private val timeSinceLastUpdate: Long
+        get() {
+            val lastUpdateTime = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
+            return if (lastUpdateTime != NO_DATA) {
+                System.currentTimeMillis() - lastUpdateTime
+            } else {
+                NO_DATA
+            }
+        }
 
-    internal fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
+    internal var isFirstLaunch: Boolean
+        get() = sharedPrefsProperties.getBoolean("first_launch", true)
+        set(value) {
+            sharedPrefsProperties.edit().putBoolean("first_launch", value).apply()
+        }
 
-    internal fun upsertCurrency(currency: Currency) {
+    internal suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
+
+    internal fun upsertCurrency(currency: Currency?) {
         CoroutineScope(Dispatchers.IO).launch {
             currencyDao.upsert(currency)
         }
     }
+
+    internal fun getAllCurrencies() = currencyDao.getAllCurrencies()
+
+    internal fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
 
     private fun getApiKey(): String {
         val apiKeys = context.resources.getStringArray(R.array.api_keys)
@@ -86,5 +94,4 @@ class Repository(private val context: Context) {
         private const val TWENTY_FOUR_HOURS = 86400000L
         private const val NO_DATA = 0L
     }
-
 }

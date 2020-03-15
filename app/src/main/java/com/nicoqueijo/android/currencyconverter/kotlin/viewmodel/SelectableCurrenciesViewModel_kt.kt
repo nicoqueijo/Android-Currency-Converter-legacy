@@ -12,6 +12,7 @@ class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewMo
 
     // Candidate for dependency injection
     private val repository = Repository(application)
+
     private val _allCurrencies = repository.getAllCurrencies()
     val allCurrencies: LiveData<MutableList<Currency>>
         get() = _allCurrencies

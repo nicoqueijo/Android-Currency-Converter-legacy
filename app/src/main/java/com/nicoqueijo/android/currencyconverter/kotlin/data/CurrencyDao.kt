@@ -13,6 +13,9 @@ interface CurrencyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(currency: Currency?)
 
+    @Query("SELECT * FROM table_currency WHERE column_currencyCode = :currencyCode")
+    suspend fun getCurrency(currencyCode: String): Currency?
+
     @Query("SELECT * FROM table_currency ORDER BY column_currencyCode ASC")
     fun getAllCurrencies(): LiveData<MutableList<Currency>>
 

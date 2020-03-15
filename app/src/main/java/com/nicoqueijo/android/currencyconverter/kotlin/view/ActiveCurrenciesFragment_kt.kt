@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,8 +35,8 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel_kt::class.java)
         initInterstitialAd()
         initViewsAndAdapter(view)
+        populateDefaultCurrencies()
         setUpFabOnClickListener()
-        Log.d("ActiveCurrency", "${viewModel.adapterActiveCurrencies}")
         return view
     }
 
@@ -89,5 +88,9 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         if (interstitialAd.isLoaded) {
             interstitialAd.show()
         }
+    }
+
+    private fun populateDefaultCurrencies() {
+        viewModel.populateDefaultCurrencies()
     }
 }

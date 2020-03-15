@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
 
+// https://stackoverflow.com/questions/35920584/android-how-to-catch-drop-action-of-itemtouchhelper-which-is-used-with-recycle
+
 class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompletionContract, dragDirs: Int, swipeDirs: Int) :
         ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 

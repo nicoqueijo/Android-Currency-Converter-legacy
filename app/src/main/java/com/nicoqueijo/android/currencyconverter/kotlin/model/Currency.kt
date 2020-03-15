@@ -13,10 +13,14 @@ class Currency(@PrimaryKey
                @ColumnInfo(name = "column_exchangeRate")
                val exchangeRate: Double) {
 
+    constructor(currencyCode: String) : this(currencyCode, 0.0)
+
     @Ignore
     var conversionValue = BigDecimal(0.0)
+
     @ColumnInfo(name = "column_isSelected")
     var isSelected = false
+
     @ColumnInfo(name = "column_order")
     var order = -1
 
