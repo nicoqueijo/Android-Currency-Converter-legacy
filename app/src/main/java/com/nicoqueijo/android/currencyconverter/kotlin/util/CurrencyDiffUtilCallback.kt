@@ -10,8 +10,6 @@ class CurrencyDiffUtilCallback : DiffUtil.ItemCallback<Currency>() {
 
     override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean {
         return oldItem.currencyCode == newItem.currencyCode &&
-                oldItem.exchangeRate == newItem.exchangeRate &&
-                oldItem.isSelected == newItem.isSelected &&
-                oldItem.order == newItem.order
+                oldItem.exchangeRate == newItem.exchangeRate
     }
 }
