@@ -14,6 +14,7 @@ abstract class CurrencyDatabase : RoomDatabase() {
 
     companion object {
         private const val DATABASE_NAME = "currency.db"
+
         @Volatile
         private var instance: CurrencyDatabase? = null
 

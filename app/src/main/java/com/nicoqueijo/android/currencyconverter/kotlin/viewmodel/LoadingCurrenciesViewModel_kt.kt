@@ -7,5 +7,9 @@ import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 class LoadingCurrenciesViewModel_kt(application: Application) : AndroidViewModel(application) {
 
     // Candidate for dependency injection
-    val repository = Repository(application)
+    private val repository = Repository(application)
+
+    suspend fun initCurrencies() {
+        repository.initCurrencies()
+    }
 }
