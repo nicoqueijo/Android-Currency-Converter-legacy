@@ -26,14 +26,16 @@ class LoadingCurrenciesFragment_kt : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        Log.d("LoadingFragment", "onCreateView called")
         return inflater.inflate(R.layout.fragment_loading_currencies_kt, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("LoadingFragment", "onViewCreated called")
         viewModel = ViewModelProvider(this).get(LoadingCurrenciesViewModel_kt::class.java)
+    }
+
+    override fun onStart() {
+        super.onStart()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 // Small delay so the user can actually see the splash screen
