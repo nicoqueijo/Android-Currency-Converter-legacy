@@ -5,7 +5,7 @@ import java.math.RoundingMode
 
 object CurrencyConversion {
 
-    fun currencyConverter(amount: BigDecimal, fromRate: Double, toRate: Double): BigDecimal {
+    fun convertCurrency(amount: BigDecimal, fromRate: Double, toRate: Double): BigDecimal {
         val valueInDollars = convertAnyCurrencyToDollar(amount, fromRate)
         return convertDollarToAnyCurrency(valueInDollars, toRate)
     }

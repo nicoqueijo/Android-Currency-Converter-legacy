@@ -42,7 +42,7 @@ object Utils {
 
     @JvmStatic
     fun roundBigDecimal(value: BigDecimal): BigDecimal {
-        val decimalPlaces = 2
+        val decimalPlaces = 4
         return value.setScale(decimalPlaces, RoundingMode.CEILING)
     }
 
