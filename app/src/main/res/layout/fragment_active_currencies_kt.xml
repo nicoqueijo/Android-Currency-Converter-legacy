@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground">
+    android:background="?fragment_background_color">
 
     <LinearLayout
         android:id="@+id/container_empty_list_kt"

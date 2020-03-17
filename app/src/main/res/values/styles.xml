@@ -5,6 +5,9 @@
     <attr name="ic_error" format="reference" />
     <attr name="text_color" format="color" />
     <attr name="icon_color" format="color" />
+    <attr name="row_background_color" format="color" />
+    <attr name="fragment_background_color" format="color" />
+    <attr name="drawer_background_color" format="color" />
 
     <style name="AppThemeLight" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -19,7 +22,7 @@
         <item name="icon_color">@android:color/black</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="AppThemeDark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -28,6 +31,9 @@
         <item name="ic_error">@drawable/ic_dark_error</item>
         <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:colorControlHighlight">@color/accent</item>
+        <item name="row_background_color">@android:color/black</item>
+        <item name="fragment_background_color">@android:color/black</item>
+        <item name="drawer_background_color">@color/not_black</item>
         <item name="text_color">@android:color/white</item>
         <item name="icon_color">@android:color/white</item>
     </style>

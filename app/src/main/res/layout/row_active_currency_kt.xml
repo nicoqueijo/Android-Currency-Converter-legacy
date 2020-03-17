@@ -50,7 +50,7 @@
             android:id="@+id/row_foreground_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_item_ripple"
+            android:background="?attr/row_background_color"
             android:longClickable="true"
             android:paddingStart="16dp"
             android:paddingTop="8dp"

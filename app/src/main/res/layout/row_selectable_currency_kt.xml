@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="?android:colorBackground"
+        android:background="?attr/row_background_color"
         android:clickable="@{!currency.selected}"
         android:paddingStart="16dp"
         android:paddingTop="8dp"

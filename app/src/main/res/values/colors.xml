@@ -5,6 +5,7 @@
     <color name="accent">#9B00FF</color>
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>
+    <color name="not_black">#101010</color>
 
     <!--Color palette primary-->
     <color name="purple_50">#F3E0FF</color>
