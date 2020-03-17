@@ -58,7 +58,7 @@
             android:paddingBottom="8dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/flag_card_kt"
+                android:id="@+id/card_kt"
                 android:layout_width="50dp"
                 android:layout_height="37dp"
                 app:cardCornerRadius="2dp"
@@ -86,7 +86,7 @@
                 android:textColor="?attr/text_color"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/flag_card_kt"
+                app:layout_constraintStart_toEndOf="@+id/card_kt"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="USD" />
 
