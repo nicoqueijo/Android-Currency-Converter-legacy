@@ -1,11 +1,14 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivityViewModel_kt(application: Application) : AndroidViewModel(application) {
 
@@ -18,5 +21,13 @@ class MainActivityViewModel_kt(application: Application) : AndroidViewModel(appl
 
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
-    fun getLastUpdate() = repository.lastUpdate
+    @SuppressLint("SimpleDateFormat")
+    fun getLastUpdate(): String? {
+        val lastUpdate = repository.lastUpdate
+        if (lastUpdate == Repository.NO_DATA) return null
+        val date = Date(lastUpdate)
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
+        simpleDateFormat.timeZone = TimeZone.getDefault()
+        return simpleDateFormat.format(date)
+    }
 }

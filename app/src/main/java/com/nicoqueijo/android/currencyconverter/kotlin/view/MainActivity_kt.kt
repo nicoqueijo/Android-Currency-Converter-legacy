@@ -18,11 +18,8 @@ import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel_kt
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainActivity_kt : AppCompatActivity() {
 
@@ -152,12 +149,9 @@ class MainActivity_kt : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun initLastUpdateLabel() {
-        val lastUpdate = viewModel.getLastUpdate()
-        if (lastUpdate == Repository.NO_DATA) return
-        val date = Date(lastUpdate)
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
-        simpleDateFormat.timeZone = TimeZone.getDefault()
-        lastUpdateLabel.text = getString(R.string.last_update, simpleDateFormat.format(date))
+        viewModel.getLastUpdate()?.let {
+            lastUpdateLabel.text = getString(R.string.last_update, viewModel.getLastUpdate())
+        }
     }
 
     private fun showNoInternetSnackbar() {
