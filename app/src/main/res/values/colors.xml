@@ -5,13 +5,15 @@
     <color name="accent">#9B00FF</color>
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>
-    <color name="not_black">#101010</color>
+    <color name="almost_black">#101010</color>
+    <color name="semi_transparent">#40FFFFFF</color> <!-- white with 25% alpha -->
 
     <!--Color palette primary-->
     <color name="purple_50">#F3E0FF</color>
     <color name="purple_100">#E1B3FF</color>
     <color name="purple_200">#CD80FF</color>
     <color name="purple_300">#B94DFF</color>
+    <color name="purple_300_semi_transparent">#26CD80FF</color>
     <color name="purple_400">#AA26FF</color>
     <color name="purple_500">#9B00FF</color>
     <color name="purple_600">#9300FF</color>
