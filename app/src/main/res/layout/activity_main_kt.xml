@@ -74,19 +74,21 @@
             android:layout_gravity="start"
             android:background="?attr/drawer_background_color"
             android:fitsSystemWindows="true"
-            app:itemShapeFillColor="@color/background_menu_item_drawer"
             app:headerLayout="@layout/navigation_header_kt"
             app:itemIconTint="?attr/icon_color"
+            app:itemShapeFillColor="@color/background_menu_item_drawer"
             app:itemTextColor="?attr/text_color"
             app:menu="@menu/drawer_view_kt">
 
             <TextView
+                android:id="@+id/last_updated_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center"
-                android:padding="8dp"
-                android:text="Last updated: 2020-02-21 13:45" />
+                android:padding="16dp"
+                android:textColor="@color/semi_transparent"
+                tools:text="Last updated: 2020-02-21 13:45" />
 
         </com.google.android.material.navigation.NavigationView>
 

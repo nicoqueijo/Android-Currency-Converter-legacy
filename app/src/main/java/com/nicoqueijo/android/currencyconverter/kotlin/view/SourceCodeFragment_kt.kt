@@ -89,8 +89,8 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
     private fun handleBackPress() {
         webView.setOnKeyListener { _, keyCode: Int, event: KeyEvent ->
             val hostingActivity = activity as MainActivity_kt
-            if (hostingActivity.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                hostingActivity.drawerLayout.closeDrawer(GravityCompat.START)
+            if (hostingActivity.drawer.isDrawerOpen(GravityCompat.START)) {
+                hostingActivity.drawer.closeDrawer(GravityCompat.START)
                 return@setOnKeyListener true
             }
             if (keyCode == KeyEvent.KEYCODE_BACK

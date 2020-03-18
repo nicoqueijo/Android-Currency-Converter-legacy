@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,27 +18,32 @@ import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel_kt
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity_kt : AppCompatActivity() {
 
-    private lateinit var activityViewModel: MainActivityViewModel_kt
+    private lateinit var viewModel: MainActivityViewModel_kt
 
-    internal lateinit var drawerLayout: DrawerLayout
+    internal lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var navController: NavController
     private lateinit var navView: NavigationView
+    private lateinit var lastUpdateLabel: TextView
     private lateinit var closeAppToast: Toast
     private var interstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
-        activityViewModel = ViewModelProvider(this).get(MainActivityViewModel_kt::class.java)
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel_kt::class.java)
         initAds()
         initViews()
+        initLastUpdateLabel()
         handleNavigation()
     }
 
@@ -46,13 +52,13 @@ class MainActivity_kt : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            activityViewModel._activeFragment.postValue(destination.id)
-            activityViewModel.fragmentBackstackEntries.add(destination.id)
+            viewModel._activeFragment.postValue(destination.id)
+            viewModel.fragmentBackstackEntries.add(destination.id)
         }
 
         navView.setNavigationItemSelectedListener { menuItem ->
-            drawerLayout.closeDrawer(GravityCompat.START)
-            when (activityViewModel.activeFragment.value) {
+            drawer.closeDrawer(GravityCompat.START)
+            when (viewModel.activeFragment.value) {
                 R.id.activeCurrenciesFragment_kt -> {
                     handleBackstack(menuItem.itemId, R.id.activeCurrenciesFragment_kt)
                 }
@@ -84,14 +90,14 @@ class MainActivity_kt : AppCompatActivity() {
             menuItemId == activeFragment -> {
                 true
             }
-            activityViewModel.fragmentBackstackEntries.contains(menuItemId) -> {
+            viewModel.fragmentBackstackEntries.contains(menuItemId) -> {
                 navController.popBackStack(menuItemId, false)
-                activityViewModel.fragmentBackstackEntries.remove(activeFragment)
+                viewModel.fragmentBackstackEntries.remove(activeFragment)
                 true
             }
             else -> {
                 navController.navigate(menuItemId)
-                activityViewModel.fragmentBackstackEntries.add(menuItemId)
+                viewModel.fragmentBackstackEntries.add(menuItemId)
                 true
             }
         }
@@ -124,16 +130,17 @@ class MainActivity_kt : AppCompatActivity() {
     private fun initViews() {
         toolbar = findViewById(R.id.toolbar_kt)
         setSupportActionBar(toolbar)
-        drawerLayout = findViewById(R.id.drawer_layout_kt)
+        drawer = findViewById(R.id.drawer_layout_kt)
         initListeners()
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        drawer.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
         navView = findViewById(R.id.nav_view_menu_kt)
+        lastUpdateLabel = findViewById(R.id.last_updated_label)
         closeAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT)
     }
 
     private fun initListeners() {
-        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar,
+        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close) {
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -143,16 +150,26 @@ class MainActivity_kt : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private fun initLastUpdateLabel() {
+        val lastUpdate = viewModel.getLastUpdate()
+        if (lastUpdate == Repository.NO_DATA) return
+        val date = Date(lastUpdate)
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
+        simpleDateFormat.timeZone = TimeZone.getDefault()
+        lastUpdateLabel.text = getString(R.string.last_update, simpleDateFormat.format(date))
+    }
+
     private fun showNoInternetSnackbar() {
         Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
             // Document magic number or store in named variable
         } else if (navController.backStack.size > 2) {
-            activityViewModel.fragmentBackstackEntries.remove(navController.currentDestination?.id!!)
+            viewModel.fragmentBackstackEntries.remove(navController.currentDestination?.id!!)
             navController.popBackStack()
         } else if (!closeAppToast.view.isShown) {
             closeAppToast.show()

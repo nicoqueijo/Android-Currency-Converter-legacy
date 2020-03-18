@@ -46,11 +46,13 @@ class Repository(private val context: Context) {
         }
     }
 
+    val lastUpdate: Long
+        get() = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
+
     private val timeSinceLastUpdate: Long
         get() {
-            val lastUpdateTime = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
-            return if (lastUpdateTime != NO_DATA) {
-                System.currentTimeMillis() - lastUpdateTime
+            return if (lastUpdate != NO_DATA) {
+                System.currentTimeMillis() - lastUpdate
             } else {
                 NO_DATA
             }
@@ -91,7 +93,7 @@ class Repository(private val context: Context) {
     private fun isDataEmpty() = timeSinceLastUpdate == NO_DATA
 
     companion object {
-        private const val TWENTY_FOUR_HOURS = 86400000L
-        private const val NO_DATA = 0L
+        const val TWENTY_FOUR_HOURS = 86400000L
+        const val NO_DATA = 0L
     }
 }
