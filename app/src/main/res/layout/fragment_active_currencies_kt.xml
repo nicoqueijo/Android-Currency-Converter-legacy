@@ -7,7 +7,7 @@
     android:background="?fragment_background_color">
 
     <LinearLayout
-        android:id="@+id/container_empty_list_kt"
+        android:id="@+id/empty_list_kt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"

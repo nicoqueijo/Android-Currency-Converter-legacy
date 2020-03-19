@@ -42,7 +42,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
 
     private fun initViewsAndAdapter(view: View) {
         val recyclerView: CustomRecyclerView_kt = view.findViewById(R.id.recycler_view_active_currencies_kt)
-        val emptyListView = view.findViewById<View>(R.id.container_empty_list_kt)
+        val emptyListView = view.findViewById<View>(R.id.empty_list_kt)
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         adapter = ActiveCurrenciesAdapter_kt(viewModel, floatingActionButton)

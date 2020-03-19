@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel_kt
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
@@ -41,7 +42,9 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
+        val recyclerView: CustomRecyclerView_kt = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
+        val noResultsView = view.findViewById<View>(R.id.no_results_kt)
+        recyclerView.showIfEmpty(noResultsView)
         val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
         recyclerView.setHasFixedSize(true)

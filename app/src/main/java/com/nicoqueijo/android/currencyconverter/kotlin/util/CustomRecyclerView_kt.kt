@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Extending the default RecyclerView in order to implement AdapterDataObserver to listen for
  * changes in the adapter and act accordingly. If the adapter becomes empty we want to show a View
- * which displays a hint on how to add new items using the FloatingActionButton.
+ * which displays information about why its empty.
  */
 class CustomRecyclerView_kt : RecyclerView {
     private lateinit var mEmptyListView: View
@@ -74,8 +74,7 @@ class CustomRecyclerView_kt : RecyclerView {
     }
 
     /**
-     * Shows/hides the view that hints the user how to add items if the RecyclerView is empty or
-     * not.
+     * Shows/hides the view that displays information about why the list is empty.
      */
     private fun showEmptyListView() {
         mEmptyListView.visibility = if (adapter!!.itemCount == 0) View.VISIBLE else View.GONE

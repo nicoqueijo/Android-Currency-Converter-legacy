@@ -1,27 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?fragment_background_color">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <TextView
+        android:id="@+id/no_results_kt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:padding="8dp"
+        android:text="@string/no_results"
+        android:textColor="?attr/text_color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
         android:id="@+id/recycler_view_selectable_currencies_kt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/row_selectable_currency_kt" />
 
     <com.turingtechnologies.materialscrollbar.DragScrollBar
         android:id="@+id/drag_scroll_bar_kt"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_selectable_currencies_kt"
+        app:layout_constraintTop_toTopOf="parent"
         app:msb_barColor="@color/semi_transparent"
         app:msb_handleColor="@color/purple_300"
         app:msb_lightOnTouch="false"
         app:msb_recyclerView="@id/recycler_view_selectable_currencies_kt"
         app:msb_textColor="?attr/text_color" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
