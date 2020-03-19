@@ -26,6 +26,8 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
         return true
     }
 
+
+
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         actionCompletionContract.onViewSwiped(viewHolder, direction, viewHolder.adapterPosition)
     }
