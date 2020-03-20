@@ -1,5 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -55,6 +56,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         recyclerView.setHasFixedSize(true)
     }
 
+    @SuppressLint("StringFormatInvalid")
     private fun observeObservables() {
         viewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
