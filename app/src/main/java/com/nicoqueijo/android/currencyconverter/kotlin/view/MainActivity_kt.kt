@@ -14,7 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
@@ -32,13 +34,12 @@ class MainActivity_kt : AppCompatActivity() {
     private lateinit var navView: NavigationView
     private lateinit var lastUpdateLabel: TextView
     private lateinit var closeAppToast: Toast
-    private var interstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_kt)
         viewModel = ViewModelProvider(this).get(MainActivityViewModel_kt::class.java)
-        initAds()
+        initBannerAd()
         initViews()
         initLastUpdateLabel()
         handleNavigation()
@@ -100,27 +101,11 @@ class MainActivity_kt : AppCompatActivity() {
         }
     }
 
-    private fun initAds() {
-        initBannerAd()
-        initInterstitialAd()
-    }
-
     private fun initBannerAd() {
         MobileAds.initialize(this, resources.getString(R.string.app_id))
         val adView: AdView = findViewById(R.id.banner_ad_kt)
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
-    }
-
-    private fun initInterstitialAd() {
-        interstitialAd = InterstitialAd(this)
-        interstitialAd!!.adUnitId = resources.getString(R.string.ad_unit_id_interstitial_test)
-        interstitialAd!!.loadAd(AdRequest.Builder().build())
-        interstitialAd!!.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                interstitialAd = null
-            }
-        }
     }
 
     @SuppressLint("ShowToast")

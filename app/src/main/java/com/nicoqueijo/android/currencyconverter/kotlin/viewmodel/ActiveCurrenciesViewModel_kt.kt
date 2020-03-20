@@ -33,8 +33,6 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
 
     var adapterActiveCurrencies = mutableListOf<Currency>()
 
-    var fabClicks: Int = 0
-
     private lateinit var swipedCurrency: Currency
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
 

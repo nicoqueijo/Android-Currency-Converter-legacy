@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,7 +25,7 @@ class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewMo
     var adapterSelectableCurrencies: ArrayList<Currency> = ArrayList()
     var adapterFilteredCurrencies: ArrayList<Currency> = ArrayList()
 
-    var searchQuery = MutableLiveData<String>()
+    val searchQuery = MutableLiveData<String>()
 
     fun handleOnClick(adapterPosition: Int) {
         val selectedCurrency = adapterFilteredCurrencies[adapterPosition]

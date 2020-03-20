@@ -42,7 +42,7 @@
     <string name="click_to_add">Press the + button to add</string>
     <string name="no_results">No results found for \'%1$s\'</string>
 
-    <!-- The names of the currencies -->
+    <!-- Currency names  -->
     <string name="USD_AED">Emirati Dirham</string>
     <string name="USD_AFN">Afghan Afghani</string>
     <string name="USD_ALL">Albanian Lek</string>
@@ -221,8 +221,4 @@
         <item>USD_XPD</item>
         <item>USD_XPT</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>

@@ -10,9 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
@@ -26,30 +23,17 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     private lateinit var viewModel: ActiveCurrenciesViewModel_kt
 
     private lateinit var adapter: ActiveCurrenciesAdapter_kt
-    private lateinit var interstitialAd: InterstitialAd
     private lateinit var floatingActionButton: FloatingActionButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies_kt, container, false)
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel_kt::class.java)
-        initInterstitialAd()
         initViewsAndAdapter(view)
         observeObservables()
         populateDefaultCurrencies()
         setUpFabOnClickListener()
         return view
-    }
-
-    private fun initInterstitialAd() {
-        interstitialAd = InterstitialAd(activity)
-        interstitialAd.adUnitId = resources.getString(R.string.ad_unit_id_interstitial_test)
-        interstitialAd.loadAd(AdRequest.Builder().build())
-        interstitialAd.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                interstitialAd.loadAd(AdRequest.Builder().build())
-            }
-        }
     }
 
     private fun initViewsAndAdapter(view: View) {
@@ -73,24 +57,8 @@ class ActiveCurrenciesFragment_kt : Fragment() {
 
     private fun setUpFabOnClickListener() {
         floatingActionButton.setOnClickListener {
-            processInterstitialAd()
             Utils.hideKeyboard(activity)
             findNavController().navigate(R.id.action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt)
-        }
-    }
-
-    private fun processInterstitialAd() {
-        if (viewModel.fabClicks == 1) {
-            showInterstitialAd()
-        } else if (viewModel.fabClicks % 5 == 0 && viewModel.fabClicks != 0) {
-            showInterstitialAd()
-        }
-        viewModel.fabClicks++
-    }
-
-    private fun showInterstitialAd() {
-        if (interstitialAd.isLoaded) {
-            interstitialAd.show()
         }
     }
 
