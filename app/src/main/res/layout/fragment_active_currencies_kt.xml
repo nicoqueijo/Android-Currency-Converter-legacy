@@ -49,14 +49,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fel_edge="bottom"
-        app:fel_size_bottom="86dp">
+        app:fel_size_bottom="90dp">
 
         <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
             android:id="@+id/recycler_view_active_currencies_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="86dp"
+            android:paddingBottom="90dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_active_currency_kt" />
 

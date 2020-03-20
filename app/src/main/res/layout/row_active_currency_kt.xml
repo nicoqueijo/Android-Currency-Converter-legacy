@@ -90,22 +90,31 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="USD" />
 
-            <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
-                android:id="@+id/conversion_value_kt"
+            <com.bosphere.fadingedgelayout.FadingEdgeLayout
+                android:id="@+id/fading_edge_layout_kt"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@android:color/transparent"
-                android:gravity="right|center_vertical"
-                android:inputType="numberDecimal"
-                android:minWidth="100dp"
                 android:paddingLeft="16dp"
-                android:textColor="?attr/text_color"
-                android:textSize="20sp"
+                app:fel_edge="left"
+                app:fel_size_left="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/currency_code_kt"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
+                    android:id="@+id/conversion_value_kt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:gravity="right|center_vertical"
+                    android:inputType="numberDecimal"
+                    android:minWidth="100dp"
+                    android:textColor="?attr/text_color"
+                    android:textSize="20sp" />
+
+            </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
