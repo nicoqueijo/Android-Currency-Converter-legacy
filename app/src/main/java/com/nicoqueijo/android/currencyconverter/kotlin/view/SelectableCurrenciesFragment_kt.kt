@@ -3,13 +3,12 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
@@ -22,6 +21,8 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     private lateinit var viewModel: SelectableCurrenciesViewModel_kt
 
     private lateinit var adapter: SelectableCurrenciesAdapter_kt
+    private lateinit var recyclerView: CustomRecyclerView_kt
+    private lateinit var noResultsView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,7 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         val view = inflater.inflate(R.layout.fragment_selectable_currency_kt, container, false)
         viewModel = ViewModelProvider(this).get(SelectableCurrenciesViewModel_kt::class.java)
         initViewsAndAdapter(view)
+        observeObservables()
         return view
     }
 
@@ -42,18 +44,23 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        val recyclerView: CustomRecyclerView_kt = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
-        val noResultsView = view.findViewById<View>(R.id.no_results_kt)
+        recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
+        noResultsView = view.findViewById(R.id.no_results_kt)
         recyclerView.showIfEmpty(noResultsView)
         val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
-        recyclerView.setHasFixedSize(true)
         adapter = SelectableCurrenciesAdapter_kt(viewModel)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
+        recyclerView.setHasFixedSize(true)
+    }
+
+    private fun observeObservables() {
         viewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
+        })
+        viewModel.searchQuery.observe(viewLifecycleOwner, Observer { searchQuery ->
+            noResultsView.text = getString(R.string.no_results, searchQuery)
         })
     }
 

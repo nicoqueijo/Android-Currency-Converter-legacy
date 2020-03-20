@@ -40,7 +40,7 @@
     <string name="error">Error</string>
     <string name="empty_list">Empty list</string>
     <string name="click_to_add">Press the + button to add</string>
-    <string name="no_results">No results found…</string>
+    <string name="no_results">No results found for \'%1$s\'</string>
 
     <!-- The names of the currencies -->
     <string name="USD_AED">Emirati Dirham</string>

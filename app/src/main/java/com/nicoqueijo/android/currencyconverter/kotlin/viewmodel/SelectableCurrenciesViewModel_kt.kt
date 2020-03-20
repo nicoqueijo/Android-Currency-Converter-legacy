@@ -2,8 +2,10 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
@@ -24,6 +26,8 @@ class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewMo
     var adapterSelectableCurrencies: ArrayList<Currency> = ArrayList()
     var adapterFilteredCurrencies: ArrayList<Currency> = ArrayList()
 
+    var searchQuery = MutableLiveData<String>()
+
     fun handleOnClick(adapterPosition: Int) {
         val selectedCurrency = adapterFilteredCurrencies[adapterPosition]
         val count = adapterSelectableCurrencies.asSequence()
@@ -36,6 +40,7 @@ class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewMo
 
     @SuppressLint("DefaultLocale")
     fun filter(constraint: CharSequence?): MutableList<Currency> {
+        searchQuery.postValue(constraint.toString())
         val filteredList: MutableList<Currency> = mutableListOf()
         if (constraint == null || constraint.isEmpty()) {
             filteredList.addAll(adapterSelectableCurrencies)

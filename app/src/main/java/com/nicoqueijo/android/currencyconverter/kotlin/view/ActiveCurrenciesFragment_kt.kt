@@ -35,9 +35,21 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel_kt::class.java)
         initInterstitialAd()
         initViewsAndAdapter(view)
+        observeObservables()
         populateDefaultCurrencies()
         setUpFabOnClickListener()
         return view
+    }
+
+    private fun initInterstitialAd() {
+        interstitialAd = InterstitialAd(activity)
+        interstitialAd.adUnitId = resources.getString(R.string.ad_unit_id_interstitial_test)
+        interstitialAd.loadAd(AdRequest.Builder().build())
+        interstitialAd.adListener = object : AdListener() {
+            override fun onAdClosed() {
+                interstitialAd.loadAd(AdRequest.Builder().build())
+            }
+        }
     }
 
     private fun initViewsAndAdapter(view: View) {
@@ -51,20 +63,12 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
                 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
+    }
+
+    private fun observeObservables() {
         viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })
-    }
-
-    private fun initInterstitialAd() {
-        interstitialAd = InterstitialAd(activity)
-        interstitialAd.adUnitId = resources.getString(R.string.ad_unit_id_interstitial_test)
-        interstitialAd.loadAd(AdRequest.Builder().build())
-        interstitialAd.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                interstitialAd.loadAd(AdRequest.Builder().build())
-            }
-        }
     }
 
     private fun setUpFabOnClickListener() {
