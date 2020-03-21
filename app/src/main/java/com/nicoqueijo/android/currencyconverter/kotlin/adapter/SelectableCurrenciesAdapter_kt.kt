@@ -70,7 +70,7 @@ class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrencies
         @Suppress("UNCHECKED_CAST")
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
             val filteredCurrencies = results.values as List<Currency>
-            with(viewModel.adapterFilteredCurrencies) {
+            viewModel.adapterFilteredCurrencies.run {
                 clear()
                 addAll(filteredCurrencies)
             }

@@ -8,12 +8,10 @@ import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
 data class Currency(@PrimaryKey
-               @ColumnInfo(name = "column_currencyCode")
-               val currencyCode: String,
-               @ColumnInfo(name = "column_exchangeRate")
-               val exchangeRate: Double) {
-
-    constructor(currencyCode: String) : this(currencyCode, 0.0)
+                    @ColumnInfo(name = "column_currencyCode")
+                    val currencyCode: String,
+                    @ColumnInfo(name = "column_exchangeRate")
+                    val exchangeRate: Double) {
 
     @Ignore
     var conversionValue = BigDecimal(0.0)
