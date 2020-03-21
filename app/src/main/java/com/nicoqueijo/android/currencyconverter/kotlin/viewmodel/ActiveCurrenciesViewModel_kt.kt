@@ -62,7 +62,6 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         swipedCurrency.isSelected = true
         swipedCurrency.order = swipedCurrencyOrder
         upsertCurrency(swipedCurrency)
-
         for (i in swipedCurrencyOrder until adapterActiveCurrencies.size) {
             val currency = adapterActiveCurrencies[i]
             currency.order++
@@ -95,32 +94,39 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
             withContext(Dispatchers.IO) {
                 setFirstLaunch(false)
                 val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
-                val defaultCurrencies = mutableSetOf<Currency?>()
-                val usd = getCurrency("USD_USD")
-                usd?.order = 0
-                usd?.isSelected = true
-                defaultCurrencies.add(usd)
+                getCurrency("USD_USD")?.run {
+                    setDefaultCurrency(this, FIRST)
+                }
                 val localCurrency = getCurrency(localCurrencyCode)
                 if (localCurrencyCode == "USD_USD" || localCurrency == null) {
-                    val eur = getCurrency("USD_EUR")
-                    eur?.order = 1
-                    eur?.isSelected = true
-                    val jpy = getCurrency("USD_JPY")
-                    jpy?.order = 2
-                    jpy?.isSelected = true
-                    val gbp = getCurrency("USD_GBP")
-                    gbp?.order = 3
-                    gbp?.isSelected = true
-                    defaultCurrencies.addAll(listOf(eur, jpy, gbp))
+                    getCurrency("USD_EUR")?.run {
+                        setDefaultCurrency(this, SECOND)
+                    }
+                    getCurrency("USD_JPY")?.run {
+                        setDefaultCurrency(this, THIRD)
+                    }
+                    getCurrency("USD_GBP")?.run {
+                        setDefaultCurrency(this, FOURTH)
+                    }
                 } else {
-                    localCurrency.order = 1
-                    localCurrency.isSelected = true
-                    defaultCurrencies.add(localCurrency)
-                }
-                defaultCurrencies.forEach {
-                    upsertCurrency(it)
+                    localCurrency.run {
+                        setDefaultCurrency(this, SECOND)
+                    }
                 }
             }
         }
+    }
+
+    private fun setDefaultCurrency(currency: Currency, order: Int) {
+        currency.order = order
+        currency.isSelected = true
+        upsertCurrency(currency)
+    }
+
+    companion object {
+        private const val FIRST = 0
+        private const val SECOND = 1
+        private const val THIRD = 2
+        private const val FOURTH = 3
     }
 }

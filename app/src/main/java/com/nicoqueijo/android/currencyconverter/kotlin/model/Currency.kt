@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
-class Currency(@PrimaryKey
+data class Currency(@PrimaryKey
                @ColumnInfo(name = "column_currencyCode")
                val currencyCode: String,
                @ColumnInfo(name = "column_exchangeRate")
@@ -37,7 +37,7 @@ class Currency(@PrimaryKey
 
     override fun hashCode() = currencyCode.hashCode()
 
-    override fun toString() = "{$currencyCode : $order}"
+    override fun toString() = "{$order : $currencyCode}"
 
     companion object {
         const val CURRENCY_CODE_STARTING_INDEX = 4
