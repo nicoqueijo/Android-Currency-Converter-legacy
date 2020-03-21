@@ -22,10 +22,9 @@ class MainActivityViewModel_kt(application: Application) : AndroidViewModel(appl
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
     @SuppressLint("SimpleDateFormat")
-    fun getLastUpdate(): String? {
-        val lastUpdate = repository.lastUpdate
-        if (lastUpdate == Repository.NO_DATA) return null
-        val date = Date(lastUpdate)
+    fun getFormattedLastUpdate(): String {
+        val timestamp = repository.timestamp
+        val date = Date(timestamp)
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
         simpleDateFormat.timeZone = TimeZone.getDefault()
         return simpleDateFormat.format(date)

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -41,8 +42,28 @@ class MainActivity_kt : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainActivityViewModel_kt::class.java)
         initBannerAd()
         initViews()
-        initLastUpdateLabel()
         handleNavigation()
+        initLastUpdateLabel()
+    }
+
+    private fun initBannerAd() {
+        MobileAds.initialize(this, resources.getString(R.string.app_id))
+        val adView: AdView = findViewById(R.id.banner_ad_kt)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+    }
+
+    @SuppressLint("ShowToast")
+    private fun initViews() {
+        toolbar = findViewById(R.id.toolbar_kt)
+        setSupportActionBar(toolbar)
+        drawer = findViewById(R.id.drawer_layout_kt)
+        initListeners()
+        drawer.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+        navView = findViewById(R.id.nav_view_menu_kt)
+        lastUpdateLabel = findViewById(R.id.last_updated_label)
+        closeAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT)
     }
 
     private fun handleNavigation() {
@@ -101,26 +122,6 @@ class MainActivity_kt : AppCompatActivity() {
         }
     }
 
-    private fun initBannerAd() {
-        MobileAds.initialize(this, resources.getString(R.string.app_id))
-        val adView: AdView = findViewById(R.id.banner_ad_kt)
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
-    }
-
-    @SuppressLint("ShowToast")
-    private fun initViews() {
-        toolbar = findViewById(R.id.toolbar_kt)
-        setSupportActionBar(toolbar)
-        drawer = findViewById(R.id.drawer_layout_kt)
-        initListeners()
-        drawer.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-        navView = findViewById(R.id.nav_view_menu_kt)
-        lastUpdateLabel = findViewById(R.id.last_updated_label)
-        closeAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT)
-    }
-
     private fun initListeners() {
         actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close) {
@@ -132,11 +133,14 @@ class MainActivity_kt : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     private fun initLastUpdateLabel() {
-        viewModel.getLastUpdate()?.let {
-            lastUpdateLabel.text = getString(R.string.last_update, viewModel.getLastUpdate())
-        }
+        viewModel.activeFragment.observe(this, Observer { activeFragment ->
+            when (activeFragment) {
+                R.id.activeCurrenciesFragment_kt ->
+                    lastUpdateLabel.text = getString(R.string.last_update,
+                            viewModel.getFormattedLastUpdate())
+            }
+        })
     }
 
     private fun showNoInternetSnackbar() {

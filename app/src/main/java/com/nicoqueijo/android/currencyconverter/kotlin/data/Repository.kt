@@ -32,8 +32,8 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                retrofitResponse.body()?.exchangeRates?.currencies?.forEach {
-                    currencyDao.upsert(it)
+                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
+                    currencyDao.upsert(currency)
                 }
             } else {
                 // Retrofit call executed but response wasn't in the 200s
@@ -46,13 +46,13 @@ class Repository(private val context: Context) {
         }
     }
 
-    val lastUpdate: Long
+    val timestamp: Long
         get() = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
 
     private val timeSinceLastUpdate: Long
         get() {
-            return if (lastUpdate != NO_DATA) {
-                System.currentTimeMillis() - lastUpdate
+            return if (timestamp != NO_DATA) {
+                System.currentTimeMillis() - timestamp
             } else {
                 NO_DATA
             }

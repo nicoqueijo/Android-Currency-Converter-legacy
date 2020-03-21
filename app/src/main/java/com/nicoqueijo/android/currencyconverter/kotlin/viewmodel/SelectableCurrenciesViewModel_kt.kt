@@ -24,7 +24,6 @@ class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewMo
 
     var adapterSelectableCurrencies: ArrayList<Currency> = ArrayList()
     var adapterFilteredCurrencies: ArrayList<Currency> = ArrayList()
-
     val searchQuery = MutableLiveData<String>()
 
     fun handleOnClick(adapterPosition: Int) {

@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeDark"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
         <activity
             android:name=".java.activities.MainActivity"
             android:configChanges="screenSize|orientation|screenLayout|navigation">
