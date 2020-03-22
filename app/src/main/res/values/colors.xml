@@ -6,7 +6,7 @@
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>
     <color name="almost_black">#101010</color>
-    <color name="semi_transparent">#40FFFFFF</color> <!-- white with 25% alpha -->
+    <color name="semi_transparent">#33FFFFFF</color> <!-- white with 20% alpha -->
 
     <!--Color palette primary-->
     <color name="purple_50">#F3E0FF</color>
