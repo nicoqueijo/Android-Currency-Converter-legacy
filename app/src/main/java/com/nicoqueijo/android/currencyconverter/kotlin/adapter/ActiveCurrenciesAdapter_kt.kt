@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -111,8 +110,8 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             ///////////////////////////////////////////////////////////////////////////////////////////////
             /*try {
                 conversionValue.removeTextChangedListener(this)
-                val value: String = conversionValue.getText().toString()
-                if (value != null && value != "") {
+                val value: String = conversionValue.text.toString()
+                if (value != "") {
                     if (value.startsWith(".")) {
                         conversionValue.setText("0.")
                     }
@@ -178,9 +177,9 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
 
         ///////////////////////////////////////////////////////////////////////////////////////////////
         private fun isInputValid(s: CharSequence?): Boolean {
-            return (!isInputAboveFourDecimalPlaces(s) &&
-                    !isInputAboveOneDecimalSeparator(s) &&
-                    !isInputTooLarge(s))
+            return (!isInputTooLarge(s) &&
+                    !isInputAboveFourDecimalPlaces(s) &&
+                    !isInputAboveOneDecimalSeparator(s))
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -189,10 +188,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             val input = s.toString()
             if (input.contains(decimalSeparator) &&
                     input.substring(input.indexOf(decimalSeparator) + 1).length > 4) {
-                Utils.vibrate(viewModel.getApplication())
-                conversionValue.startAnimation(animShake)
-                conversionValue.setText(input.substring(0, input.length - 1))
-                conversionValue.setSelection(conversionValue.text!!.length)
+                dropLastWithFeedback(input)
                 return true
             }
             return false
@@ -202,17 +198,11 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         ///////////////////////////////////////////////////////////////////////////////////////////////
         private fun isInputAboveOneDecimalSeparator(s: CharSequence?): Boolean {
             val input = s.toString()
-            var occurrences = 0
-            for (element in input) {
-                if (element.toString() == decimalSeparator) {
-                    occurrences++
-                }
+            val decimalSeparatorCount = input.asSequence().count { char ->
+                char.toString() == decimalSeparator
             }
-            if (occurrences > 1) {
-                Utils.vibrate(viewModel.getApplication())
-                conversionValue.startAnimation(animShake)
-                conversionValue.setText(input.substring(0, input.length - 1))
-                conversionValue.setSelection(conversionValue.text!!.length)
+            if (decimalSeparatorCount > 1) {
+                dropLastWithFeedback(input)
                 return true
             }
             return false
@@ -220,29 +210,22 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         ///////////////////////////////////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////////////////////////////
-        /*
-        val maxDigitsAllowed = 5
-        12345       // valid
-        12345.1234  // valid
-        1234567     // invalid
-        Don't allow more than x digits before the decimal place if there is a decimal place
-            where x is maxDigitsAllowed.
-        */
         private fun isInputTooLarge(s: CharSequence?): Boolean {
-            val maxDigitsAllowed = 5
-            val anyNonDigitRegex = "\\D"
-            var input = s.toString()
-            input = input.replace(anyNonDigitRegex.toRegex(), "")
-            if (input.length > maxDigitsAllowed /*&& !mOnBind*/) {
-                Utils.vibrate(viewModel.getApplication())
-                conversionValue.startAnimation(animShake)
-                conversionValue.setText(input.substring(0, input.length - 1))
-//                conversionValue.setSelection(conversionValue.text!!.length)
+            val maxDigitsAllowed = 20
+            val input = s.toString()
+            if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
+                dropLastWithFeedback(input)
                 return true
             }
             return false
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////
+
+        private fun dropLastWithFeedback(input: String) {
+            Utils.vibrate(viewModel.getApplication())
+            conversionValue.startAnimation(animShake)
+            conversionValue.setText(input.dropLast(1))
+        }
 
     }
 }
