@@ -2,6 +2,8 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast

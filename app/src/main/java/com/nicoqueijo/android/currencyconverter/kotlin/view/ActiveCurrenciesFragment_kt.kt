@@ -41,7 +41,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         val emptyListView = view.findViewById<View>(R.id.empty_list_kt)
         recyclerView.showIfEmpty(emptyListView)
         floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
-        adapter = ActiveCurrenciesAdapter_kt(viewModel, floatingActionButton)
+        adapter = ActiveCurrenciesAdapter_kt(viewModel)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
