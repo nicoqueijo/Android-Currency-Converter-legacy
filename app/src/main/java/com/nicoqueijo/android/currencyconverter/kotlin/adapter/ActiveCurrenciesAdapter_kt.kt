@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -18,34 +20,29 @@ import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
-import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
+import com.nicoqueijo.android.currencyconverter.kotlin.util.*
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-
 
 class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt) :
         ListAdapter<Currency, ActiveCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper_kt.ActionCompletionContract {
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     private var decimalFormatter: DecimalFormat
     private var decimalSeparator: String
     private var animShake: Animation
 
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
-        decimalFormatter = numberFormatter as DecimalFormat
         val conversionPattern = "###,##0.0000"
+        decimalFormatter = numberFormatter as DecimalFormat
         decimalFormatter.applyPattern(conversionPattern)
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
         animShake = AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.shake)
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = RowActiveCurrencyKtBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -55,6 +52,8 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.currency = viewModel.adapterActiveCurrencies[position]
+        holder.conversionValue.hint = viewModel.adapterActiveCurrencies[position].hintValue.toString()
+        Log.d("ActiveCurrency", "${viewModel.adapterActiveCurrencies[position].hintValue}")
     }
 
     fun setCurrencies(currencies: MutableList<Currency>) {
@@ -80,6 +79,17 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         viewModel.handleDrop()
     }
 
+    fun updateHints() {
+        val focusedCurrency = viewModel.focusedCurrency.value
+        viewModel.adapterActiveCurrencies.filter { currency ->
+            currency != viewModel.focusedCurrency.value
+        }.forEach { currency ->
+            currency.hintValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
+                    focusedCurrency!!.exchangeRate,
+                    currency.exchangeRate)
+        }
+    }
+
     inner class ViewHolder(val binding: RowActiveCurrencyKtBinding) :
             RecyclerView.ViewHolder(binding.root),
             TextWatcher {
@@ -91,14 +101,18 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         val currencyCode: TextView = itemView.findViewById(R.id.currency_code_kt)
         val conversionValue: CustomEditText_kt = itemView.findViewById(R.id.conversion_value_kt)
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         init {
             conversionValue.imeOptions = EditorInfo.IME_ACTION_DONE
             conversionValue.keyListener = DigitsKeyListener.getInstance("0123456789$decimalSeparator")
+            conversionValue.hint = "0${decimalSeparator}0000"
             conversionValue.addTextChangedListener(this)
+            conversionValue.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    viewModel.focusedCurrency.postValue(viewModel.adapterActiveCurrencies[adapterPosition])
+                    conversionValue.hint = "1"
+                }
+            }
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -131,7 +145,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             ///////////////////////////////////////////////////////////////////////////////////////////////
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         fun getDecimalFormattedString(value: String): String? {
             val lst = StringTokenizer(value, ".")
             var str1 = value
@@ -162,9 +175,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
                 k--
             }
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         fun trimCommaOfString(string: String): String? {
 //        String returnString;
             return if (string.contains(",")) {
@@ -173,17 +184,13 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
                 string
             }
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         private fun isInputValid(s: CharSequence?): Boolean {
             return (!isInputTooLarge(s) &&
                     !isInputAboveFourDecimalPlaces(s) &&
                     !isInputAboveOneDecimalSeparator(s))
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         private fun isInputAboveFourDecimalPlaces(s: CharSequence?): Boolean {
             val input = s.toString()
             if (input.contains(decimalSeparator) &&
@@ -193,9 +200,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             }
             return false
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         private fun isInputAboveOneDecimalSeparator(s: CharSequence?): Boolean {
             val input = s.toString()
             val decimalSeparatorCount = input.asSequence().count { char ->
@@ -207,9 +212,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             }
             return false
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         private fun isInputTooLarge(s: CharSequence?): Boolean {
             val maxDigitsAllowed = 20
             val input = s.toString()
@@ -219,13 +222,11 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             }
             return false
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
         private fun dropLastWithFeedback(input: String) {
             Utils.vibrate(viewModel.getApplication())
             conversionValue.startAnimation(animShake)
             conversionValue.setText(input.dropLast(1))
         }
-
     }
 }

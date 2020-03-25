@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
@@ -33,6 +34,7 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
     }
 
     var adapterActiveCurrencies = mutableListOf<Currency>()
+    val focusedCurrency = MutableLiveData<Currency>()
 
     private lateinit var swipedCurrency: Currency
     private var swipedCurrencyOrder by Delegates.notNull<Int>()

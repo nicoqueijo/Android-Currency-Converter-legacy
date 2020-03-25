@@ -16,6 +16,9 @@ data class Currency(@PrimaryKey
     @Ignore
     var conversionValue = BigDecimal(0.0)
 
+    @Ignore
+    var hintValue = BigDecimal(0.0)
+
     @ColumnInfo(name = "column_isSelected")
     var isSelected = false
 
