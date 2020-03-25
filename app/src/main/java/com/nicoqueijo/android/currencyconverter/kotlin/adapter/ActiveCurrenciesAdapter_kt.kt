@@ -188,7 +188,8 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         private fun isInputValid(s: CharSequence?): Boolean {
             return (!isInputTooLarge(s) &&
                     !isInputAboveFourDecimalPlaces(s) &&
-                    !isInputAboveOneDecimalSeparator(s))
+                    !isInputAboveOneDecimalSeparator(s) &&
+                    isInputLeadingZero(s))
         }
 
         private fun isInputAboveFourDecimalPlaces(s: CharSequence?): Boolean {
@@ -219,6 +220,21 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
                 dropLastWithFeedback(input)
                 return true
+            }
+            return false
+        }
+
+        private fun isInputLeadingZero(s: CharSequence?): Boolean {
+            val input = s.toString()
+            if (input.length == 2) {
+                if (input == "00") {
+                    dropLastWithFeedback(input)
+                    return true
+                }
+                if (input[0] == '0' && input[1] != decimalSeparator.single()) {
+                    conversionValue.setText(input[1].toString())
+                    return true
+                }
             }
             return false
         }
