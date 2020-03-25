@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,10 +53,9 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })
-        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
-//            Log.d("ActiveCurrency", "$it")
+        /*viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
             adapter.updateHints()
-        })
+        })*/
     }
 
     private fun setUpFabOnClickListener() {

@@ -106,7 +106,6 @@
                 <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
                     android:id="@+id/conversion_value_kt"
                     android:layout_width="match_parent"
-                    android:hint="@{currency.hintValue.toString()}"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:gravity="right|center_vertical"

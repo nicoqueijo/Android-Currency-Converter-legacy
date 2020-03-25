@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -20,9 +18,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.*
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -52,8 +52,8 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.currency = viewModel.adapterActiveCurrencies[position]
-        holder.conversionValue.hint = viewModel.adapterActiveCurrencies[position].hintValue.toString()
-        Log.d("ActiveCurrency", "${viewModel.adapterActiveCurrencies[position].hintValue}")
+        holder.conversionValue.hint = "0${decimalSeparator}0000"
+//        holder.conversionValue.hint = viewModel.adapterActiveCurrencies[position].hintValue.toString()
     }
 
     fun setCurrencies(currencies: MutableList<Currency>) {
@@ -81,13 +81,31 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
 
     fun updateHints() {
         val focusedCurrency = viewModel.focusedCurrency.value
-        viewModel.adapterActiveCurrencies.filter { currency ->
+
+        /*viewModel.adapterActiveCurrencies.filter { currency ->
             currency != viewModel.focusedCurrency.value
-        }.forEach { currency ->
-            currency.hintValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
-                    focusedCurrency!!.exchangeRate,
-                    currency.exchangeRate)
-        }
+        }.forEachIndexed { i, currency ->
+            currency.hintValue =
+                    CurrencyConversion.convertCurrency(BigDecimal("1"),
+                            focusedCurrency!!.exchangeRate,
+                            currency.exchangeRate)
+                            .setScale(4, RoundingMode.HALF_UP)
+            notifyItemChanged(i)
+        }*/
+
+        /*viewModel.adapterActiveCurrencies
+                .forEach loop@{ currency ->
+                    if (currency == viewModel.focusedCurrency.value) {
+                        currency.hintValue = BigDecimal("1")
+                        return@loop
+                    }
+                    currency.hintValue =
+                            CurrencyConversion.convertCurrency(BigDecimal("1"),
+                                    focusedCurrency!!.exchangeRate,
+                                    currency.exchangeRate)
+                                    .setScale(4, RoundingMode.HALF_UP)
+                    viewModel.upsertCurrency(currency)
+                }*/
     }
 
     inner class ViewHolder(val binding: RowActiveCurrencyKtBinding) :
@@ -106,18 +124,12 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             conversionValue.keyListener = DigitsKeyListener.getInstance("0123456789$decimalSeparator")
             conversionValue.hint = "0${decimalSeparator}0000"
             conversionValue.addTextChangedListener(this)
-            conversionValue.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
-                    viewModel.focusedCurrency.postValue(viewModel.adapterActiveCurrencies[adapterPosition])
-                    conversionValue.hint = "1"
-                }
-            }
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            isInputValid(s)
+            validateInput(s)
         }
 
         override fun afterTextChanged(s: Editable?) {
@@ -185,58 +197,53 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
             }
         }
 
-        private fun isInputValid(s: CharSequence?): Boolean {
-            return (!isInputTooLarge(s) &&
-                    !isInputAboveFourDecimalPlaces(s) &&
-                    !isInputAboveOneDecimalSeparator(s) &&
-                    isInputLeadingZero(s))
+        private fun validateInput(s: CharSequence?) {
+            validateLength(s)
+            validateDecimalPlaces(s)
+            validateDecimalSeparator(s)
+            validateZeros(s)
         }
 
-        private fun isInputAboveFourDecimalPlaces(s: CharSequence?): Boolean {
+        private fun validateLength(s: CharSequence?) {
+            val maxDigitsAllowed = 20
+            val input = s.toString()
+            if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
+                dropLastWithFeedback(input)
+            }
+        }
+
+        private fun validateDecimalPlaces(s: CharSequence?) {
             val input = s.toString()
             if (input.contains(decimalSeparator) &&
                     input.substring(input.indexOf(decimalSeparator) + 1).length > 4) {
                 dropLastWithFeedback(input)
-                return true
             }
-            return false
         }
 
-        private fun isInputAboveOneDecimalSeparator(s: CharSequence?): Boolean {
+        @SuppressLint("SetTextI18n")
+        private fun validateDecimalSeparator(s: CharSequence?) {
             val input = s.toString()
+            if (input.length == 1 && input[0] == decimalSeparator.single()) {
+                conversionValue.setText("0$decimalSeparator")
+            }
             val decimalSeparatorCount = input.asSequence().count { char ->
                 char.toString() == decimalSeparator
             }
             if (decimalSeparatorCount > 1) {
                 dropLastWithFeedback(input)
-                return true
             }
-            return false
         }
 
-        private fun isInputTooLarge(s: CharSequence?): Boolean {
-            val maxDigitsAllowed = 20
-            val input = s.toString()
-            if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
-                dropLastWithFeedback(input)
-                return true
-            }
-            return false
-        }
-
-        private fun isInputLeadingZero(s: CharSequence?): Boolean {
+        private fun validateZeros(s: CharSequence?) {
             val input = s.toString()
             if (input.length == 2) {
                 if (input == "00") {
                     dropLastWithFeedback(input)
-                    return true
                 }
                 if (input[0] == '0' && input[1] != decimalSeparator.single()) {
                     conversionValue.setText(input[1].toString())
-                    return true
                 }
             }
-            return false
         }
 
         private fun dropLastWithFeedback(input: String) {
