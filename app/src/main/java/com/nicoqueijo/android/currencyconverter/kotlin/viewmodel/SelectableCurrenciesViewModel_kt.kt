@@ -29,8 +29,9 @@ class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewMo
     fun handleOnClick(adapterPosition: Int) {
         val selectedCurrency = adapterFilteredCurrencies[adapterPosition]
         val count = adapterSelectableCurrencies.asSequence()
-                .filter { it.isSelected }
-                .count()
+                .filter { currency ->
+                    currency.isSelected
+                }.count()
         selectedCurrency.isSelected = true
         selectedCurrency.order = count
         upsertCurrency(selectedCurrency)
