@@ -26,8 +26,10 @@
 <!--                        </intent-filter>-->
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".kotlin.view.MainActivity_kt"
-            android:configChanges="screenSize|orientation|screenLayout|navigation">
+            android:configChanges="screenSize|orientation|screenLayout|navigation"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

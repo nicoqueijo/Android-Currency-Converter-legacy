@@ -41,6 +41,17 @@
     <string name="empty_list">Empty list</string>
     <string name="click_to_add">Press the + button to add</string>
     <string name="no_results">No results found for \'%1$s\'</string>
+    <string name="button_one">1</string>
+    <string name="button_two">2</string>
+    <string name="button_three">3</string>
+    <string name="button_four">4</string>
+    <string name="button_five">5</string>
+    <string name="button_six">6</string>
+    <string name="button_seven">7</string>
+    <string name="button_eight">8</string>
+    <string name="button_nine">9</string>
+    <string name="button_zero">0</string>
+
 
     <!-- Currency names  -->
     <string name="USD_AED">Emirati Dirham</string>

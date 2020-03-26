@@ -1,76 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?fragment_background_color">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/empty_list_kt"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/active_currencies_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="60dp">
+        android:layout_height="0dp"
+        android:background="?fragment_background_color"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="65">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="?attr/ic_list" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/empty_list"
-            android:textColor="?attr/text_color"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/click_to_add"
-            android:textColor="?attr/text_color"
-            android:textSize="16sp" />
-
-    </LinearLayout>
-
-    <com.bosphere.fadingedgelayout.FadingEdgeLayout
-        android:id="@+id/fading_edge_layout_kt"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:fel_edge="bottom"
-        app:fel_size_bottom="90dp">
-
-        <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
-            android:id="@+id/recycler_view_active_currencies_kt"
+        <LinearLayout
+            android:id="@+id/empty_list_kt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="90dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/row_active_currency_kt" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="60dp">
 
-    </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="?attr/ic_list" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_kt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/purple_300"
-        android:src="@drawable/ic_add"
-        app:borderWidth="0dp"
-        app:fabSize="normal" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/empty_list"
+                android:textColor="?attr/text_color"
+                android:textSize="20sp" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/click_to_add"
+                android:textColor="?attr/text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <com.bosphere.fadingedgelayout.FadingEdgeLayout
+            android:id="@+id/fading_edge_layout_kt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fel_edge="bottom"
+            app:fel_size_bottom="90dp">
+
+            <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
+                android:id="@+id/recycler_view_active_currencies_kt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="90dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_active_currency_kt" />
+
+        </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_kt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/purple_300"
+            android:src="@drawable/ic_add"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/keyboard_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/active_currencies_list"
+        app:layout_constraintVertical_weight="35">
+
+        <View
+            android:id="@+id/keyboard_padding_start"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@+id/keyboard"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_weight="13"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/keyboard"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@+id/keyboard_padding_end"
+            app:layout_constraintHorizontal_weight="74"
+            app:layout_constraintStart_toEndOf="@+id/keyboard_padding_start">
+
+            <Button
+                android:id="@+id/button_one"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_one"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_four"
+                app:layout_constraintEnd_toStartOf="@+id/button_two"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <Button
+                android:id="@+id/button_two"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_two"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_five"
+                app:layout_constraintEnd_toStartOf="@+id/button_three"
+                app:layout_constraintStart_toEndOf="@+id/button_one"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <Button
+                android:id="@+id/button_three"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_three"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_six"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_two"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <Button
+                android:id="@+id/button_four"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_four"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_seven"
+                app:layout_constraintEnd_toStartOf="@+id/button_five"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_one" />
+
+            <Button
+                android:id="@+id/button_five"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_five"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_eight"
+                app:layout_constraintEnd_toStartOf="@+id/button_six"
+                app:layout_constraintStart_toEndOf="@+id/button_four"
+                app:layout_constraintTop_toBottomOf="@+id/button_two" />
+
+            <Button
+                android:id="@+id/button_six"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_six"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_nine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_five"
+                app:layout_constraintTop_toBottomOf="@+id/button_three" />
+
+            <Button
+                android:id="@+id/button_seven"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_seven"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_decimal_separator"
+                app:layout_constraintEnd_toStartOf="@+id/button_eight"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_four" />
+
+            <Button
+                android:id="@+id/button_eight"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_eight"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_zero"
+                app:layout_constraintEnd_toStartOf="@+id/button_nine"
+                app:layout_constraintStart_toEndOf="@+id/button_seven"
+                app:layout_constraintTop_toBottomOf="@+id/button_five" />
+
+            <Button
+                android:id="@+id/button_nine"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_nine"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_backspace"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_eight"
+                app:layout_constraintTop_toBottomOf="@+id/button_six" />
+
+            <Button
+                android:id="@+id/button_decimal_separator"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_zero"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_seven" />
+
+            <Button
+                android:id="@+id/button_zero"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/button_zero"
+                android:textSize="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_backspace"
+                app:layout_constraintStart_toEndOf="@+id/button_decimal_separator"
+                app:layout_constraintTop_toBottomOf="@+id/button_eight" />
+
+            <ImageButton
+                android:id="@+id/button_backspace"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_backspace"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_zero"
+                app:layout_constraintTop_toBottomOf="@+id/button_nine" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/keyboard_padding_end"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="13"
+            app:layout_constraintStart_toEndOf="@+id/keyboard" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
