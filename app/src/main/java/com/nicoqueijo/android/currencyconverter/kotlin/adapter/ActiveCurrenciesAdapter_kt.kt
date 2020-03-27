@@ -19,9 +19,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.*
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -33,7 +35,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     private var decimalFormatter: DecimalFormat
     private var decimalSeparator: String
     private var animShake: Animation
-    private var onBind: Boolean = false
 
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
@@ -53,9 +54,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.currency = viewModel.adapterActiveCurrencies[position]
         holder.conversionValue.hint = "0${decimalSeparator}0000"
-        onBind = true
-        holder.conversionValue.setText(viewModel.adapterActiveCurrencies[position].conversionValue.toString())
-        onBind = false
     }
 
     fun setCurrencies(currencies: MutableList<Currency>) {
@@ -131,9 +129,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (validateInput(s)) {
-                processTextChange(s)
-            }
+            validateInput(s)
         }
 
         override fun afterTextChanged(s: Editable?) {
@@ -198,43 +194,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
                 string.replace(",", "")
             } else {
                 string
-            }
-        }
-
-        private fun processTextChange(s: CharSequence?) {
-            val focusedCurrency = viewModel.adapterActiveCurrencies[adapterPosition]
-            if (onBind) {
-                val newlyAddedCurrency = viewModel.adapterActiveCurrencies[itemCount - 1]
-                val valueToConvert = focusedCurrency.conversionValue
-                val fromRate = focusedCurrency.exchangeRate
-                val toRate = newlyAddedCurrency.exchangeRate
-                val convertedValue = CurrencyConversion.convertCurrency(valueToConvert, fromRate, toRate)
-                newlyAddedCurrency.conversionValue = convertedValue
-                return
-            }
-            if (s.isNullOrEmpty()) {
-                viewModel.adapterActiveCurrencies.forEachIndexed { i, currency ->
-                    currency.conversionValue = BigDecimal("0")
-                    notifyItemChanged(i)
-                }
-            }
-            if (!s.isNullOrEmpty() && s.toString() != decimalSeparator) {
-                val number = decimalFormatter.parse(s.toString())
-                val numberAsDouble = number?.toDouble() ?: 0.0
-                focusedCurrency.conversionValue = BigDecimal(numberAsDouble)
-                viewModel.adapterActiveCurrencies.forEachIndexed loop@{ i, currency ->
-                    if (currency == focusedCurrency) {
-                        return@loop
-                    }
-                    val valueToConvert = focusedCurrency.conversionValue
-                    val fromRate = focusedCurrency.exchangeRate
-                    val toRate = currency.exchangeRate
-                    var convertedValue = CurrencyConversion.convertCurrency(valueToConvert, fromRate, toRate)
-                    convertedValue = Utils.roundBigDecimal(convertedValue)
-                    currency.conversionValue = convertedValue
-                    currency.conversion.conversionValue = convertedValue
-                    notifyItemChanged(i)
-                }
             }
         }
 

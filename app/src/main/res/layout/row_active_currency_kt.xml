@@ -113,6 +113,16 @@
                     android:textColor="?attr/text_color"
                     android:textSize="20sp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="?attr/text_color"
+                    android:textDirection="rtl"
+                    android:textSize="20sp"
+                    tools:text="12,345.6789" />
+
             </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

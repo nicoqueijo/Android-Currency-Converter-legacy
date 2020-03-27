@@ -32,9 +32,18 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
+                /*retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
+                    currencyDao.upsert(currency)
+                }*/
+
+                // Remove this after done testing
+                //////////////////////////////////////////////////////////////////////////////////
+                retrofitResponse.body()?.exchangeRates?.currencies?.forEachIndexed { i, currency ->
+                    currency.order = i
+                    currency.isSelected = true
                     currencyDao.upsert(currency)
                 }
+                //////////////////////////////////////////////////////////////////////////////////
             } else {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())

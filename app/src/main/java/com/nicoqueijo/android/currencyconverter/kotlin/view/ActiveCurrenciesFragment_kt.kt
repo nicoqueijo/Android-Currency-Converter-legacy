@@ -84,6 +84,8 @@ class ActiveCurrenciesFragment_kt : Fragment() {
                 buttonZero, buttonBackspace)
     }
 
+    // Style through XML when they patch this bug:
+    // https://github.com/material-components/material-components-android/issues/889#issuecomment-573196038
     private fun styleButtons(vararg buttons: View) {
         buttons.forEach { it.setBackgroundResource(R.drawable.background_button) }
     }
