@@ -20,10 +20,10 @@
         <activity
             android:name=".java.activities.MainActivity"
             android:configChanges="screenSize|orientation|screenLayout|navigation">
-<!--                        <intent-filter>-->
-<!--                            <action android:name="android.intent.action.MAIN" />-->
-<!--                            <category android:name="android.intent.category.LAUNCHER" />-->
-<!--                        </intent-filter>-->
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity
             android:screenOrientation="portrait"

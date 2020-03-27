@@ -95,27 +95,20 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:paddingLeft="16dp"
+                android:paddingRight="2dp"
                 app:fel_edge="left"
                 app:fel_size_left="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/blinking_cursor_kt"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/currency_code_kt"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomEditText_kt
+                <TextView
                     android:id="@+id/conversion_value_kt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:gravity="right|center_vertical"
-                    android:inputType="numberDecimal"
-                    android:textColor="?attr/text_color"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textColor="?attr/text_color"
@@ -124,6 +117,17 @@
                     tools:text="12,345.6789" />
 
             </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+
+            <View
+                android:id="@+id/blinking_cursor_kt"
+                android:layout_width="2dp"
+                android:layout_height="22dp"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/fading_edge_layout_kt"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
