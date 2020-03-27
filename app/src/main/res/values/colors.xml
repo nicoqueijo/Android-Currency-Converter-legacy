@@ -5,7 +5,7 @@
     <color name="accent">#9B00FF</color>
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>
-    <color name="almost_black">#101010</color>
+    <color name="almost_black">#090909</color>
     <color name="semi_transparent">#33FFFFFF</color> <!-- white with 20% alpha -->
 
     <!--Color palette primary-->

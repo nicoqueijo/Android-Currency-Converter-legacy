@@ -22,7 +22,8 @@
         <item name="icon_color">@android:color/black</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!--    <style name="AppThemeDark" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -36,6 +37,14 @@
         <item name="drawer_background_color">@color/almost_black</item>
         <item name="text_color">@android:color/white</item>
         <item name="icon_color">@android:color/white</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@drawable/background_button_text_color</item>
+        <item name="android:background">@drawable/background_button</item>
     </style>
 
     <style name="dialog_animation_slide">
