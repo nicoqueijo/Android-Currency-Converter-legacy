@@ -17,7 +17,7 @@
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/container_clipped_progress_bar_kt"
+            android:id="@+id/clipped_progress_bar_canvas_kt"
             android:layout_width="match_parent"
             android:layout_height="4dp"
             tools:ignore="UselessParent">
