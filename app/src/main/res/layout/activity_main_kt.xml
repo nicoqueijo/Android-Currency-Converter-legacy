@@ -51,7 +51,8 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         app:defaultNavHost="true"
-                        app:navGraph="@navigation/nav_graph" />
+                        app:navGraph="@navigation/nav_graph"
+                        tools:ignore="FragmentTagUsage" />
 
                     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/banner_ad_kt"

@@ -14,7 +14,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/row_background_kt"

@@ -22,7 +22,8 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="8dp"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_kt"
@@ -39,6 +40,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:src="@{Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
+                tools:ignore="ContentDescription"
                 tools:src="@drawable/usd_usd" />
 
         </androidx.cardview.widget.CardView>

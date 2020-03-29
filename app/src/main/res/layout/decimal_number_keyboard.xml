@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge>
+<merge xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -147,7 +147,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/button_zero"
                 app:layout_constraintTop_toBottomOf="@+id/button_nine"
-                app:tint="@drawable/background_button_text_color" />
+                app:tint="@drawable/background_button_text_color"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
