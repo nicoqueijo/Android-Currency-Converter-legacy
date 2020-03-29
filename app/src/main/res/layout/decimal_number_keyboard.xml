@@ -27,6 +27,7 @@
             android:id="@+id/keyboard"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             app:layout_constraintEnd_toStartOf="@+id/keyboard_padding_end"
             app:layout_constraintHorizontal_weight="74"
             app:layout_constraintStart_toEndOf="@+id/keyboard_padding_start">
