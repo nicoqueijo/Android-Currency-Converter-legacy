@@ -30,6 +30,7 @@
         <item name="ic_list">@drawable/ic_list</item>
         <item name="ic_no_connection">@drawable/ic_dark_no_connection</item>
         <item name="ic_error">@drawable/ic_error</item>
+        <item name="android:statusBarColor">@color/primary</item>
         <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:colorControlHighlight">@color/accent</item>
         <item name="row_background_color">@android:color/black</item>

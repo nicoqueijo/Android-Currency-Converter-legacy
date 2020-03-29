@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -57,7 +56,6 @@ class MainActivity_kt : AppCompatActivity() {
     @SuppressLint("ShowToast")
     private fun initViews() {
         toolbar = findViewById(R.id.toolbar_kt)
-        window.statusBarColor = Color.BLACK
         setSupportActionBar(toolbar)
         drawer = findViewById(R.id.drawer_layout_kt)
         initListeners()

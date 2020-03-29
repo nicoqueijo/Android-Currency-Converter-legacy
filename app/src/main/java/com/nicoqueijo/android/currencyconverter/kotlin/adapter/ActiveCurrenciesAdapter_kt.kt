@@ -19,12 +19,14 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
+import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 
-class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt) :
+class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt,
+                                 private val keyboard: DecimalNumberKeyboard) :
         ListAdapter<Currency, ActiveCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper_kt.ActionCompletionContract {
 

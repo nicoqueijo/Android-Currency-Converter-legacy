@@ -17,7 +17,6 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
 import java.text.DecimalFormatSymbols
 
@@ -47,16 +46,17 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         initViewsAndAdapter(view)
         observeObservables()
         populateDefaultCurrencies()
-        setUpFabOnClickListener()
         return view
     }
 
     private fun initViewsAndAdapter(view: View) {
-        val recyclerView: CustomRecyclerView_kt = view.findViewById(R.id.recycler_view_active_currencies_kt)
+        val recyclerView = view.findViewById<CustomRecyclerView_kt>(R.id.recycler_view_active_currencies_kt)
         val emptyListView = view.findViewById<View>(R.id.empty_list_kt)
+        val keyboard = view.findViewById<DecimalNumberKeyboard>(R.id.keyboard)
         recyclerView.showIfEmpty(emptyListView)
-        initButtons(view)
-        adapter = ActiveCurrenciesAdapter_kt(viewModel)
+        initKeyboardButtons(keyboard)
+        initFloatingActionButton(view)
+        adapter = ActiveCurrenciesAdapter_kt(viewModel, keyboard)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
@@ -64,20 +64,19 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
 
-    private fun initButtons(view: View) {
-        floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
-        buttonOne = view.findViewById(R.id.button_one)
-        buttonTwo = view.findViewById(R.id.button_two)
-        buttonThree = view.findViewById(R.id.button_three)
-        buttonFour = view.findViewById(R.id.button_four)
-        buttonFive = view.findViewById(R.id.button_five)
-        buttonSix = view.findViewById(R.id.button_six)
-        buttonSeven = view.findViewById(R.id.button_seven)
-        buttonEight = view.findViewById(R.id.button_eight)
-        buttonNine = view.findViewById(R.id.button_nine)
-        buttonDecimalSeparator = view.findViewById(R.id.button_decimal_separator)
-        buttonZero = view.findViewById(R.id.button_zero)
-        buttonBackspace = view.findViewById(R.id.button_backspace)
+    private fun initKeyboardButtons(keyboard: DecimalNumberKeyboard) {
+        buttonOne = keyboard.findViewById(R.id.button_one)
+        buttonTwo = keyboard.findViewById(R.id.button_two)
+        buttonThree = keyboard.findViewById(R.id.button_three)
+        buttonFour = keyboard.findViewById(R.id.button_four)
+        buttonFive = keyboard.findViewById(R.id.button_five)
+        buttonSix = keyboard.findViewById(R.id.button_six)
+        buttonSeven = keyboard.findViewById(R.id.button_seven)
+        buttonEight = keyboard.findViewById(R.id.button_eight)
+        buttonNine = keyboard.findViewById(R.id.button_nine)
+        buttonDecimalSeparator = keyboard.findViewById(R.id.button_decimal_separator)
+        buttonZero = keyboard.findViewById(R.id.button_zero)
+        buttonBackspace = keyboard.findViewById(R.id.button_backspace)
         buttonDecimalSeparator.text = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
         styleButtons(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
                 buttonSix, buttonSeven, buttonEight, buttonNine, buttonDecimalSeparator,
@@ -87,7 +86,9 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     // Style through XML when they patch this bug:
     // https://github.com/material-components/material-components-android/issues/889#issuecomment-573196038
     private fun styleButtons(vararg buttons: View) {
-        buttons.forEach { it.setBackgroundResource(R.drawable.background_button) }
+        buttons.forEach { button ->
+            button.setBackgroundResource(R.drawable.background_button)
+        }
     }
 
     private fun observeObservables() {
@@ -99,9 +100,9 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         })*/
     }
 
-    private fun setUpFabOnClickListener() {
+    private fun initFloatingActionButton(view: View) {
+        floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
         floatingActionButton.setOnClickListener {
-            Utils.hideKeyboard(activity)
             findNavController().navigate(R.id.action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt)
         }
     }

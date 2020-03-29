@@ -3,8 +3,3 @@
     <item android:drawable="@android:color/white" android:state_pressed="true" />
     <item android:drawable="@android:color/transparent" android:state_pressed="false" />
 </selector>
-
-    <!--<shape xmlns:android="http://schemas.android.com/apk/res/android">
-        <solid android:color="@color/accent" />
-        <corners android:radius="4dp" />
-    </shape>-->

@@ -2,13 +2,18 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nicoqueijo.android.currencyconverter.R
 
+typealias KeyboardCallback = (View) -> Unit
+
 class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+
+    private var callback: KeyboardCallback? = null
 
     private val buttonOne: Button
     private val buttonTwo: Button
@@ -24,7 +29,7 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : Constrain
     private val buttonBackspace: ImageButton
 
     init {
-        View.inflate(context, R.layout.decimal_number_keyboard, this)
+        LayoutInflater.from(context).inflate(R.layout.decimal_number_keyboard, this)
         buttonOne = findViewById(R.id.button_one)
         buttonTwo = findViewById(R.id.button_two)
         buttonThree = findViewById(R.id.button_three)
@@ -39,4 +44,11 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : Constrain
         buttonBackspace = findViewById(R.id.button_backspace)
     }
 
+    fun onKeyPressedListener(listener: KeyboardCallback) {
+        callback = listener
+    }
+
+    fun onClick(button: View) {
+        callback?.invoke(button)
+    }
 }
