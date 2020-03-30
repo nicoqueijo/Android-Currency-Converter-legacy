@@ -70,6 +70,10 @@ class SelectableCurrenciesFragment_kt : Fragment() {
         inflater.inflate(R.menu.menu_search_kt, menu)
         val searchView = menu.findItem(R.id.search_kt).actionView as SearchView
         searchView.imeOptions = EditorInfo.IME_ACTION_GO
+        searchView.queryHint = resources.getStringArray(R.array.currency_names)
+                .asList()
+                .shuffled() // Random currency name
+                .take(1)[0] // as hint to search view.
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
