@@ -13,8 +13,7 @@
         app:layout_constraintBottom_toTopOf="@+id/keyboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="65">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/empty_list_kt"
@@ -89,12 +88,11 @@
     <com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
         android:id="@+id/keyboard"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/active_currencies_list"
-        app:layout_constraintVertical_weight="35" />
+        app:layout_constraintTop_toBottomOf="@+id/active_currencies_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

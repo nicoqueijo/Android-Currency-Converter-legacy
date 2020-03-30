@@ -38,12 +38,19 @@ class Repository(private val context: Context) {
 
                 // Remove this after done testing
                 //////////////////////////////////////////////////////////////////////////////////
-                retrofitResponse.body()?.exchangeRates?.currencies?.forEachIndexed { i, currency ->
-                    currency.order = i
-                    currency.isSelected = true
+                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
                     currencyDao.upsert(currency)
                 }
+                val defaultCurrencies = setOf("USD_ARS", "USD_BRL", "USD_CAD", "USD_DKK", "USD_EUR", "USD_FJD", "USD_GBP", "USD_HRK", "USD_INR", "USD_JPY", "USD_KRW", "USD_LYD", "USD_MXN")
+                retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
+                    defaultCurrencies.contains(currency.currencyCode)
+                }?.forEachIndexed { i, currency ->
+                    currency.order = i
+                    currency.isSelected = true
+                    upsertCurrency(currency)
+                }
                 //////////////////////////////////////////////////////////////////////////////////
+
             } else {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())

@@ -18,7 +18,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesA
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
-import java.text.DecimalFormatSymbols
 
 class ActiveCurrenciesFragment_kt : Fragment() {
 
@@ -26,18 +25,6 @@ class ActiveCurrenciesFragment_kt : Fragment() {
 
     private lateinit var adapter: ActiveCurrenciesAdapter_kt
     private lateinit var floatingActionButton: FloatingActionButton
-    private lateinit var buttonOne: Button
-    private lateinit var buttonTwo: Button
-    private lateinit var buttonThree: Button
-    private lateinit var buttonFour: Button
-    private lateinit var buttonFive: Button
-    private lateinit var buttonSix: Button
-    private lateinit var buttonSeven: Button
-    private lateinit var buttonEight: Button
-    private lateinit var buttonNine: Button
-    private lateinit var buttonDecimalSeparator: Button
-    private lateinit var buttonZero: Button
-    private lateinit var buttonBackspace: ImageButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -54,7 +41,6 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         val emptyListView = view.findViewById<View>(R.id.empty_list_kt)
         val keyboard = view.findViewById<DecimalNumberKeyboard>(R.id.keyboard)
         recyclerView.showIfEmpty(emptyListView)
-        initKeyboardButtons(keyboard)
         initFloatingActionButton(view)
         adapter = ActiveCurrenciesAdapter_kt(viewModel, keyboard)
         recyclerView.adapter = adapter
@@ -62,33 +48,6 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
                 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
-    }
-
-    private fun initKeyboardButtons(keyboard: DecimalNumberKeyboard) {
-        buttonOne = keyboard.findViewById(R.id.button_one)
-        buttonTwo = keyboard.findViewById(R.id.button_two)
-        buttonThree = keyboard.findViewById(R.id.button_three)
-        buttonFour = keyboard.findViewById(R.id.button_four)
-        buttonFive = keyboard.findViewById(R.id.button_five)
-        buttonSix = keyboard.findViewById(R.id.button_six)
-        buttonSeven = keyboard.findViewById(R.id.button_seven)
-        buttonEight = keyboard.findViewById(R.id.button_eight)
-        buttonNine = keyboard.findViewById(R.id.button_nine)
-        buttonDecimalSeparator = keyboard.findViewById(R.id.button_decimal_separator)
-        buttonZero = keyboard.findViewById(R.id.button_zero)
-        buttonBackspace = keyboard.findViewById(R.id.button_backspace)
-        buttonDecimalSeparator.text = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
-        styleButtons(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
-                buttonSix, buttonSeven, buttonEight, buttonNine, buttonDecimalSeparator,
-                buttonZero, buttonBackspace)
-    }
-
-    // Style through XML when they patch this bug:
-    // https://github.com/material-components/material-components-android/issues/889#issuecomment-573196038
-    private fun styleButtons(vararg buttons: View) {
-        buttons.forEach { button ->
-            button.setBackgroundResource(R.drawable.background_button)
-        }
     }
 
     private fun observeObservables() {

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nicoqueijo.android.currencyconverter.R
+import java.text.DecimalFormatSymbols
 
 typealias KeyboardCallback = (View) -> Unit
 
@@ -42,6 +43,18 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : Constrain
         buttonDecimalSeparator = findViewById(R.id.button_decimal_separator)
         buttonZero = findViewById(R.id.button_zero)
         buttonBackspace = findViewById(R.id.button_backspace)
+        buttonDecimalSeparator.text = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
+        styleButtons(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
+                buttonSix, buttonSeven, buttonEight, buttonNine, buttonDecimalSeparator,
+                buttonZero, buttonBackspace)
+    }
+
+    // Style through XML when they patch this bug:
+    // https://github.com/material-components/material-components-android/issues/889#issuecomment-573196038
+    private fun styleButtons(vararg buttons: View) {
+        buttons.forEach { button ->
+            button.setBackgroundResource(R.drawable.background_button)
+        }
     }
 
     fun onKeyPressedListener(listener: KeyboardCallback) {
