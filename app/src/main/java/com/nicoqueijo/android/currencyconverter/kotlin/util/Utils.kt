@@ -67,7 +67,7 @@ object Utils {
             (context.getSystemService(VIBRATOR_SERVICE) as Vibrator)
                     .vibrate(VibrationEffect.createOneShot(10L, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(25L)
+            (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(10L)
         }
     }
 }

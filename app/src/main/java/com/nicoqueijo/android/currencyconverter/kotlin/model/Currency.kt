@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
@@ -15,6 +16,9 @@ data class Currency(@PrimaryKey
 
     @Ignore
     var conversionValue = BigDecimal(0.0)
+
+    @Ignore
+    var conversion = Conversion(BigDecimal(0.0))
 
     @ColumnInfo(name = "column_isSelected")
     var isSelected = false
@@ -40,4 +44,21 @@ data class Currency(@PrimaryKey
     companion object {
         const val CURRENCY_CODE_STARTING_INDEX = 4
     }
+
+    class Conversion(conversionValue: BigDecimal) {
+
+        // The raw underlying conversion result
+        var conversionValue: BigDecimal = conversionValue
+            set(value) {
+                field = Utils.roundBigDecimal(value)
+                conversionText = conversionValue.toString()
+            }
+
+        // The conversion result rounded and formatted
+        lateinit var conversionText: String
+
+        // The hint displayed when it is empty
+        lateinit var conversionHint: String
+    }
+
 }

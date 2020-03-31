@@ -93,15 +93,32 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         init {
             viewModel.focusedCurrency = viewModel.adapterActiveCurrencies.take(1)[0]
             conversionValue.hint = "0${decimalSeparator}0000"
+
+            conversionValue.setOnClickListener {
+                viewModel.focusedCurrency = viewModel.adapterActiveCurrencies[adapterPosition]
+            }
+
             keyboard.onKeyPressedListener { button ->
                 if (button is Button) {
+                    // validate input first
+                    val input = button.text.toString()
+                    val existingText = conversionValue.text.toString()
+                    val replacementText = StringBuilder()
+                    replacementText.append(existingText).append(input)
+                    conversionValue.text = replacementText
                     // Number or decimal separator
-                    log("Number or decimal separator clicked.")
+                    log("${conversionValue.text}")
                 }
                 if (button is ImageButton) {
                     // Backspace
-                    log("Backspace clicked.")
+                    conversionValue.text = conversionValue.text.dropLast(1)
+                    log("${conversionValue.text}")
                 }
+            }
+
+            keyboard.onKeyLongPressedListener {
+                conversionValue.text = ""
+                log("${conversionValue.text}")
             }
         }
 

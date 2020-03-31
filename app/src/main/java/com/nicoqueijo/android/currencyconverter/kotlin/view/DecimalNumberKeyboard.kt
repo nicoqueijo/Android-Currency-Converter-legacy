@@ -14,9 +14,11 @@ typealias KeyboardCallback = (View?) -> Unit
 
 class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
         ConstraintLayout(context, attrs),
-        View.OnClickListener {
+        View.OnClickListener,
+        View.OnLongClickListener {
 
-    private var callback: KeyboardCallback? = null
+    private var singlePressCallback: KeyboardCallback? = null
+    private var longPressCallback: KeyboardCallback? = null
 
     private val buttonOne: Button
     private val buttonTwo: Button
@@ -60,6 +62,9 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
     private fun setButtonListeners(vararg buttons: View) {
         buttons.forEach { button ->
             button.setOnClickListener(this)
+            if (button is ImageButton) {
+                button.setOnLongClickListener(this)
+            }
         }
     }
 
@@ -72,11 +77,20 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
     }
 
     fun onKeyPressedListener(listener: KeyboardCallback) {
-        callback = listener
+        singlePressCallback = listener
+    }
+
+    fun onKeyLongPressedListener(listener: KeyboardCallback) {
+        longPressCallback = listener
     }
 
     override fun onClick(button: View?) {
-        callback?.invoke(button)
+        singlePressCallback?.invoke(button)
+    }
+
+    override fun onLongClick(button: View?): Boolean {
+        longPressCallback?.invoke(button)
+        return true
     }
 
 

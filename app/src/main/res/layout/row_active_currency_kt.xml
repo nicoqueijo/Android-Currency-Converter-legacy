@@ -110,10 +110,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:gravity="center_vertical"
+                    android:ellipsize="none"
+                    android:gravity="center_vertical|right"
                     android:singleLine="true"
                     android:textColor="?attr/text_color"
-                    android:textDirection="rtl"
                     android:textSize="20sp"
                     tools:text="12,345.6789" />
 
