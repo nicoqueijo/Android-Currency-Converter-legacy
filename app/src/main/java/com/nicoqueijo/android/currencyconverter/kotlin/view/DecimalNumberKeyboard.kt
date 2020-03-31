@@ -10,9 +10,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.nicoqueijo.android.currencyconverter.R
 import java.text.DecimalFormatSymbols
 
-typealias KeyboardCallback = (View) -> Unit
+typealias KeyboardCallback = (View?) -> Unit
 
-class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
+        ConstraintLayout(context, attrs),
+        View.OnClickListener {
 
     private var callback: KeyboardCallback? = null
 
@@ -31,6 +33,7 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : Constrain
 
     init {
         LayoutInflater.from(context).inflate(R.layout.decimal_number_keyboard, this)
+
         buttonOne = findViewById(R.id.button_one)
         buttonTwo = findViewById(R.id.button_two)
         buttonThree = findViewById(R.id.button_three)
@@ -44,9 +47,20 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : Constrain
         buttonZero = findViewById(R.id.button_zero)
         buttonBackspace = findViewById(R.id.button_backspace)
         buttonDecimalSeparator.text = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
-        styleButtons(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
+        setUpButtons(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
                 buttonSix, buttonSeven, buttonEight, buttonNine, buttonDecimalSeparator,
                 buttonZero, buttonBackspace)
+    }
+
+    private fun setUpButtons(vararg buttons: View) {
+        setButtonListeners(*buttons)
+        styleButtons(*buttons)
+    }
+
+    private fun setButtonListeners(vararg buttons: View) {
+        buttons.forEach { button ->
+            button.setOnClickListener(this)
+        }
     }
 
     // Style through XML when they patch this bug:
@@ -61,7 +75,9 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) : Constrain
         callback = listener
     }
 
-    fun onClick(button: View) {
+    override fun onClick(button: View?) {
         callback?.invoke(button)
     }
+
+
 }

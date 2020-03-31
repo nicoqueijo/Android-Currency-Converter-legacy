@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -26,13 +28,13 @@ import java.text.NumberFormat
 import java.util.*
 
 class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt,
-                                 private val keyboard: DecimalNumberKeyboard) :
+                                 keyboard: DecimalNumberKeyboard) :
         ListAdapter<Currency, ActiveCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper_kt.ActionCompletionContract {
 
     private var decimalFormatter: DecimalFormat
     private var decimalSeparator: String
-    private var animBlink: Animation
+    private var animBlink = AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink)
 
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
@@ -40,7 +42,17 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         decimalFormatter = numberFormatter as DecimalFormat
         decimalFormatter.applyPattern(conversionPattern)
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
-        animBlink = AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink)
+
+        keyboard.onKeyPressedListener { button ->
+            if (button is Button) {
+                // Number or decimal separator
+                log("Number or decimal separator clicked.")
+            }
+            if (button is ImageButton) {
+                // Backspace
+                log("Backspace clicked.")
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -75,35 +87,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
 
     override fun onViewDropped() {
         viewModel.handleDrop()
-    }
-
-    fun updateHints() {
-        val focusedCurrency = viewModel.focusedCurrency.value
-
-        /*viewModel.adapterActiveCurrencies.filter { currency ->
-            currency != viewModel.focusedCurrency.value
-        }.forEachIndexed { i, currency ->
-            currency.hintValue =
-                    CurrencyConversion.convertCurrency(BigDecimal("1"),
-                            focusedCurrency!!.exchangeRate,
-                            currency.exchangeRate)
-                            .setScale(4, RoundingMode.HALF_UP)
-            notifyItemChanged(i)
-        }*/
-
-        /*viewModel.adapterActiveCurrencies
-                .forEach loop@{ currency ->
-                    if (currency == viewModel.focusedCurrency.value) {
-                        currency.hintValue = BigDecimal("1")
-                        return@loop
-                    }
-                    currency.hintValue =
-                            CurrencyConversion.convertCurrency(BigDecimal("1"),
-                                    focusedCurrency!!.exchangeRate,
-                                    currency.exchangeRate)
-                                    .setScale(4, RoundingMode.HALF_UP)
-                    viewModel.upsertCurrency(currency)
-                }*/
     }
 
     inner class ViewHolder(val binding: RowActiveCurrencyKtBinding) :

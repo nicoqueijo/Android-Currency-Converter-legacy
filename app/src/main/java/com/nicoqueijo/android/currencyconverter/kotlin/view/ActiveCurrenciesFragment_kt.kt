@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,9 +52,6 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
         })
-        /*viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
-            adapter.updateHints()
-        })*/
     }
 
     private fun initFloatingActionButton(view: View) {
