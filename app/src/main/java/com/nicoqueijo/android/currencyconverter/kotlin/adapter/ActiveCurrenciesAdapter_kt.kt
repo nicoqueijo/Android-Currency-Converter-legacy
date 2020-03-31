@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
@@ -28,7 +27,7 @@ import java.text.NumberFormat
 import java.util.*
 
 class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt,
-                                 keyboard: DecimalNumberKeyboard) :
+                                 val keyboard: DecimalNumberKeyboard) :
         ListAdapter<Currency, ActiveCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper_kt.ActionCompletionContract {
 
@@ -42,17 +41,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         decimalFormatter = numberFormatter as DecimalFormat
         decimalFormatter.applyPattern(conversionPattern)
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
-
-        keyboard.onKeyPressedListener { button ->
-            if (button is Button) {
-                // Number or decimal separator
-                log("Number or decimal separator clicked.")
-            }
-            if (button is ImageButton) {
-                // Backspace
-                log("Backspace clicked.")
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -63,7 +51,9 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     @SuppressLint("DefaultLocale", "SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.currency = viewModel.adapterActiveCurrencies[position]
-        holder.blinkingCursor.startAnimation(animBlink)
+        if (holder.binding.currency == viewModel.focusedCurrency) {
+            holder.blinkingCursor.startAnimation(animBlink)
+        }
     }
 
     fun setCurrencies(currencies: MutableList<Currency>) {
@@ -101,7 +91,18 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor_kt)
 
         init {
+            viewModel.focusedCurrency = viewModel.adapterActiveCurrencies.take(1)[0]
             conversionValue.hint = "0${decimalSeparator}0000"
+            keyboard.onKeyPressedListener { button ->
+                if (button is Button) {
+                    // Number or decimal separator
+                    log("Number or decimal separator clicked.")
+                }
+                if (button is ImageButton) {
+                    // Backspace
+                    log("Backspace clicked.")
+                }
+            }
         }
 
         private fun validateInput(s: CharSequence?): Boolean {
