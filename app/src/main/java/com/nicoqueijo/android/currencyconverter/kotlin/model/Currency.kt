@@ -48,7 +48,15 @@ data class Currency(@PrimaryKey
             "fcsd: ${isFocused.toString().capitalize().take(1)} " +
             currencyCode*/
 
-    // Weird logic but helps me debug
+     /* Structure is for debugging purposes.
+        Example: 4 S* F* USD_EUR
+                 | |  |    |
+             Order |  |    |
+            Selected? |    |
+                 Focused?  |
+                     Currency code
+
+         *blank if not selected/focused      */
     override fun toString(): String {
         val string = StringBuilder()
         string.append(order)

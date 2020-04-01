@@ -55,7 +55,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("DefaultLocale", "SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        log("onBindViewHolder() called for $position: ${viewModel.adapterActiveCurrencies[position]}")
+        /*log("onBindViewHolder() called for $position: ${viewModel.adapterActiveCurrencies[position]}")*/
         holder.binding.currency = viewModel.adapterActiveCurrencies[position]
         if (viewModel.adapterActiveCurrencies[position].isFocused) {
             holder.rowForeground.setBackgroundColor(keyboard.context.getColor(R.color.dark_gray))
