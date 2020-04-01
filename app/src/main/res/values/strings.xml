@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- English -->
-
     <!-- UI components -->
     <string name="app_name">Currency Converter</string>
     <string name="converter">Converter</string>
-    <string name="share">Share</string>
-    <string name="language">Language</string>
-    <string name="rate_app">Rate App</string>
     <string name="source_code">Source Code</string>
-    <string name="theme">Theme</string>
-    <string name="contact_us">Contact Us</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="last_update">Last updated: %1$s</string>
     <string name="no_internet">No internet connection</string>
-    <string name="no_connection_title">No Connection</string>
-    <string name="no_connection_description">We could not establish a connection with our servers.
-        Please try again when you are connected to the internet.</string>
     <string name="refresh">Refresh</string>
     <string name="tap_to_close">Tap again to close app</string>
     <string name="search">Search</string>
@@ -31,13 +21,6 @@
         from the internet.</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
-    <string name="share_via">Share via</string>
-    <string name="select_email_app">Select email app</string>
-    <string name="english">English</string>
-    <string name="spanish">Español</string>
-    <string name="light">Light</string>
-    <string name="dark">Dark</string>
-    <string name="error">Error</string>
     <string name="empty_list">Empty list</string>
     <string name="click_to_add">Press the + button to add</string>
     <string name="no_results">No results found for \'%1$s\'</string>

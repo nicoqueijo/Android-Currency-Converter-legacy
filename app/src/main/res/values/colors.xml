@@ -9,21 +9,4 @@
     <color name="dark_gray">#424242 </color>
     <color name="almost_black">#0D0D0D</color>
     <color name="semi_transparent">#33FFFFFF</color> <!-- white with 20% alpha -->
-
-    <!--Color palette primary-->
-    <color name="purple_50">#F3E0FF</color>
-    <color name="purple_100">#E1B3FF</color>
-    <color name="purple_200">#CD80FF</color>
-    <color name="purple_300">#B94DFF</color>
-    <color name="purple_300_semi_transparent">#26CD80FF</color>
-    <color name="purple_400">#AA26FF</color>
-    <color name="purple_500">#9B00FF</color>
-    <color name="purple_600">#9300FF</color>
-    <color name="purple_700">#8900FF</color>
-    <color name="purple_800">#7F00FF</color>
-    <color name="purple_900">#6D00FF</color>
-    <color name="purple_A100">#FFFFFF</color>
-    <color name="purple_A200">#F7F2FF</color>
-    <color name="purple_A400">#D7BFFF</color>
-    <color name="purple_A700">#C7A6FF</color>
 </resources>

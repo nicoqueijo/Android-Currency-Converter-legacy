@@ -13,9 +13,6 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="ic_list">@drawable/ic_light_list</item>
-        <item name="ic_no_connection">@drawable/ic_light_no_connection</item>
-        <item name="ic_error">@drawable/ic_light_error</item>
         <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:colorControlHighlight">@color/accent</item>
         <item name="text_color">@android:color/black</item>
@@ -28,7 +25,6 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="ic_list">@drawable/ic_list</item>
-        <item name="ic_no_connection">@drawable/ic_dark_no_connection</item>
         <item name="ic_error">@drawable/ic_error</item>
         <item name="android:statusBarColor">@color/primary</item>
         <item name="android:navigationBarColor">@color/primary</item>
@@ -47,10 +43,4 @@
         <item name="android:textColor">@drawable/background_button_text_color</item>
         <item name="android:background">@drawable/background_button</item>
     </style>
-
-    <style name="dialog_animation_slide">
-        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
-        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
-    </style>
-
 </resources>
