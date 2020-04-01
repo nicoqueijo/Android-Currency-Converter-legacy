@@ -1,6 +1,8 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -23,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel_kt
+
 
 class MainActivity_kt : AppCompatActivity() {
 
@@ -159,5 +162,15 @@ class MainActivity_kt : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    // DELETE THIS BEFORE DEPLOYING
+    override fun onDestroy() {
+        super.onDestroy()
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // CLEARS APP DATA ON EVERY EXIT OF THE APP
+        (this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+                .clearApplicationUserData()
+        ///////////////////////////////////////////////////////////////////////////////////////////
     }
 }

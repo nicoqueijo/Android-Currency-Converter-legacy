@@ -17,8 +17,8 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
         View.OnClickListener,
         View.OnLongClickListener {
 
-    private var singlePressCallback: KeyboardCallback? = null
-    private var longPressCallback: KeyboardCallback? = null
+    private var onClickCallback: KeyboardCallback? = null
+    private var onLongClickCallback: KeyboardCallback? = null
 
     private val buttonOne: Button
     private val buttonTwo: Button
@@ -76,20 +76,20 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
         }
     }
 
-    fun onKeyPressedListener(listener: KeyboardCallback) {
-        singlePressCallback = listener
+    fun onKeyClickedListener(listener: KeyboardCallback) {
+        onClickCallback = listener
     }
 
-    fun onKeyLongPressedListener(listener: KeyboardCallback) {
-        longPressCallback = listener
+    fun onKeyLongClickedListener(listener: KeyboardCallback) {
+        onLongClickCallback = listener
     }
 
     override fun onClick(button: View?) {
-        singlePressCallback?.invoke(button)
+        onClickCallback?.invoke(button)
     }
 
     override fun onLongClick(button: View?): Boolean {
-        longPressCallback?.invoke(button)
+        onLongClickCallback?.invoke(button)
         return true
     }
 

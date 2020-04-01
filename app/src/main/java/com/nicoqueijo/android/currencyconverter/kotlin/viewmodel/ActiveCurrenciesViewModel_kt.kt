@@ -32,7 +32,7 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
     }
 
     var adapterActiveCurrencies = mutableListOf<Currency>()
-    lateinit var focusedCurrency: Currency
+    var focusedCurrency: Currency? = null
 
     private lateinit var swipedCurrency: Currency
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
@@ -122,6 +122,18 @@ class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(
         currency.order = order
         currency.isSelected = true
         upsertCurrency(currency)
+    }
+
+    // If the previously focused currency was swiped it will not be in the list and the index will return
+    // -1.
+    fun changeFocusedCurrency(newlyFocusedCurrency: Currency): Int {
+        val indexOfPreviouslyFocusedCurrency = adapterActiveCurrencies.indexOf(focusedCurrency)
+        if (indexOfPreviouslyFocusedCurrency != -1) {
+            adapterActiveCurrencies[indexOfPreviouslyFocusedCurrency].isFocused = false
+        }
+        focusedCurrency = newlyFocusedCurrency
+        newlyFocusedCurrency.isFocused = true
+        return indexOfPreviouslyFocusedCurrency
     }
 
     companion object {

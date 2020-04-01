@@ -10,12 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
+
 
 class ActiveCurrenciesFragment_kt : Fragment() {
 
@@ -30,7 +32,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel_kt::class.java)
         initViewsAndAdapter(view)
         observeObservables()
-        populateDefaultCurrencies()
+        /*populateDefaultCurrencies()*/
         return view
     }
 
@@ -39,6 +41,7 @@ class ActiveCurrenciesFragment_kt : Fragment() {
         val emptyListView = view.findViewById<View>(R.id.empty_list_kt)
         val keyboard = view.findViewById<DecimalNumberKeyboard>(R.id.keyboard)
         recyclerView.showIfEmpty(emptyListView)
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         initFloatingActionButton(view)
         adapter = ActiveCurrenciesAdapter_kt(viewModel, keyboard)
         recyclerView.adapter = adapter
