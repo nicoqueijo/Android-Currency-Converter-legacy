@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
@@ -42,7 +41,20 @@ class Repository(private val context: Context) {
                 retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
                     currencyDao.upsert(currency)
                 }
-                val defaultCurrencies = setOf("USD_ARS", "USD_BRL", "USD_CAD", "USD_DKK", "USD_EUR"/*, "USD_FJD", "USD_GBP", "USD_HRK", "USD_INR", "USD_JPY", "USD_KRW", "USD_LYD", "USD_MXN"*/)
+                val defaultCurrencies = setOf(
+                        "USD_ARS",
+                        "USD_BRL",
+                        "USD_CAD",
+                        "USD_DKK",
+                        "USD_EUR"/*,
+                        "USD_FJD",
+                        "USD_GBP",
+                        "USD_HRK",
+                        "USD_INR",
+                        "USD_JPY",
+                        "USD_KRW",
+                        "USD_LYD",
+                        "USD_MXN"*/)
                 retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
                 }?.forEachIndexed { i, currency ->

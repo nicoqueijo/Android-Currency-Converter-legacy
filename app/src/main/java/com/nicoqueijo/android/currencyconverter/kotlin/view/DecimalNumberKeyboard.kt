@@ -92,6 +92,4 @@ class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
         onLongClickCallback?.invoke(button)
         return true
     }
-
-
 }

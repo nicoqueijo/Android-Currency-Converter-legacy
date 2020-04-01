@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
-import java.lang.StringBuilder
 import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
@@ -48,32 +47,34 @@ data class Currency(@PrimaryKey
             "fcsd: ${isFocused.toString().capitalize().take(1)} " +
             currencyCode*/
 
-     /* Structure is for debugging purposes.
-        Example: 4 S* F* USD_EUR
-                 | |  |    |
-             Order |  |    |
-            Selected? |    |
-                 Focused?  |
-                     Currency code
+    /* Structure is for debugging purposes.
+       Example: 4 S* F* USD_EUR
+                | |  |    |
+            Order |  |    |
+           Selected? |    |
+                Focused?  |
+                    Currency code
 
-         *blank if not selected/focused      */
+        *blank if not selected/focused      */
     override fun toString(): String {
         val string = StringBuilder()
+        string.append("{")
         string.append(order)
-        string.append("  ")
-        if (isSelected) {
-            string.append("S")
-        } else {
-            string.append(" ")
-        }
-        string.append("  ")
+        string.append(" ")
+        string.append(trimmedCurrencyCode)
+        string.append(" ")
         if (isFocused) {
             string.append("F")
         } else {
             string.append(" ")
         }
-        string.append("  ")
-        string.append(currencyCode)
+        string.append(" ")
+        if (isSelected) {
+            string.append("S")
+        } else {
+            string.append(" ")
+        }
+        string.append("}")
         return string.toString()
     }
 

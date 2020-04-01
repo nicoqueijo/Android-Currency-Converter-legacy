@@ -52,7 +52,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         return ViewHolder(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.M) // Find another way to set background color
     @SuppressLint("DefaultLocale", "SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         /*log("onBindViewHolder() called for $position: ${viewModel.adapterActiveCurrencies[position]}")*/
@@ -86,7 +86,9 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
-//        val conversionValue = swipedCurrency.conversionValue
+        /*val conversionValue = swipedCurrency.conversionValue*/
+
+        // Handles the focus management
         val swipedCurrency = viewModel.adapterActiveCurrencies[position]
         if (viewModel.focusedCurrency == swipedCurrency) {
             val newlyFocusedCurrency: Currency
@@ -105,7 +107,6 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
                 swipedCurrency.isFocused = false
                 viewModel.focusedCurrency = newlyFocusedCurrency
             }
-            notifyDataSetChanged()
         }
 
         viewModel.handleSwipe(position)
