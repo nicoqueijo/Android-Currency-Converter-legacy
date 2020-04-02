@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.LoadingCurrenciesViewModel_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.LoadingCurrenciesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,18 +19,18 @@ import java.io.IOException
 /**
  * A simple [Fragment] subclass.
  */
-class LoadingCurrenciesFragment_kt : Fragment() {
+class LoadingCurrenciesFragment : Fragment() {
 
-    private lateinit var viewModel: LoadingCurrenciesViewModel_kt
+    private lateinit var viewModel: LoadingCurrenciesViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_loading_currencies_kt, container, false)
+        return inflater.inflate(R.layout.fragment_loading_currencies, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LoadingCurrenciesViewModel_kt::class.java)
+        viewModel = ViewModelProvider(this).get(LoadingCurrenciesViewModel::class.java)
     }
 
     override fun onStart() {
@@ -44,10 +43,10 @@ class LoadingCurrenciesFragment_kt : Fragment() {
                 try {
                     viewModel.initCurrencies()
                     withContext(Dispatchers.Main) {
-                        findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt)
+                        findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_activeCurrenciesFragment)
                     }
                 } catch (e: IOException) {
-                    findNavController().navigate(R.id.action_loadingCurrenciesFragment_kt_to_errorFragment_kt)
+                    findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_errorFragment)
                 }
             }
         }

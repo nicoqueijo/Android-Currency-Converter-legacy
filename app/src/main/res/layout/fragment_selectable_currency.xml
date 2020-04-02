@@ -7,7 +7,7 @@
     android:background="?fragment_background_color">
 
     <TextView
-        android:id="@+id/no_results_kt"
+        android:id="@+id/no_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -17,22 +17,22 @@
         android:textColor="?attr/text_color"
         android:textSize="18sp" />
 
-    <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
-        android:id="@+id/recycler_view_selectable_currencies_kt"
+    <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView
+        android:id="@+id/recycler_view_selectable_currencies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/row_selectable_currency_kt" />
+        tools:listitem="@layout/row_selectable_currency" />
 
     <com.turingtechnologies.materialscrollbar.DragScrollBar
-        android:id="@+id/drag_scroll_bar_kt"
+        android:id="@+id/drag_scroll_bar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         app:msb_barColor="@color/semi_transparent"
         app:msb_handleColor="@android:color/white"
         app:msb_lightOnTouch="false"
-        app:msb_recyclerView="@id/recycler_view_selectable_currencies_kt"
+        app:msb_recyclerView="@id/recycler_view_selectable_currencies"
         app:msb_textColor="@android:color/black" />
 
 </RelativeLayout>

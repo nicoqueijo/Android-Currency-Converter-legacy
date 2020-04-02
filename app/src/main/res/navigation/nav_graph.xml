@@ -3,69 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loadingCurrenciesFragment_kt">
+    app:startDestination="@id/loadingCurrenciesFragment">
     <fragment
-        android:id="@+id/loadingCurrenciesFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.LoadingCurrenciesFragment_kt"
-        android:label="LoadingCurrenciesFragment_kt"
-        tools:layout="@layout/fragment_loading_currencies_kt">
+        android:id="@+id/loadingCurrenciesFragment"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.LoadingCurrenciesFragment"
+        android:label="LoadingCurrenciesFragment"
+        tools:layout="@layout/fragment_loading_currencies">
         <action
-            android:id="@+id/action_loadingCurrenciesFragment_kt_to_errorFragment_kt"
-            app:destination="@id/errorFragment_kt"
+            android:id="@+id/action_loadingCurrenciesFragment_to_errorFragment"
+            app:destination="@id/errorFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/loadingCurrenciesFragment_kt"
+            app:popUpTo="@+id/loadingCurrenciesFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_loadingCurrenciesFragment_kt_to_activeCurrenciesFragment_kt"
-            app:destination="@id/activeCurrenciesFragment_kt"
+            android:id="@+id/action_loadingCurrenciesFragment_to_activeCurrenciesFragment"
+            app:destination="@id/activeCurrenciesFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/loadingCurrenciesFragment_kt"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/errorFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ErrorFragment_kt"
-        android:label="ErrorFragment_kt"
-        tools:layout="@layout/fragment_error_kt">
-        <action
-            android:id="@+id/action_errorFragment_kt_to_loadingCurrenciesFragment_kt"
-            app:destination="@id/loadingCurrenciesFragment_kt"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/errorFragment_kt"
+            app:popUpTo="@+id/loadingCurrenciesFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/sourceCodeFragment_kt"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SourceCodeFragment_kt"
-        android:label="SourceCodeFragment_kt"
-        tools:layout="@layout/fragment_source_code_kt" />
+        android:id="@+id/errorFragment"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ErrorFragment"
+        android:label="ErrorFragment"
+        tools:layout="@layout/fragment_error">
+        <action
+            android:id="@+id/action_errorFragment_to_loadingCurrenciesFragment"
+            app:destination="@id/loadingCurrenciesFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@+id/errorFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/sourceCodeFragment"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SourceCodeFragment"
+        android:label="SourceCodeFragment"
+        tools:layout="@layout/fragment_source_code" />
     <navigation
-        android:id="@+id/activeCurrenciesFragment_kt"
-        app:startDestination="@id/activeCurrenciesFragment_kt" >
+        android:id="@+id/activeCurrenciesFragment"
+        app:startDestination="@id/activeCurrenciesFragment">
         <fragment
-            android:id="@+id/activeCurrenciesFragment_kt"
-            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment_kt"
-            android:label="ActiveCurrenciesFragment_kt"
-            tools:layout="@layout/fragment_active_currencies_kt">
+            android:id="@+id/activeCurrenciesFragment"
+            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment"
+            android:label="ActiveCurrenciesFragment"
+            tools:layout="@layout/fragment_active_currencies">
             <action
-                android:id="@+id/action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt"
-                app:destination="@id/selectableCurrenciesFragment_kt"
+                android:id="@+id/action_activeCurrenciesFragment_to_selectableCurrenciesFragment"
+                app:destination="@id/selectableCurrenciesFragment"
                 app:enterAnim="@android:anim/slide_in_left"
                 app:exitAnim="@android:anim/slide_out_right"
                 app:popEnterAnim="@android:anim/slide_in_left"
                 app:popExitAnim="@android:anim/slide_out_right" />
         </fragment>
         <fragment
-            android:id="@+id/selectableCurrenciesFragment_kt"
-            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment_kt"
-            android:label="SelectableCurrenciesFragment_kt"
-            tools:layout="@layout/fragment_selectable_currency_kt" />
+            android:id="@+id/selectableCurrenciesFragment"
+            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment"
+            android:label="SelectableCurrenciesFragment"
+            tools:layout="@layout/fragment_selectable_currency" />
         <action
-            android:id="@+id/action_global_sourceCodeFragment_kt"
-            app:destination="@id/sourceCodeFragment_kt"
+            android:id="@+id/action_global_sourceCodeFragment"
+            app:destination="@id/sourceCodeFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
     </navigation>

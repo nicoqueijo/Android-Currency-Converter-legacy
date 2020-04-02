@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nicoqueijo.android.currencyconverter.R
 
-class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListener {
+class SourceCodeFragment : Fragment(), ViewTreeObserver.OnScrollChangedListener {
 
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
@@ -24,7 +24,7 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_source_code_kt, container, false)
+        val view = inflater.inflate(R.layout.fragment_source_code, container, false)
         initViews(view)
         setUpWebClientsAndSwipeLayout()
         handleBackPress()
@@ -38,7 +38,7 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_open_in_browser_kt, menu)
+        inflater.inflate(R.menu.menu_open_in_browser, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -51,9 +51,9 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initViews(view: View) {
-        webView = view.findViewById(R.id.web_view_kt)
-        progressBar = view.findViewById(R.id.progress_bar_kt)
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_kt)
+        webView = view.findViewById(R.id.web_view)
+        progressBar = view.findViewById(R.id.progress_bar)
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
         val webViewSettings: WebSettings = webView.settings
         webViewSettings.javaScriptEnabled = true
         webViewSettings.builtInZoomControls = true
@@ -88,7 +88,7 @@ class SourceCodeFragment_kt : Fragment(), ViewTreeObserver.OnScrollChangedListen
 
     private fun handleBackPress() {
         webView.setOnKeyListener { _, keyCode: Int, event: KeyEvent ->
-            val hostingActivity = activity as MainActivity_kt
+            val hostingActivity = activity as MainActivity
             if (hostingActivity.drawer.isDrawerOpen(GravityCompat.START)) {
                 hostingActivity.drawer.closeDrawer(GravityCompat.START)
                 return@setOnKeyListener true

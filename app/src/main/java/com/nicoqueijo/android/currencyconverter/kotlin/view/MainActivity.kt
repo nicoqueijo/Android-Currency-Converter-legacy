@@ -24,12 +24,12 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 
 
-class MainActivity_kt : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainActivityViewModel_kt
+    private lateinit var viewModel: MainActivityViewModel
 
     internal lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
@@ -41,8 +41,8 @@ class MainActivity_kt : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_kt)
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel_kt::class.java)
+        setContentView(R.layout.activity_main)
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         initBannerAd()
         initViews()
         handleNavigation()
@@ -51,26 +51,26 @@ class MainActivity_kt : AppCompatActivity() {
 
     private fun initBannerAd() {
         MobileAds.initialize(this, resources.getString(R.string.app_id))
-        val adView: AdView = findViewById(R.id.banner_ad_kt)
+        val adView: AdView = findViewById(R.id.banner_ad)
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
     }
 
     @SuppressLint("ShowToast")
     private fun initViews() {
-        toolbar = findViewById(R.id.toolbar_kt)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        drawer = findViewById(R.id.drawer_layout_kt)
+        drawer = findViewById(R.id.drawer)
         initListeners()
         drawer.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
-        navView = findViewById(R.id.nav_view_menu_kt)
+        navView = findViewById(R.id.nav_view)
         lastUpdateLabel = findViewById(R.id.last_updated_label)
         closeAppToast = Toast.makeText(this, R.string.tap_to_close, Toast.LENGTH_SHORT)
     }
 
     private fun handleNavigation() {
-        navController = findNavController(R.id.content_frame_kt)
+        navController = findNavController(R.id.content_frame)
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -81,25 +81,25 @@ class MainActivity_kt : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             drawer.closeDrawer(GravityCompat.START)
             when (viewModel.activeFragment.value) {
-                R.id.activeCurrenciesFragment_kt -> {
-                    handleBackstack(menuItem.itemId, R.id.activeCurrenciesFragment_kt)
+                R.id.activeCurrenciesFragment -> {
+                    handleBackstack(menuItem.itemId, R.id.activeCurrenciesFragment)
                 }
-                R.id.sourceCodeFragment_kt -> {
-                    handleBackstack(menuItem.itemId, R.id.sourceCodeFragment_kt)
+                R.id.sourceCodeFragment -> {
+                    handleBackstack(menuItem.itemId, R.id.sourceCodeFragment)
                 }
-                R.id.selectableCurrenciesFragment_kt -> {
-                    if (menuItem.itemId == R.id.activeCurrenciesFragment_kt) {
+                R.id.selectableCurrenciesFragment -> {
+                    if (menuItem.itemId == R.id.activeCurrenciesFragment) {
                         true
                     } else {
                         navController.navigate(menuItem.itemId)
                         true
                     }
                 }
-                R.id.errorFragment_kt -> {
+                R.id.errorFragment -> {
                     showNoInternetSnackbar()
                     false
                 }
-                R.id.loadingCurrenciesFragment_kt -> false
+                R.id.loadingCurrenciesFragment -> false
                 else -> {
                     false
                 }
@@ -131,7 +131,7 @@ class MainActivity_kt : AppCompatActivity() {
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                Utils.hideKeyboard(this@MainActivity_kt)
+                Utils.hideKeyboard(this@MainActivity)
             }
         }
     }
@@ -139,7 +139,7 @@ class MainActivity_kt : AppCompatActivity() {
     private fun initLastUpdateLabel() {
         viewModel.activeFragment.observe(this, Observer { activeFragment ->
             when (activeFragment) {
-                R.id.activeCurrenciesFragment_kt ->
+                R.id.activeCurrenciesFragment ->
                     lastUpdateLabel.text = getString(R.string.last_update,
                             viewModel.getFormattedLastUpdate())
             }
@@ -147,7 +147,7 @@ class MainActivity_kt : AppCompatActivity() {
     }
 
     private fun showNoInternetSnackbar() {
-        Snackbar.make(findViewById(R.id.content_frame_kt), R.string.no_internet, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(findViewById(R.id.content_frame), R.string.no_internet, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {

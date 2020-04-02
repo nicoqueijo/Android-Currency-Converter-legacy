@@ -9,7 +9,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 
-class SelectableCurrenciesViewModel_kt(application: Application) : AndroidViewModel(application) {
+class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
 
     // Candidate for dependency injection
     private val repository = Repository(application)

@@ -13,7 +13,7 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.properties.Delegates
 
-class ActiveCurrenciesViewModel_kt(application: Application) : AndroidViewModel(application) {
+class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
 
     // Candidate for dependency injection
     private val repository = Repository(application)

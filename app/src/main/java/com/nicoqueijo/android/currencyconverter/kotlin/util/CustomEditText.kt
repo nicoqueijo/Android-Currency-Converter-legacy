@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 
-class CustomEditText_kt : AppCompatEditText {
+class CustomEditText : AppCompatEditText {
 
     // Required constructors
     constructor(context: Context?) : super(context)

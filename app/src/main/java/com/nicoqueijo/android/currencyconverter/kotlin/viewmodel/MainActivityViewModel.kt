@@ -10,12 +10,12 @@ import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivityViewModel_kt(application: Application) : AndroidViewModel(application) {
+class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     // Candidate for dependency injection
     private val repository = Repository(application)
 
-    val _activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment_kt)
+    val _activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment)
     val activeFragment: LiveData<Int>
         get() = _activeFragment
 

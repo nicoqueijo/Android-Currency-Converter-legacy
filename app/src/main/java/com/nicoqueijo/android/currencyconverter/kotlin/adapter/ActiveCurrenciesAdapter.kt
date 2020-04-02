@@ -15,20 +15,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyKtBinding
+import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
-import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 
-class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewModel_kt,
-                                 private val keyboard: DecimalNumberKeyboard) :
-        ListAdapter<Currency, ActiveCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
-        SwipeAndDragHelper_kt.ActionCompletionContract {
+class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
+                              private val keyboard: DecimalNumberKeyboard) :
+        ListAdapter<Currency, ActiveCurrenciesAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
+        SwipeAndDragHelper.ActionCompletionContract {
 
     private var decimalFormatter: DecimalFormat
     private var decimalSeparator: String
@@ -43,7 +43,7 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RowActiveCurrencyKtBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RowActiveCurrencyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         if (viewModel.focusedCurrency == null) {
             val firstCurrency = viewModel.adapterActiveCurrencies.take(1)[0]
             firstCurrency.isFocused = true
@@ -129,16 +129,16 @@ class ActiveCurrenciesAdapter_kt(private val viewModel: ActiveCurrenciesViewMode
         notifyItemChanged(adapterPosition)
     }
 
-    inner class ViewHolder(val binding: RowActiveCurrencyKtBinding) :
+    inner class ViewHolder(val binding: RowActiveCurrencyBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        val rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground_kt)
-        val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start_kt)
-        val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end_kt)
-        val flag: ImageView = itemView.findViewById(R.id.flag_kt)
-        val currencyCode: TextView = itemView.findViewById(R.id.currency_code_kt)
-        val conversionValue: TextView = itemView.findViewById(R.id.conversion_value_kt)
-        val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor_kt)
+        val rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground)
+        val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
+        val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
+        val flag: ImageView = itemView.findViewById(R.id.flag)
+        val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
+        val conversionValue: TextView = itemView.findViewById(R.id.conversion_value)
+        val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
         init {
             conversionValue.hint = "0${decimalSeparator}0000"

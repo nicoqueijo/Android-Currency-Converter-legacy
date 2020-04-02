@@ -11,18 +11,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
 
-class SelectableCurrenciesFragment_kt : Fragment() {
+class SelectableCurrenciesFragment : Fragment() {
 
-    private lateinit var viewModel: SelectableCurrenciesViewModel_kt
+    private lateinit var viewModel: SelectableCurrenciesViewModel
 
-    private lateinit var adapter: SelectableCurrenciesAdapter_kt
-    private lateinit var recyclerView: CustomRecyclerView_kt
+    private lateinit var adapter: SelectableCurrenciesAdapter
+    private lateinit var recyclerView: CustomRecyclerView
     private lateinit var noResultsView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +32,8 @@ class SelectableCurrenciesFragment_kt : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_selectable_currency_kt, container, false)
-        viewModel = ViewModelProvider(this).get(SelectableCurrenciesViewModel_kt::class.java)
+        val view = inflater.inflate(R.layout.fragment_selectable_currency, container, false)
+        viewModel = ViewModelProvider(this).get(SelectableCurrenciesViewModel::class.java)
         initViewsAndAdapter(view)
         observeObservables()
         return view
@@ -45,12 +45,12 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies_kt)
-        noResultsView = view.findViewById(R.id.no_results_kt)
+        recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies)
+        noResultsView = view.findViewById(R.id.no_results)
         recyclerView.showIfEmpty(noResultsView)
-        val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar_kt)
+        val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
-        adapter = SelectableCurrenciesAdapter_kt(viewModel)
+        adapter = SelectableCurrenciesAdapter(viewModel)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
@@ -67,8 +67,8 @@ class SelectableCurrenciesFragment_kt : Fragment() {
     }
 
     private fun initMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_kt, menu)
-        val searchView = menu.findItem(R.id.search_kt).actionView as SearchView
+        inflater.inflate(R.menu.menu_search, menu)
+        val searchView = menu.findItem(R.id.search).actionView as SearchView
         searchView.imeOptions = EditorInfo.IME_ACTION_GO
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {

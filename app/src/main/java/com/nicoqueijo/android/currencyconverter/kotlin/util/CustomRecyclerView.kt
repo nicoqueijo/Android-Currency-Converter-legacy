@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
  * changes in the adapter and act accordingly. If the adapter becomes empty we want to show a View
  * which displays information about why its empty.
  */
-class CustomRecyclerView_kt : RecyclerView {
+class CustomRecyclerView : RecyclerView {
     private lateinit var mEmptyListView: View
 
     constructor(context: Context) : super(context)

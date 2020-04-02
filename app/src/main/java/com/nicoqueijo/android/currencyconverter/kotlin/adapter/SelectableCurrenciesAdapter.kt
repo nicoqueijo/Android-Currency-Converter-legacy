@@ -9,18 +9,18 @@ import android.widget.Filterable
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyKtBinding
+import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
 import com.turingtechnologies.materialscrollbar.INameableAdapter
 
-class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrenciesViewModel_kt) :
-        ListAdapter<Currency, SelectableCurrenciesAdapter_kt.ViewHolder>(CurrencyDiffUtilCallback()),
+class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesViewModel) :
+        ListAdapter<Currency, SelectableCurrenciesAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
         INameableAdapter,
         Filterable {
 
-    inner class ViewHolder(val binding: RowSelectableCurrencyKtBinding) :
+    inner class ViewHolder(val binding: RowSelectableCurrencyBinding) :
             RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         init {
@@ -34,7 +34,7 @@ class SelectableCurrenciesAdapter_kt(private val viewModel: SelectableCurrencies
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RowSelectableCurrencyKtBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RowSelectableCurrencyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

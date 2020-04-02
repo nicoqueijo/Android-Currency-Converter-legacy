@@ -3,12 +3,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout_kt"
+    android:id="@+id/main_activity_canvas"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_kt"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/almost_black"
@@ -21,13 +21,13 @@
         app:popupTheme="@style/AppThemeDark" />
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout_kt"
+        android:id="@+id/drawer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_kt"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:context=".java.activities.MainActivity"
         tools:openDrawer="start">
 
@@ -45,7 +45,7 @@
                     android:orientation="vertical">
 
                     <fragment
-                        android:id="@+id/content_frame_kt"
+                        android:id="@+id/content_frame"
                         android:name="androidx.navigation.fragment.NavHostFragment"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -55,7 +55,7 @@
                         tools:ignore="FragmentTagUsage" />
 
                     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/banner_ad_kt"
+                        android:id="@+id/banner_ad"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -69,17 +69,17 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view_menu_kt"
+            android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="?attr/drawer_background_color"
             android:fitsSystemWindows="true"
-            app:headerLayout="@layout/navigation_header_kt"
+            app:headerLayout="@layout/navigation_header"
             app:itemIconTint="?attr/icon_color"
             app:itemShapeFillColor="@color/background_menu_item_drawer"
             app:itemTextColor="?attr/text_color"
-            app:menu="@menu/drawer_view_kt">
+            app:menu="@menu/drawer_view">
 
             <TextView
                 android:id="@+id/last_updated_label"

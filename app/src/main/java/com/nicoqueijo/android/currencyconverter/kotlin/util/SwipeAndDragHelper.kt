@@ -4,11 +4,11 @@ import android.graphics.Canvas
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter
 
 // https://stackoverflow.com/questions/35920584/android-how-to-catch-drop-action-of-itemtouchhelper-which-is-used-with-recycle
 
-class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompletionContract, dragDirs: Int, swipeDirs: Int) :
+class SwipeAndDragHelper(private val actionCompletionContract: ActionCompletionContract, dragDirs: Int, swipeDirs: Int) :
         ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 
     private var dragFrom = -1
@@ -41,7 +41,7 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (viewHolder != null) {
-                val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
+                val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter.ViewHolder).rowForeground
                 getDefaultUIUtil().onSelected(foregroundView)
             }
         } else {
@@ -52,7 +52,7 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
     override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder?,
                                  dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
+            val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter.ViewHolder).rowForeground
             getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive)
         } else {
@@ -66,14 +66,14 @@ class SwipeAndDragHelper_kt(private val actionCompletionContract: ActionCompleti
         }
         dragTo = -1
         dragFrom = dragTo
-        val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder).rowForeground
+        val foregroundView: View = (viewHolder as ActiveCurrenciesAdapter.ViewHolder).rowForeground
         getDefaultUIUtil().clearView(foregroundView)
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                              dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val thisHolder = viewHolder as ActiveCurrenciesAdapter_kt.ViewHolder
+            val thisHolder = viewHolder as ActiveCurrenciesAdapter.ViewHolder
             val foregroundView: View = thisHolder.rowForeground
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView,
                     dX, dY, actionState, isCurrentlyActive)

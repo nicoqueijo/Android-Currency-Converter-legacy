@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <group
-        android:id="@+id/nav_group_fragments_kt"
+        android:id="@+id/nav_group_fragments"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/activeCurrenciesFragment_kt"
+            android:id="@+id/activeCurrenciesFragment"
             android:icon="@drawable/ic_convert"
             android:title="@string/converter" />
         <item
-            android:id="@+id/sourceCodeFragment_kt"
+            android:id="@+id/sourceCodeFragment"
             android:icon="@drawable/ic_source_code"
             android:title="@string/source_code" />
     </group>

@@ -13,23 +13,23 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper_kt
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel_kt
+import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView
+import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
 
 
-class ActiveCurrenciesFragment_kt : Fragment() {
+class ActiveCurrenciesFragment : Fragment() {
 
-    private lateinit var viewModel: ActiveCurrenciesViewModel_kt
+    private lateinit var viewModel: ActiveCurrenciesViewModel
 
-    private lateinit var adapter: ActiveCurrenciesAdapter_kt
+    private lateinit var adapter: ActiveCurrenciesAdapter
     private lateinit var floatingActionButton: FloatingActionButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_active_currencies_kt, container, false)
-        viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel_kt::class.java)
+        val view = inflater.inflate(R.layout.fragment_active_currencies, container, false)
+        viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
         initViewsAndAdapter(view)
         observeObservables()
         /*populateDefaultCurrencies()*/
@@ -37,16 +37,16 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        val recyclerView = view.findViewById<CustomRecyclerView_kt>(R.id.recycler_view_active_currencies_kt)
-        val emptyListView = view.findViewById<View>(R.id.empty_list_kt)
+        val recyclerView = view.findViewById<CustomRecyclerView>(R.id.recycler_view_active_currencies)
+        val emptyListView = view.findViewById<View>(R.id.empty_list)
         val keyboard = view.findViewById<DecimalNumberKeyboard>(R.id.keyboard)
         recyclerView.showIfEmpty(emptyListView)
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         initFloatingActionButton(view)
-        adapter = ActiveCurrenciesAdapter_kt(viewModel, keyboard)
+        adapter = ActiveCurrenciesAdapter(viewModel, keyboard)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
-        val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper_kt(adapter,
+        val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper(adapter,
                 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
@@ -58,9 +58,9 @@ class ActiveCurrenciesFragment_kt : Fragment() {
     }
 
     private fun initFloatingActionButton(view: View) {
-        floatingActionButton = view.findViewById(R.id.floating_action_button_kt)
+        floatingActionButton = view.findViewById(R.id.floating_action_button)
         floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_activeCurrenciesFragment_kt_to_selectableCurrenciesFragment_kt)
+            findNavController().navigate(R.id.action_activeCurrenciesFragment_to_selectableCurrenciesFragment)
         }
     }
 
