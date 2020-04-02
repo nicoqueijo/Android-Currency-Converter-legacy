@@ -237,10 +237,4 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
             conversionValue.text = input.dropLast(1)
         }*/
     }
-
-    companion object {
-        private fun log(message: String) {
-            Log.d("ActiveCurrency", message)
-        }
-    }
 }

@@ -48,7 +48,7 @@ class SelectableCurrenciesFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies)
         noResultsView = view.findViewById(R.id.no_results)
         recyclerView.showIfEmpty(noResultsView)
-        val dragScrollBar: DragScrollBar = view.findViewById(R.id.drag_scroll_bar)
+        val dragScrollBar = view.findViewById<DragScrollBar>(R.id.drag_scroll_bar)
         dragScrollBar.setIndicator(AlphabetIndicator(context), true)
         adapter = SelectableCurrenciesAdapter(viewModel)
         recyclerView.adapter = adapter

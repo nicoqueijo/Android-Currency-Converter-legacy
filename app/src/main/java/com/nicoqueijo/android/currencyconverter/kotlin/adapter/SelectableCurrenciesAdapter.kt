@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
@@ -20,16 +19,18 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
         INameableAdapter,
         Filterable {
 
-    inner class ViewHolder(val binding: RowSelectableCurrencyBinding) :
-            RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    inner class ViewHolder(private val binding: RowSelectableCurrencyBinding) :
+            RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener { view ->
+                viewModel.handleOnClick(adapterPosition)
+                view?.findNavController()?.popBackStack()
+            }
         }
 
-        override fun onClick(v: View?) {
-            viewModel.handleOnClick(adapterPosition)
-            v?.findNavController()?.popBackStack()
+        fun bind(currency: Currency) {
+            binding.currency = currency
         }
     }
 
@@ -40,7 +41,7 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
 
     @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.currency = viewModel.adapterFilteredCurrencies[position]
+        holder.bind(viewModel.adapterFilteredCurrencies[position])
     }
 
     fun setCurrencies(currencies: List<Currency>) {
