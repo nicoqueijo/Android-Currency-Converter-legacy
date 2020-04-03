@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.INVALID
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
@@ -25,7 +25,7 @@ data class Currency(@PrimaryKey
     var isSelected = false
 
     @ColumnInfo(name = "column_order")
-    var order = INVALID
+    var order = INVALID.position
 
     @Ignore
     var isFocused = false
@@ -88,7 +88,7 @@ data class Currency(@PrimaryKey
         // The raw underlying conversion result
         var conversionValue: BigDecimal = conversionValue
             set(value) {
-                field = Utils.roundBigDecimal(value)
+                field = value.roundToFourDecimalPlaces()
                 conversionText = conversionValue.toString()
             }
 

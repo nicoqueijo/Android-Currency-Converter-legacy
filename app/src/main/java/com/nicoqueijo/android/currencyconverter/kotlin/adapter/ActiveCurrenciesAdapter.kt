@@ -18,6 +18,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
 import java.text.DecimalFormat
@@ -75,8 +76,8 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                     conversionValue.text = conversionValue.text.dropLast(1)
                     log("${conversionValue.text}")
                 }
-            }
-            keyboard.onKeyLongClickedListener {
+            }*/
+            /*keyboard.onKeyLongClickedListener {
                 conversionValue.text = ""
                 log("${conversionValue.text}")
             }*/

@@ -24,7 +24,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
+import java.math.BigDecimal
 
 
 class MainActivity : AppCompatActivity() {
@@ -131,7 +134,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                Utils.hideKeyboard(this@MainActivity)
+                /*Utils.hideKeyboard(this@MainActivity)*/
+                this@MainActivity.hideKeyboard()
             }
         }
     }

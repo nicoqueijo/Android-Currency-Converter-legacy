@@ -3,21 +3,20 @@ package com.nicoqueijo.android.currencyconverter.kotlin.util
 import android.app.Activity
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
-import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import androidx.fragment.app.DialogFragment
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-// @JvmStatic annotations so Data Binding can recognize them
+/**
+ * @JvmStatic annotations so Data Binding can recognize them
+ */
 object Utils {
+
     @JvmStatic
     fun getStringResourceByName(name: String, context: Context?): String {
         val resId = context!!.resources.getIdentifier(name, "string", context.packageName)
@@ -31,54 +30,34 @@ object Utils {
 
     @JvmStatic
     @BindingAdapter("android:src")
-    fun setImageViewResource(imageView: ImageView, resource: Int) {
-        imageView.setImageResource(resource)
+    fun setImageViewResource(imageView: ImageView, resource: Int) = imageView.setImageResource(resource)
+
+    fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.CEILING)
+
+    fun Activity.hideKeyboard() {
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
-    @JvmStatic
-    fun putDouble(edit: SharedPreferences.Editor, key: String, value: Double) {
-        edit.putLong(key, java.lang.Double.doubleToRawLongBits(value))
-    }
-
-    @JvmStatic
-    fun getDouble(prefs: SharedPreferences, key: String, defaultValue: Double): Double {
-        return java.lang.Double.longBitsToDouble(prefs.getLong(key, java.lang.Double.doubleToLongBits(defaultValue)))
-    }
-
-    @JvmStatic
-    fun roundBigDecimal(value: BigDecimal): BigDecimal {
-        val decimalPlaces = 4
-        return value.setScale(decimalPlaces, RoundingMode.CEILING)
-    }
-
-    @JvmStatic
-    fun roundDialogCorners(dialogFragment: DialogFragment) {
-        dialogFragment.dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-    }
-
-    fun hideKeyboard(activity: Activity?) {
-        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0)
-    }
-
-    // Vibrate for 10 milliseconds
-    fun vibrate(context: Context) {
+    fun Context.vibrate() {
+        val duration = 10L
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            (context.getSystemService(VIBRATOR_SERVICE) as Vibrator)
-                    .vibrate(VibrationEffect.createOneShot(10L, VibrationEffect.DEFAULT_AMPLITUDE))
+            (getSystemService(VIBRATOR_SERVICE) as Vibrator)
+                    .vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(10L)
+            (getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(duration)
         }
     }
 
     fun List<*>.hasMoreThanOneElement() = size > 1
 
-    fun Int.isValid() = this != -1
+    fun Int.isValid() = this != Order.INVALID.position
 
-    const val INVALID = -1
-
-    const val FIRST = 0
-    const val SECOND = 1
-    const val THIRD = 2
-    const val FOURTH = 3
+    enum class Order(val position: Int) {
+        INVALID(-1),
+        FIRST(0),
+        SECOND(1),
+        THIRD(2),
+        FOURTH(3)
+    }
 }

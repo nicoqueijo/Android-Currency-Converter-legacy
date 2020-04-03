@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.FIRST
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.FOURTH
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.SECOND
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.THIRD
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasMoreThanOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
@@ -57,25 +54,25 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         swipedCurrency = adapterActiveCurrencies[position]
         if (focusedCurrency == swipedCurrency) {
             val newlyFocusedCurrency: Currency
-            if (position == 0) {
+            if (position == FIRST.position) {
                 if (adapterActiveCurrencies.hasMoreThanOneElement()) {
-                    newlyFocusedCurrency = adapterActiveCurrencies[1] // SECOND
+                    newlyFocusedCurrency = adapterActiveCurrencies[SECOND.position]
                     newlyFocusedCurrency.isFocused = true
                     swipedCurrency.isFocused = false
                     focusedCurrency = newlyFocusedCurrency
-                    return 1
+                    return SECOND.position
                 } else {
                     focusedCurrency = null
                 }
             } else {
-                newlyFocusedCurrency = adapterActiveCurrencies[0] // FIRST
+                newlyFocusedCurrency = adapterActiveCurrencies[FIRST.position]
                 newlyFocusedCurrency.isFocused = true
                 swipedCurrency.isFocused = false
                 focusedCurrency = newlyFocusedCurrency
-                return 0
+                return FIRST.position
             }
         }
-        return -1
+        return INVALID.position
     }
 
     private fun shiftCurrencies(position: Int) {
@@ -152,22 +149,22 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                 setFirstLaunch(false)
                 val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
                 getCurrency("USD_USD")?.run {
-                    setDefaultCurrency(this, FIRST)
+                    setDefaultCurrency(this, FIRST.position)
                 }
                 val localCurrency = getCurrency(localCurrencyCode)
                 if (localCurrencyCode == "USD_USD" || localCurrency == null) {
                     getCurrency("USD_EUR")?.run {
-                        setDefaultCurrency(this, SECOND)
+                        setDefaultCurrency(this, SECOND.position)
                     }
                     getCurrency("USD_JPY")?.run {
-                        setDefaultCurrency(this, THIRD)
+                        setDefaultCurrency(this, THIRD.position)
                     }
                     getCurrency("USD_GBP")?.run {
-                        setDefaultCurrency(this, FOURTH)
+                        setDefaultCurrency(this, FOURTH.position)
                     }
                 } else {
                     localCurrency.run {
-                        setDefaultCurrency(this, SECOND)
+                        setDefaultCurrency(this, SECOND.position)
                     }
                 }
             }
