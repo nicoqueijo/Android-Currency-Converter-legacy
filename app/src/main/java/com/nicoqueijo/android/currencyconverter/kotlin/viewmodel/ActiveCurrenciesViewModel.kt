@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasMoreThanOneElement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +39,10 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
 
     fun handleSwipe(position: Int) {
+        shiftCurrencies(position)
+    }
+
+    private fun shiftCurrencies(position: Int) {
         swipedCurrency = adapterActiveCurrencies[position]
         swipedCurrencyOrder = swipedCurrency.order
 //        val conversionValue = swipedCurrency.conversionValue

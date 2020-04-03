@@ -46,8 +46,7 @@ class ActiveCurrenciesFragment : Fragment() {
         adapter = ActiveCurrenciesAdapter(viewModel, keyboard)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
-        val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = SwipeAndDragHelper(adapter,
-                0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+        val itemTouchHelperCallback = SwipeAndDragHelper(adapter, 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
 

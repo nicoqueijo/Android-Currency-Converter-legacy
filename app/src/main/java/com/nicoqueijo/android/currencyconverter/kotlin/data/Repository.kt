@@ -46,7 +46,7 @@ class Repository(private val context: Context) {
                         "USD_BRL",
                         "USD_CAD",
                         "USD_DKK",
-                        "USD_EUR"/*,
+                        "USD_EUR",
                         "USD_FJD",
                         "USD_GBP",
                         "USD_HRK",
@@ -54,7 +54,7 @@ class Repository(private val context: Context) {
                         "USD_JPY",
                         "USD_KRW",
                         "USD_LYD",
-                        "USD_MXN"*/)
+                        "USD_MXN")
                 retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
                 }?.forEachIndexed { i, currency ->

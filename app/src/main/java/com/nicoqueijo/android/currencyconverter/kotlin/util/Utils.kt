@@ -70,4 +70,7 @@ object Utils {
             (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(10L)
         }
     }
+
+    fun List<*>.hasMoreThanOneElement() = size > 1
+
 }
