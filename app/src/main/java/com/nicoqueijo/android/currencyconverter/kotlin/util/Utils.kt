@@ -9,6 +9,7 @@ import android.os.Vibrator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -49,7 +50,23 @@ object Utils {
         }
     }
 
-    fun List<*>.hasMoreThanOneElement() = size > 1
+    fun List<*>.hasOneElement() = size == 1
+
+    fun List<*>.isNotLastElement(position: Int) = size > position + 1
+
+    fun List<Currency>.elementAfter(position: Int): Currency {
+        if (position >= size) {
+            throw IndexOutOfBoundsException()
+        }
+        return this[position + 1]
+    }
+
+    fun List<Currency>.elementBefore(position: Int): Currency {
+        if (position <= 0) {
+            throw IndexOutOfBoundsException()
+        }
+        return this[position - 1]
+    }
 
     fun Int.isValid() = this != Order.INVALID.position
 

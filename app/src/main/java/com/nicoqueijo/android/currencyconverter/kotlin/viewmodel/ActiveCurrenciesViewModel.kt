@@ -7,7 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasMoreThanOneElement
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOneElement
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,29 +50,42 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     /**
-     * Here we are setting the focused to the first currency in the list
-     * if the swiped currency was focused.
+     * Here we are reassigning the focus to another currency if the focused currency is swiped.
+     * The assignment logic is:
+     *      If there are items below me
+     *          Unfocus me, focus item directly below me
+     *          Return position of item directly below me
+     *      Else if I am the sole item
+     *          Unfocus me
+     *          Return invalid position
+     *      Else
+     *          Unfocus me, focus item directly above me
+     *          Return position of time directly above me
      */
     private fun reassignFocusedCurrency(position: Int): Int {
         swipedCurrency = adapterActiveCurrencies[position]
         if (focusedCurrency == swipedCurrency) {
-            val newlyFocusedCurrency: Currency
-            if (position == FIRST.position) {
-                if (adapterActiveCurrencies.hasMoreThanOneElement()) {
-                    newlyFocusedCurrency = adapterActiveCurrencies[SECOND.position]
-                    newlyFocusedCurrency.isFocused = true
-                    swipedCurrency.isFocused = false
-                    focusedCurrency = newlyFocusedCurrency
-                    return SECOND.position
-                } else {
-                    focusedCurrency = null
+            when {
+                adapterActiveCurrencies.isNotLastElement(position) -> {
+                    adapterActiveCurrencies.elementAfter(position).let { newlyFocusedCurrency ->
+                        newlyFocusedCurrency.isFocused = true
+                        swipedCurrency.isFocused = false
+                        focusedCurrency = newlyFocusedCurrency
+                        return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
+                    }
                 }
-            } else {
-                newlyFocusedCurrency = adapterActiveCurrencies[FIRST.position]
-                newlyFocusedCurrency.isFocused = true
-                swipedCurrency.isFocused = false
-                focusedCurrency = newlyFocusedCurrency
-                return FIRST.position
+                adapterActiveCurrencies.hasOneElement() -> {
+                    focusedCurrency = null
+                    return INVALID.position
+                }
+                else -> {
+                    adapterActiveCurrencies.elementBefore(position).let { newlyFocusedCurrency ->
+                        newlyFocusedCurrency.isFocused = true
+                        swipedCurrency.isFocused = false
+                        focusedCurrency = newlyFocusedCurrency
+                        return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
+                    }
+                }
             }
         }
         return INVALID.position
