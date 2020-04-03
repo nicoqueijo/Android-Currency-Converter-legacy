@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.INVALID
 import java.math.BigDecimal
 
 @Entity(tableName = "table_currency")
@@ -24,7 +25,7 @@ data class Currency(@PrimaryKey
     var isSelected = false
 
     @ColumnInfo(name = "column_order")
-    var order = -1
+    var order = INVALID
 
     @Ignore
     var isFocused = false

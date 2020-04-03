@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,7 @@ import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBin
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasMoreThanOneElement
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
 import java.text.DecimalFormat
@@ -55,7 +54,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
 
         init {
             conversionValue.hint = "0${decimalSeparator}0000"
-
             conversionValue.setOnClickListener {
                 changeFocusedCurrency(adapterPosition)
             }
@@ -155,7 +153,8 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 binding.currency = viewModel.adapterActiveCurrencies[position]
                 styleIfFocused()
             } catch (e: IndexOutOfBoundsException) {
-                Log.d("Nicoo", "IndexOutOfBoundsException thrown...")
+                // Create issue on Github and post link here
+                // This error is caused by reassignFocusedCurrency()
             }
         }
 
@@ -164,7 +163,8 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 rowForeground.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.dark_gray))
                 blinkingCursor.startAnimation(animBlink)
             } else {
-                rowForeground.background = keyboard.context.getDrawable(R.drawable.background_row_active_currency)
+                rowForeground.background = ContextCompat.getDrawable(binding.root.context,
+                        R.drawable.background_row_active_currency)
                 blinkingCursor.clearAnimation()
             }
         }
@@ -173,7 +173,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = RowActiveCurrencyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        setFirstCurrencyAsFocused()
+        setFocusToFirstCurrency()
         return ViewHolder(binding)
     }
 
@@ -188,7 +188,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         submitList(currencies)
     }
 
-    private fun setFirstCurrencyAsFocused() {
+    private fun setFocusToFirstCurrency() {
         if (viewModel.focusedCurrency == null) {
             viewModel.focusedCurrency = viewModel.adapterActiveCurrencies.take(1)[0].also { firstCurrency ->
                 firstCurrency.isFocused = true
@@ -206,7 +206,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
     private fun changeFocusedCurrency(adapterPosition: Int) {
         val clickedCurrency = viewModel.adapterActiveCurrencies[adapterPosition]
         val indexOfPreviouslyFocusedCurrency = viewModel.changeFocusedCurrency(clickedCurrency)
-        if (indexOfPreviouslyFocusedCurrency != -1) {
+        if (indexOfPreviouslyFocusedCurrency.isValid()) {
             notifyItemChanged(indexOfPreviouslyFocusedCurrency)
         }
         notifyItemChanged(adapterPosition)
@@ -219,31 +219,11 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
         /*val conversionValue = swipedCurrency.conversionValue*/
-
-        // Handles the focus management
-        val swipedCurrency = viewModel.adapterActiveCurrencies[position]
-        if (viewModel.focusedCurrency == swipedCurrency) {
-            val newlyFocusedCurrency: Currency
-            if (position == 0) {
-                if (viewModel.adapterActiveCurrencies.hasMoreThanOneElement()) {
-                    newlyFocusedCurrency = viewModel.adapterActiveCurrencies[1] // SECOND
-                    newlyFocusedCurrency.isFocused = true
-                    swipedCurrency.isFocused = false
-                    viewModel.focusedCurrency = newlyFocusedCurrency
-                    notifyItemChanged(1)
-                } else {
-                    viewModel.focusedCurrency = null
-                }
-            } else {
-                newlyFocusedCurrency = viewModel.adapterActiveCurrencies[0] // FIRST
-                newlyFocusedCurrency.isFocused = true
-                swipedCurrency.isFocused = false
-                viewModel.focusedCurrency = newlyFocusedCurrency
-                notifyItemChanged(0)
+        viewModel.handleSwipe(position).let {
+            if (it.isValid()) {
+                notifyItemChanged(it)
             }
         }
-
-        viewModel.handleSwipe(position)
         Snackbar.make(viewHolder!!.itemView, R.string.item_removed, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo) {
                     viewModel.handleSwipeUndo()

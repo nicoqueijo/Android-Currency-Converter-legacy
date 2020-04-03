@@ -6,7 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.FIRST
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.FOURTH
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.SECOND
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.THIRD
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasMoreThanOneElement
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,8 +43,39 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     private lateinit var swipedCurrency: Currency
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
 
-    fun handleSwipe(position: Int) {
+    fun handleSwipe(position: Int): Int {
+        val indexToRefresh = reassignFocusedCurrency(position)
         shiftCurrencies(position)
+        return indexToRefresh
+    }
+
+    /**
+     * Here we are setting the focused to the first currency in the list
+     * if the swiped currency was focused.
+     */
+    private fun reassignFocusedCurrency(position: Int): Int {
+        swipedCurrency = adapterActiveCurrencies[position]
+        if (focusedCurrency == swipedCurrency) {
+            val newlyFocusedCurrency: Currency
+            if (position == 0) {
+                if (adapterActiveCurrencies.hasMoreThanOneElement()) {
+                    newlyFocusedCurrency = adapterActiveCurrencies[1] // SECOND
+                    newlyFocusedCurrency.isFocused = true
+                    swipedCurrency.isFocused = false
+                    focusedCurrency = newlyFocusedCurrency
+                    return 1
+                } else {
+                    focusedCurrency = null
+                }
+            } else {
+                newlyFocusedCurrency = adapterActiveCurrencies[0] // FIRST
+                newlyFocusedCurrency.isFocused = true
+                swipedCurrency.isFocused = false
+                focusedCurrency = newlyFocusedCurrency
+                return 0
+            }
+        }
+        return -1
     }
 
     private fun shiftCurrencies(position: Int) {
@@ -61,6 +97,21 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         swipedCurrency.order = -1
         swipedCurrency.conversionValue = BigDecimal(0.0)
         upsertCurrency(swipedCurrency)
+    }
+
+    /**
+     * Makes the passed currency focused and the previously focused currency unfocused.
+     * If the previously focused currency was swiped it will not be in the list and the index will
+     * return -1.
+     */
+    fun changeFocusedCurrency(newlyFocusedCurrency: Currency): Int {
+        val indexOfPreviouslyFocusedCurrency = adapterActiveCurrencies.indexOf(focusedCurrency)
+        if (indexOfPreviouslyFocusedCurrency.isValid()) {
+            adapterActiveCurrencies[indexOfPreviouslyFocusedCurrency].isFocused = false
+        }
+        focusedCurrency = newlyFocusedCurrency
+        newlyFocusedCurrency.isFocused = true
+        return indexOfPreviouslyFocusedCurrency
     }
 
     fun handleSwipeUndo() {
@@ -127,24 +178,5 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         currency.order = order
         currency.isSelected = true
         upsertCurrency(currency)
-    }
-
-    // If the previously focused currency was swiped it will not be in the list and the index will return
-    // -1.
-    fun changeFocusedCurrency(newlyFocusedCurrency: Currency): Int {
-        val indexOfPreviouslyFocusedCurrency = adapterActiveCurrencies.indexOf(focusedCurrency)
-        if (indexOfPreviouslyFocusedCurrency != -1) {
-            adapterActiveCurrencies[indexOfPreviouslyFocusedCurrency].isFocused = false
-        }
-        focusedCurrency = newlyFocusedCurrency
-        newlyFocusedCurrency.isFocused = true
-        return indexOfPreviouslyFocusedCurrency
-    }
-
-    companion object {
-        private const val FIRST = 0
-        private const val SECOND = 1
-        private const val THIRD = 2
-        private const val FOURTH = 3
     }
 }

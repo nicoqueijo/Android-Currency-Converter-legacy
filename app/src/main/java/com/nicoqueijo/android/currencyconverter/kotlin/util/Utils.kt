@@ -73,4 +73,12 @@ object Utils {
 
     fun List<*>.hasMoreThanOneElement() = size > 1
 
+    fun Int.isValid() = this != -1
+
+    const val INVALID = -1
+
+    const val FIRST = 0
+    const val SECOND = 1
+    const val THIRD = 2
+    const val FOURTH = 3
 }
