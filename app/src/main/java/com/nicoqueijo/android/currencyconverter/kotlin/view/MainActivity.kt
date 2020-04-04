@@ -23,18 +23,15 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
-import java.math.BigDecimal
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainActivityViewModel
 
-    internal lateinit var drawer: DrawerLayout
+    lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var navController: NavController

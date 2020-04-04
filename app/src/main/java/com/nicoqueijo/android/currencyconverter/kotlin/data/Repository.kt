@@ -20,7 +20,7 @@ class Repository(private val context: Context) {
     private val sharedPrefsProperties = context
             .getSharedPreferences(context.packageName.plus(".properties"), Context.MODE_PRIVATE)
 
-    internal suspend fun initCurrencies() {
+    suspend fun initCurrencies() {
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
@@ -55,8 +55,7 @@ class Repository(private val context: Context) {
                         "USD_KRW",
                         "USD_LYD",
                         "USD_MXN")
-                retrofitResponse.body()?.exchangeRates?.currencies?.
-                filter { currency ->
+                retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
                 }?.forEachIndexed { i, currency ->
                     currency.order = i
@@ -88,23 +87,23 @@ class Repository(private val context: Context) {
             }
         }
 
-    internal var isFirstLaunch: Boolean
+    var isFirstLaunch: Boolean
         get() = sharedPrefsProperties.getBoolean("first_launch", true)
         set(value) {
             sharedPrefsProperties.edit().putBoolean("first_launch", value).apply()
         }
 
-    internal suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
+    suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
 
-    internal fun upsertCurrency(currency: Currency?) {
+    fun upsertCurrency(currency: Currency?) {
         CoroutineScope(Dispatchers.IO).launch {
             currencyDao.upsert(currency)
         }
     }
 
-    internal fun getAllCurrencies() = currencyDao.getAllCurrencies()
+    fun getAllCurrencies() = currencyDao.getAllCurrencies()
 
-    internal fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
+    fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
 
     private fun getApiKey(): String {
         val apiKeys = context.resources.getStringArray(R.array.api_keys)

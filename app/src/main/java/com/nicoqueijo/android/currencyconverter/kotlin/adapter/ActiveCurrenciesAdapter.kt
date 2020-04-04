@@ -49,10 +49,10 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
     inner class ViewHolder(private val binding: RowActiveCurrencyBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        internal val rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground)
-        internal val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
-        internal val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
-        internal val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
+        val rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground)
+        val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
+        val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
+        val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
         private val conversionValue: TextView = itemView.findViewById(R.id.conversion_value)
         private val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
