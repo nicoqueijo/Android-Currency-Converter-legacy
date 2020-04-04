@@ -108,7 +108,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         }
         swipedCurrency.isSelected = false
         swipedCurrency.order = -1
-        swipedCurrency.conversionValue = BigDecimal(0.0)
+        swipedCurrency.conversionValue = BigDecimal.ZERO
         upsertCurrency(swipedCurrency)
     }
 

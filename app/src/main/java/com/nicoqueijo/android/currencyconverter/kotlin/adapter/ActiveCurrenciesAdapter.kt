@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,9 +20,9 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -30,8 +32,11 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         ListAdapter<Currency, ActiveCurrenciesAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper.ActionCompletionContract {
 
+    private var input = ""
+
     private var decimalFormatter: DecimalFormat
     private var decimalSeparator: String
+    private var groupingSeparator: String
     private var animBlink = AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink)
 
     init {
@@ -39,19 +44,19 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         val conversionPattern = "###,##0.0000"
         decimalFormatter = numberFormatter as DecimalFormat
         decimalFormatter.applyPattern(conversionPattern)
+        groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
     }
 
     inner class ViewHolder(private val binding: RowActiveCurrencyBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        val rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground)
-        val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
-        val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
-        val flag: ImageView = itemView.findViewById(R.id.flag)
-        val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
-        val conversionValue: TextView = itemView.findViewById(R.id.conversion_value)
-        val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
+        internal val rowForeground: ConstraintLayout = itemView.findViewById(R.id.row_foreground)
+        internal val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
+        internal val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
+        internal val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
+        private val conversionValue: TextView = itemView.findViewById(R.id.conversion_value)
+        private val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
         init {
             conversionValue.hint = "0${decimalSeparator}0000"
@@ -59,28 +64,35 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 changeFocusedCurrency(adapterPosition)
             }
 
-            /*keyboard.onKeyClickedListener { button ->
+            keyboard.onKeyClickedListener { button ->
                 // Move and encapsulate all this logic into functions outside this inner class
+
+                // If the view passed in is a Button we know that belongs to chars 0-9 or the
+                // decimal separator as those were declared as Button objects.
+                // If the view passed in is an ImageButton that can only mean that it is the
+                // backspace key as that was the only one declared as an ImageButton
                 if (button is Button) {
                     // validate input first
-                    val input = button.text.toString()
-                    val existingText = conversionValue.text.toString()
+                    val focusedCurrency = viewModel.focusedCurrency
+                    val keyValue = button.text.toString()
+                    val existingText = focusedCurrency?.conversion?.conversionText?.replace(groupingSeparator, "")
                     val replacementText = StringBuilder()
-                    replacementText.append(existingText).append(input)
-                    conversionValue.text = replacementText
+                    replacementText.append(existingText).append(keyValue)
+                    focusedCurrency?.conversion?.conversionValue = BigDecimal(replacementText.toString())
+                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
                     // Number or decimal separator
-                    log("${conversionValue.text}")
                 }
                 if (button is ImageButton) {
                     // Backspace
                     conversionValue.text = conversionValue.text.dropLast(1)
-                    log("${conversionValue.text}")
                 }
-            }*/
-            /*keyboard.onKeyLongClickedListener {
-                conversionValue.text = ""
-                log("${conversionValue.text}")
-            }*/
+            }
+
+            keyboard.onKeyLongClickedListener {
+                val focusedCurrency = viewModel.focusedCurrency
+                focusedCurrency?.conversion?.conversionValue = BigDecimal.ZERO
+                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+            }
         }
 
         /*private fun validateInput(s: CharSequence?): Boolean {

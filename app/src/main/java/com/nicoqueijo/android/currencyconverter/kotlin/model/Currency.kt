@@ -7,6 +7,9 @@ import androidx.room.PrimaryKey
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 @Entity(tableName = "table_currency")
 data class Currency(@PrimaryKey
@@ -16,10 +19,10 @@ data class Currency(@PrimaryKey
                     val exchangeRate: Double) {
 
     @Ignore
-    var conversionValue = BigDecimal(0.0)
+    var conversionValue = BigDecimal.ZERO!!
 
     @Ignore
-    var conversion = Conversion(BigDecimal(0.0))
+    var conversion = Conversion(BigDecimal.ZERO)
 
     @ColumnInfo(name = "column_isSelected")
     var isSelected = false
@@ -29,6 +32,20 @@ data class Currency(@PrimaryKey
 
     @Ignore
     var isFocused = false
+
+    @Ignore
+    private var decimalFormatter: DecimalFormat
+
+    @Ignore
+    private var decimalSeparator: String
+
+    init {
+        val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
+        val conversionPattern = "###,##0.####"
+        decimalFormatter = numberFormatter as DecimalFormat
+        decimalFormatter.applyPattern(conversionPattern)
+        decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
+    }
 
     val trimmedCurrencyCode
         get() = currencyCode.substring(CURRENCY_CODE_STARTING_INDEX)
@@ -79,24 +96,29 @@ data class Currency(@PrimaryKey
         return string.toString()
     }
 
-    companion object {
-        const val CURRENCY_CODE_STARTING_INDEX = 4
-    }
-
-    class Conversion(conversionValue: BigDecimal) {
+    inner class Conversion(conversionValue: BigDecimal) {
 
         // The raw underlying conversion result
         var conversionValue: BigDecimal = conversionValue
             set(value) {
                 field = value.roundToFourDecimalPlaces()
-                conversionText = conversionValue.toString()
+                // This field needs to be formatted not just converted to String.
+                conversionText = decimalFormatter.format(conversionValue)
             }
 
-        // The conversion result rounded and formatted
-        lateinit var conversionText: String
+        /**
+         * The conversion result formatted.
+         * Examples: 57,204.2719
+         *           0.0631
+         *           23.6000
+         */
+        var conversionText = ""
 
         // The hint displayed when it is empty
-        lateinit var conversionHint: String
+        var conversionHint = ""
     }
 
+    companion object {
+        const val CURRENCY_CODE_STARTING_INDEX = 4
+    }
 }

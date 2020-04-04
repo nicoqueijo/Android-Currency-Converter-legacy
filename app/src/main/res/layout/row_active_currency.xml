@@ -109,6 +109,7 @@
                     android:id="@+id/conversion_value"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:text="@{currency.conversion.conversionText}"
                     android:background="@android:color/transparent"
                     android:ellipsize="none"
                     android:gravity="center_vertical|right"
