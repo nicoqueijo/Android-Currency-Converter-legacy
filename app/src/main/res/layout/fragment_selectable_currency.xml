@@ -17,7 +17,7 @@
         android:textColor="?attr/text_color"
         android:textSize="18sp" />
 
-    <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView
+    <com.nicoqueijo.android.currencyconverter.kotlin.view.CustomRecyclerView
         android:id="@+id/recycler_view_selectable_currencies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

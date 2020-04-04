@@ -32,8 +32,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         ListAdapter<Currency, ActiveCurrenciesAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
         SwipeAndDragHelper.ActionCompletionContract {
 
-    private var input = ""
-
     private var decimalFormatter: DecimalFormat
     private var decimalSeparator: String
     private var groupingSeparator: String
@@ -74,12 +72,14 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 if (button is Button) {
                     // validate input first
                     val focusedCurrency = viewModel.focusedCurrency
+
                     val keyValue = button.text.toString()
                     val existingText = focusedCurrency?.conversion?.conversionText?.replace(groupingSeparator, "")
                     val replacementText = StringBuilder()
                     replacementText.append(existingText).append(keyValue)
                     focusedCurrency?.conversion?.conversionValue = BigDecimal(replacementText.toString())
-                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+                    conversionValue.text = replacementText
+                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency) + 1)
                     // Number or decimal separator
                 }
                 if (button is ImageButton) {

@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter
-import com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar

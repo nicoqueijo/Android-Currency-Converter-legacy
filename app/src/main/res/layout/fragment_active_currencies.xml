@@ -61,7 +61,7 @@
             app:fel_edge="bottom"
             app:fel_size_bottom="90dp">
 
-            <com.nicoqueijo.android.currencyconverter.kotlin.util.CustomRecyclerView
+            <com.nicoqueijo.android.currencyconverter.kotlin.view.CustomRecyclerView
                 android:id="@+id/recycler_view_active_currencies"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
