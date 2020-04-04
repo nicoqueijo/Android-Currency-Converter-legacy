@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
@@ -38,7 +39,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     var adapterActiveCurrencies = mutableListOf<Currency>()
-    var focusedCurrency: Currency? = null
+    val focusedCurrency = MutableLiveData<Currency?>()
 
     private lateinit var swipedCurrency: Currency
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
@@ -64,25 +65,25 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
      */
     private fun reassignFocusedCurrency(position: Int): Int {
         swipedCurrency = adapterActiveCurrencies[position]
-        if (focusedCurrency == swipedCurrency) {
+        if (focusedCurrency.value == swipedCurrency) {
             when {
                 adapterActiveCurrencies.isNotLastElement(position) -> {
                     adapterActiveCurrencies.elementAfter(position).let { newlyFocusedCurrency ->
                         newlyFocusedCurrency.isFocused = true
                         swipedCurrency.isFocused = false
-                        focusedCurrency = newlyFocusedCurrency
+                        focusedCurrency.value = newlyFocusedCurrency
                         return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
                     }
                 }
                 adapterActiveCurrencies.hasOneElement() -> {
-                    focusedCurrency = null
+                    focusedCurrency.value = null
                     return INVALID.position
                 }
                 else -> {
                     adapterActiveCurrencies.elementBefore(position).let { newlyFocusedCurrency ->
                         newlyFocusedCurrency.isFocused = true
                         swipedCurrency.isFocused = false
-                        focusedCurrency = newlyFocusedCurrency
+                        focusedCurrency.value = newlyFocusedCurrency
                         return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
                     }
                 }
@@ -118,11 +119,11 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
      * return -1.
      */
     fun changeFocusedCurrency(newlyFocusedCurrency: Currency): Int {
-        val indexOfPreviouslyFocusedCurrency = adapterActiveCurrencies.indexOf(focusedCurrency)
+        val indexOfPreviouslyFocusedCurrency = adapterActiveCurrencies.indexOf(focusedCurrency.value)
         if (indexOfPreviouslyFocusedCurrency.isValid()) {
             adapterActiveCurrencies[indexOfPreviouslyFocusedCurrency].isFocused = false
         }
-        focusedCurrency = newlyFocusedCurrency
+        focusedCurrency.value = newlyFocusedCurrency
         newlyFocusedCurrency.isFocused = true
         return indexOfPreviouslyFocusedCurrency
     }

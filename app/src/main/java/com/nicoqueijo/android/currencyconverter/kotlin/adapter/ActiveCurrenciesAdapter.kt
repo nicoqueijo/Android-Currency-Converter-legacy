@@ -74,12 +74,12 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                     val focusedCurrency = viewModel.focusedCurrency
 
                     val keyValue = button.text.toString()
-                    val existingText = focusedCurrency?.conversion?.conversionText?.replace(groupingSeparator, "")
+                    val existingText = focusedCurrency.value?.conversion?.conversionText?.replace(groupingSeparator, "")
                     val replacementText = StringBuilder()
                     replacementText.append(existingText).append(keyValue)
-                    focusedCurrency?.conversion?.conversionValue = BigDecimal(replacementText.toString())
+                    focusedCurrency.value?.conversion?.conversionValue = BigDecimal(replacementText.toString())
                     conversionValue.text = replacementText
-                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency) + 1)
+                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value) + 1)
                     // Number or decimal separator
                 }
                 if (button is ImageButton) {
@@ -90,8 +90,8 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
 
             keyboard.onKeyLongClickedListener {
                 val focusedCurrency = viewModel.focusedCurrency
-                focusedCurrency?.conversion?.conversionValue = BigDecimal.ZERO
-                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+                focusedCurrency.value?.conversion?.conversionValue = BigDecimal.ZERO
+                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
             }
         }
 
@@ -202,16 +202,16 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
     }
 
     private fun setFocusToFirstCurrency() {
-        if (viewModel.focusedCurrency == null) {
-            viewModel.focusedCurrency = viewModel.adapterActiveCurrencies.take(1)[0].also { firstCurrency ->
+        if (viewModel.focusedCurrency.value == null) {
+            viewModel.focusedCurrency.value = viewModel.adapterActiveCurrencies.take(1)[0].also { firstCurrency ->
                 firstCurrency.isFocused = true
             }
         }
     }
 
     private fun setFocusedCurrency(currencies: MutableList<Currency>) {
-        viewModel.focusedCurrency?.let { focusedCurrency ->
-            viewModel.focusedCurrency = currencies[currencies.indexOf(focusedCurrency)]
+        viewModel.focusedCurrency.value?.let { focusedCurrency ->
+            viewModel.focusedCurrency.value = currencies[currencies.indexOf(focusedCurrency)]
             currencies[currencies.indexOf(focusedCurrency)].isFocused = true
         }
     }
