@@ -57,6 +57,7 @@
     <string name="USD_BOB">Bolivian Boliviano</string>
     <string name="USD_BRL">Brazilian Real</string>
     <string name="USD_BSD">Bahamian Dollar</string>
+    <string name="USD_BTC">Bitcoin</string>
     <string name="USD_BTN">Bhutanese Ngultrum</string>
     <string name="USD_BWP">Botswana Pula</string>
     <string name="USD_BYN">Belarusian Ruble</string>
@@ -188,6 +189,8 @@
     <string name="USD_VUV">Ni-Vanuatu Vatu</string>
     <string name="USD_WST">Samoan Tala</string>
     <string name="USD_XAF">Central African CFA Franc</string>
+    <string name="USD_XAG">Silver</string>
+    <string name="USD_XAU">Gold</string>
     <string name="USD_XCD">East Caribbean Dollar</string>
     <string name="USD_XOF">CFA Franc</string>
     <string name="USD_XPF">CFP Franc</string>
@@ -219,6 +222,7 @@
         <item>@string/USD_BOB</item>
         <item>@string/USD_BRL</item>
         <item>@string/USD_BSD</item>
+        <item>@string/USD_BTC</item>
         <item>@string/USD_BTN</item>
         <item>@string/USD_BWP</item>
         <item>@string/USD_BYN</item>
@@ -350,6 +354,8 @@
         <item>@string/USD_VUV</item>
         <item>@string/USD_WST</item>
         <item>@string/USD_XAF</item>
+        <item>@string/USD_XAG</item>
+        <item>@string/USD_XAU</item>
         <item>@string/USD_XCD</item>
         <item>@string/USD_XOF</item>
         <item>@string/USD_XPF</item>
@@ -357,24 +363,5 @@
         <item>@string/USD_ZAR</item>
         <item>@string/USD_ZMW</item>
         <item>@string/USD_ZWL</item>
-    </string-array>
-
-    <!--
-        The items we don't want to track. These can be commodities, cryptocurrencies,
-         or outdated national currencies e.g. gold, bitcoin, etc.
-    -->
-    <string-array name="exclusion_list">
-        <item>USD_BTC</item>
-        <item>USD_CLF</item>
-        <item>USD_CNH</item>
-        <item>USD_CUC</item>
-        <item>USD_MRO</item>
-        <item>USD_STD</item>
-        <item>USD_VES</item>
-        <item>USD_XAG</item>
-        <item>USD_XAU</item>
-        <item>USD_XDR</item>
-        <item>USD_XPD</item>
-        <item>USD_XPT</item>
     </string-array>
 </resources>
