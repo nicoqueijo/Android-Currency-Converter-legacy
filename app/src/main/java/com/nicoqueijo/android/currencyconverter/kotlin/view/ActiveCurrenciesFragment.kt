@@ -55,7 +55,9 @@ class ActiveCurrenciesFragment : Fragment() {
             adapter.setCurrencies(currencies)
         })
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
-            recyclerView.smoothScrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+            focusedCurrency?.let {
+                recyclerView.smoothScrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+            }
         })
     }
 

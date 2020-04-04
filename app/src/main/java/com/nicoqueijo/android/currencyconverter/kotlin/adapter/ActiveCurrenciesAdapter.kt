@@ -63,7 +63,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
             }
 
             keyboard.onKeyClickedListener { button ->
-                // Move and encapsulate all this logic into functions outside this inner class
+                // Move and encapsulate all this logic into functions outside this inner class?
 
                 // If the view passed in is a Button we know that belongs to chars 0-9 or the
                 // decimal separator as those were declared as Button objects.
@@ -71,8 +71,9 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 // backspace key as that was the only one declared as an ImageButton
                 if (button is Button) {
                     // validate input first
-                    val focusedCurrency = viewModel.focusedCurrency
 
+                    viewModel.focusedCurrency.value = viewModel.focusedCurrency.value // This seems stupid but this is so the RecyclerView scrolls to the focused position when any key is clicked.
+                    val focusedCurrency = viewModel.focusedCurrency
                     val keyValue = button.text.toString()
                     val existingText = focusedCurrency.value?.conversion?.conversionText?.replace(groupingSeparator, "")
                     val replacementText = StringBuilder()
