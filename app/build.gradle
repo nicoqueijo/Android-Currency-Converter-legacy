@@ -36,51 +36,69 @@ android {
     }
 }
 
+ext {
+    viewModelVersion = '2.2.0'
+    liveDataVersion = '2.2.0'
+    navigationVersion = '2.3.0-alpha04'
+    coroutinesVersion = '1.3.3'
+    roomVersion = '2.2.5'
+    retrofitConverterMoshiVersion = '2.8.1'
+    moshiVersion = '1.9.2'
+    retrofitVersion = '2.8.1'
+    fadingEdgeLayoutVersion = '1.0.0'
+    materialScrollBarVersion = '13.3.0'
+    appCompatVersion = '1.1.0'
+    constraintLayoutVersion = '2.0.0-beta4'
+    cardViewVersion = '1.0.0'
+    legacySupportVersion = '1.0.0'
+    playServicesAdsVersion = '19.0.1'
+    materialVersion = '1.2.0-alpha05'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // ViewModel
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelVersion"
 
     // LiveData
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$liveDataVersion"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0-alpha04'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0-alpha04'
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     // Room
-    implementation 'androidx.room:room-runtime:2.2.5'
-    implementation 'androidx.room:room-ktx:2.2.5'
-    kapt 'androidx.room:room-compiler:2.2.5'
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     // Moshi
-    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
-    implementation 'com.squareup.moshi:moshi:1.9.2'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitConverterMoshiVersion"
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
 
     // FadingEdgeLayout
-    implementation 'com.github.bosphere.android-fadingedgelayout:fadingedgelayout:1.0.0'
+    implementation "com.github.bosphere.android-fadingedgelayout:fadingedgelayout:$fadingEdgeLayoutVersion"
 
     // MaterialScrollBar
-    implementation 'com.github.turing-tech:MaterialScrollBar:13.3.0'
+    implementation "com.github.turing-tech:MaterialScrollBar:$materialScrollBarVersion"
 
     // Android
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-    implementation 'com.google.android.gms:play-services-ads:19.0.1'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha05'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    testImplementation 'junit:junit:4.13-beta-3'
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.cardview:cardview:$cardViewVersion"
+    implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
+    implementation "com.google.android.gms:play-services-ads:$playServicesAdsVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha05'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha05'
 

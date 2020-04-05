@@ -54,13 +54,13 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
      * Here we are reassigning the focus to another currency if the focused currency is swiped.
      * The assignment logic is:
      *      If there are items below me
-     *          Unfocus me, focus item directly below me
+     *          Unfocus me, focus the item directly below me
      *          Return position of item directly below me
      *      Else if I am the sole item
      *          Unfocus me
      *          Return invalid position
      *      Else
-     *          Unfocus me, focus item directly above me
+     *          Unfocus me, focus the item directly above me
      *          Return position of time directly above me
      */
     private fun reassignFocusedCurrency(position: Int): Int {
@@ -114,7 +114,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     /**
-     * Makes the passed currency focused and the previously focused currency unfocused.
+     * Makes the [newlyFocusedCurrency] focused and the previously focused currency unfocused.
      * If the previously focused currency was swiped it will not be in the list and the index will
      * return -1.
      */
