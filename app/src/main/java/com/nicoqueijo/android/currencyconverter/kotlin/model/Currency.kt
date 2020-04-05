@@ -60,49 +60,46 @@ data class Currency(@PrimaryKey
 
     override fun hashCode() = currencyCode.hashCode()
 
-    /*override fun toString() = "ordr: $order " +
-            "slct: ${isSelected.toString().capitalize().take(1)} " +
-            "fcsd: ${isFocused.toString().capitalize().take(1)} " +
-            currencyCode*/
-
-    /* Structure is for debugging purposes.
-       Example: 4 S* F* USD_EUR
-                | |  |    |
-            Order |  |    |
-           Selected? |    |
-                Focused?  |
-                    Currency code
-
-        *blank if not selected/focused      */
-    override fun toString(): String {
-        val string = StringBuilder()
-        string.append("{")
-        string.append(order)
-        string.append(" ")
-        string.append(trimmedCurrencyCode)
-        string.append(" ")
-        if (isFocused) {
-            string.append("F")
+    /**
+     * Since the toString() method is really only useful for debugging I've structured it in a way
+     * which concisely displays the object's state.
+     *
+     * Example: 4 S* F* USD_EUR
+     *          | |  |    |
+     *      Order |  |    |
+     *     Selected? |    |
+     *         Focused?   |
+     *             Currency code
+     *
+     *    *blank if not selected/focused
+     */
+    override fun toString() = StringBuilder().apply {
+        append("{")
+        append(order)
+        append(" ")
+        append(trimmedCurrencyCode)
+        append(" ")
+        append(if (isFocused) {
+            "F"
         } else {
-            string.append(" ")
-        }
-        string.append(" ")
-        if (isSelected) {
-            string.append("S")
+            " "
+        })
+        append(" ")
+        append(if (isSelected) {
+            "S"
         } else {
-            string.append(" ")
-        }
-        string.append("}")
-        return string.toString()
-    }
+            " "
+        })
+        append("}")
+    }.toString()
 
     inner class Conversion(conversionValue: BigDecimal) {
-
-        // The raw underlying conversion result
+        /**
+         * The raw underlying conversion result
+         */
         var conversionValue: BigDecimal = conversionValue
             set(value) {
                 field = value.roundToFourDecimalPlaces()
-                // This field needs to be formatted not just converted to String.
                 conversionText = decimalFormatter.format(conversionValue)
             }
 
@@ -114,7 +111,9 @@ data class Currency(@PrimaryKey
          */
         var conversionText = ""
 
-        // The hint displayed when it is empty
+        /**
+         * The hint displayed when it is empty
+         */
         var conversionHint = ""
     }
 

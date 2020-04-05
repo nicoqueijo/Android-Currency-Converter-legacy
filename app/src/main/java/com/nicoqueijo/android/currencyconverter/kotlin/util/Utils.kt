@@ -15,21 +15,33 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
- * @JvmStatic annotations so Data Binding can recognize them
+ * Utility and extension functions that are used across the project.
+ * @JvmStatic annotations are used so Data Binding can recognize them.
  */
 object Utils {
 
+    /**
+     * Retrieves string resources using a String instead of an int.
+     * Credit: https://stackoverflow.com/a/11595723/5906793
+     */
     @JvmStatic
     fun getStringResourceByName(name: String, context: Context?): String {
         val resId = context!!.resources.getIdentifier(name, "string", context.packageName)
         return context.getString(resId)
     }
 
+    /**
+     * Retrieves drawable resources using a String instead of an int.
+     * Credit: https://stackoverflow.com/a/11595723/5906793
+     */
     @JvmStatic
     fun getDrawableResourceByName(name: String, context: Context?): Int {
         return context!!.resources.getIdentifier(name, "drawable", context.packageName)
     }
 
+    /**
+     * Used to manipulate how a resource value is set to an image view using Data Binding.
+     */
     @JvmStatic
     @BindingAdapter("android:src")
     fun setImageViewResource(imageView: ImageView, resource: Int) = imageView.setImageResource(resource)
