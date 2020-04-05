@@ -23,6 +23,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasActiveCurrenciesNavigation
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 
@@ -131,7 +132,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                /*Utils.hideKeyboard(this@MainActivity)*/
                 this@MainActivity.hideKeyboard()
             }
         }
@@ -154,8 +154,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
-            // Document magic number or store in named variable
-        } else if (navController.backStack.size > 2) {
+        } else if (navController.hasActiveCurrenciesNavigation()) {
             viewModel.fragmentBackstackEntries.remove(navController.currentDestination?.id!!)
             navController.popBackStack()
         } else if (!closeAppToast.view.isShown) {

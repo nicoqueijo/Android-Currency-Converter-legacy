@@ -9,6 +9,7 @@ import android.os.Vibrator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.navigation.NavController
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -50,22 +51,28 @@ object Utils {
         }
     }
 
+    /**
+     * If the NavController has at least two navigation entries in its backstack that means that
+     * the first two are the LoadingCurrenciesFragment and the ActiveCurrenciesFragment.
+     */
+    fun NavController.hasActiveCurrenciesNavigation() = backStack.size > 2
+
     fun List<*>.hasOneElement() = size == 1
 
     fun List<*>.isNotLastElement(position: Int) = size > position + 1
-
-    fun List<Currency>.elementAfter(position: Int): Currency {
-        if (position >= size) {
-            throw IndexOutOfBoundsException()
-        }
-        return this[position + 1]
-    }
 
     fun List<Currency>.elementBefore(position: Int): Currency {
         if (position <= 0) {
             throw IndexOutOfBoundsException()
         }
         return this[position - 1]
+    }
+
+    fun List<Currency>.elementAfter(position: Int): Currency {
+        if (position >= size - 1) {
+            throw IndexOutOfBoundsException()
+        }
+        return this[position + 1]
     }
 
     fun Int.isValid() = this != Order.INVALID.position

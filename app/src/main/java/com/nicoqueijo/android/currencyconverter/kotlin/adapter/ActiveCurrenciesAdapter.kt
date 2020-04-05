@@ -167,6 +167,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 binding.currency = viewModel.adapterActiveCurrencies[position]
                 styleIfFocused()
             } catch (e: IndexOutOfBoundsException) {
+                e.printStackTrace()
                 // Create issue on Github and post link here
                 // This error is caused by reassignFocusedCurrency()
             }
