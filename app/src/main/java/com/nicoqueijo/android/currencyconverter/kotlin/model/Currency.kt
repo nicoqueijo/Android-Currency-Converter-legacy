@@ -19,9 +19,6 @@ data class Currency(@PrimaryKey
                     val exchangeRate: Double) {
 
     @Ignore
-    var conversionValue = BigDecimal.ZERO!!
-
-    @Ignore
     var conversion = Conversion(BigDecimal.ZERO)
 
     @ColumnInfo(name = "column_isSelected")
@@ -79,17 +76,9 @@ data class Currency(@PrimaryKey
         append(" ")
         append(trimmedCurrencyCode)
         append(" ")
-        append(if (isFocused) {
-            "F"
-        } else {
-            " "
-        })
+        append(if (isFocused) "F" else " ")
         append(" ")
-        append(if (isSelected) {
-            "S"
-        } else {
-            " "
-        })
+        append(if (isSelected) "S" else " ")
         append("}")
     }.toString()
 
