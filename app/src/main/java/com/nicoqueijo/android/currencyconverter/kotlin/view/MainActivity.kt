@@ -1,8 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -162,15 +160,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-    }
-
-    // DELETE THIS BEFORE DEPLOYING
-    override fun onDestroy() {
-        super.onDestroy()
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // CLEARS APP DATA ON EVERY EXIT OF THE APP
-        (this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
-                .clearApplicationUserData()
-        ///////////////////////////////////////////////////////////////////////////////////////////
     }
 }

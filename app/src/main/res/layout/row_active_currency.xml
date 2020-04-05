@@ -106,10 +106,9 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/conversion_value"
+                    android:id="@+id/conversion"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@{currency.conversion.conversionText}"
                     android:background="@android:color/transparent"
                     android:ellipsize="none"
                     android:gravity="center_vertical|right"

@@ -1,6 +1,5 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -36,6 +34,8 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
     private var decimalSeparator: String
     private var groupingSeparator: String
     private var animBlink = AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink)
+
+    private var userInput = StringBuilder()
 
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
@@ -53,12 +53,12 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
         val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
         val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
-        private val conversionValue: TextView = itemView.findViewById(R.id.conversion_value)
+        val conversion: TextView = itemView.findViewById(R.id.conversion)
         private val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
         init {
-            conversionValue.hint = "0${decimalSeparator}0000"
-            conversionValue.setOnClickListener {
+            conversion.hint = "0${decimalSeparator}0000"
+            conversion.setOnClickListener {
                 changeFocusedCurrency(adapterPosition)
             }
 
@@ -71,27 +71,28 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                 // backspace key as that was the only one declared as an ImageButton
                 if (button is Button) {
                     // validate input first
-
                     viewModel.focusedCurrency.value = viewModel.focusedCurrency.value // This seems stupid but this is so the RecyclerView scrolls to the focused position when any key is clicked.
                     val focusedCurrency = viewModel.focusedCurrency
                     val keyValue = button.text.toString()
-                    val existingText = focusedCurrency.value?.conversion?.conversionText?.replace(groupingSeparator, "")
-                    val replacementText = StringBuilder()
-                    replacementText.append(existingText).append(keyValue)
-                    focusedCurrency.value?.conversion?.conversionValue = BigDecimal(replacementText.toString())
-                    conversionValue.text = replacementText
-                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value) + 1)
-                    // Number or decimal separator
+                    var existingText = focusedCurrency.value?.conversion?.conversionText
+                    existingText += keyValue
+                    focusedCurrency.value?.conversion?.conversionText = existingText!!
+                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
                 }
                 if (button is ImageButton) {
                     // Backspace
-                    conversionValue.text = conversionValue.text.dropLast(1)
+                    viewModel.focusedCurrency.value = viewModel.focusedCurrency.value // This seems stupid but this is so the RecyclerView scrolls to the focused position when any key is clicked.
+                    val focusedCurrency = viewModel.focusedCurrency
+                    var existingText = focusedCurrency.value?.conversion?.conversionText
+                    existingText = existingText?.dropLast(1)
+                    focusedCurrency.value?.conversion?.conversionText = existingText!!
+                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
                 }
             }
 
             keyboard.onKeyLongClickedListener {
                 val focusedCurrency = viewModel.focusedCurrency
-                focusedCurrency.value?.conversion?.conversionValue = BigDecimal.ZERO
+                focusedCurrency.value?.conversion?.conversionText = ""
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
             }
         }
@@ -165,11 +166,14 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         fun bind(position: Int) {
             try {
                 binding.currency = viewModel.adapterActiveCurrencies[position]
+                binding.conversion.text = viewModel.adapterActiveCurrencies[position].conversion.conversionText
                 styleIfFocused()
             } catch (e: IndexOutOfBoundsException) {
                 e.printStackTrace()
-                // Create issue on Github and post link here
-                // This error is caused by reassignFocusedCurrency()
+                /**
+                 * Create issue on Github and post link here
+                 * This error is caused by reassignFocusedCurrency()
+                 */
             }
         }
 
@@ -185,21 +189,30 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = RowActiveCurrencyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         setFocusToFirstCurrency()
         return ViewHolder(binding)
     }
 
-    @SuppressLint("DefaultLocale", "SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
     }
 
+    /**
+     * When currencies are added or removed, the upsert() function is called to modify the underlying
+     * db table that stores the state of the currencies.
+     */
     fun setCurrencies(currencies: MutableList<Currency>) {
+        /**
+         * [currencies] gives me the currencies as they are in the db (without the volatile data).
+         * Need to make a copy of the volatile data and pass it back to the adapter.
+         */
+
         setFocusedCurrency(currencies)
+        // stash the volatile data
         viewModel.adapterActiveCurrencies = currencies
+        // apple the volatile data
         submitList(currencies)
     }
 

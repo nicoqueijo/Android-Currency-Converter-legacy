@@ -44,17 +44,36 @@ class Repository(private val context: Context) {
                 val defaultCurrencies = setOf(
                         "USD_ARS",
                         "USD_BRL",
+                        "USD_BTC",
                         "USD_CAD",
+                        "USD_CHF",
+                        "USD_CLP",
+                        "USD_CNY",
                         "USD_DKK",
+                        "USD_DZD",
                         "USD_EUR",
-                        "USD_FJD",
                         "USD_GBP",
+                        "USD_HKD",
                         "USD_HRK",
+                        "USD_ILS",
                         "USD_INR",
                         "USD_JPY",
                         "USD_KRW",
-                        "USD_LYD",
-                        "USD_MXN")
+                        "USD_MXN",
+                        "USD_NOK",
+                        "USD_PLN",
+                        "USD_QAR",
+                        "USD_RUB",
+                        "USD_SEK",
+                        "USD_SGD",
+                        "USD_TRY",
+                        "USD_USD",
+                        "USD_UYU",
+                        "USD_VEF",
+                        "USD_XAG",
+                        "USD_XAU",
+                        "USD_ZWL"
+                )
                 retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
                 }?.forEachIndexed { i, currency ->
