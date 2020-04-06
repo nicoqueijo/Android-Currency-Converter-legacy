@@ -18,6 +18,7 @@ import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBin
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
@@ -35,8 +36,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
     private var groupingSeparator: String
     private var animBlink = AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink)
 
-    private var userInput = StringBuilder()
-
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
         val conversionPattern = "###,##0.0000"
@@ -53,7 +52,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         val deleteIconStart: ImageView = itemView.findViewById(R.id.delete_icon_start)
         val deleteIconEnd: ImageView = itemView.findViewById(R.id.delete_icon_end)
         val currencyCode: TextView = itemView.findViewById(R.id.currency_code)
-        val conversion: TextView = itemView.findViewById(R.id.conversion)
+        private val conversion: TextView = itemView.findViewById(R.id.conversion)
         private val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
         init {
@@ -201,19 +200,44 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
 
     /**
      * When currencies are added or removed, the upsert() function is called to modify the underlying
-     * db table that stores the state of the currencies.
+     * db table that stores the state of the currencies.[currencies] gives me the currencies as they
+     * are in the db (without the volatile data).
+     * Need to make a copy of the volatile data and pass it back to the adapter.
      */
     fun setCurrencies(currencies: MutableList<Currency>) {
         /**
-         * [currencies] gives me the currencies as they are in the db (without the volatile data).
-         * Need to make a copy of the volatile data and pass it back to the adapter.
+         *
          */
-
-        setFocusedCurrency(currencies)
-        // stash the volatile data
+        reconcileCurrencies(currencies)
+        /*viewModel.adapterActiveCurrencies.removeInvalidCurrency()*/
         viewModel.adapterActiveCurrencies = currencies
-        // apple the volatile data
+        /*submitList(adapterActiveCurrencies)*/
         submitList(currencies)
+    }
+
+    private fun reconcileCurrencies(currencies: MutableList<Currency>) {
+        setFocusedCurrency(currencies)
+        copyVolatileFields(currencies)
+    }
+
+    private fun setFocusedCurrency(currencies: MutableList<Currency>) {
+        viewModel.focusedCurrency.value?.let {
+            viewModel.focusedCurrency.value = currencies[currencies.indexOf(it)]
+            currencies[currencies.indexOf(it)].isFocused = true
+        }
+    }
+
+    /**
+     * [currencies] will have +/- 1 elements than [adapterActiveCurrencies] due to the swiping or
+     * adding event but they will have no volatile data (conversion, isFocused).
+     * Goals is to copy that volatile data stored in [adapterActiveCurrencies]
+     */
+    private fun copyVolatileFields(currencies: MutableList<Currency>) {
+        viewModel.adapterActiveCurrencies.forEach { currency ->
+            if (currency.order != INVALID.position && currencies.contains(currency)) {
+                currencies[currencies.indexOf(currency)] = currency
+            }
+        }
     }
 
     private fun setFocusToFirstCurrency() {
@@ -221,13 +245,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
             viewModel.focusedCurrency.value = viewModel.adapterActiveCurrencies.take(1)[0].also { firstCurrency ->
                 firstCurrency.isFocused = true
             }
-        }
-    }
-
-    private fun setFocusedCurrency(currencies: MutableList<Currency>) {
-        viewModel.focusedCurrency.value?.let { focusedCurrency ->
-            viewModel.focusedCurrency.value = currencies[currencies.indexOf(focusedCurrency)]
-            currencies[currencies.indexOf(focusedCurrency)].isFocused = true
         }
     }
 

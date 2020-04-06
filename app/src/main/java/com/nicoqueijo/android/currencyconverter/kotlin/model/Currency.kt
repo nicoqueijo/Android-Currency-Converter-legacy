@@ -18,17 +18,17 @@ data class Currency(@PrimaryKey
                     @ColumnInfo(name = "column_exchangeRate")
                     val exchangeRate: Double) {
 
-    @Ignore
-    var conversion = Conversion(BigDecimal.ZERO)
+    @ColumnInfo(name = "column_order")
+    var order = INVALID.position
 
     @ColumnInfo(name = "column_isSelected")
     var isSelected = false
 
-    @ColumnInfo(name = "column_order")
-    var order = INVALID.position
-
     @Ignore
     var isFocused = false
+
+    @Ignore
+    var conversion = Conversion(BigDecimal.ZERO)
 
     @Ignore
     private var decimalFormatter: DecimalFormat
