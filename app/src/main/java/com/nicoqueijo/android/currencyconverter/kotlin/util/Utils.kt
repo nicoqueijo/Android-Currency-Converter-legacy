@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.navigation.NavController
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -73,21 +74,30 @@ object Utils {
 
     fun List<*>.isNotLastElement(position: Int) = size > position + 1
 
-    fun List<Currency>.elementBefore(position: Int): Currency {
+    fun <E> List<E>.elementBefore(position: Int): E {
         if (position <= 0) {
             throw IndexOutOfBoundsException()
         }
         return this[position - 1]
     }
 
-    fun List<Currency>.elementAfter(position: Int): Currency {
+    fun <E> List<E>.elementAfter(position: Int): E {
         if (position >= size - 1) {
             throw IndexOutOfBoundsException()
         }
         return this[position + 1]
     }
 
-    fun Int.isValid() = this != Order.INVALID.position
+    fun MutableList<Currency>.removeInvalidCurrency() {
+        this.forEach { currency ->
+            if (currency.order == INVALID.position) {
+                remove(currency)
+                return
+            }
+        }
+    }
+
+    fun Int.isValid() = this != INVALID.position
 
     enum class Order(val position: Int) {
         INVALID(-1),
