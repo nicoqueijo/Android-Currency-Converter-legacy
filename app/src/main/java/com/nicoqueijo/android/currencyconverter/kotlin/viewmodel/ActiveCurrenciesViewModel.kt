@@ -15,7 +15,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastEleme
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.util.*
 import kotlin.properties.Delegates
@@ -161,28 +160,26 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     fun populateDefaultCurrencies() {
         if (!isFirstLaunch()) return
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                setFirstLaunch(false)
-                val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
-                getCurrency("USD_USD")?.run {
-                    setDefaultCurrency(this, FIRST.position)
+        viewModelScope.launch(Dispatchers.IO) {
+            setFirstLaunch(false)
+            val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
+            getCurrency("USD_USD")?.run {
+                setDefaultCurrency(this, FIRST.position)
+            }
+            val localCurrency = getCurrency(localCurrencyCode)
+            if (localCurrencyCode == "USD_USD" || localCurrency == null) {
+                getCurrency("USD_EUR")?.run {
+                    setDefaultCurrency(this, SECOND.position)
                 }
-                val localCurrency = getCurrency(localCurrencyCode)
-                if (localCurrencyCode == "USD_USD" || localCurrency == null) {
-                    getCurrency("USD_EUR")?.run {
-                        setDefaultCurrency(this, SECOND.position)
-                    }
-                    getCurrency("USD_JPY")?.run {
-                        setDefaultCurrency(this, THIRD.position)
-                    }
-                    getCurrency("USD_GBP")?.run {
-                        setDefaultCurrency(this, FOURTH.position)
-                    }
-                } else {
-                    localCurrency.run {
-                        setDefaultCurrency(this, SECOND.position)
-                    }
+                getCurrency("USD_JPY")?.run {
+                    setDefaultCurrency(this, THIRD.position)
+                }
+                getCurrency("USD_GBP")?.run {
+                    setDefaultCurrency(this, FOURTH.position)
+                }
+            } else {
+                localCurrency.run {
+                    setDefaultCurrency(this, SECOND.position)
                 }
             }
         }

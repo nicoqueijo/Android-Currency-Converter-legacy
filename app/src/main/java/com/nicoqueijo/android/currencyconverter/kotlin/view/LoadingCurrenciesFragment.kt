@@ -35,19 +35,17 @@ class LoadingCurrenciesFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                // Small delay so the user can actually see the splash screen
-                // for a moment as feedback of an attempt to retrieve data.
-                delay(250)
-                try {
-                    viewModel.initCurrencies()
-                    withContext(Dispatchers.Main) {
-                        findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_activeCurrenciesFragment)
-                    }
-                } catch (e: IOException) {
-                    findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_errorFragment)
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Small delay so the user can actually see the splash screen
+            // for a moment as feedback of an attempt to retrieve data.
+            delay(250)
+            try {
+                viewModel.initCurrencies()
+                withContext(Dispatchers.Main) {
+                    findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_activeCurrenciesFragment)
                 }
+            } catch (e: IOException) {
+                findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_errorFragment)
             }
         }
     }
