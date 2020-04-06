@@ -205,19 +205,14 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
      * Need to make a copy of the volatile data and pass it back to the adapter.
      */
     fun setCurrencies(currencies: MutableList<Currency>) {
-        /**
-         *
-         */
         reconcileCurrencies(currencies)
-        /*viewModel.adapterActiveCurrencies.removeInvalidCurrency()*/
         viewModel.adapterActiveCurrencies = currencies
-        /*submitList(adapterActiveCurrencies)*/
         submitList(currencies)
     }
 
     private fun reconcileCurrencies(currencies: MutableList<Currency>) {
-        setFocusedCurrency(currencies)
         copyVolatileFields(currencies)
+        setFocusedCurrency(currencies)
     }
 
     private fun setFocusedCurrency(currencies: MutableList<Currency>) {

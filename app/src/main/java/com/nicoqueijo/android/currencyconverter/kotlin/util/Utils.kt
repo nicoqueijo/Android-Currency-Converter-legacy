@@ -88,15 +88,6 @@ object Utils {
         return this[position + 1]
     }
 
-    fun MutableList<Currency>.removeInvalidCurrency() {
-        this.forEach { currency ->
-            if (currency.order == INVALID.position) {
-                remove(currency)
-                return
-            }
-        }
-    }
-
     fun Int.isValid() = this != INVALID.position
 
     enum class Order(val position: Int) {
