@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
+import java.math.BigDecimal
 
 
 class ActiveCurrenciesFragment : Fragment() {
@@ -62,6 +65,18 @@ class ActiveCurrenciesFragment : Fragment() {
         })
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
             focusedCurrency?.let {
+                focusedCurrency.conversion.conversionHint = "1"
+                recyclerView.post {
+                    viewModel.adapterActiveCurrencies
+                            .filter { it != focusedCurrency }
+                            .forEach {
+                                val fromRate = focusedCurrency.exchangeRate
+                                val toRate = it.exchangeRate
+                                val converterHint = CurrencyConversion.convertCurrency(BigDecimal("1"), fromRate, toRate).roundToFourDecimalPlaces()
+                                it.conversion.conversionHint = converterHint.toString()
+                                adapter.notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
+                            }
+                }
                 recyclerView.smoothScrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
             }
         })

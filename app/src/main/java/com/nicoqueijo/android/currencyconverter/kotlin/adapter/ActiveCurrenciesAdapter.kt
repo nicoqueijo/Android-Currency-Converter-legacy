@@ -58,12 +58,8 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         private val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
         init {
-            conversion.hint = "0${decimalSeparator}0000"
             conversion.setOnClickListener {
                 changeFocusedCurrency(adapterPosition)
-                /**
-                 * Also update all the hints. When
-                 */
             }
 
             /**

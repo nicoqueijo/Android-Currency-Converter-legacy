@@ -112,6 +112,7 @@
                     android:background="@android:color/transparent"
                     android:ellipsize="none"
                     android:gravity="center_vertical|right"
+                    android:hint="@{currency.conversion.conversionHint}"
                     android:singleLine="true"
                     android:textColor="?attr/text_color"
                     android:textSize="20sp"
