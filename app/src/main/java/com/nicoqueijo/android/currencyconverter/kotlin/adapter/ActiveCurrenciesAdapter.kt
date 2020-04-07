@@ -176,19 +176,20 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         }
 
         fun bind(position: Int) {
-            if (viewModel.adapterActiveCurrencies[position].conversion.hasInvalidInput) {
-                vibrateAndShake()
-                viewModel.focusedCurrency.value?.conversion?.hasInvalidInput = false
-            }
             try {
+                if (viewModel.adapterActiveCurrencies[position].conversion.hasInvalidInput) {
+                    vibrateAndShake()
+                    viewModel.focusedCurrency.value?.conversion?.hasInvalidInput = false
+                }
                 binding.currency = viewModel.adapterActiveCurrencies[position]
                 binding.conversion.text = viewModel.adapterActiveCurrencies[position].conversion.conversionText
                 styleIfFocused()
             } catch (e: IndexOutOfBoundsException) {
                 e.printStackTrace()
                 /**
-                 * Create issue on Github and post link here
-                 * This error is caused by reassignFocusedCurrency()
+                 * Create issue on Github and post link here.
+                 * This error is caused by reassignFocusedCurrency() and the observe callback of
+                 * the focusedCurrency in ActiveCurrenciesFragment.
                  */
             }
         }
@@ -217,9 +218,9 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
 
     /**
      * When currencies are added or removed, the upsert() function is called to modify the underlying
-     * db table that stores the state of the currencies.[currencies] gives me the currencies as they
-     * are in the db (without the volatile data).
-     * Need to make a copy of the volatile data and pass it back to the adapter.
+     * db table that stores the state of the currencies. [currencies] provides the currencies as they
+     * are in the db (without the volatile fields).
+     * Need to make a copy of the volatile fields and pass it back to the adapter.
      */
     fun setCurrencies(currencies: MutableList<Currency>) {
         reconcileCurrencies(currencies)
