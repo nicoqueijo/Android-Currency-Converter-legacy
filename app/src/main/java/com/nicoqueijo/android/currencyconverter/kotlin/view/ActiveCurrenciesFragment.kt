@@ -65,10 +65,7 @@ class ActiveCurrenciesFragment : Fragment() {
         })
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
             focusedCurrency?.let {
-                /**
-                 * Only do this when TextView is empty to avoid unnecessary work.
-                 * Hints won't display while TextView has text so why bother computing it?
-                 */
+                if (focusedCurrency.conversion.conversionText.isNotEmpty()) return@Observer
                 focusedCurrency.conversion.conversionHint = "1"
                 recyclerView.post {
                     viewModel.adapterActiveCurrencies
