@@ -108,9 +108,7 @@ class Repository(private val context: Context) {
 
     var isFirstLaunch: Boolean
         get() = sharedPrefsProperties.getBoolean("first_launch", true)
-        set(value) {
-            sharedPrefsProperties.edit().putBoolean("first_launch", value).apply()
-        }
+        set(value) = sharedPrefsProperties.edit().putBoolean("first_launch", value).apply()
 
     suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
 

@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
@@ -24,9 +23,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     // Candidate for dependency injection
     private val repository = Repository(application)
 
-    private val _activeCurrencies = repository.getActiveCurrencies()
-    val activeCurrencies: LiveData<MutableList<Currency>>
-        get() = _activeCurrencies
+    val activeCurrencies = repository.getActiveCurrencies()
 
     private fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
 

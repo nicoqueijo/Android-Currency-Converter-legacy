@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            viewModel._activeFragment.postValue(destination.id)
+            viewModel.activeFragment.postValue(destination.id)
             viewModel.fragmentBackstackEntries.add(destination.id)
         }
 

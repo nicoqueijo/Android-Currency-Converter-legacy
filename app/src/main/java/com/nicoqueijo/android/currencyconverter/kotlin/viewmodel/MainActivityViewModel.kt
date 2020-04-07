@@ -3,7 +3,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
@@ -15,9 +14,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     // Candidate for dependency injection
     private val repository = Repository(application)
 
-    val _activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment)
-    val activeFragment: LiveData<Int>
-        get() = _activeFragment
+    val activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment)
 
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 

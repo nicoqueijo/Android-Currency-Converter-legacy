@@ -15,9 +15,7 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
     // Candidate for dependency injection
     private val repository = Repository(application)
 
-    private val _allCurrencies = repository.getAllCurrencies()
-    val allCurrencies: LiveData<MutableList<Currency>>
-        get() = _allCurrencies
+    val allCurrencies = repository.getAllCurrencies()
 
     private fun upsertCurrency(currency: Currency) {
         repository.upsertCurrency(currency)
@@ -25,7 +23,10 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
 
     var adapterSelectableCurrencies: ArrayList<Currency> = ArrayList()
     var adapterFilteredCurrencies: ArrayList<Currency> = ArrayList()
-    val searchQuery = MutableLiveData<String>()
+    private val _searchQuery = MutableLiveData<String>()
+    val searchQuery: LiveData<String>
+        get() = _searchQuery
+
 
     fun handleOnClick(adapterPosition: Int) {
         val selectedCurrency = adapterFilteredCurrencies[adapterPosition]
@@ -38,7 +39,7 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
     }
 
     fun filter(constraint: CharSequence?): MutableList<Currency> {
-        searchQuery.postValue(constraint.toString())
+        _searchQuery.postValue(constraint.toString())
         val filteredList: MutableList<Currency> = mutableListOf()
         if (constraint == null || constraint.isEmpty()) {
             filteredList.addAll(adapterSelectableCurrencies)
