@@ -112,13 +112,11 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         }
 
         private fun cleanInput(input: String): String {
-            if (input == ".") {
-                return "0$decimalSeparator"
+            return when (input) {
+                "." -> "0$decimalSeparator"
+                "00" -> "0"
+                else -> input
             }
-            if (input == "00") {
-                return "0"
-            }
-            return input
         }
 
         private fun isInputValid(input: String): Boolean {

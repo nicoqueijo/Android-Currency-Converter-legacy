@@ -58,9 +58,9 @@ class ActiveCurrenciesFragment : Fragment() {
         viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
             if (currencies.isEmpty()) {
-                // TODO: hide keyboard
+                // TODO: drop down keyboard
             } else {
-                // TODO: show keyboard
+                // TODO: pop up keyboard
             }
         })
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
