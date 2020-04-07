@@ -104,6 +104,8 @@ data class Currency(@PrimaryKey
          * The hint displayed when it is empty
          */
         var conversionHint = ""
+
+        var hasInvalidInput = false
     }
 
     companion object {

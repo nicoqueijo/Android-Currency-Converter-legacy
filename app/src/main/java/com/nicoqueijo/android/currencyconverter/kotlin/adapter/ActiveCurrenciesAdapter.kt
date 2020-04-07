@@ -1,5 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCall
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
 import java.text.DecimalFormat
@@ -59,110 +61,131 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
             conversion.hint = "0${decimalSeparator}0000"
             conversion.setOnClickListener {
                 changeFocusedCurrency(adapterPosition)
+                /**
+                 * Also update all the hints. When
+                 */
             }
 
+            /**
+             * If the [button] is a Button we know that belongs to chars 0-9 or the decimal
+             * separator as those were declared as Buttons.
+             * If the [button] passed in is an ImageButton that can only mean that it is the backspace
+             * key as that was the only one declared as an ImageButton.
+             *
+             * On each key click event, we want to validate the input against what already is in the
+             * TextView. If it is valid we want to run the conversion of that value against all other
+             * currencies.
+             */
             keyboard.onKeyClickedListener { button ->
-                // Move and encapsulate all this logic into functions outside this inner class?
-
-                // If the view passed in is a Button we know that belongs to chars 0-9 or the
-                // decimal separator as those were declared as Button objects.
-                // If the view passed in is an ImageButton that can only mean that it is the
-                // backspace key as that was the only one declared as an ImageButton
+                triggerScrollToPosition()
+                val focusedCurrency = viewModel.focusedCurrency.value
                 if (button is Button) {
-                    // validate input first
-                    viewModel.focusedCurrency.value = viewModel.focusedCurrency.value // This seems stupid but this is so the RecyclerView scrolls to the focused position when any key is clicked.
-                    val focusedCurrency = viewModel.focusedCurrency
-                    val keyValue = button.text.toString()
-                    var existingText = focusedCurrency.value?.conversion?.conversionText
-                    existingText += keyValue
-                    focusedCurrency.value?.conversion?.conversionText = existingText!!
-                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
+                    val existingText = focusedCurrency?.conversion?.conversionText
+                    val keyPressed = button.text
+                    var input = existingText + keyPressed
+                    input = cleanInput(input)
+                    if (isInputValid(input)) {
+                        notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+                    } else {
+                        focusedCurrency?.conversion?.hasInvalidInput = true
+                        notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+                    }
                 }
                 if (button is ImageButton) {
-                    // Backspace
-                    viewModel.focusedCurrency.value = viewModel.focusedCurrency.value // This seems stupid but this is so the RecyclerView scrolls to the focused position when any key is clicked.
-                    val focusedCurrency = viewModel.focusedCurrency
-                    var existingText = focusedCurrency.value?.conversion?.conversionText
+                    var existingText = focusedCurrency?.conversion?.conversionText
                     existingText = existingText?.dropLast(1)
-                    focusedCurrency.value?.conversion?.conversionText = existingText!!
-                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
+                    focusedCurrency?.conversion?.conversionText = existingText!!
+                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
                 }
             }
 
             keyboard.onKeyLongClickedListener {
+                triggerScrollToPosition()
                 val focusedCurrency = viewModel.focusedCurrency
                 focusedCurrency.value?.conversion?.conversionText = ""
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency.value))
             }
         }
 
-        /*private fun validateInput(s: CharSequence?): Boolean {
-            return validateLength(s) &&
-                    validateDecimalPlaces(s) &&
-                    validateDecimalSeparator(s) &&
-                    validateZeros(s)
+        /**
+         *  The RecyclerView scrolls to the focused position when it observes that its value has
+         *  changed. This is a way to force that call.
+         */
+        private fun triggerScrollToPosition() {
+            viewModel.focusedCurrency.value = viewModel.focusedCurrency.value
         }
 
-        private fun validateLength(s: CharSequence?): Boolean {
+        private fun cleanInput(input: String): String {
+            if (input == ".") {
+                return "0$decimalSeparator"
+            }
+            if (input == "00") {
+                return "0"
+            }
+            return input
+        }
+
+        private fun isInputValid(input: String): Boolean {
+            return validateLength(input) && validateDecimalPlaces(input) &&
+                    validateDecimalSeparator(input) && validateZeros(input)
+        }
+
+        private fun validateLength(input: String): Boolean {
             val maxDigitsAllowed = 20
-            val input = s.toString()
             if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
-                dropLastWithFeedback(input)
+                viewModel.focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
                 return false
             }
+            viewModel.focusedCurrency.value?.conversion?.conversionText = input
             return true
         }
 
-        private fun validateDecimalPlaces(s: CharSequence?): Boolean {
+        private fun validateDecimalPlaces(input: String): Boolean {
             val maxDecimalPlacesAllowed = 4
-            val input = s.toString()
             if (input.contains(decimalSeparator) &&
                     input.substring(input.indexOf(decimalSeparator) + 1).length > maxDecimalPlacesAllowed) {
-                dropLastWithFeedback(input)
+                viewModel.focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
                 return false
             }
+            viewModel.focusedCurrency.value?.conversion?.conversionText = input
             return true
         }
 
         @SuppressLint("SetTextI18n")
-        private fun validateDecimalSeparator(s: CharSequence?): Boolean {
-            val input = s.toString()
-            if (input.length == 1 && input[0] == decimalSeparator.single()) {
-                conversionValue.text = "0$decimalSeparator"
-                return false
-            }
-            val decimalSeparatorCount = input.asSequence().count { char ->
-                char.toString() == decimalSeparator
-            }
+        private fun validateDecimalSeparator(input: String): Boolean {
+            val decimalSeparatorCount = input.asSequence()
+                    .count { char ->
+                        char.toString() == decimalSeparator
+                    }
             if (decimalSeparatorCount > 1) {
-                dropLastWithFeedback(input)
+                viewModel.focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
                 return false
             }
+            viewModel.focusedCurrency.value?.conversion?.conversionText = input
             return true
         }
 
-        private fun validateZeros(s: CharSequence?): Boolean {
-            val input = s.toString()
+        private fun validateZeros(input: String): Boolean {
             if (input.length == 2) {
-                if (input == "00") {
-                    dropLastWithFeedback(input)
-                    return false
-                }
                 if (input[0] == '0' && input[1] != decimalSeparator.single()) {
-                    conversionValue.text = input[1].toString()
-                    return false
+                    viewModel.focusedCurrency.value?.conversion?.conversionText = input[1].toString()
+                    return true
                 }
             }
+            viewModel.focusedCurrency.value?.conversion?.conversionText = input
             return true
         }
 
-        private fun dropLastWithFeedback(input: String) {
-            Utils.vibrate(viewModel.getApplication())
-            conversionValue.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.shake))
-            conversionValue.text = input.dropLast(1)
-        }*/
+        private fun vibrateAndShake() {
+            keyboard.context.vibrate()
+            conversion.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.shake))
+        }
 
         fun bind(position: Int) {
+            if (viewModel.adapterActiveCurrencies[position].conversion.hasInvalidInput) {
+                vibrateAndShake()
+                viewModel.focusedCurrency.value?.conversion?.hasInvalidInput = false
+            }
             try {
                 binding.currency = viewModel.adapterActiveCurrencies[position]
                 binding.conversion.text = viewModel.adapterActiveCurrencies[position].conversion.conversionText

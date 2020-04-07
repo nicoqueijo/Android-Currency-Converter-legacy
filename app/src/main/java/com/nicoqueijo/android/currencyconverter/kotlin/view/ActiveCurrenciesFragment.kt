@@ -25,6 +25,7 @@ class ActiveCurrenciesFragment : Fragment() {
     private lateinit var recyclerView: CustomRecyclerView
     private lateinit var adapter: ActiveCurrenciesAdapter
     private lateinit var floatingActionButton: FloatingActionButton
+    private lateinit var keyboard: DecimalNumberKeyboard
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,7 +40,7 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun initViewsAndAdapter(view: View) {
         recyclerView = view.findViewById(R.id.recycler_view_active_currencies)
         val emptyListView = view.findViewById<View>(R.id.empty_list)
-        val keyboard = view.findViewById<DecimalNumberKeyboard>(R.id.keyboard)
+        keyboard = view.findViewById(R.id.keyboard)
         recyclerView.showIfEmpty(emptyListView)
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         initFloatingActionButton(view)
@@ -53,6 +54,11 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun observeObservables() {
         viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
             adapter.setCurrencies(currencies)
+            if (currencies.isEmpty()) {
+                // TODO: hide keyboard
+            } else {
+                // TODO: show keyboard
+            }
         })
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
             focusedCurrency?.let {
