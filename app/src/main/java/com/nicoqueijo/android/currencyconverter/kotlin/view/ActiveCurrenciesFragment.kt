@@ -81,7 +81,7 @@ class ActiveCurrenciesFragment : Fragment() {
                             adapter.notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
                         }
             }
-            recyclerView.smoothScrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+            recyclerView.scrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
         }
     }
 
