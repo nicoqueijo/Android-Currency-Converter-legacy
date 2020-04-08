@@ -74,9 +74,9 @@ class Repository(private val context: Context) {
                         "USD_XAU",
                         "USD_ZWL"
                 )
-                retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
+                retrofitResponse.body()?.exchangeRates?.currencies/*?.filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
-                }?.forEachIndexed { i, currency ->
+                }*/?.forEachIndexed { i, currency ->
                     currency.order = i
                     currency.isSelected = true
                     upsertCurrency(currency)

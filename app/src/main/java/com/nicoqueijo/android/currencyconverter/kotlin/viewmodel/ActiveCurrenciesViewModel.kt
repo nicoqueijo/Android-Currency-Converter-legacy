@@ -1,6 +1,10 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,6 +19,8 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -39,6 +45,146 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     private lateinit var swipedCurrency: Currency
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
+
+    private var decimalFormatter: DecimalFormat
+    private var decimalSeparator: String
+    private var groupingSeparator: String
+
+    init {
+        val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
+        val conversionPattern = "###,##0.0000"
+        decimalFormatter = numberFormatter as DecimalFormat
+        decimalFormatter.applyPattern(conversionPattern)
+        groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
+        decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
+    }
+
+    fun handleKeyPressed(button: View?) {
+        triggerScrollToPosition()
+        if (button is Button) {
+            val existingText = focusedCurrency.value?.conversion?.conversionText
+            val keyPressed = button.text
+            var input = existingText + keyPressed
+            input = cleanInput(input)
+            if (isInputValid(input)) {
+                return
+            } else {
+                focusedCurrency.value?.conversion?.hasInvalidInput = true
+                return
+            }
+        }
+        if (button is ImageButton) {
+            var existingText = focusedCurrency.value?.conversion?.conversionText
+            existingText = existingText?.dropLast(1)
+            focusedCurrency.value?.conversion?.conversionText = existingText!!
+            return
+        }
+    }
+
+    fun handleKeyLongPressed() {
+        triggerScrollToPosition()
+        focusedCurrency.value?.conversion?.conversionText = ""
+    }
+
+    private fun cleanInput(input: String): String {
+        return when (input) {
+            "." -> "0$decimalSeparator"
+            "00" -> "0"
+            else -> input
+        }
+    }
+
+    private fun isInputValid(input: String): Boolean {
+        return validateLength(input) && validateDecimalPlaces(input) &&
+                validateDecimalSeparator(input) && validateZeros(input)
+    }
+
+    private fun validateLength(input: String): Boolean {
+        val maxDigitsAllowed = 20
+        if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
+            focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
+            return false
+        }
+        focusedCurrency.value?.conversion?.conversionText = input
+        return true
+    }
+
+    private fun validateDecimalPlaces(input: String): Boolean {
+        val maxDecimalPlacesAllowed = 4
+        if (input.contains(decimalSeparator) &&
+                input.substring(input.indexOf(decimalSeparator) + 1).length > maxDecimalPlacesAllowed) {
+            focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
+            return false
+        }
+        focusedCurrency.value?.conversion?.conversionText = input
+        return true
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun validateDecimalSeparator(input: String): Boolean {
+        val decimalSeparatorCount = input.asSequence()
+                .count { char ->
+                    char.toString() == decimalSeparator
+                }
+        if (decimalSeparatorCount > 1) {
+            focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
+            return false
+        }
+        focusedCurrency.value?.conversion?.conversionText = input
+        return true
+    }
+
+    private fun validateZeros(input: String): Boolean {
+        if (input.length == 2) {
+            if (input[0] == '0' && input[1] != decimalSeparator.single()) {
+                focusedCurrency.value?.conversion?.conversionText = input[1].toString()
+                return true
+            }
+        }
+        focusedCurrency.value?.conversion?.conversionText = input
+        return true
+    }
+
+    fun setFocusToFirstCurrency() {
+        if (focusedCurrency.value == null) {
+            focusedCurrency.value = adapterActiveCurrencies.take(1)[0].also { firstCurrency ->
+                firstCurrency.isFocused = true
+            }
+        }
+    }
+
+    fun reconcileCurrencies(currencies: MutableList<Currency>) {
+        copyVolatileFields(currencies)
+        setFocusedCurrency(currencies)
+    }
+
+    /**
+     * [currencies] will have +/- 1 elements than [adapterActiveCurrencies] due to the swiping or
+     * adding event but they will have no volatile data (conversion, isFocused).
+     * Goals is to copy that volatile data stored in [adapterActiveCurrencies]
+     */
+    private fun copyVolatileFields(currencies: MutableList<Currency>) {
+        adapterActiveCurrencies.forEach { currency ->
+            if (currency.order != INVALID.position && currencies.contains(currency)) {
+                currencies[currencies.indexOf(currency)] = currency
+            }
+        }
+    }
+
+    private fun setFocusedCurrency(currencies: MutableList<Currency>) {
+        focusedCurrency.value?.let {
+            focusedCurrency.value = currencies[currencies.indexOf(it)]
+            currencies[currencies.indexOf(it)].isFocused = true
+        }
+    }
+
+    /**
+     *  The RecyclerView scrolls to the position of the focused currency when it is notified that
+     *  the value of the focused currency has changed. This is a way to force that call.
+     */
+    private fun triggerScrollToPosition() {
+        focusedCurrency.value = focusedCurrency.value
+    }
 
     fun handleSwipe(position: Int): Int {
         val indexToRefresh = reassignFocusedCurrency(position)

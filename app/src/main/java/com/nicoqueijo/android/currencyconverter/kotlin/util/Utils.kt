@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.navigation.NavController
-import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import java.math.BigDecimal
 import java.math.RoundingMode
