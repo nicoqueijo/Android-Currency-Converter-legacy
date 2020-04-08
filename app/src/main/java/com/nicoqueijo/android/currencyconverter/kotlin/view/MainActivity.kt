@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                this@MainActivity.hideKeyboard()
+                hideKeyboard()
             }
         }
     }

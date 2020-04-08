@@ -9,7 +9,7 @@ class ExchangeRates {
     val currencies: List<Currency>
         get() {
             val currencies = mutableListOf<Currency>()
-            val declaredFields = this.javaClass.declaredFields
+            val declaredFields = javaClass.declaredFields
             for (property in declaredFields) {
                 val currencyCode = property.name
                 val exchangeRate = property.get(this) as Double
