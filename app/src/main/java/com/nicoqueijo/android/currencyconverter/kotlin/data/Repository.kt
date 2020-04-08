@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
@@ -11,7 +12,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 import java.net.SocketTimeoutException
-import java.util.*
 
 class Repository(private val context: Context) {
 
@@ -123,9 +123,13 @@ class Repository(private val context: Context) {
     fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
 
     private fun getApiKey(): String {
-        val apiKeys = context.resources.getStringArray(R.array.api_keys)
-        val random = Random().nextInt(apiKeys.size)
-        return apiKeys[random]
+        with(context.resources) {
+            return when (BuildConfig.BUILD_TYPE) {
+                "debug" -> getString(R.string.openexchangerates_debug_api_key)
+                "release" -> getString(R.string.openexchangerates_release_api_key)
+                else -> getString(R.string.openexchangerates_release_api_key)
+            }
+        }
     }
 
     private fun isNetworkAvailable(): Boolean {

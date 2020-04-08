@@ -53,6 +53,7 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
              */
             keyboard.onKeyClickedListener { button ->
                 viewModel.handleKeyPressed(button)
+                //
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
             }
 
