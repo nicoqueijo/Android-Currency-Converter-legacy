@@ -59,25 +59,27 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
     }
 
-    fun handleKeyPressed(button: View?) {
+    fun handleKeyPressed(button: View?): Boolean {
         triggerScrollToPosition()
-        if (button is Button) {
-            val existingText = focusedCurrency.value?.conversion?.conversionText
-            val keyPressed = button.text
-            var input = existingText + keyPressed
-            input = cleanInput(input)
-            if (isInputValid(input)) {
-                return
-            } else {
-                focusedCurrency.value?.conversion?.hasInvalidInput = true
-                return
+        when (button) {
+            is Button -> {
+                val existingText = focusedCurrency.value?.conversion?.conversionText
+                val keyPressed = button.text
+                var input = existingText + keyPressed
+                input = cleanInput(input)
+                if (!isInputValid(input)) {
+                    focusedCurrency.value?.conversion?.hasInvalidInput = true
+                    return false
+                }
+                return true
             }
-        }
-        if (button is ImageButton) {
-            var existingText = focusedCurrency.value?.conversion?.conversionText
-            existingText = existingText?.dropLast(1)
-            focusedCurrency.value?.conversion?.conversionText = existingText!!
-            return
+            is ImageButton -> {
+                var existingText = focusedCurrency.value?.conversion?.conversionText
+                existingText = existingText?.dropLast(1)
+                focusedCurrency.value?.conversion?.conversionText = existingText!!
+                return true
+            }
+            else -> return false // never reached but kotlin requires it for exhaustiveness
         }
     }
 

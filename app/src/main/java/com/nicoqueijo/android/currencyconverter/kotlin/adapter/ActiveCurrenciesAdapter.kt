@@ -14,12 +14,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.databinding.RowActiveCurrencyBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
+import java.math.BigDecimal
 
 class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                               private val keyboard: DecimalNumberKeyboard) :
@@ -52,13 +55,33 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
              * currencies.
              */
             keyboard.onKeyClickedListener { button ->
-                viewModel.handleKeyPressed(button)
-                //
+                // notifyItemChanged for this item
+                // if input was valid convert all other items and then notifyItemChanged for them
+                // Problem is that when you backspace the last element the algo tries to convert an empty String to a BigDecimal (exception)
+                    // Handle this scenario
+                        // Also need to update all the hints
+                // Btw, added currencies aren't being converted. They appear with empty fields. (This also applies to added currencies from swipe undos)
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
+                val isInputValid = viewModel.handleKeyPressed(button)
+                if (isInputValid) {
+                    val focusedCurrency = viewModel.focusedCurrency.value
+                    viewModel.adapterActiveCurrencies
+                            .filter { it != focusedCurrency }
+                            .forEach {
+                                val fromRate = focusedCurrency?.exchangeRate
+                                val toRate = it.exchangeRate
+                                val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency?.conversion?.conversionText),
+                                        fromRate!!, toRate).roundToFourDecimalPlaces()
+                                it.conversion.conversionValue = conversionValue
+                                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
+                            }
+                }
             }
 
             keyboard.onKeyLongClickedListener {
                 viewModel.handleKeyLongPressed()
+                // Clear the text from all items
+                // Update all hints
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
             }
         }

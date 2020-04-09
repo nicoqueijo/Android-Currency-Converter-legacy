@@ -7,8 +7,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// https://openexchangerates.org/api/latest.json?app_id={app_id}
-
+/**
+ * API endpoint: https://openexchangerates.org/api/latest.json?app_id={app_id}
+ */
 interface RetrofitService {
 
     @GET("api/latest.json")
