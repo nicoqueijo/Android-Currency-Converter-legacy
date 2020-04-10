@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -63,7 +64,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         triggerScrollToPosition()
         when (button) {
             is Button -> {
-                val existingText = focusedCurrency.value?.conversion?.conversionText
+                val existingText = focusedCurrency.value?.conversion?.conversionString
                 val keyPressed = button.text
                 var input = existingText + keyPressed
                 input = cleanInput(input)
@@ -74,9 +75,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                 return true
             }
             is ImageButton -> {
-                var existingText = focusedCurrency.value?.conversion?.conversionText
+                var existingText = focusedCurrency.value?.conversion?.conversionString
                 existingText = existingText?.dropLast(1)
-                focusedCurrency.value?.conversion?.conversionText = existingText!!
+                focusedCurrency.value?.conversion?.conversionString = existingText!!
                 return true
             }
             else -> return false // never reached but kotlin requires it for exhaustiveness
@@ -85,7 +86,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     fun handleKeyLongPressed() {
         triggerScrollToPosition()
-        focusedCurrency.value?.conversion?.conversionText = ""
+        focusedCurrency.value?.conversion?.conversionString = ""
     }
 
     private fun cleanInput(input: String): String {
@@ -104,10 +105,10 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     private fun validateLength(input: String): Boolean {
         val maxDigitsAllowed = 20
         if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
-            focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
+            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
         }
-        focusedCurrency.value?.conversion?.conversionText = input
+        focusedCurrency.value?.conversion?.conversionString = input
         return true
     }
 
@@ -115,10 +116,10 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         val maxDecimalPlacesAllowed = 4
         if (input.contains(decimalSeparator) &&
                 input.substring(input.indexOf(decimalSeparator) + 1).length > maxDecimalPlacesAllowed) {
-            focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
+            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
         }
-        focusedCurrency.value?.conversion?.conversionText = input
+        focusedCurrency.value?.conversion?.conversionString = input
         return true
     }
 
@@ -129,21 +130,21 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                     char.toString() == decimalSeparator
                 }
         if (decimalSeparatorCount > 1) {
-            focusedCurrency.value?.conversion?.conversionText = input.dropLast(1)
+            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
         }
-        focusedCurrency.value?.conversion?.conversionText = input
+        focusedCurrency.value?.conversion?.conversionString = input
         return true
     }
 
     private fun validateZeros(input: String): Boolean {
         if (input.length == 2) {
             if (input[0] == '0' && input[1] != decimalSeparator.single()) {
-                focusedCurrency.value?.conversion?.conversionText = input[1].toString()
+                focusedCurrency.value?.conversion?.conversionString = input[1].toString()
                 return true
             }
         }
-        focusedCurrency.value?.conversion?.conversionText = input
+        focusedCurrency.value?.conversion?.conversionString = input
         return true
     }
 

@@ -18,7 +18,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.view.DecimalNumberKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
@@ -40,10 +39,21 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
         private val blinkingCursor: View = itemView.findViewById(R.id.blinking_cursor)
 
         init {
+            initListeners()
+        }
+
+        private fun initListeners() {
+            initTextViewListener()
+            initKeyboardListener()
+        }
+
+        private fun initTextViewListener() {
             conversion.setOnClickListener {
                 changeFocusedCurrency(adapterPosition)
             }
+        }
 
+        private fun initKeyboardListener() {
             /**
              * If the [button] is a Button we know that belongs to chars 0-9 or the decimal
              * separator as those were declared as Buttons.
@@ -52,36 +62,47 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
              *
              * On each key click event, we want to validate the input against what already is in the
              * TextView. If it is valid we want to run the conversion of that value against all other
-             * currencies.
+             * currencies and update the TextView of all other currencies.
              */
             keyboard.onKeyClickedListener { button ->
-                // notifyItemChanged for this item
-                // if input was valid convert all other items and then notifyItemChanged for them
-                // Problem is that when you backspace the last element the algo tries to convert an empty String to a BigDecimal (exception)
-                    // Handle this scenario
-                        // Also need to update all the hints
-                // Btw, added currencies aren't being converted. They appear with empty fields. (This also applies to added currencies from swipe undos)
-                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
+                /**
+                 * notifyItemChanged for this item (to draw input on TextView if it's valid)
+                 * If input was valid convert all other items and then notifyItemChanged for them.
+                 * Problem is that when you backspace the last element, the algo tries to convert an empty String to a BigDecimal (exception).
+                 *      Handle this scenario
+                 *          Also need to update all the hints when everything is backspaced
+                 * Btw, added currencies aren't being converted. They appear with empty fields. (This also applies to added currencies from swipe undos)
+                 */
                 val isInputValid = viewModel.handleKeyPressed(button)
                 if (isInputValid) {
                     val focusedCurrency = viewModel.focusedCurrency.value
                     viewModel.adapterActiveCurrencies
                             .filter { it != focusedCurrency }
                             .forEach {
-                                val fromRate = focusedCurrency?.exchangeRate
+                                val fromRate = focusedCurrency!!.exchangeRate
                                 val toRate = it.exchangeRate
-                                val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency?.conversion?.conversionText),
-                                        fromRate!!, toRate).roundToFourDecimalPlaces()
-                                it.conversion.conversionValue = conversionValue
+                                if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
+                                    val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
+                                            .conversion.conversionString), fromRate, toRate)
+                                    it.conversion.conversionValue = conversionValue
+                                } else {
+                                    it.conversion.conversionString = ""
+                                }
                                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
                             }
                 }
+                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
             }
 
             keyboard.onKeyLongClickedListener {
                 viewModel.handleKeyLongPressed()
-                // Clear the text from all items
-                // Update all hints
+                val focusedCurrency = viewModel.focusedCurrency.value
+                viewModel.adapterActiveCurrencies
+                        .filter { it != focusedCurrency }
+                        .forEach {
+                            it.conversion.conversionString = ""
+                            notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
+                        }
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
             }
         }
@@ -98,7 +119,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
                     viewModel.focusedCurrency.value?.conversion?.hasInvalidInput = false
                 }
                 binding.currency = viewModel.adapterActiveCurrencies[position]
-                binding.conversion.text = viewModel.adapterActiveCurrencies[position].conversion.conversionText
                 styleIfFocused()
             } catch (e: IndexOutOfBoundsException) {
                 /**

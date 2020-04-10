@@ -89,6 +89,25 @@ object Utils {
 
     fun Int.isValid() = this != INVALID.position
 
+    /**
+     * Something that looks like: 0.{one or more zeros}
+     */
+    fun String.isDecimaledZero() = Regex("0[.,]0+").matches(this)
+
+    fun String.extractTrailingZeros(): String {
+        var zeroCounter = 0
+        run loop@{
+            this.reversed().forEach {
+                if (it == '0') {
+                    zeroCounter++
+                } else {
+                    return@loop
+                }
+            }
+        }
+        return "0".repeat(zeroCounter)
+    }
+
     enum class Order(val position: Int) {
         INVALID(-1),
         FIRST(0),

@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.extractTrailingZeros
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isDecimaledZero
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import java.math.BigDecimal
 import java.text.DecimalFormat
@@ -36,14 +38,21 @@ data class Currency(@PrimaryKey
     @Ignore
     private var decimalSeparator: String
 
+    @Ignore
+    private var groupingSeparator: String
+
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
-        val conversionPattern = "###,##0.####"
+        val conversionPattern = "#,##0.####"
         decimalFormatter = numberFormatter as DecimalFormat
         decimalFormatter.applyPattern(conversionPattern)
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
+        groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
     }
 
+    /**
+     * Currency code without the "USD_" prefix. E.g. USD_EUR -> EUR
+     */
     val trimmedCurrencyCode
         get() = currencyCode.substring(CURRENCY_CODE_STARTING_INDEX)
 
@@ -61,12 +70,12 @@ data class Currency(@PrimaryKey
      * Since the toString() method is really only useful for debugging I've structured it in a way
      * which concisely displays the object's state.
      *
-     * Example: 4 S* F* USD_EUR
-     *          | |  |    |
-     *      Order |  |    |
-     *     Selected? |    |
-     *         Focused?   |
-     *             Currency code
+     * Example: 4 S* F* EUR
+     *          | |  |   |
+     *      Order |  |   |
+     *     Selected? |   |
+     *         Focused?  |
+     *            Currency code
      *
      *    *blank if not selected/focused
      */
@@ -82,28 +91,69 @@ data class Currency(@PrimaryKey
         append("}")
     }.toString()
 
+
     inner class Conversion(conversionValue: BigDecimal) {
         /**
-         * The raw underlying conversion result
+         * The underlying numeric conversion result.
+         * Example: 1234.5678
          */
         var conversionValue: BigDecimal = conversionValue
             set(value) {
                 field = value.roundToFourDecimalPlaces()
-                conversionText = decimalFormatter.format(conversionValue)
+                conversionString = field.toString()
             }
 
         /**
-         * The conversion result formatted.
-         * Examples: 57,204.2719
-         *           0.0631
-         *           23.6000
+         * The [conversionValue] as a String.
+         * Example: "1234.5678"
          */
-        var conversionText = ""
+        var conversionString: String = ""
 
         /**
-         * The hint displayed when it is empty
+         * The [conversionString] formatted according to locale.
+         * Example:    USA: 1,234.5678
+         *          France: 1.234,5678
          */
-        var conversionHint = ""
+        val conversionText: String
+            get() {
+                return if (conversionString.isNotBlank()) {
+                    when {
+                        conversionString.endsWith('.') -> {
+                            decimalFormatter.format(BigDecimal(conversionString)).plus('.')
+                        }
+                        conversionString.isDecimaledZero() -> {
+                            conversionString
+                        }
+                        conversionString.contains(decimalSeparator) && conversionString.endsWith('0') -> {
+                            val trailingZeros = conversionString.extractTrailingZeros()
+                            val formattedString = decimalFormatter.format(BigDecimal(conversionString))
+                            if (formattedString.contains(decimalSeparator)) {
+                                decimalFormatter.format(BigDecimal(conversionString)).plus(trailingZeros)
+                            } else {
+                                decimalFormatter.format(BigDecimal(conversionString)).plus(decimalSeparator).plus(trailingZeros)
+                            }
+                        }
+                        else -> {
+                            try {
+                                decimalFormatter.format(BigDecimal(conversionString))
+                            } catch (e: NumberFormatException) {
+                                e.printStackTrace()
+                                return conversionString
+                            }
+                        }
+                    }
+                } else {
+                    ""
+                }
+            }
+
+        /**
+         * The hint displayed when [conversionText] is empty.
+         */
+        var conversionHint: String = ""
+            set(value) {
+                field = decimalFormatter.format(BigDecimal(value))
+            }
 
         var hasInvalidInput = false
     }

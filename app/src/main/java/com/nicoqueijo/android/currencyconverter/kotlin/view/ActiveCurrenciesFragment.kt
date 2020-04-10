@@ -75,9 +75,9 @@ class ActiveCurrenciesFragment : Fragment() {
                         .forEach {
                             val fromRate = focusedCurrency.exchangeRate
                             val toRate = it.exchangeRate
-                            val converterHint = CurrencyConversion.convertCurrency(BigDecimal("1"),
+                            val conversionValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
                                     fromRate, toRate).roundToFourDecimalPlaces()
-                            it.conversion.conversionHint = converterHint.toString()
+                            it.conversion.conversionHint = conversionValue.toString()
                             adapter.notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
                         }
             }
