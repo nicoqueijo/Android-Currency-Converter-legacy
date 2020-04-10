@@ -65,14 +65,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
              * currencies and update the TextView of all other currencies.
              */
             keyboard.onKeyClickedListener { button ->
-                /**
-                 * notifyItemChanged for this item (to draw input on TextView if it's valid)
-                 * If input was valid convert all other items and then notifyItemChanged for them.
-                 * Problem is that when you backspace the last element, the algo tries to convert an empty String to a BigDecimal (exception).
-                 *      Handle this scenario
-                 *          Also need to update all the hints when everything is backspaced
-                 * Btw, added currencies aren't being converted. They appear with empty fields. (This also applies to added currencies from swipe undos)
-                 */
                 val isInputValid = viewModel.handleKeyPressed(button)
                 if (isInputValid) {
                     val focusedCurrency = viewModel.focusedCurrency.value
