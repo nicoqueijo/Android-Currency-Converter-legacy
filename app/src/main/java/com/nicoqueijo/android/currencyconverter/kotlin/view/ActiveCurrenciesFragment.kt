@@ -67,7 +67,6 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun updateHints(focusedCurrency: Currency?) {
         focusedCurrency?.let {
-            if (focusedCurrency.conversion.conversionText.isNotEmpty()) return
             focusedCurrency.conversion.conversionHint = "1"
             recyclerView.post {
                 viewModel.adapterActiveCurrencies
