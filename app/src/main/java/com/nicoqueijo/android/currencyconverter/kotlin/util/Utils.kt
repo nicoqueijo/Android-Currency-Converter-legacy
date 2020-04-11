@@ -95,6 +95,20 @@ object Utils {
      */
     fun String.isDecimaledZero() = Regex("0[.,]0+").matches(this)
 
+    /**
+     * 12,345.6789 -> 12.345,6789
+     * 12.345,6789 -> 12,345.6789
+     * . -> ,
+     * 1. -> 1,
+     *
+     * x is used as a placeholder and is assumed not to be in the string which represents numbers.
+     */
+    fun String.swapDecimalAndGroupingSeparators(): String {
+        return this.replace('.', 'x')
+                .replace(',', '.')
+                .replace('x', ',')
+    }
+
     fun String.extractTrailingZeros(): String {
         var zeroCounter = 0
         run loop@{

@@ -67,21 +67,25 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
             keyboard.onKeyClickedListener { button ->
                 val isInputValid = viewModel.handleKeyPressed(button)
                 if (isInputValid) {
-                    val focusedCurrency = viewModel.focusedCurrency.value
-                    viewModel.adapterActiveCurrencies
-                            .filter { it != focusedCurrency }
-                            .forEach {
-                                val fromRate = focusedCurrency!!.exchangeRate
-                                val toRate = it.exchangeRate
-                                if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
-                                    val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
-                                            .conversion.conversionString), fromRate, toRate)
-                                    it.conversion.conversionValue = conversionValue
-                                } else {
-                                    it.conversion.conversionString = ""
+                    try {
+                        val focusedCurrency = viewModel.focusedCurrency.value
+                        viewModel.adapterActiveCurrencies
+                                .filter { it != focusedCurrency }
+                                .forEach {
+                                    val fromRate = focusedCurrency!!.exchangeRate
+                                    val toRate = it.exchangeRate
+                                    if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
+                                        val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
+                                                .conversion.conversionString.replace(",", ".")), fromRate, toRate)
+                                        it.conversion.conversionValue = conversionValue
+                                    } else {
+                                        it.conversion.conversionString = ""
+                                    }
+                                    notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
                                 }
-                                notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
-                            }
+                    } catch (e: NumberFormatException) {
+                        e.printStackTrace()
+                    }
                 }
                 notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(viewModel.focusedCurrency.value))
             }
@@ -170,7 +174,6 @@ class ActiveCurrenciesAdapter(private val viewModel: ActiveCurrenciesViewModel,
     }
 
     override fun onViewSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
-        /*val conversionValue = swipedCurrency.conversionValue*/
         viewModel.handleSwipe(position).let {
             if (it.isValid()) {
                 notifyItemChanged(it)

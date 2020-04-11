@@ -35,54 +35,6 @@ class Repository(private val context: Context) {
                 retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
                     currencyDao.upsert(currency)
                 }
-
-                // Remove this after done testing
-                //////////////////////////////////////////////////////////////////////////////////
-                /*retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
-                    currencyDao.upsert(currency)
-                }
-                val defaultCurrencies = setOf(
-                        "USD_ARS",
-                        "USD_BRL",
-                        "USD_BTC",
-                        "USD_CAD",
-                        "USD_CHF",
-                        "USD_CLP",
-                        "USD_CNY",
-                        "USD_DKK",
-                        "USD_DZD",
-                        "USD_EUR",
-                        "USD_GBP",
-                        "USD_HKD",
-                        "USD_HRK",
-                        "USD_ILS",
-                        "USD_INR",
-                        "USD_JPY",
-                        "USD_KRW",
-                        "USD_MXN",
-                        "USD_NOK",
-                        "USD_PLN",
-                        "USD_QAR",
-                        "USD_RUB",
-                        "USD_SEK",
-                        "USD_SGD",
-                        "USD_TRY",
-                        "USD_USD",
-                        "USD_UYU",
-                        "USD_VEF",
-                        "USD_XAG",
-                        "USD_XAU",
-                        "USD_ZWL"
-                )
-                retrofitResponse.body()?.exchangeRates?.currencies?.*//*filter { currency ->
-                    defaultCurrencies.contains(currency.currencyCode)
-                }?.*//*forEachIndexed { i, currency ->
-                    currency.order = i
-                    currency.isSelected = true
-                    upsertCurrency(currency)
-                }*/
-                //////////////////////////////////////////////////////////////////////////////////
-
             } else {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())
@@ -125,8 +77,8 @@ class Repository(private val context: Context) {
     private fun getApiKey(): String {
         with(context.resources) {
             return when (BuildConfig.BUILD_TYPE) {
-                "debug" -> getString(R.string.openexchangerates_debug_api_key)
                 "release" -> getString(R.string.openexchangerates_release_api_key)
+                "debug" -> getString(R.string.openexchangerates_debug_api_key)
                 else -> getString(R.string.openexchangerates_release_api_key)
             }
         }

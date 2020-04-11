@@ -2,7 +2,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -11,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
@@ -19,6 +19,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastEleme
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -43,7 +44,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     var adapterActiveCurrencies = mutableListOf<Currency>()
     val focusedCurrency = MutableLiveData<Currency?>()
 
-    private lateinit var swipedCurrency: Currency
+    private var swipedCurrency: Currency? = null
     private var swipedCurrencyOrder by Delegates.notNull<Int>()
 
     private var decimalFormatter: DecimalFormat
@@ -90,7 +91,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     private fun cleanInput(input: String): String {
         return when (input) {
-            "." -> "0$decimalSeparator"
+            decimalSeparator -> "0$decimalSeparator"
             "00" -> "0"
             else -> input
         }
@@ -160,15 +161,22 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         setFocusedCurrency(currencies)
     }
 
-    /**
-     * [currencies] will have +/- 1 elements than [adapterActiveCurrencies] due to the swiping or
-     * adding event but they will have no volatile data (conversion, isFocused).
-     * Goals is to copy that volatile data stored in [adapterActiveCurrencies]
-     */
-    private fun copyVolatileFields(currencies: MutableList<Currency>) {
-        adapterActiveCurrencies.forEach { currency ->
-            if (currency.order != INVALID.position && currencies.contains(currency)) {
-                currencies[currencies.indexOf(currency)] = currency
+    private fun copyVolatileFields(freshCurrencies: MutableList<Currency>) {
+        val addedOrRestoredCurrency: Currency
+        if (freshCurrencies.size - adapterActiveCurrencies.size == 1 &&
+                focusedCurrency.value != null && focusedCurrency.value!!.conversion.conversionString.isNotEmpty()) {
+            addedOrRestoredCurrency = freshCurrencies.asSequence()
+                    .filter { !adapterActiveCurrencies.contains(it) }
+                    .first()
+            val fromRate = focusedCurrency.value?.exchangeRate
+            val toRate = addedOrRestoredCurrency.exchangeRate
+            val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(
+                    focusedCurrency.value?.conversion?.conversionString?.replace(",", ".")), fromRate!!, toRate)
+            addedOrRestoredCurrency.conversion.conversionValue = conversionValue
+        }
+        adapterActiveCurrencies.forEach { adapterCurrency ->
+            if (adapterCurrency.order != INVALID.position && freshCurrencies.contains(adapterCurrency)) {
+                freshCurrencies[freshCurrencies.indexOf(adapterCurrency)] = adapterCurrency
             }
         }
     }
@@ -214,7 +222,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                 adapterActiveCurrencies.isNotLastElement(position) -> {
                     adapterActiveCurrencies.elementAfter(position).let { newlyFocusedCurrency ->
                         newlyFocusedCurrency.isFocused = true
-                        swipedCurrency.isFocused = false
+                        swipedCurrency?.isFocused = false
                         focusedCurrency.value = newlyFocusedCurrency
                         return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
                     }
@@ -226,7 +234,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                 else -> {
                     adapterActiveCurrencies.elementBefore(position).let { newlyFocusedCurrency ->
                         newlyFocusedCurrency.isFocused = true
-                        swipedCurrency.isFocused = false
+                        swipedCurrency?.isFocused = false
                         focusedCurrency.value = newlyFocusedCurrency
                         return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
                     }
@@ -238,8 +246,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     private fun shiftCurrencies(position: Int) {
         swipedCurrency = adapterActiveCurrencies[position]
-        swipedCurrencyOrder = swipedCurrency.order
-//        val conversionValue = swipedCurrency.conversionValue
+        swipedCurrencyOrder = swipedCurrency?.order!!
         run loop@{
             adapterActiveCurrencies
                     .reversed()
@@ -251,9 +258,8 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                         upsertCurrency(currency)
                     }
         }
-        swipedCurrency.isSelected = false
-        swipedCurrency.order = -1
-        /*swipedCurrency.conversion.conversionValue = BigDecimal.ZERO*/
+        swipedCurrency?.isSelected = false
+        swipedCurrency?.order = -1
         upsertCurrency(swipedCurrency)
     }
 
@@ -273,9 +279,8 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     fun handleSwipeUndo() {
-//        swipedCurrency.conversionValue = conversionValue
-        swipedCurrency.isSelected = true
-        swipedCurrency.order = swipedCurrencyOrder
+        swipedCurrency?.isSelected = true
+        swipedCurrency?.order = swipedCurrencyOrder
         upsertCurrency(swipedCurrency)
         for (i in swipedCurrencyOrder until adapterActiveCurrencies.size) {
             val currency = adapterActiveCurrencies[i]

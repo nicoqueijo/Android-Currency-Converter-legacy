@@ -118,24 +118,32 @@ data class Currency(@PrimaryKey
             get() {
                 return if (conversionString.isNotBlank()) {
                     when {
-                        conversionString.endsWith('.') -> {
-                            decimalFormatter.format(BigDecimal(conversionString)).plus('.')
+                        conversionString.endsWith(decimalSeparator.take(1)[0]) -> {
+                            try {
+                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(decimalSeparator.take(1)[0])
+                            } catch (e: NumberFormatException) {
+                                e.printStackTrace()
+                                conversionString
+                            }
                         }
                         conversionString.isDecimaledZero() -> {
+                            if (decimalSeparator == ",") {
+                                return conversionString.replace(".", ",")
+                            }
                             conversionString
                         }
                         conversionString.contains(decimalSeparator) && conversionString.endsWith('0') -> {
                             val trailingZeros = conversionString.extractTrailingZeros()
-                            val formattedString = decimalFormatter.format(BigDecimal(conversionString))
+                            val formattedString = decimalFormatter.format(BigDecimal(conversionString.replace(",", ".")))
                             if (formattedString.contains(decimalSeparator)) {
-                                decimalFormatter.format(BigDecimal(conversionString)).plus(trailingZeros)
+                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(trailingZeros)
                             } else {
-                                decimalFormatter.format(BigDecimal(conversionString)).plus(decimalSeparator).plus(trailingZeros)
+                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(decimalSeparator).plus(trailingZeros)
                             }
                         }
                         else -> {
                             try {
-                                decimalFormatter.format(BigDecimal(conversionString))
+                                decimalFormatter.format(BigDecimal(conversionString.replace(",", ".")))
                             } catch (e: NumberFormatException) {
                                 e.printStackTrace()
                                 return conversionString
