@@ -156,6 +156,9 @@ data class Currency(@PrimaryKey
             }
 
         var hasInvalidInput = false
+
+        override fun toString() = "value: $conversionValue string: $conversionString " +
+                "text: $conversionString hint: $conversionHint"
     }
 
     companion object {

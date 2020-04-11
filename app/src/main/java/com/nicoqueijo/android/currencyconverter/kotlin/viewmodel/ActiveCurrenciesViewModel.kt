@@ -14,12 +14,11 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOneElement
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -220,7 +219,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                         return adapterActiveCurrencies.indexOf(newlyFocusedCurrency)
                     }
                 }
-                adapterActiveCurrencies.hasOneElement() -> {
+                adapterActiveCurrencies.hasOnlyOneElement() -> {
                     focusedCurrency.value = null
                     return INVALID.position
                 }
@@ -254,7 +253,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         }
         swipedCurrency.isSelected = false
         swipedCurrency.order = -1
-        swipedCurrency.conversion.conversionValue = BigDecimal.ZERO
+        /*swipedCurrency.conversion.conversionValue = BigDecimal.ZERO*/
         upsertCurrency(swipedCurrency)
     }
 

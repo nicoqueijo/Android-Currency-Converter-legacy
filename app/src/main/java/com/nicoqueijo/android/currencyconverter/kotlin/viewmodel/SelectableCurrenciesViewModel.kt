@@ -30,11 +30,11 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
 
     fun handleOnClick(adapterPosition: Int) {
         val selectedCurrency = adapterFilteredCurrencies[adapterPosition]
-        val count = adapterSelectableCurrencies.asSequence()
+        val countOfSelectedCurrencies = adapterSelectableCurrencies.asSequence()
                 .filter { it.isSelected }
                 .count()
         selectedCurrency.isSelected = true
-        selectedCurrency.order = count
+        selectedCurrency.order = countOfSelectedCurrencies
         upsertCurrency(selectedCurrency)
     }
 

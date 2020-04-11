@@ -32,13 +32,13 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                /*retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
+                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
                     currencyDao.upsert(currency)
-                }*/
+                }
 
                 // Remove this after done testing
                 //////////////////////////////////////////////////////////////////////////////////
-                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
+                /*retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
                     currencyDao.upsert(currency)
                 }
                 val defaultCurrencies = setOf(
@@ -74,13 +74,13 @@ class Repository(private val context: Context) {
                         "USD_XAU",
                         "USD_ZWL"
                 )
-                retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
+                retrofitResponse.body()?.exchangeRates?.currencies?.*//*filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
-                }?.forEachIndexed { i, currency ->
+                }?.*//*forEachIndexed { i, currency ->
                     currency.order = i
                     currency.isSelected = true
                     upsertCurrency(currency)
-                }
+                }*/
                 //////////////////////////////////////////////////////////////////////////////////
 
             } else {

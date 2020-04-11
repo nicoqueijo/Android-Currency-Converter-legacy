@@ -69,7 +69,7 @@ object Utils {
      */
     fun NavController.hasActiveCurrenciesNavigation() = backStack.size > 2
 
-    fun List<*>.hasOneElement() = size == 1
+    fun List<*>.hasOnlyOneElement() = size == 1
 
     fun List<*>.isNotLastElement(position: Int) = size > position + 1
 
@@ -91,6 +91,7 @@ object Utils {
 
     /**
      * Something that looks like: 0.{one or more zeros}
+     * Note: decimal separator could be a comma based on locale.
      */
     fun String.isDecimaledZero() = Regex("0[.,]0+").matches(this)
 

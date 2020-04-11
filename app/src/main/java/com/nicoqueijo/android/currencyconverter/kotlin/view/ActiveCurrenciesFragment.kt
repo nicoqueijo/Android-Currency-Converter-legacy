@@ -37,7 +37,7 @@ class ActiveCurrenciesFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
         initViewsAndAdapter(view)
         observeObservables()
-        /*populateDefaultCurrencies()*/
+        populateDefaultCurrencies()
         return view
     }
 
