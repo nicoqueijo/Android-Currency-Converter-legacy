@@ -13,7 +13,7 @@ abstract class CurrencyDatabase : RoomDatabase() {
     abstract fun currencyDao(): CurrencyDao
 
     companion object {
-        private const val DATABASE_NAME = "currency.db"
+        const val DATABASE_NAME = "currency.db"
 
         @Volatile
         private var instance: CurrencyDatabase? = null

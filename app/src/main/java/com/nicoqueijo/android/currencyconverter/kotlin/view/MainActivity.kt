@@ -1,6 +1,8 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -21,6 +23,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.data.CurrencyDatabase
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasActiveCurrenciesNavigation
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
@@ -41,11 +44,43 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        clearDataOnUpdate()
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         initBannerAd()
         initViews()
         handleNavigation()
         initLastUpdateLabel()
+    }
+
+    /**
+     * I accidentally pushed an update that broke the app unless the user clears the data (but user
+     * won't know that) so I need to manually clear the data before the app can be properly used
+     * if the user is on the outdated version. :(
+     *
+     * Credit: https://stackoverflow.com/a/48520258/5906793
+     */
+    private fun clearDataOnUpdate() {
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            val currentVersion = packageInfo.longVersionCode
+            val sharedPrefs = getSharedPreferences(packageName.plus(".properties"), Context.MODE_PRIVATE)
+            val editor = sharedPrefs.edit()
+            editor.apply()
+            val lastVersion = sharedPrefs.getLong("last_version", -1)
+            if (lastVersion < currentVersion) {
+                val prefs: Map<String, *> = sharedPrefs.all
+                for ((key) in prefs) {
+                    if (key != "last_version") {
+                        editor.remove(key).commit()
+                    }
+                }
+                deleteDatabase(CurrencyDatabase.DATABASE_NAME);
+            }
+            editor.putLong("last_version", currentVersion)
+            editor.commit()
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
     }
 
     private fun initBannerAd() {
