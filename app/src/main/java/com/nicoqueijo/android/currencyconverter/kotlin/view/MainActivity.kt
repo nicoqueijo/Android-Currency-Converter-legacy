@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                         editor.remove(key).commit()
                     }
                 }
-                deleteDatabase(CurrencyDatabase.DATABASE_NAME);
+                deleteDatabase(CurrencyDatabase.DATABASE_NAME)
             }
             editor.putLong("last_version", currentVersion)
             editor.commit()
