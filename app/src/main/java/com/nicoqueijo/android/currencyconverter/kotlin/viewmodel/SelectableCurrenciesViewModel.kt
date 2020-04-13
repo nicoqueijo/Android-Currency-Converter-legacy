@@ -28,6 +28,11 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
         get() = _searchQuery
 
 
+    /**
+     * Takes the clicked Currency, updates its selected value to true and its order value as the
+     * last value of the already-selected currencies. Upserts that to the database so its observers
+     * can be notified.
+     */
     fun handleOnClick(adapterPosition: Int) {
         val selectedCurrency = adapterFilteredCurrencies[adapterPosition]
         val countOfSelectedCurrencies = adapterSelectableCurrencies.asSequence()

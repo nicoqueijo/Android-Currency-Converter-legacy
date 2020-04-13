@@ -22,10 +22,12 @@ import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrencie
 import java.math.BigDecimal
 
 
-class ActiveCurrenciesFragment : Fragment() {
+class ActiveCurrenciesFragmentDeprecated : Fragment() {
 
     private lateinit var viewModel: ActiveCurrenciesViewModel
 
+    private lateinit var recyclerView: CustomRecyclerView
+    private lateinit var adapter: ActiveCurrenciesAdapter
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
 
@@ -40,13 +42,46 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
+        recyclerView = view.findViewById(R.id.recycler_view_active_currencies)
         val emptyListView = view.findViewById<View>(R.id.empty_list)
         keyboard = view.findViewById(R.id.keyboard)
+        recyclerView.showIfEmpty(emptyListView)
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         initFloatingActionButton(view)
+        adapter = ActiveCurrenciesAdapter(viewModel, keyboard)
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
+        val itemTouchHelperCallback = SwipeAndDragHelper(adapter, 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
 
     private fun observeObservables() {
+        viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+            adapter.setCurrencies(currencies)
+            toggleKeyboardVisibility(currencies)
+        })
+        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
+            updateHints(focusedCurrency)
+        })
+    }
 
+    private fun updateHints(focusedCurrency: Currency?) {
+        focusedCurrency?.let {
+            focusedCurrency.conversion.conversionHint = "1"
+            recyclerView.post {
+                viewModel.adapterActiveCurrencies
+                        .filter { it != focusedCurrency }
+                        .forEach {
+                            val fromRate = focusedCurrency.exchangeRate
+                            val toRate = it.exchangeRate
+                            val conversionValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
+                                    fromRate, toRate).roundToFourDecimalPlaces()
+                            it.conversion.conversionHint = conversionValue.toString()
+                            adapter.notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
+                        }
+            }
+            recyclerView.smoothScrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+        }
     }
 
     private fun toggleKeyboardVisibility(currencies: MutableList<Currency>) {

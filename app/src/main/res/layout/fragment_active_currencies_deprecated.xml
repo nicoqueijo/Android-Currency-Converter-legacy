@@ -61,13 +61,14 @@
             app:fel_edge="bottom"
             app:fel_size_bottom="90dp">
 
-            <com.jmedeisis.draglinearlayout.DragLinearLayout
+            <com.nicoqueijo.android.currencyconverter.kotlin.view.CustomRecyclerView
+                android:id="@+id/recycler_view_active_currencies"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                
-
-            </com.jmedeisis.draglinearlayout.DragLinearLayout>
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="90dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_active_currency" />
 
         </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 

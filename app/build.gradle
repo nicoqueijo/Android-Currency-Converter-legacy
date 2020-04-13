@@ -47,6 +47,7 @@ ext {
     retrofitVersion = '2.8.1'
     fadingEdgeLayoutVersion = '1.0.0'
     materialScrollBarVersion = '13.3.0'
+    dragLinearLayoutVersion = '1.0.0'
     appCompatVersion = '1.1.0'
     constraintLayoutVersion = '2.0.0-beta4'
     cardViewVersion = '1.0.0'
@@ -90,6 +91,9 @@ dependencies {
 
     // MaterialScrollBar
     implementation "com.github.turing-tech:MaterialScrollBar:$materialScrollBarVersion"
+
+    // DragLinearLayout
+    implementation "com.jmedeisis:draglinearlayout:$dragLinearLayoutVersion"
 
     // Android
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
