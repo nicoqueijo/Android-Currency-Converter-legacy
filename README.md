@@ -19,7 +19,7 @@ https://github.com/nicoqueijo/Android-Currency-Converter/tree/master/graphics/sc
 https://openexchangerates.org/
 
 ### Architecture
-This app uses MVVM architecture using a single activity with fragment-swapping and data-caching using a repository to fetch local or remote data. 
+This app implements the MVVM architectural pattern using a single activity with fragment-swapping and data-caching using a repository to fetch local or remote data. 
 
 <img src="graphics/flowcharts/single_activity_diagram.jpg" width="550">
 <img src="graphics/flowcharts/data_flow_diagram.png" width="550">
