@@ -4,8 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.forEach
-import androidx.core.view.get
+import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,6 +23,7 @@ class ActiveCurrenciesFragment : Fragment() {
     private lateinit var dragLinearLayout: DragLinearLayout
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
+    private lateinit var scrollView: ScrollView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -38,20 +38,17 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun initViewsAndAdapter(view: View) {
         val emptyListView = view.findViewById<View>(R.id.empty_list) // connect this with the DragLinearLayout some way
         dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
-        dragLinearLayout.forEach {
-            dragLinearLayout.setViewDraggable(it, it)
+        scrollView = view.findViewById(R.id.scroll_view)
+
+        dragLinearLayout.setContainerScrollView(scrollView)
+        resources.getStringArray(R.array.currency_names).forEach {
+            val row = RowActiveCurrency(activity!!)
+            row.currencyCode.text = it
+            row.flag.setImageResource(Utils.getDrawableResourceByName(it, activity))
+            row.conversion.text = "100.00"
+            dragLinearLayout.addView(row)
+            dragLinearLayout.setViewDraggable(row, row)
         }
-        val row0: RowActiveCurrency = dragLinearLayout[0] as RowActiveCurrency
-        val row1: RowActiveCurrency = dragLinearLayout[1] as RowActiveCurrency
-        val row2: RowActiveCurrency = dragLinearLayout[2] as RowActiveCurrency
-
-        row0.flag.setImageResource(Utils.getDrawableResourceByName("usd_ars", activity))
-        row1.flag.setImageResource(Utils.getDrawableResourceByName("usd_brl", activity))
-        row2.flag.setImageResource(Utils.getDrawableResourceByName("usd_clp", activity))
-
-        row0.currencyCode.text = "ARS"
-        row1.currencyCode.text = "BRL"
-        row2.currencyCode.text = "CLP"
 
         keyboard = view.findViewById(R.id.keyboard)
         initFloatingActionButton(view)
