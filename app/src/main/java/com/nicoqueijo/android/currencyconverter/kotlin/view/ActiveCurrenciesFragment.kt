@@ -4,28 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.forEach
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.adapter.ActiveCurrenciesAdapter
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
-import com.nicoqueijo.android.currencyconverter.kotlin.util.SwipeAndDragHelper
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
-import java.math.BigDecimal
 
 
 class ActiveCurrenciesFragment : Fragment() {
 
     private lateinit var viewModel: ActiveCurrenciesViewModel
 
+    private lateinit var dragLinearLayout: DragLinearLayout
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
 
@@ -40,13 +36,30 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        val emptyListView = view.findViewById<View>(R.id.empty_list)
+        val emptyListView = view.findViewById<View>(R.id.empty_list) // connect this with the DragLinearLayout some way
+        dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
+        dragLinearLayout.forEach {
+            dragLinearLayout.setViewDraggable(it, it)
+        }
+        val row0: RowActiveCurrency = dragLinearLayout[0] as RowActiveCurrency
+        val row1: RowActiveCurrency = dragLinearLayout[1] as RowActiveCurrency
+        val row2: RowActiveCurrency = dragLinearLayout[2] as RowActiveCurrency
+
+        row0.flag.setImageResource(Utils.getDrawableResourceByName("usd_ars", activity))
+        row1.flag.setImageResource(Utils.getDrawableResourceByName("usd_brl", activity))
+        row2.flag.setImageResource(Utils.getDrawableResourceByName("usd_clp", activity))
+
+        row0.currencyCode.text = "ARS"
+        row1.currencyCode.text = "BRL"
+        row2.currencyCode.text = "CLP"
+
         keyboard = view.findViewById(R.id.keyboard)
         initFloatingActionButton(view)
     }
 
     private fun observeObservables() {
-
+        // When currency is added or swiped, add/remove an item from DragLinearLayout
+        // When the focused currency changes update the hints
     }
 
     private fun toggleKeyboardVisibility(currencies: MutableList<Currency>) {

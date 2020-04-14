@@ -61,13 +61,34 @@
             app:fel_edge="bottom"
             app:fel_size_bottom="90dp">
 
-            <com.jmedeisis.draglinearlayout.DragLinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                
+                <com.jmedeisis.draglinearlayout.DragLinearLayout
+                    android:id="@+id/drag_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider"
+                    android:orientation="vertical"
+                    android:paddingBottom="90dp"
+                    android:showDividers="middle|beginning|end">
 
-            </com.jmedeisis.draglinearlayout.DragLinearLayout>
+                    <com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.jmedeisis.draglinearlayout.DragLinearLayout>
+
+            </ScrollView>
 
         </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 

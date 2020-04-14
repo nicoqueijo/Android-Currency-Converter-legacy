@@ -12,7 +12,7 @@ import java.text.DecimalFormatSymbols
 
 typealias KeyboardCallback = (View?) -> Unit
 
-class DecimalNumberKeyboard(context: Context?, attrs: AttributeSet?) :
+class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
         ConstraintLayout(context, attrs),
         View.OnClickListener,
         View.OnLongClickListener {

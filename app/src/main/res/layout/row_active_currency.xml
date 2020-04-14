@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <import type="com.nicoqueijo.android.currencyconverter.kotlin.util.Utils" />
-
-        <variable
-            name="currency"
-            type="com.nicoqueijo.android.currencyconverter.kotlin.model.Currency" />
-    </data>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -52,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_row_active_currency"
-            android:longClickable="true"
             android:paddingStart="16dp"
             android:paddingTop="8dp"
             android:paddingEnd="16dp"
@@ -72,7 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@{Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context)}"
                     tools:src="@drawable/usd_usd" />
 
             </androidx.cardview.widget.CardView>
@@ -83,7 +72,6 @@
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:text="@{currency.trimmedCurrencyCode}"
                 android:textColor="?attr/text_color"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -112,9 +100,7 @@
                     android:background="@android:color/transparent"
                     android:ellipsize="none"
                     android:gravity="center_vertical|right"
-                    android:hint="@{currency.conversion.conversionHint}"
                     android:singleLine="true"
-                    android:text="@{currency.conversion.conversionText}"
                     android:textColor="?attr/text_color"
                     android:textSize="20sp"
                     tools:text="12,345.6789" />
@@ -137,4 +123,4 @@
 
     </FrameLayout>
 
-</layout>
+</merge>
