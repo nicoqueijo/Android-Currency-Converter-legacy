@@ -12,11 +12,7 @@
             android:id="@+id/row_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/red"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp">
+            android:background="@color/red">
 
             <ImageView
                 android:id="@+id/delete_icon_start"
@@ -43,18 +39,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_row_active_currency"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp">
+            android:paddingEnd="16dp">
+
+            <!-- Purpose of this view is intercept the touches from the  DragLinearLayout so it
+             allows the nav drawer to be opened with a swipe from the edge of the screen. -->
+            <View
+                android:id="@+id/padding_start"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_flag_canvas"
                 android:layout_width="50dp"
                 android:layout_height="37dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 app:cardCornerRadius="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/padding_start"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -83,6 +89,9 @@
                 android:id="@+id/fading_edge_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:longClickable="true"
                 android:paddingLeft="16dp"
                 android:paddingRight="2dp"
                 app:fel_edge="left"
