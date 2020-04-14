@@ -1,10 +1,14 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
+import android.animation.LayoutTransition
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import androidx.annotation.RequiresApi
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -35,6 +39,7 @@ class ActiveCurrenciesFragment : Fragment() {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun initViewsAndAdapter(view: View) {
         val emptyListView = view.findViewById<View>(R.id.empty_list) // connect this with the DragLinearLayout some way
         dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
@@ -42,13 +47,24 @@ class ActiveCurrenciesFragment : Fragment() {
 
         dragLinearLayout.setContainerScrollView(scrollView)
 
-        currencyCodes.forEach {
+        currencyCodes.forEachIndexed { i, it ->
             val row = RowActiveCurrency(activity!!)
             row.currencyCode.text = it.substring(4)
             row.flag.setImageResource(Utils.getDrawableResourceByName(it.toLowerCase(), activity))
-            row.conversion.text = "100.00"
+            row.conversion.text = i.plus(1).toString()
             dragLinearLayout.addView(row)
             dragLinearLayout.setViewDraggable(row, row)
+        }
+
+
+        dragLinearLayout.forEach { row ->
+            row as RowActiveCurrency
+            row.fadingEdgeLayout.setOnLongClickListener {
+                dragLinearLayout.layoutTransition = LayoutTransition()
+                dragLinearLayout.removeDragView(row)
+                dragLinearLayout.layoutTransition = null
+                true
+            }
         }
 
         keyboard = view.findViewById(R.id.keyboard)
@@ -115,146 +131,12 @@ class ActiveCurrenciesFragment : Fragment() {
                 "USD_CHF",
                 "USD_CLF",
                 "USD_CLP",
-                "USD_CNH",
                 "USD_CNY",
                 "USD_COP",
                 "USD_CRC",
-                "USD_CUC",
                 "USD_CUP",
                 "USD_CVE",
-                "USD_CZK",
-                "USD_DJF",
-                "USD_DKK",
-                "USD_DOP",
-                "USD_DZD",
-                "USD_EGP",
-                "USD_ERN",
-                "USD_ETB",
-                "USD_EUR",
-                "USD_FJD",
-                "USD_FKP",
-                "USD_GBP",
-                "USD_GEL",
-                "USD_GGP",
-                "USD_GHS",
-                "USD_GIP",
-                "USD_GMD",
-                "USD_GNF",
-                "USD_GTQ",
-                "USD_GYD",
-                "USD_HKD",
-                "USD_HNL",
-                "USD_HRK",
-                "USD_HTG",
-                "USD_HUF",
-                "USD_IDR",
-                "USD_ILS",
-                "USD_IMP",
-                "USD_INR",
-                "USD_IQD",
-                "USD_IRR",
-                "USD_ISK",
-                "USD_JEP",
-                "USD_JMD",
-                "USD_JOD",
-                "USD_JPY",
-                "USD_KES",
-                "USD_KGS",
-                "USD_KHR",
-                "USD_KMF",
-                "USD_KPW",
-                "USD_KRW",
-                "USD_KWD",
-                "USD_KYD",
-                "USD_KZT",
-                "USD_LAK",
-                "USD_LBP",
-                "USD_LKR",
-                "USD_LRD",
-                "USD_LSL",
-                "USD_LYD",
-                "USD_MAD",
-                "USD_MDL",
-                "USD_MGA",
-                "USD_MKD",
-                "USD_MMK",
-                "USD_MNT",
-                "USD_MOP",
-                "USD_MRO",
-                "USD_MRU",
-                "USD_MUR",
-                "USD_MVR",
-                "USD_MWK",
-                "USD_MXN",
-                "USD_MYR",
-                "USD_MZN",
-                "USD_NAD",
-                "USD_NGN",
-                "USD_NIO",
-                "USD_NOK",
-                "USD_NPR",
-                "USD_NZD",
-                "USD_OMR",
-                "USD_PAB",
-                "USD_PEN",
-                "USD_PGK",
-                "USD_PHP",
-                "USD_PKR",
-                "USD_PLN",
-                "USD_PYG",
-                "USD_QAR",
-                "USD_RON",
-                "USD_RSD",
-                "USD_RUB",
-                "USD_RWF",
-                "USD_SAR",
-                "USD_SBD",
-                "USD_SCR",
-                "USD_SDG",
-                "USD_SEK",
-                "USD_SGD",
-                "USD_SHP",
-                "USD_SLL",
-                "USD_SOS",
-                "USD_SRD",
-                "USD_SSP",
-                "USD_STD",
-                "USD_STN",
-                "USD_SVC",
-                "USD_SYP",
-                "USD_SZL",
-                "USD_THB",
-                "USD_TJS",
-                "USD_TMT",
-                "USD_TND",
-                "USD_TOP",
-                "USD_TRY",
-                "USD_TTD",
-                "USD_TWD",
-                "USD_TZS",
-                "USD_UAH",
-                "USD_UGX",
-                "USD_USD",
-                "USD_UYU",
-                "USD_UZS",
-                "USD_VEF",
-                "USD_VES",
-                "USD_VND",
-                "USD_VUV",
-                "USD_WST",
-                "USD_XAF",
-                "USD_XAG",
-                "USD_XAU",
-                "USD_XCD",
-                "USD_XDR",
-                "USD_XOF",
-                "USD_XPD",
-                "USD_XPF",
-                "USD_XPT",
-                "USD_YER",
-                "USD_ZAR",
-                "USD_ZMW",
-                "USD_ZWL"
+                "USD_CZK"
         )
     }
 }
