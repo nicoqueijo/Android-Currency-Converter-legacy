@@ -27,14 +27,18 @@ import kotlin.properties.Delegates
 
 class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
 
+    var listConstructed = false
+
     // Candidate for dependency injection
     private val repository = Repository(application)
 
     val activeCurrencies = repository.getActiveCurrencies()
 
-    private fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
+    /*private*/ fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
 
     private suspend fun getCurrency(currencyCode: String) = repository.getCurrency(currencyCode)
+
+    /*fun getActiveCurrencies() = repository.getActiveCurrencies().value*/
 
     private fun isFirstLaunch() = repository.isFirstLaunch
     private fun setFirstLaunch(value: Boolean) {

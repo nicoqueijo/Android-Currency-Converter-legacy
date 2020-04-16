@@ -1,18 +1,19 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.animation.LayoutTransition
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ScrollView
-import androidx.annotation.RequiresApi
-import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
@@ -24,6 +25,7 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private lateinit var viewModel: ActiveCurrenciesViewModel
 
+    private lateinit var emptyListView: LinearLayout
     private lateinit var dragLinearLayout: DragLinearLayout
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
@@ -39,41 +41,97 @@ class ActiveCurrenciesFragment : Fragment() {
         return view
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun initViewsAndAdapter(view: View) {
-        val emptyListView = view.findViewById<View>(R.id.empty_list) // connect this with the DragLinearLayout some way
+        emptyListView = view.findViewById(R.id.empty_list) // connect this with the DragLinearLayout some way
         dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
         scrollView = view.findViewById(R.id.scroll_view)
-
         dragLinearLayout.setContainerScrollView(scrollView)
-
-        currencyCodes.forEachIndexed { i, it ->
-            val row = RowActiveCurrency(activity!!)
-            row.currencyCode.text = it.substring(4)
-            row.flag.setImageResource(Utils.getDrawableResourceByName(it.toLowerCase(), activity))
-            row.conversion.text = i.plus(1).toString()
-            dragLinearLayout.addView(row)
-            dragLinearLayout.setViewDraggable(row, row)
-        }
-
-
-        dragLinearLayout.forEach { row ->
-            row as RowActiveCurrency
-            row.fadingEdgeLayout.setOnLongClickListener {
-                dragLinearLayout.layoutTransition = LayoutTransition()
-                dragLinearLayout.removeDragView(row)
-                dragLinearLayout.layoutTransition = null
-                true
-            }
-        }
-
         keyboard = view.findViewById(R.id.keyboard)
         initFloatingActionButton(view)
+
+        if (viewModel.listConstructed) {
+            // If list was initialized from the first launch just redraw it from the data we have
+            viewModel.activeCurrencies.value?.forEach { activeCurrency ->
+                RowActiveCurrency(activity).run row@{
+                    currencyCode.text = activeCurrency.trimmedCurrencyCode
+                    flag.setImageResource(Utils.getDrawableResourceByName(activeCurrency.currencyCode.toLowerCase(), activity))
+                    conversion.text = activeCurrency.conversion.conversionText
+                    dragLinearLayout.run {
+                        addView(this@row)
+                        setViewDraggable(this@row, this@row)
+                    }
+                    this.currencyCode.setOnLongClickListener {
+                        dragLinearLayout.run {
+                            layoutTransition = LayoutTransition()
+                            removeDragView(this)
+                            layoutTransition = null
+                            Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.undo) {
+                                        // handle the undo
+                                    }.show()
+                        }
+                        true
+                    }
+                }
+            }
+        }
     }
 
     private fun observeObservables() {
-        // When currency is added or swiped, add/remove an item from DragLinearLayout
+        viewModel.activeCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+            toggleKeyboardVisibility(currencies)
+            if (!viewModel.listConstructed) {
+                constructList(currencies)
+            }
+            // When currency is added or swiped, add/remove an item from DragLinearLayout
+        })
+
         // When the focused currency changes update the hints
+        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
+            /*updateHints(focusedCurrency)*/
+        })
+    }
+
+    /**
+     *
+     */
+    private fun constructList(currencies: MutableList<Currency>?) {
+        currencies?.forEach { currency ->
+            RowActiveCurrency(activity).run row@{
+                currencyCode.text = currency.trimmedCurrencyCode
+                flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), activity))
+                conversion.text = currency.conversion.conversionText
+                dragLinearLayout.run {
+                    addView(this@row)
+                    setViewDraggable(this@row, this@row)
+                }
+                this.currencyCode.setOnLongClickListener {
+                    dragLinearLayout.run {
+                        layoutTransition = LayoutTransition()
+                        removeDragView(this)
+                        layoutTransition = null
+                        Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.undo) {
+                                    // handle the undo
+                                }.show()
+                    }
+                    true
+                }
+            }
+        }
+        viewModel.listConstructed = true
+    }
+
+    private fun addRowAtEnd() {
+
+    }
+
+    private fun addRowAtIndex(/*index or currency code*/) {
+
+    }
+
+    private fun removeRowAtIndex(/*index or currency code*/) {
+
     }
 
     private fun toggleKeyboardVisibility(currencies: MutableList<Currency>) {
@@ -99,44 +157,17 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     companion object {
+
+        fun log(message: String) {
+            Log.d("Nicoo", message)
+        }
+
         val currencyCodes = listOf(
-                "USD_AED",
-                "USD_AFN",
-                "USD_ALL",
-                "USD_AMD",
-                "USD_ANG",
-                "USD_AOA",
                 "USD_ARS",
-                "USD_AUD",
-                "USD_AWG",
-                "USD_AZN",
-                "USD_BAM",
-                "USD_BBD",
-                "USD_BDT",
-                "USD_BGN",
-                "USD_BHD",
-                "USD_BIF",
-                "USD_BMD",
-                "USD_BND",
-                "USD_BOB",
                 "USD_BRL",
-                "USD_BSD",
-                "USD_BTC",
-                "USD_BTN",
-                "USD_BWP",
-                "USD_BYN",
-                "USD_BZD",
                 "USD_CAD",
-                "USD_CDF",
-                "USD_CHF",
-                "USD_CLF",
-                "USD_CLP",
-                "USD_CNY",
-                "USD_COP",
-                "USD_CRC",
-                "USD_CUP",
-                "USD_CVE",
-                "USD_CZK"
+                "USD_DKK",
+                "USD_EUR"
         )
     }
 }

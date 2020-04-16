@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.bosphere.fadingedgelayout.FadingEdgeLayout
 import com.nicoqueijo.android.currencyconverter.R
 
-class RowActiveCurrency(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
+class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) : FrameLayout(context!!, attrs) {
 
     val rowBackground: ConstraintLayout
     val deleteIconStart: ImageView
@@ -39,4 +39,5 @@ class RowActiveCurrency(context: Context, attrs: AttributeSet? = null) : FrameLa
         conversion = findViewById(R.id.conversion)
         blinkingCursor = findViewById(R.id.blinking_cursor)
     }
+
 }

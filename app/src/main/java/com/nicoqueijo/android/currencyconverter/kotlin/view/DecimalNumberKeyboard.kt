@@ -10,6 +10,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.nicoqueijo.android.currencyconverter.R
 import java.text.DecimalFormatSymbols
 
+/**
+ * Credit: https://stackoverflow.com/a/60906741/5906793
+ */
 typealias KeyboardCallback = (View?) -> Unit
 
 class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
