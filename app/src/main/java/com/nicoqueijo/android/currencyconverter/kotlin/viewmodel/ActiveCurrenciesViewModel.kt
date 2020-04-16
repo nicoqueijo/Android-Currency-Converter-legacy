@@ -27,7 +27,7 @@ import kotlin.properties.Delegates
 
 class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
 
-    var listConstructed = false
+    var wasListConstructed = false
 
     // Candidate for dependency injection
     private val repository = Repository(application)
@@ -46,6 +46,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     var adapterActiveCurrencies = mutableListOf<Currency>()
+    var memoryActiveCurrencies = mutableListOf<Currency>()
     val focusedCurrency = MutableLiveData<Currency?>()
 
     private var swipedCurrency: Currency? = null

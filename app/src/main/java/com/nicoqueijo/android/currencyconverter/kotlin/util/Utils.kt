@@ -6,6 +6,7 @@ import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -104,7 +105,7 @@ object Utils {
      * x is used as a placeholder and is assumed not to be in the string which represents numbers.
      */
     fun String.swapDecimalAndGroupingSeparators(): String {
-        return this.replace('.', 'x')
+        return replace('.', 'x')
                 .replace(',', '.')
                 .replace('x', ',')
     }
@@ -121,6 +122,14 @@ object Utils {
             }
         }
         return "0".repeat(zeroCounter)
+    }
+
+    fun View.show() {
+        visibility = View.VISIBLE
+    }
+
+    fun View.hide() {
+        visibility = View.INVISIBLE
     }
 
     enum class Order(val position: Int) {
