@@ -40,7 +40,7 @@ class ActiveCurrenciesFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
         initViewsAndAdapter(view)
         observeObservables()
-        populateDefaultCurrencies()
+        /*populateDefaultCurrencies()*/
         return view
     }
 
@@ -57,7 +57,7 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun restoreActiveCurrencies() {
-        viewModel.activeCurrencies.value?.forEach { activeCurrency ->
+        viewModel.memoryActiveCurrencies.forEach { activeCurrency ->
             RowActiveCurrency(activity).run row@{
                 currencyCode.text = activeCurrency.trimmedCurrencyCode
                 flag.setImageResource(Utils.getDrawableResourceByName(activeCurrency.currencyCode.toLowerCase(), activity))
@@ -94,7 +94,6 @@ class ActiveCurrenciesFragment : Fragment() {
                 constructActiveCurrencies(dbActiveCurrencies)
             }
             if (wasCurrencyAddedViaFab(dbActiveCurrencies)) {
-
                 val addedCurrency = dbActiveCurrencies.takeLast(1).single()
                 viewModel.memoryActiveCurrencies.add(addedCurrency)
                 RowActiveCurrency(activity).run row@{
@@ -140,13 +139,14 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     /**
-     * This indicates user added a currency by selecting it from the SelectableCurrenciesFragment
+     * This indicates the user added a currency by selecting it from the SelectableCurrenciesFragment
      * that was initiated by the press of the FloatingActionButton.
-     * The indication is triggered when, apart from having one additional element, the
-     * [dbActiveCurrencies] is the same as the [memoryActiveCurrencies].
+     * The indication is triggered when, the only difference between [dbActiveCurrencies] and
+     * [memoryActiveCurrencies] is that [dbActiveCurrencies] has one extra element.
      */
-    fun wasCurrencyAddedViaFab(dbActiveCurrencies: List<Currency>): Boolean {
-        return viewModel.memoryActiveCurrencies == dbActiveCurrencies.dropLast(1)
+    private fun wasCurrencyAddedViaFab(dbActiveCurrencies: List<Currency>): Boolean {
+        return dbActiveCurrencies.size - viewModel.memoryActiveCurrencies.size == 1 &&
+                dbActiveCurrencies.dropLast(1) == viewModel.memoryActiveCurrencies
     }
 
     /**
