@@ -57,33 +57,8 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun restoreActiveCurrencies() {
-        viewModel.memoryActiveCurrencies.forEach { activeCurrency ->
-            RowActiveCurrency(activity).run row@{
-                currencyCode.text = activeCurrency.trimmedCurrencyCode
-                flag.setImageResource(Utils.getDrawableResourceByName(activeCurrency.currencyCode.toLowerCase(), activity))
-                conversion.text = activeCurrency.conversion.conversionText
-                dragLinearLayout.run {
-                    addView(this@row)
-                    setViewDraggable(this@row, this@row)
-                }
-                this.currencyCode.setOnLongClickListener {
-                    dragLinearLayout.run {
-                        val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
-                        currencyToRemove.order = INVALID.position
-                        currencyToRemove.isSelected = false
-                        viewModel.upsertCurrency(currencyToRemove)
-                        viewModel.memoryActiveCurrencies.remove(currencyToRemove)
-                        layoutTransition = LayoutTransition()
-                        removeDragView(this@row)
-                        layoutTransition = null
-                        Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.undo) {
-                                    // handle the undo
-                                }.show()
-                    }
-                    true
-                }
-            }
+        viewModel.memoryActiveCurrencies.forEach { currency ->
+            addRow(currency)
         }
     }
 
@@ -96,34 +71,7 @@ class ActiveCurrenciesFragment : Fragment() {
             if (wasCurrencyAddedViaFab(dbActiveCurrencies)) {
                 val addedCurrency = dbActiveCurrencies.takeLast(1).single()
                 viewModel.memoryActiveCurrencies.add(addedCurrency)
-                RowActiveCurrency(activity).run row@{
-                    currencyCode.text = addedCurrency.trimmedCurrencyCode
-                    flag.setImageResource(Utils.getDrawableResourceByName(addedCurrency.currencyCode.toLowerCase(), activity))
-                    conversion.text = addedCurrency.conversion.conversionText
-                    dragLinearLayout.run {
-                        addView(this@row)
-                        setViewDraggable(this@row, this@row)
-                    }
-                    this.currencyCode.setOnLongClickListener {
-                        dragLinearLayout.run {
-                            val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
-                            currencyToRemove.order = INVALID.position
-                            currencyToRemove.isSelected = false
-                            viewModel.upsertCurrency(currencyToRemove)
-                            viewModel.memoryActiveCurrencies.remove(currencyToRemove)
-                            layoutTransition = LayoutTransition()
-                            removeDragView(this@row)
-                            layoutTransition = null
-                            Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.undo) {
-                                        // handle the undo
-                                    }.show()
-                        }
-                        true
-                    }
-                }
-
-
+                addRow(addedCurrency)
             }
             if (dbActiveCurrencies.isEmpty()) {
                 emptyListView.show()
@@ -145,6 +93,8 @@ class ActiveCurrenciesFragment : Fragment() {
      * [memoryActiveCurrencies] is that [dbActiveCurrencies] has one extra element.
      */
     private fun wasCurrencyAddedViaFab(dbActiveCurrencies: List<Currency>): Boolean {
+        log("dbActiveCurrencies    : $dbActiveCurrencies")
+        log("memoryActiveCurrencies: ${viewModel.memoryActiveCurrencies}")
         return dbActiveCurrencies.size - viewModel.memoryActiveCurrencies.size == 1 &&
                 dbActiveCurrencies.dropLast(1) == viewModel.memoryActiveCurrencies
     }
@@ -152,38 +102,45 @@ class ActiveCurrenciesFragment : Fragment() {
     /**
      *
      */
-    private fun constructActiveCurrencies(currencies: MutableList<Currency>?) {
-        currencies?.forEach { currency ->
+    private fun constructActiveCurrencies(dbActiveCurrencies: MutableList<Currency>?) {
+        dbActiveCurrencies?.forEach { currency ->
             viewModel.memoryActiveCurrencies.add(currency)
-            RowActiveCurrency(activity).run row@{
-                currencyCode.text = currency.trimmedCurrencyCode
-                flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), activity))
-                conversion.text = currency.conversion.conversionText
-                dragLinearLayout.run {
-                    addView(this@row)
-                    setViewDraggable(this@row, this@row)
-                }
-                this.currencyCode.setOnLongClickListener {
-                    dragLinearLayout.run {
-                        val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
-                        currencyToRemove.order = INVALID.position
-                        currencyToRemove.isSelected = false
-                        viewModel.upsertCurrency(currencyToRemove)
-                        viewModel.memoryActiveCurrencies.remove(currencyToRemove)
-                        layoutTransition = LayoutTransition()
-                        removeDragView(this@row)
-                        layoutTransition = null
-                        Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.undo) {
-                                    // handle the undo
-
-                                }.show()
-                    }
-                    true
-                }
-            }
+            addRow(currency)
         }
         viewModel.wasListConstructed = true
+    }
+
+    /**
+     * Creates a row from a Currency object, adds that row to the DragLinearLayout, and sets up
+     * its listeners.
+     */
+    private fun addRow(currency: Currency) {
+        RowActiveCurrency(activity).run row@{
+            currencyCode.text = currency.trimmedCurrencyCode
+            flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), activity))
+            conversion.text = currency.conversion.conversionText
+            dragLinearLayout.run {
+                addView(this@row)
+                setViewDraggable(this@row, this@row)
+            }
+            this.currencyCode.setOnLongClickListener {
+                dragLinearLayout.run {
+                    val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
+                    currencyToRemove.order = INVALID.position
+                    currencyToRemove.isSelected = false
+                    viewModel.upsertCurrency(currencyToRemove)
+                    viewModel.memoryActiveCurrencies.remove(currencyToRemove)
+                    layoutTransition = LayoutTransition()
+                    removeDragView(this@row)
+                    layoutTransition = null
+                    Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.undo) {
+                                // handle the undo
+                            }.show()
+                }
+                true
+            }
+        }
     }
 
     private fun addRowAtEnd() {
