@@ -3,134 +3,115 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <!-- Some view have the attribute longClickable="true" with what may seem no actual purpose
+     but this is done so the touch events are intercepted from the DragLinearLayout that holds
+     these views and the user is able to scroll without dragging items.
+     More on this here: https://github.com/justasm/DragLinearLayout/issues/48 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:background="@drawable/background_row_active_currency"
         tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/row_background"
-            android:layout_width="match_parent"
+        <View
+            android:id="@+id/padding_start"
+            android:layout_width="16dp"
             android:layout_height="match_parent"
-            android:background="@color/red">
+            android:longClickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card_flag_canvas"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_flag_canvas"
+            android:layout_width="50dp"
+            android:layout_height="37dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:cardCornerRadius="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/currency_code"
+            app:layout_constraintStart_toEndOf="@id/padding_start"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/delete_icon_start"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16sp"
-                android:src="@drawable/ic_delete"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/delete_icon_end"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16sp"
-                android:src="@drawable/ic_delete"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/row_foreground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background_row_active_currency"
-            android:paddingEnd="16dp">
-
-            <!-- Purpose of this view is intercept the touches from the  DragLinearLayout so it
-             allows the nav drawer to be opened with a swipe from the edge of the screen. -->
-            <View
-                android:id="@+id/padding_start"
-                android:layout_width="16dp"
+                android:id="@+id/flag"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:scaleType="fitXY"
+                tools:src="@drawable/usd_usd" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_flag_canvas"
-                android:layout_width="50dp"
-                android:layout_height="37dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                app:cardCornerRadius="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/padding_start"
-                app:layout_constraintTop_toTopOf="parent">
+        </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/flag"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    tools:src="@drawable/usd_usd" />
+        <TextView
+            android:id="@+id/currency_code"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:longClickable="true"
+            android:paddingLeft="16dp"
+            android:textColor="?attr/text_color"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fading_edge_layout"
+            app:layout_constraintStart_toEndOf="@+id/card_flag_canvas"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="USD" />
 
-            </androidx.cardview.widget.CardView>
+        <com.bosphere.fadingedgelayout.FadingEdgeLayout
+            android:id="@+id/fading_edge_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:longClickable="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="2dp"
+            app:fel_edge="left"
+            app:fel_size_left="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/blinking_cursor"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/currency_code"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/currency_code"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center_vertical"
+                android:id="@+id/conversion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:ellipsize="none"
+                android:gravity="center_vertical|right"
                 android:longClickable="true"
-                android:paddingLeft="16dp"
+                android:singleLine="true"
                 android:textColor="?attr/text_color"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/card_flag_canvas"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="USD" />
+                android:textSize="20sp"
+                tools:text="12,345.6789" />
 
-            <com.bosphere.fadingedgelayout.FadingEdgeLayout
-                android:id="@+id/fading_edge_layout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:longClickable="true"
-                android:paddingLeft="16dp"
-                android:paddingRight="2dp"
-                app:fel_edge="left"
-                app:fel_size_left="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/blinking_cursor"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/currency_code"
-                app:layout_constraintTop_toTopOf="parent">
+        </com.bosphere.fadingedgelayout.FadingEdgeLayout>
 
-                <TextView
-                    android:id="@+id/conversion"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:ellipsize="none"
-                    android:gravity="center_vertical|right"
-                    android:singleLine="true"
-                    android:textColor="?attr/text_color"
-                    android:textSize="20sp"
-                    tools:text="12,345.6789" />
+        <View
+            android:id="@+id/blinking_cursor"
+            android:layout_width="2dp"
+            android:layout_height="22dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:longClickable="true"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/padding_end"
+            app:layout_constraintStart_toEndOf="@id/fading_edge_layout"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+        <View
+            android:id="@+id/padding_end"
+            android:layout_width="16dp"
+            android:layout_height="match_parent"
+            android:longClickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/blinking_cursor"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/blinking_cursor"
-                android:layout_width="2dp"
-                android:layout_height="22dp"
-                android:background="@android:color/white"
-                android:gravity="center_vertical"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/fading_edge_layout"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>
