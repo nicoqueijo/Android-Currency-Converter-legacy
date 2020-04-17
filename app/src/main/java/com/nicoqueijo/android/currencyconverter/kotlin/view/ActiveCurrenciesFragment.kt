@@ -45,10 +45,20 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        emptyListView = view.findViewById(R.id.empty_list) // connect this with the DragLinearLayout some way
+        emptyListView = view.findViewById(R.id.empty_list)
         dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
         scrollView = view.findViewById(R.id.scroll_view)
         dragLinearLayout.setContainerScrollView(scrollView)
+        dragLinearLayout.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+            viewModel.memoryActiveCurrencies[firstPosition].order = viewModel.memoryActiveCurrencies[secondPosition].order.also {
+                viewModel.memoryActiveCurrencies[secondPosition].order = viewModel.memoryActiveCurrencies[firstPosition].order
+            }
+            viewModel.memoryActiveCurrencies[firstPosition] = viewModel.memoryActiveCurrencies[secondPosition].also {
+                viewModel.memoryActiveCurrencies[secondPosition] = viewModel.memoryActiveCurrencies[firstPosition]
+            }
+            viewModel.upsertCurrency(viewModel.memoryActiveCurrencies[firstPosition])
+            viewModel.upsertCurrency(viewModel.memoryActiveCurrencies[secondPosition])
+        }
         keyboard = view.findViewById(R.id.keyboard)
         initFloatingActionButton(view)
         if (viewModel.wasListConstructed) {
@@ -126,8 +136,9 @@ class ActiveCurrenciesFragment : Fragment() {
             this.currencyCode.setOnLongClickListener {
                 dragLinearLayout.run {
                     val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
-                    currencyToRemove.order = INVALID.position
+                    shiftCurrencies(currencyToRemove.order)
                     currencyToRemove.isSelected = false
+                    currencyToRemove.order = INVALID.position
                     viewModel.upsertCurrency(currencyToRemove)
                     viewModel.memoryActiveCurrencies.remove(currencyToRemove)
                     layoutTransition = LayoutTransition()
@@ -140,6 +151,20 @@ class ActiveCurrenciesFragment : Fragment() {
                 }
                 true
             }
+        }
+    }
+
+    private fun shiftCurrencies(orderOfCurrencyToRemove: Int) {
+        run loop@{
+            viewModel.memoryActiveCurrencies
+                    .reversed()
+                    .forEach { currency ->
+                        if (currency.order == orderOfCurrencyToRemove) {
+                            return@loop
+                        }
+                        currency.order--
+                        viewModel.upsertCurrency(currency)
+                    }
         }
     }
 
