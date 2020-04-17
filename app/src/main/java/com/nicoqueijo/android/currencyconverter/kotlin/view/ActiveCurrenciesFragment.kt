@@ -19,6 +19,7 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
@@ -49,7 +50,7 @@ class ActiveCurrenciesFragment : Fragment() {
         dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
         scrollView = view.findViewById(R.id.scroll_view)
         dragLinearLayout.setContainerScrollView(scrollView)
-        dragLinearLayout.setOnViewSwapListener { firstView, firstPosition, secondView, secondPosition ->
+        dragLinearLayout.setOnViewSwapListener { _, firstPosition, _, secondPosition ->
             viewModel.memoryActiveCurrencies[firstPosition].order = viewModel.memoryActiveCurrencies[secondPosition].order.also {
                 viewModel.memoryActiveCurrencies[secondPosition].order = viewModel.memoryActiveCurrencies[firstPosition].order
             }
@@ -102,12 +103,9 @@ class ActiveCurrenciesFragment : Fragment() {
      * The indication is triggered when, the only difference between [dbActiveCurrencies] and
      * [memoryActiveCurrencies] is that [dbActiveCurrencies] has one extra element.
      */
-    private fun wasCurrencyAddedViaFab(dbActiveCurrencies: List<Currency>): Boolean {
-        log("dbActiveCurrencies    : $dbActiveCurrencies")
-        log("memoryActiveCurrencies: ${viewModel.memoryActiveCurrencies}")
-        return dbActiveCurrencies.size - viewModel.memoryActiveCurrencies.size == 1 &&
-                dbActiveCurrencies.dropLast(1) == viewModel.memoryActiveCurrencies
-    }
+    private fun wasCurrencyAddedViaFab(dbActiveCurrencies: List<Currency>) =
+            (dbActiveCurrencies.size - viewModel.memoryActiveCurrencies.size == 1 &&
+                    dbActiveCurrencies.dropLast(1) == viewModel.memoryActiveCurrencies)
 
     /**
      *
@@ -128,11 +126,12 @@ class ActiveCurrenciesFragment : Fragment() {
         RowActiveCurrency(activity).run row@{
             currencyCode.text = currency.trimmedCurrencyCode
             flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), activity))
-            conversion.text = currency.conversion.conversionText
+            conversion.text = "100.00" // Remove this later (is just for testing)
             dragLinearLayout.run {
                 addView(this@row)
                 setViewDraggable(this@row, this@row)
             }
+            // Remove item
             this.currencyCode.setOnLongClickListener {
                 dragLinearLayout.run {
                     val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
@@ -149,6 +148,12 @@ class ActiveCurrenciesFragment : Fragment() {
                                 // handle the undo
                             }.show()
                 }
+                true
+            }
+            // Copy conversion to clipboard & display toast
+            this.conversion.setOnLongClickListener {
+                val conversionText = conversion.text.toString()
+                activity?.copyToClipboard(conversionText)
                 true
             }
         }

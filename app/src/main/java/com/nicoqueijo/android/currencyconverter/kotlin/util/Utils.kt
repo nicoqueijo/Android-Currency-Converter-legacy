@@ -1,6 +1,8 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.util
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
@@ -9,6 +11,7 @@ import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import androidx.navigation.NavController
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
@@ -130,6 +133,13 @@ object Utils {
 
     fun View.hide() {
         visibility = View.INVISIBLE
+    }
+
+    fun Context.copyToClipboard(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied Text", text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
     enum class Order(val position: Int) {
