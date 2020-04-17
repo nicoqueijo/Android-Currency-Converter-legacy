@@ -32,7 +32,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     // Candidate for dependency injection
     private val repository = Repository(application)
 
-    val activeCurrencies = repository.getActiveCurrencies()
+    val databaseActiveCurrencies = repository.getActiveCurrencies()
 
     /*private*/ fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
 

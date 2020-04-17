@@ -139,7 +139,7 @@ object Utils {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", text)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Conversion copied", Toast.LENGTH_SHORT).show()
     }
 
     enum class Order(val position: Int) {

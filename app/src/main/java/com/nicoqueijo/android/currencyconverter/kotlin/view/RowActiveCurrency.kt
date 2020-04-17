@@ -9,7 +9,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nicoqueijo.android.currencyconverter.R
 
-class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
+class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
+        ConstraintLayout(context, attrs) {
 
     val flag: ImageView
     val currencyCode: TextView
@@ -23,5 +24,4 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) : Constr
         conversion = findViewById(R.id.conversion)
         blinkingCursor = findViewById(R.id.blinking_cursor)
     }
-
 }
