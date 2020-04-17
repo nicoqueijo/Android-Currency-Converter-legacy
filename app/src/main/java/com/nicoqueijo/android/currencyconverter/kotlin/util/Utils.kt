@@ -132,7 +132,7 @@ object Utils {
     }
 
     fun View.hide() {
-        visibility = View.INVISIBLE
+        visibility = View.GONE
     }
 
     fun Context.copyToClipboard(text: String) {

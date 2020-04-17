@@ -47,24 +47,32 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun initViewsAndAdapter(view: View) {
         emptyListView = view.findViewById(R.id.empty_list)
-        dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
         scrollView = view.findViewById(R.id.scroll_view)
+        dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
         dragLinearLayout.setContainerScrollView(scrollView)
         dragLinearLayout.setOnViewSwapListener { _, firstPosition, _, secondPosition ->
-            viewModel.memoryActiveCurrencies[firstPosition].order = viewModel.memoryActiveCurrencies[secondPosition].order.also {
-                viewModel.memoryActiveCurrencies[secondPosition].order = viewModel.memoryActiveCurrencies[firstPosition].order
-            }
-            viewModel.memoryActiveCurrencies[firstPosition] = viewModel.memoryActiveCurrencies[secondPosition].also {
-                viewModel.memoryActiveCurrencies[secondPosition] = viewModel.memoryActiveCurrencies[firstPosition]
-            }
-            viewModel.upsertCurrency(viewModel.memoryActiveCurrencies[firstPosition])
-            viewModel.upsertCurrency(viewModel.memoryActiveCurrencies[secondPosition])
+            swapCurrencies(firstPosition, secondPosition)
         }
         keyboard = view.findViewById(R.id.keyboard)
         initFloatingActionButton(view)
         if (viewModel.wasListConstructed) {
             restoreActiveCurrencies()
         }
+    }
+
+    /**
+     * On the drag events, adjacent currencies need to swap position indices and this needs to be
+     * reflected in memory and in the database.
+     */
+    private fun swapCurrencies(firstPosition: Int, secondPosition: Int) {
+        viewModel.memoryActiveCurrencies[firstPosition].order = viewModel.memoryActiveCurrencies[secondPosition].order.also {
+            viewModel.memoryActiveCurrencies[secondPosition].order = viewModel.memoryActiveCurrencies[firstPosition].order
+        }
+        viewModel.memoryActiveCurrencies[firstPosition] = viewModel.memoryActiveCurrencies[secondPosition].also {
+            viewModel.memoryActiveCurrencies[secondPosition] = viewModel.memoryActiveCurrencies[firstPosition]
+        }
+        viewModel.upsertCurrency(viewModel.memoryActiveCurrencies[firstPosition])
+        viewModel.upsertCurrency(viewModel.memoryActiveCurrencies[secondPosition])
     }
 
     private fun restoreActiveCurrencies() {
@@ -75,24 +83,19 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun observeObservables() {
         viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
-            toggleKeyboardVisibility(databaseActiveCurrencies)
+            toggleEmptyListViewVisibility(databaseActiveCurrencies)
             if (!viewModel.wasListConstructed) {
                 constructActiveCurrencies(databaseActiveCurrencies)
             }
             if (wasCurrencyAddedViaFab(databaseActiveCurrencies)) {
-                log("Currency was added via FAB")
                 val addedCurrency = databaseActiveCurrencies.takeLast(1).single()
                 viewModel.memoryActiveCurrencies.add(addedCurrency)
                 addRow(addedCurrency)
             }
-            if (databaseActiveCurrencies.isEmpty()) {
-                emptyListView.show()
-            } else {
-                emptyListView.hide()
-            }
-            // When currency is added or swiped, add/remove an item from DragLinearLayout
         })
-        // When the focused currency changes update the hints
+        /**
+         * When the focused currency changes update the hints
+         */
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
             /*updateHints(focusedCurrency)*/
         })
@@ -101,18 +104,19 @@ class ActiveCurrenciesFragment : Fragment() {
     /**
      * This indicates the user added a currency by selecting it from the SelectableCurrenciesFragment
      * that was initiated by the press of the FloatingActionButton.
-     * The indication is triggered when, the only difference between [dbActiveCurrencies] and
-     * [memoryActiveCurrencies] is that [dbActiveCurrencies] has one extra element.
+     * The indication is triggered when, the only difference between [databaseActiveCurrencies] and
+     * [memoryActiveCurrencies] is that [databaseActiveCurrencies] has an extra element.
      */
-    private fun wasCurrencyAddedViaFab(dbActiveCurrencies: List<Currency>) =
-            (dbActiveCurrencies.size - viewModel.memoryActiveCurrencies.size == 1 &&
-                    dbActiveCurrencies.dropLast(1) == viewModel.memoryActiveCurrencies)
+    private fun wasCurrencyAddedViaFab(databaseActiveCurrencies: List<Currency>) =
+            (databaseActiveCurrencies.size - viewModel.memoryActiveCurrencies.size == 1 &&
+                    databaseActiveCurrencies.dropLast(1) == viewModel.memoryActiveCurrencies)
 
     /**
-     *
+     * This inflates the DragLinearLayout with the active currencies from the database when the
+     * activity starts for the first time.
      */
-    private fun constructActiveCurrencies(dbActiveCurrencies: MutableList<Currency>?) {
-        dbActiveCurrencies?.forEach { currency ->
+    private fun constructActiveCurrencies(databaseActiveCurrencies: MutableList<Currency>?) {
+        databaseActiveCurrencies?.forEach { currency ->
             viewModel.memoryActiveCurrencies.add(currency)
             addRow(currency)
         }
@@ -120,8 +124,8 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     /**
-     * Creates a row from a Currency object, adds that row to the DragLinearLayout, and sets up
-     * its listeners.
+     * Creates a row from a [currency] object, adds that row to the DragLinearLayout, and sets up
+     * its listeners so it could be dragged, removed, and restored.
      */
     private fun addRow(currency: Currency) {
         RowActiveCurrency(activity).run row@{
@@ -132,28 +136,27 @@ class ActiveCurrenciesFragment : Fragment() {
                 addView(this@row)
                 setViewDraggable(this@row, this@row)
             }
-            // Remove item
+            /**
+             * Longpressing the [currencyCode] area removes the currency from the list. The currency
+             * is hidden until the Snackbar is dismissed and at that point it's completely removed.
+             */
             this.currencyCode.setOnLongClickListener {
                 dragLinearLayout.run {
-
-                    log("Hide row ${(this@row).currencyCode.text}")
                     layoutTransition = LayoutTransition()
-                    this@row.visibility = View.GONE
+                    this@row.hide()
                     layoutTransition = null
-
-                    Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_LONG)
+                    Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
                             .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                                /**
+                                 * Once the Snackbar is dismissed and the user can no longer click
+                                 * undo, then we can safely remove that currency internally.
+                                 */
                                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                     super.onDismissed(transientBottomBar, event)
                                     if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                                        log("Actually remove the ${(this@row).currencyCode.text} currency/row here")
-                                        // Remove the row from DragLinearLayout
-                                        // Remove item from memory
-                                        // Remove item from database
-
                                         val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
                                         val orderOfCurrencyToRemove = currencyToRemove.order
-                                        shiftCurrenciesUp(orderOfCurrencyToRemove)
+                                        shiftCurrencies(orderOfCurrencyToRemove)
                                         currencyToRemove.run {
                                             isSelected = false
                                             order = INVALID.position
@@ -165,45 +168,24 @@ class ActiveCurrenciesFragment : Fragment() {
                                         layoutTransition = LayoutTransition()
                                         removeDragView(this@row)
                                         layoutTransition = null
-
-
                                     }
-
                                 }
-                            }).setAction(R.string.undo) {
-                                log("Show row ${(this@row).currencyCode.text}")
-
+                            })
+                            /**
+                             * When the user clicks 'Undo' we restore the visibility of the currency.
+                             */
+                            .setAction(R.string.undo) {
                                 layoutTransition = LayoutTransition()
-                                this@row.visibility = View.VISIBLE
+                                this@row.show()
                                 layoutTransition = null
-
-
-                                /*currencyToRemove.run {
-                                    isSelected = true
-                                    order = orderOfCurrencyToRemove
-                                }
-                                *//*log("Currency to remove: $currencyToRemove")*//*
-                                viewModel.upsertCurrency(currencyToRemove)
-                                for (i in orderOfCurrencyToRemove until viewModel.memoryActiveCurrencies.size) {
-                                    val activeCurrency = viewModel.memoryActiveCurrencies[i]
-                                    activeCurrency.order++
-                                    viewModel.upsertCurrency(activeCurrency)
-                                }
-                                viewModel.memoryActiveCurrencies.add(orderOfCurrencyToRemove, currencyToRemove)
-                                addView(this@row, orderOfCurrencyToRemove)
-                                setViewDraggable(this@row, this@row)
-                                *//*log("Memory   currencies: ${viewModel.memoryActiveCurrencies}")
-                                log("Database currencies: ${viewModel.databaseActiveCurrencies.value}")*/
-
-
                             }.show()
                 }
                 true
             }
-            // Copy conversion to clipboard & display toast
+            /**
+             * Longpressing the [conversion] area copies its content into the clipboard.
+             */
             this.conversion.setOnLongClickListener {
-                log("Memory   currencies: ${viewModel.memoryActiveCurrencies}")
-                log("Database currencies: ${viewModel.databaseActiveCurrencies.value}")
                 val conversionText = conversion.text.toString()
                 activity?.copyToClipboard(conversionText)
                 true
@@ -211,11 +193,10 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
-    private fun shiftCurrenciesDown() {
-
-    }
-
-    private fun shiftCurrenciesUp(orderOfCurrencyToRemove: Int) {
+    /**
+     * All the currencies below the removed currency are shifted up one position to fill the gap.
+     */
+    private fun shiftCurrencies(orderOfCurrencyToRemove: Int) {
         run loop@{
             viewModel.memoryActiveCurrencies
                     .reversed()
@@ -229,14 +210,10 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
-    private fun toggleKeyboardVisibility(currencies: MutableList<Currency>) {
+    private fun toggleEmptyListViewVisibility(currencies: MutableList<Currency>) {
         when {
-            currencies.isEmpty() -> {
-                // Drop down keyboard
-            }
-            currencies.isNotEmpty() -> {
-                // Pop up keyboard
-            }
+            currencies.isEmpty() -> emptyListView.show()
+            currencies.isNotEmpty() -> emptyListView.hide()
         }
     }
 
