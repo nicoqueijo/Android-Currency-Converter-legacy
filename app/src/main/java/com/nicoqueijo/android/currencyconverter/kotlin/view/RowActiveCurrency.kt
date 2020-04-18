@@ -12,6 +12,7 @@ import com.nicoqueijo.android.currencyconverter.R
 class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
         ConstraintLayout(context, attrs) {
 
+    val rowCanvas: ConstraintLayout
     val flag: ImageView
     val currencyCode: TextView
     val conversion: TextView
@@ -19,6 +20,7 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
 
     init {
         LayoutInflater.from(context).inflate(R.layout.row_active_currency, this)
+        rowCanvas = findViewById(R.id.row_canvas)
         flag = findViewById(R.id.flag)
         currencyCode = findViewById(R.id.currency_code)
         conversion = findViewById(R.id.conversion)

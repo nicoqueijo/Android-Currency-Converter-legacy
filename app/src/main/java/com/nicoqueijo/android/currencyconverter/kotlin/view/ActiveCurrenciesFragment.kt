@@ -6,9 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.core.view.forEachIndexed
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -25,13 +28,14 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
 
 class ActiveCurrenciesFragment : Fragment() {
 
     private lateinit var viewModel: ActiveCurrenciesViewModel
 
-    private lateinit var emptyListView: LinearLayout
+    private lateinit var emptyList: LinearLayout
     private lateinit var dragLinearLayout: DragLinearLayout
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
@@ -48,12 +52,12 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        emptyListView = view.findViewById(R.id.empty_list)
+        emptyList = view.findViewById(R.id.empty_list)
         scrollView = view.findViewById(R.id.scroll_view)
         dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
         dragLinearLayout.setContainerScrollView(scrollView)
-        dragLinearLayout.setOnViewSwapListener { _, firstPosition, _, secondPosition ->
-            swapCurrencies(firstPosition, secondPosition)
+        dragLinearLayout.setOnViewSwapListener { _, startPosition, _, endPosition ->
+            swapCurrencies(startPosition, endPosition)
         }
         keyboard = view.findViewById(R.id.keyboard)
         initFloatingActionButton(view)
@@ -72,14 +76,36 @@ class ActiveCurrenciesFragment : Fragment() {
                 viewModel.memoryActiveCurrencies.add(addedCurrency)
                 addRow(addedCurrency)
             }
+            dragLinearLayout.forEachIndexed { i, it ->
+                styleIfFocused(viewModel.memoryActiveCurrencies[i], it as RowActiveCurrency)
+            }
             toggleEmptyListViewVisibility()
         })
         /**
          * When the focused currency changes update the hints
          */
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
-            /*updateHints(focusedCurrency)*/
+            updateHints(focusedCurrency)
         })
+    }
+
+    private fun updateHints(focusedCurrency: Currency?) {
+        /*focusedCurrency?.let {
+            focusedCurrency.conversion.conversionHint = "1"
+            recyclerView.post {
+                viewModel.adapterActiveCurrencies
+                        .filter { it != focusedCurrency }
+                        .forEach {
+                            val fromRate = focusedCurrency.exchangeRate
+                            val toRate = it.exchangeRate
+                            val conversionValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
+                                    fromRate, toRate).roundToFourDecimalPlaces()
+                            it.conversion.conversionHint = conversionValue.toString()
+                            adapter.notifyItemChanged(viewModel.adapterActiveCurrencies.indexOf(it))
+                        }
+            }
+            recyclerView.smoothScrollToPosition(viewModel.adapterActiveCurrencies.indexOf(focusedCurrency))
+        }*/
     }
 
     /**
@@ -120,9 +146,22 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun constructActiveCurrencies(databaseActiveCurrencies: MutableList<Currency>?) {
         databaseActiveCurrencies?.forEach { currency ->
             viewModel.memoryActiveCurrencies.add(currency)
+            viewModel.setFocusToFirstCurrency()
             addRow(currency)
         }
         viewModel.wasListConstructed = true
+    }
+
+    private fun styleIfFocused(currency: Currency, row: RowActiveCurrency) {
+        row.run {
+            if (currency.isFocused) {
+                rowCanvas.setBackgroundColor(ContextCompat.getColor(context!!, R.color.dark_gray))
+                blinkingCursor.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink))
+            } else {
+                rowCanvas.background = ContextCompat.getDrawable(context, R.drawable.background_row_active_currency)
+                blinkingCursor.clearAnimation()
+            }
+        }
     }
 
     /**
@@ -145,6 +184,7 @@ class ActiveCurrenciesFragment : Fragment() {
             this.currencyCode.setOnLongClickListener {
                 dragLinearLayout.run {
                     layoutTransition = LayoutTransition()
+                    context.vibrate()
                     this@row.hide()
                     toggleEmptyListViewVisibility()
                     layoutTransition = null
@@ -192,13 +232,6 @@ class ActiveCurrenciesFragment : Fragment() {
             this.conversion.setOnLongClickListener {
                 val conversionText = conversion.text.toString()
                 activity?.copyToClipboard(conversionText)
-                log("Memory currencies        : ${viewModel.memoryActiveCurrencies}")
-                log("Database currencies      : ${viewModel.databaseActiveCurrencies.value}")
-                log("DragLinearLayout children: ${dragLinearLayout.children.asSequence()
-                        .filter { it.visibility == View.VISIBLE }
-                        .map { (it as RowActiveCurrency).currencyCode.text.toString() }
-                        .toList()
-                }")
                 true
             }
         }
@@ -226,8 +259,8 @@ class ActiveCurrenciesFragment : Fragment() {
                 .filter { it.isVisible }
                 .count()
         when (visibleItems) {
-            0 -> emptyListView.show()
-            else -> emptyListView.hide()
+            0 -> emptyList.show()
+            else -> emptyList.hide()
         }
     }
 

@@ -8,6 +8,7 @@
      these views and the user is able to scroll without dragging items.
      More on this here: https://github.com/justasm/DragLinearLayout/issues/48 -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/row_canvas"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@drawable/background_row_active_currency"
