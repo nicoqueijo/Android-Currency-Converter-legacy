@@ -184,10 +184,10 @@ class ActiveCurrenciesFragment : Fragment() {
             this.currencyCode.setOnLongClickListener {
                 dragLinearLayout.run {
                     layoutTransition = LayoutTransition()
-                    context.vibrate()
                     this@row.hide()
-                    toggleEmptyListViewVisibility()
                     layoutTransition = null
+                    context.vibrate()
+                    toggleEmptyListViewVisibility()
                     Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
                             .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                                 /**
@@ -230,11 +230,18 @@ class ActiveCurrenciesFragment : Fragment() {
              * Longpressing the [conversion] area copies its content into the clipboard.
              */
             this.conversion.setOnLongClickListener {
-                val conversionText = conversion.text.toString()
-                activity?.copyToClipboard(conversionText)
+                activity?.copyToClipboard(conversion.text)
                 true
             }
+            this.conversion.setOnClickListener {
+                log("conversion clicked on index: ${dragLinearLayout.indexOfChild(this)}")
+                changeFocusedCurrency()
+            }
         }
+    }
+
+    private fun changeFocusedCurrency() {
+
     }
 
     /**
@@ -255,10 +262,10 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun toggleEmptyListViewVisibility() {
-        val visibleItems = dragLinearLayout.children.asSequence()
+        val numOfVisibleRows = dragLinearLayout.children.asSequence()
                 .filter { it.isVisible }
                 .count()
-        when (visibleItems) {
+        when (numOfVisibleRows) {
             0 -> emptyList.show()
             else -> emptyList.hide()
         }
@@ -276,7 +283,6 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     companion object {
-
         fun log(message: String) {
             Log.d("Nicoo", message)
         }

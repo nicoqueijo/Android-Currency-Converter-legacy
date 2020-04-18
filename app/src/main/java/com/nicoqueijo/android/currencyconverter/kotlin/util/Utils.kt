@@ -135,7 +135,7 @@ object Utils {
         visibility = View.GONE
     }
 
-    fun Context.copyToClipboard(text: String) {
+    fun Context.copyToClipboard(text: CharSequence) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", text)
         clipboard.setPrimaryClip(clip)
