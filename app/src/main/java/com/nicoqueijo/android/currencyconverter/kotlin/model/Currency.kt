@@ -54,7 +54,7 @@ data class Currency(@PrimaryKey
      * Currency code without the "USD_" prefix. E.g. USD_EUR -> EUR
      */
     val trimmedCurrencyCode
-        get() = currencyCode.substring(CURRENCY_CODE_STARTING_INDEX)
+        get() = currencyCode.substring(CURRENCY_CODE_START_INDEX)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -118,9 +118,9 @@ data class Currency(@PrimaryKey
             get() {
                 return if (conversionString.isNotBlank()) {
                     when {
-                        conversionString.endsWith(decimalSeparator.take(1)[0]) -> {
+                        conversionString.endsWith(decimalSeparator.take(1).single()) -> {
                             try {
-                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(decimalSeparator.take(1)[0])
+                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(decimalSeparator.take(1).single())
                             } catch (e: NumberFormatException) {
                                 e.printStackTrace()
                                 conversionString
@@ -170,6 +170,6 @@ data class Currency(@PrimaryKey
     }
 
     companion object {
-        const val CURRENCY_CODE_STARTING_INDEX = 4
+        const val CURRENCY_CODE_START_INDEX = 4
     }
 }

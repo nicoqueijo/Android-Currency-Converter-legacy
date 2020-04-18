@@ -155,7 +155,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     fun setFocusToFirstCurrency() {
         if (focusedCurrency.value == null) {
-            focusedCurrency.value = adapterActiveCurrencies.take(1)[0].also { firstCurrency ->
+            focusedCurrency.value = adapterActiveCurrencies.take(1).single().also { firstCurrency ->
                 firstCurrency.isFocused = true
             }
         }

@@ -138,7 +138,7 @@ class ActiveCurrenciesFragment : Fragment() {
             }
             /**
              * Longpressing the [currencyCode] area removes the currency from the list. The currency
-             * is hidden until the Snackbar is dismissed and at that point it's completely removed.
+             * is hidden until the Snackbar is dismissed and at that point it is completely removed.
              */
             this.currencyCode.setOnLongClickListener {
                 dragLinearLayout.run {
@@ -154,6 +154,7 @@ class ActiveCurrenciesFragment : Fragment() {
                                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                     super.onDismissed(transientBottomBar, event)
                                     if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                                        log("onDismissed() called")
                                         val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
                                         val orderOfCurrencyToRemove = currencyToRemove.order
                                         shiftCurrencies(orderOfCurrencyToRemove)

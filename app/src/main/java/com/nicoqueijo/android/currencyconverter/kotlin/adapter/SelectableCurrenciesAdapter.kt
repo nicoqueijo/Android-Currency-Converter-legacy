@@ -52,7 +52,7 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
 
     override fun getCharacterForElement(position: Int): Char {
         return try {
-            viewModel.adapterFilteredCurrencies[position].currencyCode[Currency.CURRENCY_CODE_STARTING_INDEX]
+            viewModel.adapterFilteredCurrencies[position].currencyCode[Currency.CURRENCY_CODE_START_INDEX]
         } catch (exception: IndexOutOfBoundsException) {
             ' '
         }
