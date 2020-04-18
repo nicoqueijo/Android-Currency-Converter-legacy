@@ -27,6 +27,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
@@ -231,17 +232,33 @@ class ActiveCurrenciesFragment : Fragment() {
              */
             this.conversion.setOnLongClickListener {
                 activity?.copyToClipboard(conversion.text)
+                log("Memory currencies        : ${viewModel.memoryActiveCurrencies}")
+                log("Database currencies      : ${viewModel.databaseActiveCurrencies.value}")
+                log("DragLinearLayout children: ${dragLinearLayout.children.asSequence()
+                        .filter { it.visibility == View.VISIBLE }
+                        .map { (it as RowActiveCurrency).currencyCode.text.toString() }
+                        .toList()
+                }")
                 true
             }
             this.conversion.setOnClickListener {
                 log("conversion clicked on index: ${dragLinearLayout.indexOfChild(this)}")
-                changeFocusedCurrency()
+                changeFocusedCurrency(dragLinearLayout.indexOfChild(this))
             }
         }
     }
 
-    private fun changeFocusedCurrency() {
-
+    private fun changeFocusedCurrency(positionOfClickedCurrency: Int) {
+        val clickedCurrency = viewModel.memoryActiveCurrencies[positionOfClickedCurrency]
+        val positionOfPreviouslyFocusedCurrency = viewModel.memoryActiveCurrencies.indexOf(viewModel.focusedCurrency.value)
+        if (positionOfPreviouslyFocusedCurrency.isValid()) {
+            viewModel.memoryActiveCurrencies[positionOfPreviouslyFocusedCurrency].isFocused = false
+        }
+        viewModel.focusedCurrency.value = clickedCurrency
+        clickedCurrency.isFocused = true
+        dragLinearLayout.forEachIndexed { i, it ->
+            styleIfFocused(viewModel.memoryActiveCurrencies[i], it as RowActiveCurrency)
+        }
     }
 
     /**
