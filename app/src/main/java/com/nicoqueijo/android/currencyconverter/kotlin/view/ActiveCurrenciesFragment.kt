@@ -26,7 +26,11 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
@@ -189,6 +193,15 @@ class ActiveCurrenciesFragment : Fragment() {
                     layoutTransition = null
                     context.vibrate()
                     toggleEmptyListViewVisibility()
+
+
+                    handleRemove(dragLinearLayout.indexOfChild(this@row))
+                    dragLinearLayout.forEachIndexed { i, it ->
+                        styleIfFocused(viewModel.memoryActiveCurrencies[i], it as RowActiveCurrency)
+                    }
+
+
+
                     Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
                             .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                                 /**
@@ -239,11 +252,41 @@ class ActiveCurrenciesFragment : Fragment() {
                         .map { (it as RowActiveCurrency).currencyCode.text.toString() }
                         .toList()
                 }")
+                log("${viewModel.focusedCurrency.value}")
                 true
             }
             this.conversion.setOnClickListener {
                 log("conversion clicked on index: ${dragLinearLayout.indexOfChild(this)}")
                 changeFocusedCurrency(dragLinearLayout.indexOfChild(this))
+            }
+        }
+    }
+
+    private fun handleRemove(positionOfLongClickedCurrency: Int) {
+        reassignFocusedCurrency(positionOfLongClickedCurrency)
+    }
+
+    private fun reassignFocusedCurrency(positionOfLongClickedCurrency: Int) {
+        val removedCurrency = viewModel.memoryActiveCurrencies[positionOfLongClickedCurrency]
+        if (viewModel.focusedCurrency.value == removedCurrency) {
+            when {
+                viewModel.memoryActiveCurrencies.isNotLastElement(positionOfLongClickedCurrency) -> {
+                    viewModel.memoryActiveCurrencies.elementAfter(positionOfLongClickedCurrency).let { newlyFocusedCurrency ->
+                        newlyFocusedCurrency.isFocused = true
+                        removedCurrency.isFocused = false
+                        viewModel.focusedCurrency.value = newlyFocusedCurrency
+                    }
+                }
+                viewModel.memoryActiveCurrencies.hasOnlyOneElement() -> {
+                    viewModel.focusedCurrency.value = null
+                }
+                else -> {
+                    viewModel.memoryActiveCurrencies.elementBefore(positionOfLongClickedCurrency).let { newlyFocusedCurrency ->
+                        newlyFocusedCurrency.isFocused = true
+                        removedCurrency.isFocused = false
+                        viewModel.focusedCurrency.value = newlyFocusedCurrency
+                    }
+                }
             }
         }
     }
