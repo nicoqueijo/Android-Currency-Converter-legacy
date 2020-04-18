@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -60,6 +62,26 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
+    private fun observeObservables() {
+        viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
+            if (!viewModel.wasListConstructed) {
+                constructActiveCurrencies(databaseActiveCurrencies)
+            }
+            if (wasCurrencyAddedViaFab(databaseActiveCurrencies)) {
+                val addedCurrency = databaseActiveCurrencies.takeLast(1).single()
+                viewModel.memoryActiveCurrencies.add(addedCurrency)
+                addRow(addedCurrency)
+            }
+            toggleEmptyListViewVisibility()
+        })
+        /**
+         * When the focused currency changes update the hints
+         */
+        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
+            /*updateHints(focusedCurrency)*/
+        })
+    }
+
     /**
      * On the drag events, adjacent currencies need to swap position indices and this needs to be
      * reflected in memory and in the database.
@@ -79,26 +101,6 @@ class ActiveCurrenciesFragment : Fragment() {
         viewModel.memoryActiveCurrencies.forEach { currency ->
             addRow(currency)
         }
-    }
-
-    private fun observeObservables() {
-        viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
-            toggleEmptyListViewVisibility(databaseActiveCurrencies)
-            if (!viewModel.wasListConstructed) {
-                constructActiveCurrencies(databaseActiveCurrencies)
-            }
-            if (wasCurrencyAddedViaFab(databaseActiveCurrencies)) {
-                val addedCurrency = databaseActiveCurrencies.takeLast(1).single()
-                viewModel.memoryActiveCurrencies.add(addedCurrency)
-                addRow(addedCurrency)
-            }
-        })
-        /**
-         * When the focused currency changes update the hints
-         */
-        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer { focusedCurrency ->
-            /*updateHints(focusedCurrency)*/
-        })
     }
 
     /**
@@ -144,6 +146,7 @@ class ActiveCurrenciesFragment : Fragment() {
                 dragLinearLayout.run {
                     layoutTransition = LayoutTransition()
                     this@row.hide()
+                    toggleEmptyListViewVisibility()
                     layoutTransition = null
                     Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
                             .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
@@ -154,7 +157,6 @@ class ActiveCurrenciesFragment : Fragment() {
                                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                     super.onDismissed(transientBottomBar, event)
                                     if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                                        log("onDismissed() called")
                                         val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
                                         val orderOfCurrencyToRemove = currencyToRemove.order
                                         shiftCurrencies(orderOfCurrencyToRemove)
@@ -178,6 +180,7 @@ class ActiveCurrenciesFragment : Fragment() {
                             .setAction(R.string.undo) {
                                 layoutTransition = LayoutTransition()
                                 this@row.show()
+                                toggleEmptyListViewVisibility()
                                 layoutTransition = null
                             }.show()
                 }
@@ -189,6 +192,13 @@ class ActiveCurrenciesFragment : Fragment() {
             this.conversion.setOnLongClickListener {
                 val conversionText = conversion.text.toString()
                 activity?.copyToClipboard(conversionText)
+                log("Memory currencies        : ${viewModel.memoryActiveCurrencies}")
+                log("Database currencies      : ${viewModel.databaseActiveCurrencies.value}")
+                log("DragLinearLayout children: ${dragLinearLayout.children.asSequence()
+                        .filter { it.visibility == View.VISIBLE }
+                        .map { (it as RowActiveCurrency).currencyCode.text.toString() }
+                        .toList()
+                }")
                 true
             }
         }
@@ -211,10 +221,13 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
-    private fun toggleEmptyListViewVisibility(currencies: MutableList<Currency>) {
-        when {
-            currencies.isEmpty() -> emptyListView.show()
-            currencies.isNotEmpty() -> emptyListView.hide()
+    private fun toggleEmptyListViewVisibility() {
+        val visibleItems = dragLinearLayout.children.asSequence()
+                .filter { it.isVisible }
+                .count()
+        when (visibleItems) {
+            0 -> emptyListView.show()
+            else -> emptyListView.hide()
         }
     }
 
