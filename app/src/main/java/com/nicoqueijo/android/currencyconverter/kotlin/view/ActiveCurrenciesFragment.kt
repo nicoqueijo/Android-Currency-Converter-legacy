@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
@@ -160,7 +159,7 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun styleIfFocused(currency: Currency, row: RowActiveCurrency) {
         row.run {
             if (currency.isFocused) {
-                rowCanvas.setBackgroundColor(ContextCompat.getColor(context!!, R.color.dark_gray))
+                rowCanvas.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_gray))
                 blinkingCursor.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink))
             } else {
                 rowCanvas.background = ContextCompat.getDrawable(context, R.drawable.background_row_active_currency)
@@ -169,96 +168,107 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
+    private fun populateRow(currency: Currency) {
+
+    }
+
     /**
      * Creates a row from a [currency] object, adds that row to the DragLinearLayout, and sets up
      * its listeners so it could be dragged, removed, and restored.
      */
     private fun addRow(currency: Currency) {
-        RowActiveCurrency(activity).run row@{
-            currencyCode.text = currency.trimmedCurrencyCode
-            flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), activity))
-            conversion.text = "100.00" // Remove this later (is just for testing)
-            dragLinearLayout.run {
-                addView(this@row)
-                setViewDraggable(this@row, this@row)
+        val row = RowActiveCurrency(activity)
+        row.populateRow(currency)
+        dragLinearLayout.addView(row)
+        dragLinearLayout.setViewDraggable(row, row)
+
+        /**
+         * Current implementation: Longclicking the [currencyCode] area "removes" the currency from the list. The currency
+         *                         is hidden until the Snackbar is dismissed and at that point it is completely removed.
+         *
+         * Implementation to add: Actually remove this currency from the memory currencies, database currencies,
+         *                        dragLinearLayout children, if focused reassign the focus.
+         */
+        row.currencyCode.setOnLongClickListener {
+
+            dragLinearLayout.layoutTransition = LayoutTransition()
+            dragLinearLayout.removeDragView(row)
+            dragLinearLayout.layoutTransition = null
+
+            activity?.vibrate()
+            toggleEmptyListViewVisibility()
+
+            handleRemove(dragLinearLayout.indexOfChild(row))
+            dragLinearLayout.forEachIndexed { i, view ->
+                styleIfFocused(viewModel.memoryActiveCurrencies[i], view as RowActiveCurrency)
             }
-            /**
-             * Longpressing the [currencyCode] area removes the currency from the list. The currency
-             * is hidden until the Snackbar is dismissed and at that point it is completely removed.
-             */
-            this.currencyCode.setOnLongClickListener {
-                dragLinearLayout.run {
-                    layoutTransition = LayoutTransition()
-                    this@row.hide()
-                    layoutTransition = null
-                    context.vibrate()
-                    toggleEmptyListViewVisibility()
 
-
-                    handleRemove(dragLinearLayout.indexOfChild(this@row))
-                    dragLinearLayout.forEachIndexed { i, it ->
-                        styleIfFocused(viewModel.memoryActiveCurrencies[i], it as RowActiveCurrency)
-                    }
-
-
-
-                    Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
-                            .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            Snackbar.make(dragLinearLayout, R.string.item_removed, Snackbar.LENGTH_SHORT)
+                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        /**
+                         * Current implementation: Once the Snackbar is dismissed and the user can no longer click
+                         *                         undo, then we can safely remove that currency internally.
+                         *
+                         * Implementation to add: Nothing. Nothing should happen when the Snackbar leaves the screen.
+                         *
+                         */
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                            if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
                                 /**
-                                 * Once the Snackbar is dismissed and the user can no longer click
-                                 * undo, then we can safely remove that currency internally.
+                                 * Need to put this logic when the longclick is performed.
+                                 * Need to put logic of re-adding the removed currency when the undo is performed.
                                  */
-                                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                                    super.onDismissed(transientBottomBar, event)
-                                    if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                                        val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(this@row)]
-                                        val orderOfCurrencyToRemove = currencyToRemove.order
-                                        shiftCurrencies(orderOfCurrencyToRemove)
-                                        currencyToRemove.run {
-                                            isSelected = false
-                                            order = INVALID.position
-                                        }
-                                        viewModel.run {
-                                            upsertCurrency(currencyToRemove)
-                                            memoryActiveCurrencies.remove(currencyToRemove)
-                                        }
-                                        layoutTransition = LayoutTransition()
-                                        removeDragView(this@row)
-                                        layoutTransition = null
-                                    }
+                                val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(row)]
+                                val orderOfCurrencyToRemove = currencyToRemove.order
+                                shiftCurrencies(orderOfCurrencyToRemove)
+                                currencyToRemove.run {
+                                    isSelected = false
+                                    order = INVALID.position
                                 }
-                            })
-                            /**
-                             * When the user clicks 'Undo' we restore the visibility of the currency.
-                             */
-                            .setAction(R.string.undo) {
-                                layoutTransition = LayoutTransition()
-                                this@row.show()
-                                toggleEmptyListViewVisibility()
-                                layoutTransition = null
-                            }.show()
-                }
-                true
-            }
-            /**
-             * Longpressing the [conversion] area copies its content into the clipboard.
-             */
-            this.conversion.setOnLongClickListener {
-                activity?.copyToClipboard(conversion.text)
-                log("Memory currencies        : ${viewModel.memoryActiveCurrencies}")
-                log("Database currencies      : ${viewModel.databaseActiveCurrencies.value}")
-                log("DragLinearLayout children: ${dragLinearLayout.children.asSequence()
-                        .filter { it.visibility == View.VISIBLE }
-                        .map { (it as RowActiveCurrency).currencyCode.text.toString() }
-                        .toList()
-                }")
-                log("${viewModel.focusedCurrency.value}")
-                true
-            }
-            this.conversion.setOnClickListener {
-                log("conversion clicked on index: ${dragLinearLayout.indexOfChild(this)}")
-                changeFocusedCurrency(dragLinearLayout.indexOfChild(this))
-            }
+                                viewModel.upsertCurrency(currencyToRemove)
+                                viewModel.memoryActiveCurrencies.remove(currencyToRemove)
+                                dragLinearLayout.layoutTransition = LayoutTransition()
+                                dragLinearLayout.removeDragView(row)
+                                dragLinearLayout.layoutTransition = null
+                            }
+
+
+                        }
+                    })
+                    /**
+                     * Current implementation: When the user clicks 'Undo' we restore the visibility of the currency.
+                     *
+                     * Implementation to add: Re-add the removed currency at the position it was previously at.
+                     *                        Restore the previous state of the database currencies, memory currencies,
+                     *                        dragLinearLayout children, focusedCurrency.
+                     */
+                    .setAction(R.string.undo) {
+                        dragLinearLayout.layoutTransition = LayoutTransition()
+                        row.show()
+                        toggleEmptyListViewVisibility()
+                        dragLinearLayout.layoutTransition = null
+                    }.show()
+            true
+        }
+        /**
+         * Longpressing the [conversion] area copies its content into the clipboard.
+         */
+        row.conversion.setOnLongClickListener {
+            activity?.copyToClipboard(row.conversion.text)
+            log("Memory currencies        : ${viewModel.memoryActiveCurrencies}")
+            log("Database currencies      : ${viewModel.databaseActiveCurrencies.value}")
+            log("DragLinearLayout children: ${dragLinearLayout.children.asSequence()
+                    .filter { it.visibility == View.VISIBLE }
+                    .map { (it as RowActiveCurrency).currencyCode.text.toString() }
+                    .toList()
+            }")
+            log("${viewModel.focusedCurrency.value}")
+            true
+        }
+        row.conversion.setOnClickListener {
+            log("conversion clicked on index: ${dragLinearLayout.indexOfChild(row)}")
+            changeFocusedCurrency(dragLinearLayout.indexOfChild(row))
         }
     }
 

@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 
 class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
         ConstraintLayout(context, attrs) {
@@ -25,5 +27,12 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
         currencyCode = findViewById(R.id.currency_code)
         conversion = findViewById(R.id.conversion)
         blinkingCursor = findViewById(R.id.blinking_cursor)
+    }
+
+    fun populateRow(currency: Currency) {
+        currencyCode.text = currency.trimmedCurrencyCode
+        flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context))
+        /*conversion.text = currency.conversion.conversionString*/
+        conversion.text = "100.00" // Remove this later (is just for testing)
     }
 }
