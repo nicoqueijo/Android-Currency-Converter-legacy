@@ -5,8 +5,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.extractTrailingZeros
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isDecimaledZero
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import java.math.BigDecimal
 import java.text.DecimalFormat
@@ -115,7 +113,15 @@ data class Currency(@PrimaryKey
          */
         val conversionText: String
             get() {
+
                 return if (conversionString.isNotBlank()) {
+                    decimalFormatter.format(BigDecimal(conversionString))
+                } else {
+                    ""
+                }
+
+
+                /*return if (conversionString.isNotBlank()) {
                     when {
                         conversionString.endsWith(decimalSeparator.take(1).single()) -> {
                             try {
@@ -151,7 +157,7 @@ data class Currency(@PrimaryKey
                     }
                 } else {
                     ""
-                }
+                }*/
             }
 
         /**

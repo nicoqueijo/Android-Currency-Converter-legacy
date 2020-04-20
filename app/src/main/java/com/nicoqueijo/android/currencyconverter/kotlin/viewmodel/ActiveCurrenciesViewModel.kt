@@ -45,9 +45,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     val memoryActiveCurrencies = mutableListOf<Currency>()
     val focusedCurrency = MutableLiveData<Currency?>()
 
-    private var decimalFormatter: DecimalFormat
-    private var decimalSeparator: String
-    private var groupingSeparator: String
+    /*private*/ var decimalFormatter: DecimalFormat
+    /*private*/ var decimalSeparator: String
+    /*private*/ var groupingSeparator: String
 
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
