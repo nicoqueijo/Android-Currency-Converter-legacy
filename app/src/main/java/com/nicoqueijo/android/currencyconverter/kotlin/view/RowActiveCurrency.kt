@@ -29,7 +29,7 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
         blinkingCursor = findViewById(R.id.blinking_cursor)
     }
 
-    fun populateRow(currency: Currency) {
+    fun initRow(currency: Currency) {
         currencyCode.text = currency.trimmedCurrencyCode
         flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context))
         /*conversion.text = currency.conversion.conversionString*/

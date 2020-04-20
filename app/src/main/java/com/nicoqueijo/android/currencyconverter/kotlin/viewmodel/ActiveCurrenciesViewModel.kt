@@ -164,6 +164,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         clickedCurrency.isFocused = true
     }
 
+    /**
+     * Sets the focus to the first Currency if the list is not empty.
+     */
     fun setDefaultFocus() {
         if (focusedCurrency.value == null && memoryActiveCurrencies.isNotEmpty()) {
             focusedCurrency.value = memoryActiveCurrencies.take(1).single().also { firstCurrency ->
@@ -172,9 +175,26 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
-    fun handleRemove(positionOfLongClickedCurrency: Int) {
-        shiftCurrencies(positionOfLongClickedCurrency)
-        reassignFocusedCurrency(positionOfLongClickedCurrency)
+    fun handleRemove(currencyToRemove: Currency, positionOfCurrencyToRemove: Int) {
+        shiftCurrenciesUp(positionOfCurrencyToRemove)
+        reassignFocusedCurrency(positionOfCurrencyToRemove)
+        currencyToRemove.isSelected = false
+        currencyToRemove.order = INVALID.position
+        upsertCurrency(currencyToRemove)
+        memoryActiveCurrencies.remove(currencyToRemove)
+    }
+
+    fun handleUndo(currencyToRestore: Currency, positionOfCurrencyToRestore: Int) {
+        currencyToRestore.isSelected = true
+        currencyToRestore.order = positionOfCurrencyToRestore
+        upsertCurrency(currencyToRestore)
+        for (i in positionOfCurrencyToRestore until memoryActiveCurrencies.size) {
+            memoryActiveCurrencies[i].let {
+                it.order++
+                upsertCurrency(it)
+            }
+        }
+        memoryActiveCurrencies.add(positionOfCurrencyToRestore, currencyToRestore)
     }
 
     /**
@@ -215,7 +235,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     /**
      * All the currencies below the removed currency are shifted up one position to fill in the gap.
      */
-    private fun shiftCurrencies(orderOfCurrencyToRemove: Int) {
+    private fun shiftCurrenciesUp(orderOfCurrencyToRemove: Int) {
         run loop@{
             memoryActiveCurrencies
                     .reversed()
@@ -254,7 +274,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         upsertCurrency(memoryActiveCurrencies[secondPosition])
     }
 
-    fun populateDefaultCurrencies() {
+    fun initDefaultCurrencies() {
         if (!isFirstLaunch()) return
         viewModelScope.launch(Dispatchers.IO) {
             setFirstLaunch(false)
