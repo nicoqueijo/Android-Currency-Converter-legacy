@@ -264,14 +264,16 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
      * reflected in memory and in the database.
      */
     fun swapCurrencies(firstPosition: Int, secondPosition: Int) {
-        memoryActiveCurrencies[firstPosition].order = memoryActiveCurrencies[secondPosition].order.also {
-            memoryActiveCurrencies[secondPosition].order = memoryActiveCurrencies[firstPosition].order
+        memoryActiveCurrencies.run {
+            this[firstPosition].order = this[secondPosition].order.also {
+                this[secondPosition].order = this[firstPosition].order
+            }
+            this[firstPosition] = this[secondPosition].also {
+                this[secondPosition] = this[firstPosition]
+            }
+            upsertCurrency(this[firstPosition])
+            upsertCurrency(this[secondPosition])
         }
-        memoryActiveCurrencies[firstPosition] = memoryActiveCurrencies[secondPosition].also {
-            memoryActiveCurrencies[secondPosition] = memoryActiveCurrencies[firstPosition]
-        }
-        upsertCurrency(memoryActiveCurrencies[firstPosition])
-        upsertCurrency(memoryActiveCurrencies[secondPosition])
     }
 
     fun initDefaultCurrencies() {

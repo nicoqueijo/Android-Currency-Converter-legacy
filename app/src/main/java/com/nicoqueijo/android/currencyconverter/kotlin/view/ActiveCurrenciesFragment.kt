@@ -44,7 +44,7 @@ class ActiveCurrenciesFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
         initViews(view)
         observeObservables()
-        /*initDefaultCurrencies()*/
+        /*viewModel.initDefaultCurrencies()*/
         return view
     }
 
@@ -60,17 +60,19 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun initDragLinearLayout(view: View) {
-        dragLinearLayout = view.findViewById(R.id.drag_linear_layout)
-        dragLinearLayout.setContainerScrollView(scrollView)
-        dragLinearLayout.setOnViewSwapListener { _, startPosition, _, endPosition ->
-            viewModel.swapCurrencies(startPosition, endPosition)
+        dragLinearLayout = view.findViewById<DragLinearLayout>(R.id.drag_linear_layout).apply {
+            setContainerScrollView(scrollView)
+            setOnViewSwapListener { _, startPosition, _, endPosition ->
+                viewModel.swapCurrencies(startPosition, endPosition)
+            }
         }
     }
 
     private fun initFloatingActionButton(view: View) {
-        floatingActionButton = view.findViewById(R.id.floating_action_button)
-        floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_activeCurrenciesFragment_to_selectableCurrenciesFragment)
+        floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floating_action_button).apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_activeCurrenciesFragment_to_selectableCurrenciesFragment)
+            }
         }
     }
 
@@ -99,15 +101,18 @@ class ActiveCurrenciesFragment : Fragment() {
      * of the currencies emits updates.
      */
     private fun initActiveCurrencies(databaseActiveCurrencies: List<Currency>) {
-        if (!viewModel.wasListConstructed) {
-            constructActiveCurrencies(databaseActiveCurrencies)
+        viewModel.run {
+            if (!wasListConstructed) {
+                constructActiveCurrencies(databaseActiveCurrencies)
+            }
+            if (wasCurrencyAddedViaFab(databaseActiveCurrencies)) {
+                databaseActiveCurrencies.takeLast(1).single().let {
+                    memoryActiveCurrencies.add(it)
+                    addRow(it)
+                }
+            }
+            setDefaultFocus()
         }
-        if (viewModel.wasCurrencyAddedViaFab(databaseActiveCurrencies)) {
-            val addedCurrency = databaseActiveCurrencies.takeLast(1).single()
-            viewModel.memoryActiveCurrencies.add(addedCurrency)
-            addRow(addedCurrency)
-        }
-        viewModel.setDefaultFocus()
     }
 
     private fun updateHints(focusedCurrency: Currency?) {
@@ -168,43 +173,46 @@ class ActiveCurrenciesFragment : Fragment() {
      * its listeners so it could be dragged, removed, and restored.
      */
     private fun addRow(currency: Currency) {
-        val row = RowActiveCurrency(activity)
-        row.initRow(currency)
-        dragLinearLayout.addView(row)
-        dragLinearLayout.setViewDraggable(row, row)
-        /**
-         * Removes this Currency and adjusts the state accordingly.
-         */
-        row.currencyCode.setOnLongClickListener {
-            val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(row)]
-            val positionOfCurrencyToRemove = currencyToRemove.order
-            viewModel.handleRemove(currencyToRemove, positionOfCurrencyToRemove)
-            activity?.vibrate()
-            dragLinearLayout.layoutTransition = LayoutTransition()
-            dragLinearLayout.removeDragView(row)
-            dragLinearLayout.layoutTransition = null
-            styleRows()
-            toggleEmptyListViewVisibility()
-            /**
-             * Re-adds the removed Currency and restores the state before the Currency was removed.
-             */
-            Snackbar.make(dragLinearLayout, R.string.item_removed, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.undo) {
-                        dragLinearLayout.layoutTransition = LayoutTransition()
-                        dragLinearLayout.addDragView(row, row, positionOfCurrencyToRemove)
-                        dragLinearLayout.layoutTransition = null
-                        viewModel.handleUndo(currencyToRemove, positionOfCurrencyToRemove)
-                        toggleEmptyListViewVisibility()
-                    }.show()
-            true
-        }
-        row.conversion.setOnLongClickListener {
-            activity?.copyToClipboard(row.conversion.text)
-            true
-        }
-        row.conversion.setOnClickListener {
-            viewModel.changeFocusedCurrency(dragLinearLayout.indexOfChild(row))
-            styleRows()
+        RowActiveCurrency(activity).run row@{
+            initRow(currency)
+            dragLinearLayout.run {
+                addView(this@row)
+                setViewDraggable(this@row, this@row)
+                /**
+                 * Removes this Currency and adjusts the state accordingly.
+                 */
+                currencyCode.setOnLongClickListener {
+                    val currencyToRemove = viewModel.memoryActiveCurrencies[indexOfChild(this@row)]
+                    val positionOfCurrencyToRemove = currencyToRemove.order
+                    viewModel.handleRemove(currencyToRemove, positionOfCurrencyToRemove)
+                    activity?.vibrate()
+                    layoutTransition = LayoutTransition()
+                    removeDragView(this@row)
+                    layoutTransition = null
+                    styleRows()
+                    toggleEmptyListViewVisibility()
+                    /**
+                     * Re-adds the removed Currency and restores the state before the Currency was removed.
+                     */
+                    Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.undo) {
+                                layoutTransition = LayoutTransition()
+                                addDragView(this@row, this@row, positionOfCurrencyToRemove)
+                                layoutTransition = null
+                                viewModel.handleUndo(currencyToRemove, positionOfCurrencyToRemove)
+                                toggleEmptyListViewVisibility()
+                            }.show()
+                    true
+                }
+                conversion.setOnLongClickListener {
+                    activity?.copyToClipboard(this@row.conversion.text)
+                    true
+                }
+                conversion.setOnClickListener {
+                    viewModel.changeFocusedCurrency(indexOfChild(this@row))
+                    styleRows()
+                }
+            }
         }
     }
 
@@ -216,10 +224,6 @@ class ActiveCurrenciesFragment : Fragment() {
             0 -> emptyList.show()
             else -> emptyList.hide()
         }
-    }
-
-    private fun initDefaultCurrencies() {
-        viewModel.initDefaultCurrencies()
     }
 
     companion object {
