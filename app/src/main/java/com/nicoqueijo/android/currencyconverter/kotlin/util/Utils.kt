@@ -5,12 +5,14 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
+import android.graphics.Rect
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
@@ -26,6 +28,14 @@ import java.math.RoundingMode
  * @JvmStatic annotations are used so Data Binding can recognize them.
  */
 object Utils {
+
+    enum class Order(val position: Int) {
+        INVALID(-1),
+        FIRST(0),
+        SECOND(1),
+        THIRD(2),
+        FOURTH(3)
+    }
 
     /**
      * Retrieves string resources using a String instead of an int.
@@ -154,11 +164,19 @@ object Utils {
                 (it as RowActiveCurrency).toString()
             }
 
-    enum class Order(val position: Int) {
-        INVALID(-1),
-        FIRST(0),
-        SECOND(1),
-        THIRD(2),
-        FOURTH(3)
+    /**
+     * Credit: https://stackoverflow.com/a/55487608/5906793
+     */
+    fun ScrollView.isViewVisible(view: View): Boolean {
+        val scrollBounds = Rect()
+        this.getDrawingRect(scrollBounds)
+        var top = 0f
+        var temp = view
+        while (temp !is ScrollView) {
+            top += (temp).y
+            temp = temp.parent as View
+        }
+        val bottom = top + view.height
+        return scrollBounds.top < top && scrollBounds.bottom > bottom
     }
 }

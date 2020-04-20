@@ -42,11 +42,29 @@ class Repository(private val context: Context) {
                     currencyDao.upsert(currency)
                 }
                 val defaultCurrencies = setOf(
+                        "USD_AED",
                         "USD_ARS",
+                        "USD_AUD",
                         "USD_BRL",
+                        "USD_BTC",
                         "USD_CAD",
+                        "USD_CHF",
+                        "USD_CLP",
+                        "USD_CNY",
                         "USD_DKK",
-                        "USD_EUR"
+                        "USD_EUR",
+                        "USD_GBP",
+                        "USD_HKD",
+                        "USD_JPY",
+                        "USD_MXN",
+                        "USD_NZD",
+                        "USD_RUB",
+                        "USD_SEK",
+                        "USD_TRY",
+                        "USD_USD",
+                        "USD_UYU",
+                        "USD_VEF",
+                        "USD_XAU"
                 )
                 retrofitResponse.body()?.exchangeRates?.currencies?.filter { currency ->
                     defaultCurrencies.contains(currency.currencyCode)
