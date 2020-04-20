@@ -79,6 +79,7 @@ class ActiveCurrenciesFragment : Fragment() {
                 viewModel.memoryActiveCurrencies.add(addedCurrency)
                 addRow(addedCurrency)
             }
+            setDefaultFocus()
             dragLinearLayout.forEachIndexed { i, it ->
                 styleIfFocused(viewModel.memoryActiveCurrencies[i], it as RowActiveCurrency)
             }
@@ -167,10 +168,6 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
-    private fun populateRow(currency: Currency) {
-
-    }
-
     /**
      * Creates a row from a [currency] object, adds that row to the DragLinearLayout, and sets up
      * its listeners so it could be dragged, removed, and restored.
@@ -249,12 +246,19 @@ class ActiveCurrenciesFragment : Fragment() {
                     .map { (it as RowActiveCurrency).currencyCode.text.toString() }
                     .toList()
             }")
-            log("${viewModel.focusedCurrency.value}")
+            log("Focused currency         : ${viewModel.focusedCurrency.value}")
             true
         }
         row.conversion.setOnClickListener {
-            log("conversion clicked on index: ${dragLinearLayout.indexOfChild(row)}")
             changeFocusedCurrency(dragLinearLayout.indexOfChild(row))
+            log("Memory currencies        : ${viewModel.memoryActiveCurrencies}")
+            log("Database currencies      : ${viewModel.databaseActiveCurrencies.value}")
+            log("DragLinearLayout children: ${dragLinearLayout.children.asSequence()
+                    .filter { it.visibility == View.VISIBLE }
+                    .map { (it as RowActiveCurrency).currencyCode.text.toString() }
+                    .toList()
+            }")
+            log("Focused currency         : ${viewModel.focusedCurrency.value}")
         }
     }
 
@@ -295,6 +299,13 @@ class ActiveCurrenciesFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun setDefaultFocus() {
+        if (viewModel.focusedCurrency.value == null && viewModel.memoryActiveCurrencies.isNotEmpty()) {
+            viewModel.focusedCurrency.value = viewModel.memoryActiveCurrencies.take(1).single()
+            viewModel.memoryActiveCurrencies.take(1).single().isFocused = true
         }
     }
 
