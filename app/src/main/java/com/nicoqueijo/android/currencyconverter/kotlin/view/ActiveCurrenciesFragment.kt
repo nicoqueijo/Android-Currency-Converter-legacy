@@ -15,6 +15,7 @@ import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.forEachIndexed
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -130,6 +131,8 @@ class ActiveCurrenciesFragment : Fragment() {
                             row as RowActiveCurrency
                             row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
                         }
+            } else {
+                vibrateAndShake()
             }
         }
 
@@ -148,6 +151,14 @@ class ActiveCurrenciesFragment : Fragment() {
                     }
 
         }
+    }
+
+    private fun vibrateAndShake() {
+        keyboard.context.vibrate()
+        (dragLinearLayout[viewModel.memoryActiveCurrencies
+                .indexOf(viewModel.focusedCurrency.value)] as RowActiveCurrency)
+                .conversion.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(),
+                        R.anim.shake))
     }
 
     private fun cleanInput(input: String): String {
