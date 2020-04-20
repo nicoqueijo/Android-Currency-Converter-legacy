@@ -35,4 +35,6 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
         /*conversion.text = currency.conversion.conversionString*/
         conversion.text = "100.00" // Remove this later (is just for testing)
     }
+
+    override fun toString() = currencyCode.text.toString()
 }

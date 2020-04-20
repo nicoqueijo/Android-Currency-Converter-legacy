@@ -8,5 +8,4 @@
 .externalNativeBuild
 app/src/main/res/values/secrets.xml
 app/release
-notes.txt
 examples/

@@ -12,9 +12,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import androidx.navigation.NavController
+import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
+import com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -141,6 +144,15 @@ object Utils {
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, "Conversion copied", Toast.LENGTH_SHORT).show()
     }
+
+    /**
+     * Can't extend the toString() method because it will get shadowed since it already exists.
+     * This is the next best thing.
+     */
+    fun DragLinearLayout.asString() =
+            children.joinToString(prefix = "{ ", postfix = " }") {
+                (it as RowActiveCurrency).toString()
+            }
 
     enum class Order(val position: Int) {
         INVALID(-1),

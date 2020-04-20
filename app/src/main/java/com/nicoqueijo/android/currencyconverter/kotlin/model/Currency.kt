@@ -91,7 +91,6 @@ data class Currency(@PrimaryKey
         append("}")
     }.toString()
 
-
     inner class Conversion(conversionValue: BigDecimal) {
         /**
          * The underlying numeric conversion result.

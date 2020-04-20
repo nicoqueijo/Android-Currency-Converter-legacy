@@ -18,7 +18,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
@@ -191,51 +190,26 @@ class ActiveCurrenciesFragment : Fragment() {
          */
         row.currencyCode.setOnLongClickListener {
 
+            val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(row)]
+            val orderOfCurrencyToRemove = currencyToRemove.order
+            handleRemove(orderOfCurrencyToRemove)
+            currencyToRemove.isSelected = false
+            currencyToRemove.order = INVALID.position
+            viewModel.upsertCurrency(currencyToRemove)
+            viewModel.memoryActiveCurrencies.remove(currencyToRemove)
+
+            activity?.vibrate()
+
             dragLinearLayout.layoutTransition = LayoutTransition()
             dragLinearLayout.removeDragView(row)
             dragLinearLayout.layoutTransition = null
 
-            activity?.vibrate()
-            toggleEmptyListViewVisibility()
-
-            handleRemove(dragLinearLayout.indexOfChild(row))
             dragLinearLayout.forEachIndexed { i, view ->
                 styleIfFocused(viewModel.memoryActiveCurrencies[i], view as RowActiveCurrency)
             }
 
+            toggleEmptyListViewVisibility()
             Snackbar.make(dragLinearLayout, R.string.item_removed, Snackbar.LENGTH_SHORT)
-                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                        /**
-                         * Current implementation: Once the Snackbar is dismissed and the user can no longer click
-                         *                         undo, then we can safely remove that currency internally.
-                         *
-                         * Implementation to add: Nothing. Nothing should happen when the Snackbar leaves the screen.
-                         *
-                         */
-                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            super.onDismissed(transientBottomBar, event)
-                            if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                                /**
-                                 * Need to put this logic when the longclick is performed.
-                                 * Need to put logic of re-adding the removed currency when the undo is performed.
-                                 */
-                                val currencyToRemove = viewModel.memoryActiveCurrencies[dragLinearLayout.indexOfChild(row)]
-                                val orderOfCurrencyToRemove = currencyToRemove.order
-                                shiftCurrencies(orderOfCurrencyToRemove)
-                                currencyToRemove.run {
-                                    isSelected = false
-                                    order = INVALID.position
-                                }
-                                viewModel.upsertCurrency(currencyToRemove)
-                                viewModel.memoryActiveCurrencies.remove(currencyToRemove)
-                                dragLinearLayout.layoutTransition = LayoutTransition()
-                                dragLinearLayout.removeDragView(row)
-                                dragLinearLayout.layoutTransition = null
-                            }
-
-
-                        }
-                    })
                     /**
                      * Current implementation: When the user clicks 'Undo' we restore the visibility of the currency.
                      *
@@ -245,9 +219,21 @@ class ActiveCurrenciesFragment : Fragment() {
                      */
                     .setAction(R.string.undo) {
                         dragLinearLayout.layoutTransition = LayoutTransition()
-                        row.show()
-                        toggleEmptyListViewVisibility()
+                        dragLinearLayout.addDragView(row, row, orderOfCurrencyToRemove)
                         dragLinearLayout.layoutTransition = null
+
+                        currencyToRemove.isSelected = true
+                        currencyToRemove.order = orderOfCurrencyToRemove
+                        viewModel.upsertCurrency(currencyToRemove)
+                        for (i in orderOfCurrencyToRemove until viewModel.memoryActiveCurrencies.size) {
+                            viewModel.memoryActiveCurrencies[i].let {
+                                it.order++
+                                viewModel.upsertCurrency(it)
+                            }
+                        }
+                        viewModel.memoryActiveCurrencies.add(orderOfCurrencyToRemove, currencyToRemove)
+
+                        toggleEmptyListViewVisibility()
                     }.show()
             true
         }
@@ -273,9 +259,20 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun handleRemove(positionOfLongClickedCurrency: Int) {
+        shiftCurrencies(positionOfLongClickedCurrency)
         reassignFocusedCurrency(positionOfLongClickedCurrency)
     }
 
+    /**
+     * Here we are reassigning the focus to another currency if the focused currency is removed.
+     * The reassignment logic is as follows:
+     *      If there are items below me:
+     *          Unfocus me, focus the item directly below me.
+     *      Else if I am the sole item:
+     *          Unfocus me;
+     *      Else:
+     *          Unfocus me, focus the item directly above me.
+     */
     private fun reassignFocusedCurrency(positionOfLongClickedCurrency: Int) {
         val removedCurrency = viewModel.memoryActiveCurrencies[positionOfLongClickedCurrency]
         if (viewModel.focusedCurrency.value == removedCurrency) {
