@@ -3,7 +3,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -146,7 +145,7 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun validateLength(input: String): Boolean {
         val maxDigitsAllowed = 20
-        if (!input.contains(viewModel.decimalSeparator) && input.length > maxDigitsAllowed) {
+        if (!input.contains(".") && input.length > maxDigitsAllowed) {
             viewModel.focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
         }
@@ -156,8 +155,8 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun validateDecimalPlaces(input: String): Boolean {
         val maxDecimalPlacesAllowed = 4
-        if (input.contains(viewModel.decimalSeparator) &&
-                input.substring(input.indexOf(viewModel.decimalSeparator) + 1).length > maxDecimalPlacesAllowed) {
+        if (input.contains(".") &&
+                input.substring(input.indexOf(".") + 1).length > maxDecimalPlacesAllowed) {
             viewModel.focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
         }
@@ -168,9 +167,7 @@ class ActiveCurrenciesFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun validateDecimalSeparator(input: String): Boolean {
         val decimalSeparatorCount = input.asSequence()
-                .count { char ->
-                    char.toString() == viewModel.decimalSeparator
-                }
+                .count { it == '.' }
         if (decimalSeparatorCount > 1) {
             viewModel.focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
@@ -181,7 +178,7 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun validateZeros(input: String): Boolean {
         if (input.length == 2) {
-            if (input[0] == '0' && input[1] != viewModel.decimalSeparator.single()) {
+            if (input[0] == '0' && input[1] != '.') {
                 viewModel.focusedCurrency.value?.conversion?.conversionString = input[1].toString()
                 return true
             }
@@ -225,11 +222,12 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun cleanInput(input: String): String {
-        return when (input) {
-            viewModel.decimalSeparator -> "0${viewModel.decimalSeparator}"
-            "00" -> "0"
-            else -> input
+        var cleanInput = input.replace(",", ".")
+        when (cleanInput) {
+            "." -> cleanInput = "0."
+            "00" -> cleanInput = "0"
         }
+        return cleanInput
     }
 
     private fun scrollToFocusedCurrency() {

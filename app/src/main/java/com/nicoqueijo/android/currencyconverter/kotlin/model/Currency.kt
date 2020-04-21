@@ -133,15 +133,14 @@ data class Currency(@PrimaryKey
          */
         private fun formatConversion(conversion: String): String {
             return when {
-                conversion.contains(decimalSeparator) -> {
-                    val splitConversion = conversion.split(decimalSeparator)
+                conversion.contains(".") -> {
+                    val splitConversion = conversion.split(".")
                     val wholePart = splitConversion[0]
                     val decimalPart = splitConversion[1]
-                    decimalFormatter.format(BigDecimal(wholePart.replace(",", "."))) +
-                            decimalSeparator + decimalPart
+                    decimalFormatter.format(BigDecimal(wholePart)) + decimalSeparator + decimalPart
                 }
                 else -> {
-                    decimalFormatter.format(BigDecimal(conversion.replace(",", ".")))
+                    decimalFormatter.format(BigDecimal(conversion))
                 }
             }
         }
