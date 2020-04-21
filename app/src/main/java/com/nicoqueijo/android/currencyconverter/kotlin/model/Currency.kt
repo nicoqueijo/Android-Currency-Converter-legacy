@@ -113,51 +113,11 @@ data class Currency(@PrimaryKey
          */
         val conversionText: String
             get() {
-
                 return if (conversionString.isNotBlank()) {
-                    decimalFormatter.format(BigDecimal(conversionString))
+                    formatConversion(conversionString)
                 } else {
                     ""
                 }
-
-
-                /*return if (conversionString.isNotBlank()) {
-                    when {
-                        conversionString.endsWith(decimalSeparator.take(1).single()) -> {
-                            try {
-                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(decimalSeparator.take(1).single())
-                            } catch (e: NumberFormatException) {
-                                e.printStackTrace()
-                                conversionString
-                            }
-                        }
-                        conversionString.isDecimaledZero() -> {
-                            if (decimalSeparator == ",") {
-                                return conversionString.replace(".", ",")
-                            }
-                            conversionString
-                        }
-                        conversionString.contains(decimalSeparator) && conversionString.endsWith('0') -> {
-                            val trailingZeros = conversionString.extractTrailingZeros()
-                            val formattedString = decimalFormatter.format(BigDecimal(conversionString.replace(",", ".")))
-                            if (formattedString.contains(decimalSeparator)) {
-                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(trailingZeros)
-                            } else {
-                                decimalFormatter.format(BigDecimal(conversionString.replace(",", "."))).plus(decimalSeparator).plus(trailingZeros)
-                            }
-                        }
-                        else -> {
-                            try {
-                                decimalFormatter.format(BigDecimal(conversionString.replace(",", ".")))
-                            } catch (e: NumberFormatException) {
-                                e.printStackTrace()
-                                return conversionString
-                            }
-                        }
-                    }
-                } else {
-                    ""
-                }*/
             }
 
         /**
@@ -165,13 +125,23 @@ data class Currency(@PrimaryKey
          */
         var conversionHint: String = ""
             set(value) {
-                field = decimalFormatter.format(BigDecimal(value))
+                field = formatConversion(BigDecimal(value).toString())
             }
 
-        var hasInvalidInput = false
-
-        override fun toString() = "value: $conversionValue string: $conversionString " +
-                "text: $conversionString hint: $conversionHint"
+        private fun formatConversion(conversion: String): String {
+            return when {
+                conversion.contains(decimalSeparator) -> {
+                    val splitConversion = conversion.split(decimalSeparator)
+                    val wholePart = splitConversion[0]
+                    val decimalPart = splitConversion[1]
+                    decimalFormatter.format(BigDecimal(wholePart.replace(",", "."))) +
+                            decimalSeparator + decimalPart
+                }
+                else -> {
+                    decimalFormatter.format(BigDecimal(conversion.replace(",", ".")))
+                }
+            }
+        }
     }
 
     companion object {

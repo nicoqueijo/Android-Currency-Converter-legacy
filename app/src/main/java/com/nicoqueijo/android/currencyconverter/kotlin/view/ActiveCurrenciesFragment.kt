@@ -30,6 +30,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isViewVisible
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
@@ -275,7 +276,7 @@ class ActiveCurrenciesFragment : Fragment() {
                         val fromRate = focusedCurrency.exchangeRate
                         val toRate = it.exchangeRate
                         val conversionValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
-                                fromRate, toRate)/*.roundToFourDecimalPlaces()*/.toString()
+                                fromRate, toRate).roundToFourDecimalPlaces().toString()
                         it.conversion.conversionHint = conversionValue
                     }
             dragLinearLayout.children
