@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -277,6 +278,7 @@ class ActiveCurrenciesFragment : Fragment() {
                     addRow(it)
                     if (!memoryActiveCurrencies.hasOnlyOneElement()) {
                         runConversions()
+                        scrollToFocusedCurrency()
                     }
                 }
                 updateHints(viewModel.focusedCurrency.value)
