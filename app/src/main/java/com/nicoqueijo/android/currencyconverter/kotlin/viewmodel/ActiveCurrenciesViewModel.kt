@@ -1,10 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -31,7 +27,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     val databaseActiveCurrencies = repository.getActiveCurrencies()
 
-    /*private*/ fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
+    private fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
 
     private suspend fun getCurrency(currencyCode: String) = repository.getCurrency(currencyCode)
 
@@ -56,73 +52,6 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         decimalFormatter.applyPattern(conversionPattern)
         groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
-    }
-
-    private fun cleanInput(input: String): String {
-        return when (input) {
-            decimalSeparator -> "0$decimalSeparator"
-            "00" -> "0"
-            else -> input
-        }
-    }
-
-    private fun isInputValid(input: String): Boolean {
-        return validateLength(input) && validateDecimalPlaces(input) &&
-                validateDecimalSeparator(input) && validateZeros(input)
-    }
-
-    private fun validateLength(input: String): Boolean {
-        val maxDigitsAllowed = 20
-        if (!input.contains(decimalSeparator) && input.length > maxDigitsAllowed) {
-            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
-            return false
-        }
-        focusedCurrency.value?.conversion?.conversionString = input
-        return true
-    }
-
-    private fun validateDecimalPlaces(input: String): Boolean {
-        val maxDecimalPlacesAllowed = 4
-        if (input.contains(decimalSeparator) &&
-                input.substring(input.indexOf(decimalSeparator) + 1).length > maxDecimalPlacesAllowed) {
-            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
-            return false
-        }
-        focusedCurrency.value?.conversion?.conversionString = input
-        return true
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun validateDecimalSeparator(input: String): Boolean {
-        val decimalSeparatorCount = input.asSequence()
-                .count { char ->
-                    char.toString() == decimalSeparator
-                }
-        if (decimalSeparatorCount > 1) {
-            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
-            return false
-        }
-        focusedCurrency.value?.conversion?.conversionString = input
-        return true
-    }
-
-    private fun validateZeros(input: String): Boolean {
-        if (input.length == 2) {
-            if (input[0] == '0' && input[1] != decimalSeparator.single()) {
-                focusedCurrency.value?.conversion?.conversionString = input[1].toString()
-                return true
-            }
-        }
-        focusedCurrency.value?.conversion?.conversionString = input
-        return true
-    }
-
-    /**
-     *  The RecyclerView scrolls to the position of the focused currency when it is notified that
-     *  the value of the focused currency has changed. This is a way to force that call.
-     */
-    private fun triggerScrollToPosition() {
-        focusedCurrency.value = focusedCurrency.value
     }
 
     /**

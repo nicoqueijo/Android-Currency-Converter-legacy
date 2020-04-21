@@ -106,40 +106,6 @@ object Utils {
 
     fun Int.isValid() = this != INVALID.position
 
-    /**
-     * Something that looks like: 0.{one or more zeros}
-     * Note: decimal separator could be a comma based on locale.
-     */
-    fun String.isDecimaledZero() = Regex("0[.,]0+").matches(this)
-
-    /**
-     * 12,345.6789 -> 12.345,6789
-     * 12.345,6789 -> 12,345.6789
-     * . -> ,
-     * 1. -> 1,
-     *
-     * x is used as a placeholder and is assumed not to be in the string which represents numbers.
-     */
-    fun String.swapDecimalAndGroupingSeparators(): String {
-        return replace('.', 'x')
-                .replace(',', '.')
-                .replace('x', ',')
-    }
-
-    fun String.extractTrailingZeros(): String {
-        var zeroCounter = 0
-        run loop@{
-            this.reversed().forEach {
-                if (it == '0') {
-                    zeroCounter++
-                } else {
-                    return@loop
-                }
-            }
-        }
-        return "0".repeat(zeroCounter)
-    }
-
     fun View.show() {
         visibility = View.VISIBLE
     }

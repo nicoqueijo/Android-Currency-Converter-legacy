@@ -128,6 +128,9 @@ data class Currency(@PrimaryKey
                 field = formatConversion(BigDecimal(value).toString())
             }
 
+        /**
+         * Formats a numeric String with grouping separators while retaining trailing zeros.
+         */
         private fun formatConversion(conversion: String): String {
             return when {
                 conversion.contains(decimalSeparator) -> {
