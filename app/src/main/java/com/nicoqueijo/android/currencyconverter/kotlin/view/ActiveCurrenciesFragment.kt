@@ -107,6 +107,16 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
+    private fun clearConversions() {
+        viewModel.focusedCurrency.value?.conversion?.conversionString = ""
+        viewModel.memoryActiveCurrencies
+                .filter { it != viewModel.focusedCurrency.value }
+                .forEach {
+                    it.conversion.conversionString = ""
+                }
+        updateRows()
+    }
+
     private fun processKeyboardInput(button: View?) {
         var existingText = viewModel.focusedCurrency.value?.conversion?.conversionString
         var isInputValid = true
@@ -126,58 +136,6 @@ class ActiveCurrenciesFragment : Fragment() {
             runConversions()
         } else {
             vibrateAndShake()
-        }
-    }
-
-    private fun clearConversions() {
-        viewModel.focusedCurrency.value?.conversion?.conversionString = ""
-        viewModel.memoryActiveCurrencies
-                .filter { it != viewModel.focusedCurrency.value }
-                .forEach {
-                    it.conversion.conversionString = ""
-                }
-        updateRows()
-    }
-
-    private fun runConversions() {
-        val focusedCurrency = viewModel.focusedCurrency.value
-        viewModel.memoryActiveCurrencies
-                .filter { it != focusedCurrency }
-                .forEach {
-                    val fromRate = focusedCurrency!!.exchangeRate
-                    val toRate = it.exchangeRate
-                    if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
-                        val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
-                                .conversion.conversionString.replace(",", ".")), fromRate, toRate)
-                        it.conversion.conversionValue = conversionValue
-                    } else {
-                        it.conversion.conversionString = ""
-                    }
-                }
-        updateRows()
-    }
-
-    private fun updateRows() {
-        dragLinearLayout.children
-                .forEachIndexed { i, row ->
-                    row as RowActiveCurrency
-                    row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
-                }
-    }
-
-    private fun vibrateAndShake() {
-        keyboard.context.vibrate()
-        (dragLinearLayout[viewModel.memoryActiveCurrencies
-                .indexOf(viewModel.focusedCurrency.value)] as RowActiveCurrency)
-                .conversion.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(),
-                        R.anim.shake))
-    }
-
-    private fun cleanInput(input: String): String {
-        return when (input) {
-            viewModel.decimalSeparator -> "0${viewModel.decimalSeparator}"
-            "00" -> "0"
-            else -> input
         }
     }
 
@@ -230,6 +188,48 @@ class ActiveCurrenciesFragment : Fragment() {
         }
         viewModel.focusedCurrency.value?.conversion?.conversionString = input
         return true
+    }
+
+    private fun runConversions() {
+        val focusedCurrency = viewModel.focusedCurrency.value
+        viewModel.memoryActiveCurrencies
+                .filter { it != focusedCurrency }
+                .forEach {
+                    val fromRate = focusedCurrency!!.exchangeRate
+                    val toRate = it.exchangeRate
+                    if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
+                        val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
+                                .conversion.conversionString.replace(",", ".")), fromRate, toRate)
+                        it.conversion.conversionValue = conversionValue
+                    } else {
+                        it.conversion.conversionString = ""
+                    }
+                }
+        updateRows()
+    }
+
+    private fun updateRows() {
+        dragLinearLayout.children
+                .forEachIndexed { i, row ->
+                    row as RowActiveCurrency
+                    row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
+                }
+    }
+
+    private fun vibrateAndShake() {
+        keyboard.context.vibrate()
+        (dragLinearLayout[viewModel.memoryActiveCurrencies
+                .indexOf(viewModel.focusedCurrency.value)] as RowActiveCurrency)
+                .conversion.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(),
+                        R.anim.shake))
+    }
+
+    private fun cleanInput(input: String): String {
+        return when (input) {
+            viewModel.decimalSeparator -> "0${viewModel.decimalSeparator}"
+            "00" -> "0"
+            else -> input
+        }
     }
 
     private fun scrollToFocusedCurrency() {
