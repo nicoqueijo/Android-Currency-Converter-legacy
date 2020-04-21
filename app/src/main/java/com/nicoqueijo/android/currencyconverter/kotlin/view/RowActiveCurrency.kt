@@ -32,7 +32,7 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
     fun initRow(currency: Currency) {
         currencyCode.text = currency.trimmedCurrencyCode
         flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context))
-        conversion.text = currency.conversion.conversionString
+        conversion.text = currency.conversion.conversionText
     }
 
     override fun toString() = currencyCode.text.toString()

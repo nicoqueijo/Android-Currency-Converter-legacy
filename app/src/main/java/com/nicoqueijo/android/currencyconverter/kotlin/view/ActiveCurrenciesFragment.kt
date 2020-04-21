@@ -3,7 +3,6 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,60 +97,70 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun initKeyboardListener() {
         keyboard.onKeyClickedListener { button ->
             scrollToFocusedCurrency()
-            var existingText = viewModel.focusedCurrency.value?.conversion?.conversionString
-            var isInputValid = true
-            when (button) {
-                is Button -> {
-                    val keyPressed = button.text
-                    var input = existingText + keyPressed
-                    input = cleanInput(input)
-                    isInputValid = isInputValid(input)
-                }
-                is ImageButton -> {
-                    existingText = existingText?.dropLast(1)
-                    viewModel.focusedCurrency.value?.conversion?.conversionString = existingText!!
-                }
-            }
-            if (isInputValid) {
-                val focusedCurrency = viewModel.focusedCurrency.value
-                viewModel.memoryActiveCurrencies
-                        .filter { it != focusedCurrency }
-                        .forEach {
-                            val fromRate = focusedCurrency!!.exchangeRate
-                            val toRate = it.exchangeRate
-                            if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
-                                val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
-                                        .conversion.conversionString.replace(",", ".")), fromRate, toRate)
-                                it.conversion.conversionValue = conversionValue
-                            } else {
-                                it.conversion.conversionString = ""
-                            }
-                        }
-                dragLinearLayout.children
-                        .forEachIndexed { i, row ->
-                            row as RowActiveCurrency
-                            row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
-                        }
-            } else {
-                vibrateAndShake()
-            }
+            processKeyboardInput(button)
         }
-
         keyboard.onKeyLongClickedListener {
             scrollToFocusedCurrency()
-            viewModel.focusedCurrency.value?.conversion?.conversionString = ""
-            viewModel.memoryActiveCurrencies
-                    .filter { it != viewModel.focusedCurrency.value }
-                    .forEach {
+            clearConversions()
+        }
+    }
+
+    private fun processKeyboardInput(button: View?) {
+        var existingText = viewModel.focusedCurrency.value?.conversion?.conversionString
+        var isInputValid = true
+        when (button) {
+            is Button -> {
+                val keyPressed = button.text
+                var input = existingText + keyPressed
+                input = cleanInput(input)
+                isInputValid = isInputValid(input)
+            }
+            is ImageButton -> {
+                existingText = existingText?.dropLast(1)
+                viewModel.focusedCurrency.value?.conversion?.conversionString = existingText!!
+            }
+        }
+        if (isInputValid) {
+            runConversions()
+        } else {
+            vibrateAndShake()
+        }
+    }
+
+    private fun clearConversions() {
+        viewModel.focusedCurrency.value?.conversion?.conversionString = ""
+        viewModel.memoryActiveCurrencies
+                .filter { it != viewModel.focusedCurrency.value }
+                .forEach {
+                    it.conversion.conversionString = ""
+                }
+        updateRows()
+    }
+
+    private fun runConversions() {
+        val focusedCurrency = viewModel.focusedCurrency.value
+        viewModel.memoryActiveCurrencies
+                .filter { it != focusedCurrency }
+                .forEach {
+                    val fromRate = focusedCurrency!!.exchangeRate
+                    val toRate = it.exchangeRate
+                    if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
+                        val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
+                                .conversion.conversionString.replace(",", ".")), fromRate, toRate)
+                        it.conversion.conversionValue = conversionValue
+                    } else {
                         it.conversion.conversionString = ""
                     }
-            dragLinearLayout.children
-                    .forEachIndexed { i, row ->
-                        row as RowActiveCurrency
-                        row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
-                    }
+                }
+        updateRows()
+    }
 
-        }
+    private fun updateRows() {
+        dragLinearLayout.children
+                .forEachIndexed { i, row ->
+                    row as RowActiveCurrency
+                    row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
+                }
     }
 
     private fun vibrateAndShake() {
@@ -376,12 +385,6 @@ class ActiveCurrenciesFragment : Fragment() {
         when (numOfVisibleRows) {
             0 -> emptyList.show()
             else -> emptyList.hide()
-        }
-    }
-
-    companion object {
-        fun log(message: String) {
-            Log.d("Nicoo", message)
         }
     }
 }
