@@ -27,6 +27,7 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isViewVisible
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
@@ -231,8 +232,13 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     private fun scrollToFocusedCurrency() {
-        if (!scrollView.isViewVisible(dragLinearLayout.getChildAt(viewModel.memoryActiveCurrencies.indexOf(viewModel.focusedCurrency.value)))) {
-            scrollView.smoothScrollTo(0, dragLinearLayout.getChildAt(viewModel.memoryActiveCurrencies.indexOf(viewModel.focusedCurrency.value)).top)
+        val focusedCurrency = viewModel.focusedCurrency.value
+        focusedCurrency?.let {
+            val focusedCurrencyRow = dragLinearLayout.getChildAt(viewModel.memoryActiveCurrencies
+                    .indexOf(focusedCurrency))
+            if (!scrollView.isViewVisible(focusedCurrencyRow)) {
+                scrollView.smoothScrollTo(0, focusedCurrencyRow.top)
+            }
         }
     }
 
@@ -269,6 +275,9 @@ class ActiveCurrenciesFragment : Fragment() {
                 databaseActiveCurrencies.takeLast(1).single().let {
                     memoryActiveCurrencies.add(it)
                     addRow(it)
+                    if (!memoryActiveCurrencies.hasOnlyOneElement()) {
+                        runConversions()
+                    }
                 }
                 updateHints(viewModel.focusedCurrency.value)
             }
