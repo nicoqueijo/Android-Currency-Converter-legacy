@@ -17,7 +17,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val repository = Repository(application)
 
     val activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment)
-
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
     @SuppressLint("SimpleDateFormat")

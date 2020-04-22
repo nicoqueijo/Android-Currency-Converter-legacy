@@ -1,9 +1,12 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.nicoqueijo.android.currencyconverter.BuildConfig
+import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
@@ -14,9 +17,7 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
 
     // Candidate for dependency injection
     private val repository = Repository(application)
-
     val allCurrencies = repository.getAllCurrencies()
-
     private fun upsertCurrency(currency: Currency) {
         repository.upsertCurrency(currency)
     }
@@ -27,6 +28,17 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
     val searchQuery: LiveData<String>
         get() = _searchQuery
 
+    // 1 in 12 chance the user will be shown an interstitial ad when they select a currency.
+    val willShowAd = (1..12).random() == 1
+    fun getInterstitialAdId(context: Context): String {
+        with(context.resources) {
+            return when (BuildConfig.BUILD_TYPE) {
+                "release" -> getString(R.string.ad_unit_id_interstitial)
+                "debug" -> getString(R.string.ad_unit_id_interstitial_test)
+                else -> getString(R.string.ad_unit_id_interstitial)
+            }
+        }
+    }
 
     /**
      * Takes the clicked Currency, updates its selected value to true and its order value as the

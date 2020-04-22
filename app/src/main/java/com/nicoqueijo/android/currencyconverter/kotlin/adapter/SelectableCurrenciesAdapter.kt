@@ -8,6 +8,8 @@ import android.widget.Filterable
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
@@ -19,6 +21,16 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
         INameableAdapter,
         Filterable {
 
+    private lateinit var interstitialAd: InterstitialAd
+
+    init {
+        if (viewModel.willShowAd) {
+            interstitialAd = InterstitialAd(viewModel.getApplication())
+            interstitialAd.adUnitId = viewModel.getInterstitialAdId(viewModel.getApplication())
+            interstitialAd.loadAd(AdRequest.Builder().build())
+        }
+    }
+
     inner class ViewHolder(private val binding: RowSelectableCurrencyBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
@@ -26,6 +38,9 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
             itemView.setOnClickListener { view ->
                 viewModel.handleOnClick(adapterPosition)
                 view?.findNavController()?.popBackStack()
+                if (viewModel.willShowAd && interstitialAd.isLoaded) {
+                    interstitialAd.show()
+                }
             }
         }
 
