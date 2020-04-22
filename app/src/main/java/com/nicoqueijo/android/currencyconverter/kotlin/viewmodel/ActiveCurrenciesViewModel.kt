@@ -183,18 +183,18 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         viewModelScope.launch(Dispatchers.IO) {
             val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
             val defaultCurrencies = mutableListOf<Currency>()
-            getCurrency("USD_USD")?.run {
+            getCurrency("USD_USD").run {
                 defaultCurrencies.add(setDefaultCurrency(this, FIRST.position))
             }
             val localCurrency = getCurrency(localCurrencyCode)
-            if (localCurrencyCode == "USD_USD" || localCurrency == null) {
-                getCurrency("USD_EUR")?.run {
+            if (localCurrencyCode == "USD_USD") {
+                getCurrency("USD_EUR").run {
                     defaultCurrencies.add(setDefaultCurrency(this, SECOND.position))
                 }
-                getCurrency("USD_JPY")?.run {
+                getCurrency("USD_JPY").run {
                     defaultCurrencies.add(setDefaultCurrency(this, THIRD.position))
                 }
-                getCurrency("USD_GBP")?.run {
+                getCurrency("USD_GBP").run {
                     defaultCurrencies.add(setDefaultCurrency(this, FOURTH.position))
                 }
             } else {
