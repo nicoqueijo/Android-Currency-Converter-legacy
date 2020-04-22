@@ -3,6 +3,8 @@ package com.nicoqueijo.android.currencyconverter.kotlin.view
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -16,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
@@ -48,9 +51,18 @@ class MainActivity : AppCompatActivity() {
         initLastUpdateLabel()
     }
 
+    /**
+     * The banners ad's view needs to be added programatically if we want to set its ad unit id
+     * programatically.     See: https://stackoverflow.com/a/34232962/5906793
+     */
     private fun initBannerAd() {
         MobileAds.initialize(this, resources.getString(R.string.app_id))
-        val adView: AdView = findViewById(R.id.banner_ad)
+        val adView = AdView(this)
+        adView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+        adView.adUnitId = viewModel.getBannerAdId(this)
+        adView.adSize = AdSize.SMART_BANNER
+        findViewById<LinearLayout>(R.id.main_canvas).addView(adView)
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
     }

@@ -50,9 +50,9 @@ class ActiveCurrenciesFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies, container, false)
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
+        viewModel.initDefaultCurrencies()
         initViews(view)
         observeObservables()
-        /*viewModel.initDefaultCurrencies()*/
         return view
     }
 

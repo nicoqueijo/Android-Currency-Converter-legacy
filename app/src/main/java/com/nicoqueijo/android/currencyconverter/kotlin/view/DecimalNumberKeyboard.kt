@@ -11,10 +11,8 @@ import com.nicoqueijo.android.currencyconverter.R
 import java.text.DecimalFormatSymbols
 
 /**
- * Credit: https://stackoverflow.com/a/60906741/5906793
+ * Custom keyboard that includes buttons: digits 0-9, decimal separator, backspace.
  */
-typealias KeyboardCallback = (View?) -> Unit
-
 class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
         ConstraintLayout(context, attrs),
         View.OnClickListener,
@@ -51,16 +49,12 @@ class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
         buttonZero = findViewById(R.id.button_zero)
         buttonBackspace = findViewById(R.id.button_backspace)
         buttonDecimalSeparator.text = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
-        setUpButtons(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
+        setListeners(buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive,
                 buttonSix, buttonSeven, buttonEight, buttonNine, buttonDecimalSeparator,
                 buttonZero, buttonBackspace)
     }
 
-    private fun setUpButtons(vararg buttons: View) {
-        setButtonListeners(*buttons)
-    }
-
-    private fun setButtonListeners(vararg buttons: View) {
+    private fun setListeners(vararg buttons: View) {
         buttons.forEach { button ->
             button.setOnClickListener(this)
             if (button is ImageButton) {
@@ -86,3 +80,8 @@ class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
         return true
     }
 }
+
+/**
+ * Credit: https://stackoverflow.com/a/60906741/5906793
+ */
+typealias KeyboardCallback = (View?) -> Unit

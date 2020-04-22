@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_activity_canvas"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -38,36 +37,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
+                    android:id="@+id/main_canvas"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <fragment
+                        android:id="@+id/content_frame"
+                        android:name="androidx.navigation.fragment.NavHostFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        app:defaultNavHost="true"
+                        app:navGraph="@navigation/nav_graph"
+                        tools:ignore="FragmentTagUsage" />
 
-                        <fragment
-                            android:id="@+id/content_frame"
-                            android:name="androidx.navigation.fragment.NavHostFragment"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            app:defaultNavHost="true"
-                            app:navGraph="@navigation/nav_graph"
-                            tools:ignore="FragmentTagUsage" />
-
-                        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/banner_ad"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            ads:adSize="SMART_BANNER"
-                            ads:adUnitId="@string/ad_unit_id_banner_test" />
-
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
