@@ -11,7 +11,7 @@
         android:id="@+id/row_canvas"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/background_row_active_currency"
+        android:background="@drawable/row_active_currency_background"
         tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry">
 
         <View

@@ -3,6 +3,7 @@
     <color name="primary">#000000</color>
     <color name="primary_dark">#424242</color>
     <color name="accent">#FFFFFF</color>
+    <color name="tinted_white">#E0E0E0</color>
     <color name="red">#FF5252</color>
     <color name="green">#4CAF50</color>
     <color name="silver">#C0C0C0</color>

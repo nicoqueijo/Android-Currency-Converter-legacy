@@ -7,7 +7,7 @@
         android:id="@+id/keyboard_padding_start"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
+        android:background="@color/almost_black"
         app:layout_constraintEnd_toStartOf="@+id/keyboard"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_weight="13"
@@ -17,14 +17,14 @@
         android:id="@+id/keyboard"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
+        android:background="@color/almost_black"
         app:layout_constraintEnd_toStartOf="@+id/keyboard_padding_end"
         app:layout_constraintHorizontal_weight="74"
         app:layout_constraintStart_toEndOf="@+id/keyboard_padding_start">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/button_one"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_one"
             app:layout_constraintBottom_toTopOf="@+id/button_four"
             app:layout_constraintEnd_toStartOf="@+id/button_two"
@@ -35,7 +35,7 @@
 
         <Button
             android:id="@+id/button_two"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_two"
             app:layout_constraintBottom_toTopOf="@+id/button_five"
             app:layout_constraintEnd_toStartOf="@+id/button_three"
@@ -45,7 +45,7 @@
 
         <Button
             android:id="@+id/button_three"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_three"
             app:layout_constraintBottom_toTopOf="@+id/button_six"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
 
         <Button
             android:id="@+id/button_four"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_four"
             app:layout_constraintBottom_toTopOf="@+id/button_seven"
             app:layout_constraintEnd_toStartOf="@+id/button_five"
@@ -65,7 +65,7 @@
 
         <Button
             android:id="@+id/button_five"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_five"
             app:layout_constraintBottom_toTopOf="@+id/button_eight"
             app:layout_constraintEnd_toStartOf="@+id/button_six"
@@ -74,7 +74,7 @@
 
         <Button
             android:id="@+id/button_six"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_six"
             app:layout_constraintBottom_toTopOf="@+id/button_nine"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +83,7 @@
 
         <Button
             android:id="@+id/button_seven"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_seven"
             app:layout_constraintBottom_toTopOf="@+id/button_decimal_separator"
             app:layout_constraintEnd_toStartOf="@+id/button_eight"
@@ -93,7 +93,7 @@
 
         <Button
             android:id="@+id/button_eight"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_eight"
             app:layout_constraintBottom_toTopOf="@+id/button_zero"
             app:layout_constraintEnd_toStartOf="@+id/button_nine"
@@ -102,7 +102,7 @@
 
         <Button
             android:id="@+id/button_nine"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_nine"
             app:layout_constraintBottom_toTopOf="@+id/button_backspace"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +111,7 @@
 
         <Button
             android:id="@+id/button_decimal_separator"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_zero"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -120,7 +120,7 @@
 
         <Button
             android:id="@+id/button_zero"
-            style="@style/ButtonStyle"
+            style="@style/TextButtonStyle"
             android:text="@string/button_zero"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_backspace"
@@ -129,8 +129,7 @@
 
         <ImageButton
             android:id="@+id/button_backspace"
-            style="@style/ButtonStyle"
-            android:src="@drawable/ic_backspace"
+            style="@style/ImageButtonStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/button_zero"
@@ -143,7 +142,7 @@
         android:id="@+id/keyboard_padding_end"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
+        android:background="@color/almost_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="13"
         app:layout_constraintStart_toEndOf="@+id/keyboard" />

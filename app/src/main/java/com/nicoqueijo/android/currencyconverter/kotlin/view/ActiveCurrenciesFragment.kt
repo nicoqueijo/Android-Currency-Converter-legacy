@@ -333,7 +333,7 @@ class ActiveCurrenciesFragment : Fragment() {
                 rowCanvas.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_gray))
                 blinkingCursor.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink))
             } else {
-                rowCanvas.background = ContextCompat.getDrawable(context, R.drawable.background_row_active_currency)
+                rowCanvas.background = ContextCompat.getDrawable(context, R.drawable.row_active_currency_background)
                 blinkingCursor.clearAnimation()
             }
         }

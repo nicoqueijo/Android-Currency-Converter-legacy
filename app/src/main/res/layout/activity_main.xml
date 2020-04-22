@@ -81,7 +81,7 @@
             android:background="?attr/drawer_background_color"
             app:headerLayout="@layout/navigation_header"
             app:itemIconTint="?attr/icon_color"
-            app:itemShapeFillColor="@color/background_menu_item_drawer"
+            app:itemShapeFillColor="@color/drawer_menu_item_background"
             app:itemTextColor="?attr/text_color"
             app:menu="@menu/drawer_view">
 
