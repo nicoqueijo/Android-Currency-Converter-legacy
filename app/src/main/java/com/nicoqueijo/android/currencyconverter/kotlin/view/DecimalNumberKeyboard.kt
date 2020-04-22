@@ -38,7 +38,6 @@ class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
 
     init {
         LayoutInflater.from(context).inflate(R.layout.decimal_number_keyboard, this)
-
         buttonOne = findViewById(R.id.button_one)
         buttonTwo = findViewById(R.id.button_two)
         buttonThree = findViewById(R.id.button_three)
@@ -59,7 +58,6 @@ class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
 
     private fun setUpButtons(vararg buttons: View) {
         setButtonListeners(*buttons)
-        styleButtons(*buttons)
     }
 
     private fun setButtonListeners(vararg buttons: View) {
@@ -68,14 +66,6 @@ class DecimalNumberKeyboard(context: Context, attrs: AttributeSet) :
             if (button is ImageButton) {
                 button.setOnLongClickListener(this)
             }
-        }
-    }
-
-    // Style through XML when they patch this bug:
-    // https://github.com/material-components/material-components-android/issues/889#issuecomment-573196038
-    private fun styleButtons(vararg buttons: View) {
-        buttons.forEach { button ->
-            button.setBackgroundResource(R.drawable.background_button)
         }
     }
 

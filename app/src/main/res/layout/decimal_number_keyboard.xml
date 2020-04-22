@@ -22,7 +22,7 @@
         app:layout_constraintHorizontal_weight="74"
         app:layout_constraintStart_toEndOf="@+id/keyboard_padding_start">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_one"
             style="@style/ButtonStyle"
             android:text="@string/button_one"
@@ -112,7 +112,6 @@
         <Button
             android:id="@+id/button_decimal_separator"
             style="@style/ButtonStyle"
-            android:background="@drawable/background_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_zero"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -122,7 +121,6 @@
         <Button
             android:id="@+id/button_zero"
             style="@style/ButtonStyle"
-            android:background="@drawable/background_button"
             android:text="@string/button_zero"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_backspace"
@@ -137,7 +135,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/button_zero"
             app:layout_constraintTop_toBottomOf="@+id/button_nine"
-            app:tint="@drawable/background_button_text_color"
             tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
