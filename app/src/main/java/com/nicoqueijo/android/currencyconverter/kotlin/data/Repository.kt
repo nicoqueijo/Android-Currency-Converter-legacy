@@ -32,9 +32,7 @@ class Repository(private val context: Context) {
                 sharedPrefsProperties.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                retrofitResponse.body()?.exchangeRates?.currencies?.forEach { currency ->
-                    currencyDao.upsert(currency)
-                }
+                currencyDao.upsertCurrencies(retrofitResponse.body()?.exchangeRates?.currencies!!)
             } else {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())
@@ -64,9 +62,15 @@ class Repository(private val context: Context) {
 
     suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
 
-    fun upsertCurrency(currency: Currency?) {
+    fun upsertCurrency(currency: Currency) {
         CoroutineScope(Dispatchers.IO).launch {
-            currencyDao.upsert(currency)
+            currencyDao.upsertCurrency(currency)
+        }
+    }
+
+    fun upsertCurrencies(currencies: List<Currency>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            currencyDao.upsertCurrencies(currencies)
         }
     }
 
