@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,66 +6,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/almost_black"
-        android:elevation="4dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/AppThemeDark" />
-
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:id="@+id/nav_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:context=".java.activities.MainActivity"
         tools:openDrawer="start">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/almost_black"
+                android:elevation="4dp"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/AppThemeDark" />
 
-                <LinearLayout
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
 
-                    <fragment
-                        android:id="@+id/content_frame"
-                        android:name="androidx.navigation.fragment.NavHostFragment"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        app:defaultNavHost="true"
-                        app:navGraph="@navigation/nav_graph"
-                        tools:ignore="FragmentTagUsage" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/banner_ad"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        ads:adSize="SMART_BANNER"
-                        ads:adUnitId="@string/ad_unit_id_banner_test" />
+                        <fragment
+                            android:id="@+id/content_frame"
+                            android:name="androidx.navigation.fragment.NavHostFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            app:defaultNavHost="true"
+                            app:navGraph="@navigation/nav_graph"
+                            tools:ignore="FragmentTagUsage" />
 
-                </LinearLayout>
+                        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/banner_ad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            ads:adSize="SMART_BANNER"
+                            ads:adUnitId="@string/ad_unit_id_banner_test" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
@@ -74,7 +79,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="?attr/drawer_background_color"
-            android:fitsSystemWindows="true"
             app:headerLayout="@layout/navigation_header"
             app:itemIconTint="?attr/icon_color"
             app:itemShapeFillColor="@color/background_menu_item_drawer"

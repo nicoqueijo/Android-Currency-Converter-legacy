@@ -1,8 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -23,7 +21,6 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.data.CurrencyDatabase
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasActiveCurrenciesNavigation
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
@@ -62,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        drawer = findViewById(R.id.drawer)
+        drawer = findViewById(R.id.nav_drawer)
         initListeners()
         drawer.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
