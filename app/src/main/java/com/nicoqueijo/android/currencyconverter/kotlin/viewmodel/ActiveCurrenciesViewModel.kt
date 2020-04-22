@@ -20,26 +20,23 @@ import java.util.*
 
 class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
 
-    var wasListConstructed = false
-
     // Candidate for dependency injection
     private val repository = Repository(application)
 
-    val databaseActiveCurrencies = repository.getActiveCurrencies()
-
-    private fun upsertCurrency(currency: Currency?) = repository.upsertCurrency(currency)
+    private fun upsertCurrency(currency: Currency) = repository.upsertCurrency(currency)
+    private fun upsertCurrencies(currencies: List<Currency>) = repository.upsertCurrencies(currencies)
 
     private suspend fun getCurrency(currencyCode: String) = repository.getCurrency(currencyCode)
-
-    /*fun getActiveCurrencies() = repository.getActiveCurrencies().value*/
 
     private fun isFirstLaunch() = repository.isFirstLaunch
     private fun setFirstLaunch(value: Boolean) {
         repository.isFirstLaunch = value
     }
 
+    val databaseActiveCurrencies = repository.getActiveCurrencies()
     val memoryActiveCurrencies = mutableListOf<Currency>()
     val focusedCurrency = MutableLiveData<Currency?>()
+    var wasListConstructed = false
 
     /*private*/ var decimalFormatter: DecimalFormat
     /*private*/ var decimalSeparator: String
@@ -184,33 +181,35 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     fun initDefaultCurrencies() {
         if (!isFirstLaunch()) return
         viewModelScope.launch(Dispatchers.IO) {
-            setFirstLaunch(false)
             val localCurrencyCode = "USD_${java.util.Currency.getInstance(Locale.getDefault()).currencyCode}"
+            val defaultCurrencies = mutableListOf<Currency>()
             getCurrency("USD_USD")?.run {
-                setDefaultCurrency(this, FIRST.position)
+                defaultCurrencies.add(setDefaultCurrency(this, FIRST.position))
             }
             val localCurrency = getCurrency(localCurrencyCode)
             if (localCurrencyCode == "USD_USD" || localCurrency == null) {
                 getCurrency("USD_EUR")?.run {
-                    setDefaultCurrency(this, SECOND.position)
+                    defaultCurrencies.add(setDefaultCurrency(this, SECOND.position))
                 }
                 getCurrency("USD_JPY")?.run {
-                    setDefaultCurrency(this, THIRD.position)
+                    defaultCurrencies.add(setDefaultCurrency(this, THIRD.position))
                 }
                 getCurrency("USD_GBP")?.run {
-                    setDefaultCurrency(this, FOURTH.position)
+                    defaultCurrencies.add(setDefaultCurrency(this, FOURTH.position))
                 }
             } else {
                 localCurrency.run {
-                    setDefaultCurrency(this, SECOND.position)
+                    defaultCurrencies.add(setDefaultCurrency(this, SECOND.position))
                 }
             }
+            upsertCurrencies(defaultCurrencies)
+            setFirstLaunch(false)
         }
     }
 
-    private fun setDefaultCurrency(currency: Currency, order: Int) {
+    private fun setDefaultCurrency(currency: Currency, order: Int): Currency {
         currency.order = order
         currency.isSelected = true
-        upsertCurrency(currency)
+        return currency
     }
 }

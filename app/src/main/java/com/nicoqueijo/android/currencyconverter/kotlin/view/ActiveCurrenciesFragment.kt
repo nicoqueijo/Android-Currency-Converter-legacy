@@ -249,9 +249,11 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun observeObservables() {
         viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
-            initActiveCurrencies(databaseActiveCurrencies)
-            styleRows()
-            toggleEmptyListViewVisibility()
+            if (databaseActiveCurrencies.isNotEmpty()) {
+                initActiveCurrencies(databaseActiveCurrencies)
+                styleRows()
+                toggleEmptyListViewVisibility()
+            }
         })
         /**
          * When the focused currency changes update the hints
