@@ -1,19 +1,26 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -49,6 +56,122 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         decimalFormatter.applyPattern(conversionPattern)
         groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
+    }
+
+    fun processKeyboardInput(button: View?): Boolean {
+        var existingText = focusedCurrency.value?.conversion?.conversionString
+        var isInputValid = true
+        when (button) {
+            is Button -> {
+                val keyPressed = button.text
+                var input = existingText + keyPressed
+                input = cleanInput(input)
+                isInputValid = isInputValid(input)
+            }
+            is ImageButton -> {
+                existingText = existingText?.dropLast(1)
+                focusedCurrency.value?.conversion?.conversionString = existingText!!
+            }
+        }
+        return isInputValid
+    }
+
+    private fun cleanInput(input: String): String {
+        var cleanInput = input.replace(",", ".")
+        when (cleanInput) {
+            "." -> cleanInput = "0."
+            "00" -> cleanInput = "0"
+        }
+        return cleanInput
+    }
+
+    private fun isInputValid(input: String): Boolean {
+        return validateLength(input) && validateDecimalPlaces(input) &&
+                validateDecimalSeparator(input) && validateZeros(input)
+    }
+
+    private fun validateLength(input: String): Boolean {
+        val maxDigitsAllowed = 20
+        if (!input.contains(".") && input.length > maxDigitsAllowed) {
+            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
+            return false
+        }
+        focusedCurrency.value?.conversion?.conversionString = input
+        return true
+    }
+
+    private fun validateDecimalPlaces(input: String): Boolean {
+        val maxDecimalPlacesAllowed = 4
+        if (input.contains(".") &&
+                input.substring(input.indexOf(".") + 1).length > maxDecimalPlacesAllowed) {
+            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
+            return false
+        }
+        focusedCurrency.value?.conversion?.conversionString = input
+        return true
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun validateDecimalSeparator(input: String): Boolean {
+        val decimalSeparatorCount = input.asSequence()
+                .count { it == '.' }
+        if (decimalSeparatorCount > 1) {
+            focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
+            return false
+        }
+        focusedCurrency.value?.conversion?.conversionString = input
+        return true
+    }
+
+    private fun validateZeros(input: String): Boolean {
+        if (input.length == 2) {
+            if (input[0] == '0' && input[1] != '.') {
+                focusedCurrency.value?.conversion?.conversionString = input[1].toString()
+                return true
+            }
+        }
+        focusedCurrency.value?.conversion?.conversionString = input
+        return true
+    }
+
+    fun clearConversions() {
+        focusedCurrency.value?.conversion?.conversionString = ""
+        memoryActiveCurrencies
+                .filter { it != focusedCurrency.value }
+                .forEach {
+                    it.conversion.conversionString = ""
+                }
+    }
+
+    fun runConversions() {
+        val focusedCurrency = focusedCurrency.value
+        memoryActiveCurrencies
+                .filter { it != focusedCurrency }
+                .forEach {
+                    val fromRate = focusedCurrency!!.exchangeRate
+                    val toRate = it.exchangeRate
+                    if (focusedCurrency.conversion.conversionString.isNotEmpty()) {
+                        val conversionValue = CurrencyConversion.convertCurrency(BigDecimal(focusedCurrency
+                                .conversion.conversionString.replace(",", ".")), fromRate, toRate)
+                        it.conversion.conversionValue = conversionValue
+                    } else {
+                        it.conversion.conversionString = ""
+                    }
+                }
+    }
+
+    fun updateHints() {
+        val focusedCurrency = focusedCurrency.value
+        focusedCurrency!!.conversion.conversionHint = "1"
+        memoryActiveCurrencies
+                .filter { it != focusedCurrency }
+                .forEach {
+                    val fromRate = focusedCurrency.exchangeRate
+                    val toRate = it.exchangeRate
+                    val conversionValue = CurrencyConversion.convertCurrency(BigDecimal("1"),
+                            fromRate, toRate).roundToFourDecimalPlaces().toString()
+                    it.conversion.conversionHint = conversionValue
+                }
     }
 
     /**
