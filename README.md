@@ -36,6 +36,9 @@ This app implements the MVVM architectural pattern using a single activity with 
 * <a href="https://developers.google.com/admob/android/quick-start" target="_blank">Google AdMob</a> - A mobile advertising platform that you can use to generate revenue from your app.
 * <a href="https://github.com/bosphere/Android-FadingEdgeLayout" target="_blank">FadingEdgeLayout</a> - A versatile layout that fades its edges regardless of child view type.
 * <a href="https://github.com/turing-tech/MaterialScrollBar" target="_blank">MaterialScrollBar</a> - An Android library that brings the Material Design 5.1 scrollbar to pre-5.1 devices.
+* <a href="https://github.com/justasm/DragLinearLayout" target="_blank">DragLinearLayout</a> - An Android LinearLayout that supports draggable and swappable child Views.
+
+
 
 ### Acknowledgments
 * App icon made by Freepik from www.flaticon.com
