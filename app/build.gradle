@@ -46,7 +46,7 @@ ext {
     moshiVersion = '1.9.2'
     retrofitVersion = '2.8.1'
     fadingEdgeLayoutVersion = '1.0.0'
-    materialScrollBarVersion = '13.3.0'
+    recyclerBubbleVersion = '0.2.5'
     dragLinearLayoutVersion = '1.0.0'
     appCompatVersion = '1.1.0'
     constraintLayoutVersion = '2.0.0-beta4'
@@ -89,8 +89,8 @@ dependencies {
     // FadingEdgeLayout
     implementation "com.github.bosphere.android-fadingedgelayout:fadingedgelayout:$fadingEdgeLayoutVersion"
 
-    // MaterialScrollBar
-    implementation "com.github.turing-tech:MaterialScrollBar:$materialScrollBarVersion"
+    // RecyclerBubble
+    implementation "com.futuremind.recyclerfastscroll:fastscroll:$recyclerBubbleVersion"
 
     // DragLinearLayout
     implementation "com.jmedeisis:draglinearlayout:$dragLinearLayoutVersion"

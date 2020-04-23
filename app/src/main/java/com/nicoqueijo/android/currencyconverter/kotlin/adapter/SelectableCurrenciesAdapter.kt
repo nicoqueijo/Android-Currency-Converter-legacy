@@ -8,17 +8,17 @@ import android.widget.Filterable
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.futuremind.recyclerviewfastscroll.SectionTitleProvider
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
-import com.turingtechnologies.materialscrollbar.INameableAdapter
 
 class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesViewModel) :
         ListAdapter<Currency, SelectableCurrenciesAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
-        INameableAdapter,
+        SectionTitleProvider,
         Filterable {
 
     private lateinit var interstitialAd: InterstitialAd
@@ -65,12 +65,10 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
         submitList(viewModel.adapterFilteredCurrencies)
     }
 
-    override fun getCharacterForElement(position: Int): Char {
-        return try {
-            viewModel.adapterFilteredCurrencies[position].currencyCode[Currency.CURRENCY_CODE_START_INDEX]
-        } catch (exception: IndexOutOfBoundsException) {
-            ' '
-        }
+    override fun getSectionTitle(position: Int): String {
+        return viewModel.adapterFilteredCurrencies[position]
+                .currencyCode[Currency.CURRENCY_CODE_START_INDEX]
+                .toString()
     }
 
     override fun getFilter() = currenciesFilter

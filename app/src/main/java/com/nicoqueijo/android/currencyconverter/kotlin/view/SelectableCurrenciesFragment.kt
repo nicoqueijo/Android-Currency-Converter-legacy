@@ -10,11 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.futuremind.recyclerviewfastscroll.FastScroller
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator
-import com.turingtechnologies.materialscrollbar.DragScrollBar
 
 class SelectableCurrenciesFragment : Fragment() {
 
@@ -47,12 +46,11 @@ class SelectableCurrenciesFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies)
         noResultsView = view.findViewById(R.id.no_results)
         recyclerView.showIfEmpty(noResultsView)
-        val dragScrollBar = view.findViewById<DragScrollBar>(R.id.drag_scroll_bar)
-        dragScrollBar.setIndicator(AlphabetIndicator(context), true)
         adapter = SelectableCurrenciesAdapter(viewModel)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
+        view.findViewById<FastScroller>(R.id.fast_scroller).setRecyclerView(recyclerView)
     }
 
     @SuppressLint("StringFormatInvalid")

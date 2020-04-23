@@ -53,4 +53,9 @@
         <item name="android:src">@drawable/ic_backspace</item>
         <item name="android:background">@drawable/image_button_background</item>
     </style>
+
+    <style name="ScrollBubbleStyle">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

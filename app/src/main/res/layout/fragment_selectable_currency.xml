@@ -24,16 +24,15 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/row_selectable_currency" />
 
-    <com.turingtechnologies.materialscrollbar.DragScrollBar
-        android:id="@+id/drag_scroll_bar"
+    <com.futuremind.recyclerviewfastscroll.FastScroller
+        android:id="@+id/fast_scroller"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        app:msb_barColor="@color/semi_transparent"
-        app:msb_handleColor="@android:color/white"
-        app:msb_lightOnTouch="false"
-        app:msb_recyclerView="@id/recycler_view_selectable_currencies"
-        app:msb_textColor="@android:color/black" />
+        android:orientation="vertical"
+        app:fastscroll__bubbleColor="@android:color/white"
+        app:fastscroll__bubbleTextAppearance="@style/ScrollBubbleStyle"
+        app:fastscroll__handleColor="@android:color/white" />
 
 </RelativeLayout>
 
