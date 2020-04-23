@@ -53,29 +53,16 @@ class CustomRecyclerView : RecyclerView {
         }
     }
 
-    /**
-     * Register a new observer to listen for data changes.
-     *
-     * @param adapter the bridge for the dataset of the RecyclerView.
-     */
     override fun setAdapter(adapter: Adapter<*>?) {
         super.setAdapter(adapter)
         adapter?.registerAdapterDataObserver(mAdapterDataObserver)
         mAdapterDataObserver.onChanged()
     }
 
-    /**
-     * Passes the view to show when the RecyclerView is empty.
-     *
-     * @param emptyListView the view to show when the RecyclerView is empty.
-     */
     fun showIfEmpty(emptyListView: View) {
         mEmptyListView = emptyListView
     }
 
-    /**
-     * Shows/hides the view that displays information about why the list is empty.
-     */
     private fun showEmptyListView() {
         mEmptyListView.visibility = if (adapter!!.itemCount == 0) View.VISIBLE else View.GONE
     }

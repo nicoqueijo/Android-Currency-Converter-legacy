@@ -50,6 +50,19 @@ class ActiveCurrenciesFragment : Fragment() {
         return view
     }
 
+    private fun observeObservables() {
+        viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
+            if (databaseActiveCurrencies.isNotEmpty()) {
+                initActiveCurrencies(databaseActiveCurrencies)
+                styleRows()
+                toggleEmptyListViewVisibility()
+            }
+        })
+        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
+            updateHints()
+        })
+    }
+
     private fun initViews(view: View) {
         emptyList = view.findViewById(R.id.empty_list)
         scrollView = view.findViewById(R.id.scroll_view)
@@ -80,14 +93,9 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     /**
-     * If the [button] is a Button we know that belongs to chars 0-9 or the decimal
-     * separator as those were declared as Buttons.
-     * If the [button] is an ImageButton that can only mean that it is the backspace
-     * key as that was the only one declared as an ImageButton.
-     *
      * On each key click event, we want to validate the input against what already is in the
      * TextView. If it is valid we want to run the conversion of that value against all other
-     * currencies and update the TextView of all other currencies.
+     * currencies and update the TextView of all other currencies with he converter value.
      */
     private fun initKeyboardListener() {
         keyboard.onKeyClickedListener { button ->
@@ -104,14 +112,6 @@ class ActiveCurrenciesFragment : Fragment() {
             viewModel.clearConversions()
             updateRows()
         }
-    }
-
-    private fun updateRows() {
-        dragLinearLayout.children
-                .forEachIndexed { i, row ->
-                    row as RowActiveCurrency
-                    row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
-                }
     }
 
     private fun vibrateAndShake() {
@@ -135,19 +135,6 @@ class ActiveCurrenciesFragment : Fragment() {
 
     private fun restoreActiveCurrencies() {
         viewModel.memoryActiveCurrencies.forEach { addRow(it) }
-    }
-
-    private fun observeObservables() {
-        viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
-            if (databaseActiveCurrencies.isNotEmpty()) {
-                initActiveCurrencies(databaseActiveCurrencies)
-                styleRows()
-                toggleEmptyListViewVisibility()
-            }
-        })
-        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
-            updateHints()
-        })
     }
 
     /**
@@ -220,6 +207,14 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
+    private fun updateRows() {
+        dragLinearLayout.children
+                .forEachIndexed { i, row ->
+                    row as RowActiveCurrency
+                    row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
+                }
+    }
+
     /**
      * Creates a row from a [currency], adds that row to the DragLinearLayout, and sets up
      * its listeners so it could be dragged, removed, and restored.
@@ -231,7 +226,7 @@ class ActiveCurrenciesFragment : Fragment() {
                 addView(this@row)
                 setViewDraggable(this@row, this@row)
                 /**
-                 * Removes this Currency and adjusts the state accordingly.
+                 * Removes this [currency] and adjusts the state accordingly.
                  */
                 currencyCode.setOnLongClickListener {
                     val currencyToRemove = viewModel.memoryActiveCurrencies[indexOfChild(this@row)]
@@ -244,7 +239,7 @@ class ActiveCurrenciesFragment : Fragment() {
                     styleRows()
                     toggleEmptyListViewVisibility()
                     /**
-                     * Re-adds the removed Currency and restores the state before the Currency was removed.
+                     * Restores the removed currency and restores the state before the currency was removed.
                      */
                     Snackbar.make(this, R.string.item_removed, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.undo) {

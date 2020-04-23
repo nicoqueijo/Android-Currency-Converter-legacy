@@ -63,8 +63,6 @@ object Utils {
     @BindingAdapter("android:src")
     fun setImageViewResource(imageView: ImageView, resource: Int) = imageView.setImageResource(resource)
 
-    fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.CEILING)
-
     fun Activity.hideKeyboard() {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
@@ -78,6 +76,13 @@ object Utils {
         } else {
             (getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(duration)
         }
+    }
+
+    fun Context.copyToClipboard(text: CharSequence) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied Text", text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "Conversion copied", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -104,21 +109,12 @@ object Utils {
         return this[position + 1]
     }
 
-    fun Int.isValid() = this != INVALID.position
-
     fun View.show() {
         visibility = View.VISIBLE
     }
 
     fun View.hide() {
         visibility = View.GONE
-    }
-
-    fun Context.copyToClipboard(text: CharSequence) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Copied Text", text)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "Conversion copied", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -145,4 +141,8 @@ object Utils {
         val bottom = top + view.height
         return scrollBounds.top < top && scrollBounds.bottom > bottom
     }
+
+    fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.CEILING)
+
+    fun Int.isValid() = this != INVALID.position
 }

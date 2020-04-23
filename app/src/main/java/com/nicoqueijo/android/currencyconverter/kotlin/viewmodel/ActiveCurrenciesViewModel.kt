@@ -21,8 +21,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDec
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.*
 
 class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,7 +30,6 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
 
     private fun upsertCurrency(currency: Currency) = repository.upsertCurrency(currency)
     private fun upsertCurrencies(currencies: List<Currency>) = repository.upsertCurrencies(currencies)
-
     private suspend fun getCurrency(currencyCode: String) = repository.getCurrency(currencyCode)
 
     private fun isFirstLaunch() = repository.isFirstLaunch
@@ -45,19 +42,12 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     val focusedCurrency = MutableLiveData<Currency?>()
     var wasListConstructed = false
 
-    /*private*/ var decimalFormatter: DecimalFormat
-    /*private*/ var decimalSeparator: String
-    /*private*/ var groupingSeparator: String
-
-    init {
-        val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
-        val conversionPattern = "###,##0.0000"
-        decimalFormatter = numberFormatter as DecimalFormat
-        decimalFormatter.applyPattern(conversionPattern)
-        groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
-        decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
-    }
-
+    /**
+     * If the [button] is a Button we know that belongs to chars 0-9 or the decimal
+     * separator as those were declared as Buttons.
+     * If the [button] is an ImageButton that can only mean that it is the backspace
+     * key as that was the only one declared as an ImageButton.
+     */
     fun processKeyboardInput(button: View?): Boolean {
         var existingText = focusedCurrency.value?.conversion?.conversionString
         var isInputValid = true
@@ -76,20 +66,31 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         return isInputValid
     }
 
+    /**
+     * If input has a leading decimal separator it prefixes it with a zero.
+     * If input has a leading 0 it removes it.
+     * Examples:   "." -> "0."
+     *            "00" -> "0"
+     *            "07" -> "0"
+     */
     private fun cleanInput(input: String): String {
         var cleanInput = input.replace(",", ".")
-        when (cleanInput) {
-            "." -> cleanInput = "0."
-            "00" -> cleanInput = "0"
+        when {
+            "." == cleanInput -> cleanInput = "0."
+            Regex("0[^.]").matches(cleanInput) -> cleanInput = input[1].toString()
         }
         return cleanInput
     }
 
     private fun isInputValid(input: String): Boolean {
-        return validateLength(input) && validateDecimalPlaces(input) &&
-                validateDecimalSeparator(input) && validateZeros(input)
+        return validateLength(input) &&
+                validateDecimalPlaces(input) &&
+                validateDecimalSeparator(input)
     }
 
+    /**
+     * Assures the whole part of the input is not above 20 digits long.
+     */
     private fun validateLength(input: String): Boolean {
         val maxDigitsAllowed = 20
         if (!input.contains(".") && input.length > maxDigitsAllowed) {
@@ -100,6 +101,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         return true
     }
 
+    /**
+     * Assures the decimal part of the input is at most 4 digits.
+     */
     private fun validateDecimalPlaces(input: String): Boolean {
         val maxDecimalPlacesAllowed = 4
         if (input.contains(".") &&
@@ -111,6 +115,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         return true
     }
 
+    /**
+     * Assures the input contains at most 1 decimal separator.
+     */
     @SuppressLint("SetTextI18n")
     private fun validateDecimalSeparator(input: String): Boolean {
         val decimalSeparatorCount = input.asSequence()
@@ -118,17 +125,6 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         if (decimalSeparatorCount > 1) {
             focusedCurrency.value?.conversion?.conversionString = input.dropLast(1)
             return false
-        }
-        focusedCurrency.value?.conversion?.conversionString = input
-        return true
-    }
-
-    private fun validateZeros(input: String): Boolean {
-        if (input.length == 2) {
-            if (input[0] == '0' && input[1] != '.') {
-                focusedCurrency.value?.conversion?.conversionString = input[1].toString()
-                return true
-            }
         }
         focusedCurrency.value?.conversion?.conversionString = input
         return true
@@ -143,6 +139,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                 }
     }
 
+    /**
+     * Runs the conversion of all currencies against the focused currency's input value.
+     */
     fun runConversions() {
         val focusedCurrency = focusedCurrency.value
         memoryActiveCurrencies
@@ -160,6 +159,9 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
                 }
     }
 
+    /**
+     * Updates the hints of all currencies against the focused currency with value of 1.
+     */
     fun updateHints() {
         val focusedCurrency = focusedCurrency.value
         focusedCurrency!!.conversion.conversionHint = "1"
@@ -190,7 +192,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     /**
-     * Sets the focus to the first Currency if the list is not empty.
+     * Sets the focus to the first currency if the list is not empty.
      */
     fun setDefaultFocus() {
         if (focusedCurrency.value == null && memoryActiveCurrencies.isNotEmpty()) {
@@ -213,12 +215,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         currencyToRestore.isSelected = true
         currencyToRestore.order = positionOfCurrencyToRestore
         upsertCurrency(currencyToRestore)
-        for (i in positionOfCurrencyToRestore until memoryActiveCurrencies.size) {
-            memoryActiveCurrencies[i].let {
-                it.order++
-                upsertCurrency(it)
-            }
-        }
+        shiftCurrenciesDown(positionOfCurrencyToRestore)
         memoryActiveCurrencies.add(positionOfCurrencyToRestore, currencyToRestore)
     }
 
@@ -228,7 +225,7 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
      *      If there are items below me:
      *          Unfocus me, focus the item directly below me.
      *      Else if I am the sole item:
-     *          Unfocus me;
+     *          Unfocus me.
      *      Else:
      *          Unfocus me, focus the item directly above me.
      */
@@ -275,8 +272,20 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
     }
 
     /**
+     * All currencies below the restored currency are shifted down one position to make room.
+     */
+    private fun shiftCurrenciesDown(positionOfCurrencyToRestore: Int) {
+        for (i in positionOfCurrencyToRestore until memoryActiveCurrencies.size) {
+            memoryActiveCurrencies[i].let {
+                it.order++
+                upsertCurrency(it)
+            }
+        }
+    }
+
+    /**
      * This indicates the user added a currency by selecting it from the SelectableCurrenciesFragment
-     * that was initiated by the press of the FloatingActionButton.
+     * that was initiated by the click of the FloatingActionButton.
      * The indication is triggered when, the only difference between [databaseActiveCurrencies] and
      * [memoryActiveCurrencies] is that [databaseActiveCurrencies] has an extra element.
      */
@@ -296,11 +305,16 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
             this[firstPosition] = this[secondPosition].also {
                 this[secondPosition] = this[firstPosition]
             }
-            upsertCurrency(this[firstPosition])
-            upsertCurrency(this[secondPosition])
+            upsertCurrencies(listOf(this[firstPosition], this[secondPosition]))
         }
     }
 
+    /**
+     * Selects a set of default currencies on the first launch of the app based on the user's locale.
+     * Logic: If the user's locale is US, it selects the US dollar and the three other most used
+     *        currencies which are the Euro, Japanese Yen, and British Pound.
+     *        Else, it selects the US dollar the the user's local currency.
+     */
     fun initDefaultCurrencies() {
         if (!isFirstLaunch()) return
         viewModelScope.launch(Dispatchers.IO) {

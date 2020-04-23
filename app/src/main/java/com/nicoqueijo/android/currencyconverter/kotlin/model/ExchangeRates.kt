@@ -6,6 +6,10 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 class ExchangeRates {
 
+    /**
+     * Creates a list of Currency objects from the declared fields of this class using reflection
+     * to instantiate each object's currency code with the declared field's name.
+     */
     val currencies: List<Currency>
         get() {
             val currencies = mutableListOf<Currency>()

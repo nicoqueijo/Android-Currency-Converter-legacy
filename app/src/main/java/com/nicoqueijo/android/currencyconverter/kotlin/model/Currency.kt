@@ -36,20 +36,16 @@ data class Currency(@PrimaryKey
     @Ignore
     private var decimalSeparator: String
 
-    @Ignore
-    private var groupingSeparator: String
-
     init {
         val numberFormatter = NumberFormat.getNumberInstance(Locale.getDefault())
         val conversionPattern = "#,##0.####"
         decimalFormatter = numberFormatter as DecimalFormat
         decimalFormatter.applyPattern(conversionPattern)
         decimalSeparator = decimalFormatter.decimalFormatSymbols.decimalSeparator.toString()
-        groupingSeparator = decimalFormatter.decimalFormatSymbols.groupingSeparator.toString()
     }
 
     /**
-     * Currency code without the "USD_" prefix. E.g. USD_EUR -> EUR
+     * Currency code without the "USD_" prefix. Example: USD_EUR -> EUR
      */
     val trimmedCurrencyCode
         get() = currencyCode.substring(CURRENCY_CODE_START_INDEX)

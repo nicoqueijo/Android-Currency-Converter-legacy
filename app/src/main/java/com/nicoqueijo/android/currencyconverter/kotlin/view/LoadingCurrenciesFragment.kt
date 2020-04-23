@@ -16,9 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
-/**
- * A simple [Fragment] subclass.
- */
 class LoadingCurrenciesFragment : Fragment() {
 
     private lateinit var viewModel: LoadingCurrenciesViewModel
@@ -36,8 +33,10 @@ class LoadingCurrenciesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         lifecycleScope.launch(Dispatchers.IO) {
-            // Small delay so the user can actually see the splash screen
-            // for a moment as feedback of an attempt to retrieve data.
+            /**
+             * Small delay so the user can actually see the splash screen
+             * for a moment as feedback of an attempt to retrieve data.
+             */
             delay(250)
             try {
                 viewModel.initCurrencies()

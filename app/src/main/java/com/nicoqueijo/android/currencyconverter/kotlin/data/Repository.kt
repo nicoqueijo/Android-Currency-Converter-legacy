@@ -20,6 +20,11 @@ class Repository(private val context: Context) {
     private val sharedPrefsProperties = context
             .getSharedPreferences(context.packageName.plus(".properties"), Context.MODE_PRIVATE)
 
+    /**
+     * Makes an API call if internet is available and the local data is either stale (hasn't been
+     * updated in 24 hours) or we have no local data. If the call succeeds we store the data that
+     * was returned into our local database. Else we throw an exception to let the called handle it.
+     */
     suspend fun initCurrencies() {
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>

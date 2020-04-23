@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * The banners ad's view needs to be added programatically if we want to set its ad unit id
-     * programatically.     See: https://stackoverflow.com/a/34232962/5906793
+     * at run time.     See: https://stackoverflow.com/a/34232962/5906793
      */
     private fun initBannerAd() {
         MobileAds.initialize(this, resources.getString(R.string.app_id))

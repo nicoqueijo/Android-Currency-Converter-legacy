@@ -41,7 +41,7 @@ class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel
     }
 
     /**
-     * Takes the clicked Currency, updates its selected value to true and its order value as the
+     * Takes the clicked currency, updates its selected value to true and its order value as the
      * last value of the already-selected currencies. Upserts that to the database so its observers
      * can be notified.
      */
