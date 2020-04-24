@@ -92,12 +92,6 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             drawer.closeDrawer(GravityCompat.START)
             when (viewModel.activeFragment.value) {
-                R.id.activeCurrenciesFragment -> {
-                    handleBackstack(menuItem.itemId, R.id.activeCurrenciesFragment)
-                }
-                R.id.sourceCodeFragment -> {
-                    handleBackstack(menuItem.itemId, R.id.sourceCodeFragment)
-                }
                 R.id.selectableCurrenciesFragment -> {
                     if (menuItem.itemId == R.id.activeCurrenciesFragment) {
                         true
@@ -114,24 +108,6 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     false
                 }
-            }
-        }
-    }
-
-    private fun handleBackstack(menuItemId: Int, activeFragment: Int): Boolean {
-        return when {
-            menuItemId == activeFragment -> {
-                true
-            }
-            viewModel.fragmentBackstackEntries.contains(menuItemId) -> {
-                navController.popBackStack(menuItemId, false)
-                viewModel.fragmentBackstackEntries.remove(activeFragment)
-                true
-            }
-            else -> {
-                navController.navigate(menuItemId)
-                viewModel.fragmentBackstackEntries.add(menuItemId)
-                true
             }
         }
     }

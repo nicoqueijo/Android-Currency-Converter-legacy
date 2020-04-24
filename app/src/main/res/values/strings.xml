@@ -3,7 +3,6 @@
     <!-- UI components -->
     <string name="app_name">Currency Converter</string>
     <string name="converter">Converter</string>
-    <string name="source_code">Source Code</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="last_update">Last updated: %1$s</string>

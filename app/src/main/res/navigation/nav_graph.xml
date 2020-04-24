@@ -37,11 +37,6 @@
             app:popUpTo="@+id/errorFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
-        android:id="@+id/sourceCodeFragment"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SourceCodeFragment"
-        android:label="SourceCodeFragment"
-        tools:layout="@layout/fragment_source_code" />
     <navigation
         android:id="@+id/activeCurrenciesFragment"
         app:startDestination="@id/activeCurrenciesFragment">
@@ -63,10 +58,5 @@
             android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment"
             android:label="SelectableCurrenciesFragment"
             tools:layout="@layout/fragment_selectable_currency" />
-        <action
-            android:id="@+id/action_global_sourceCodeFragment"
-            app:destination="@id/sourceCodeFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
     </navigation>
 </navigation>
