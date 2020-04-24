@@ -32,7 +32,7 @@
             android:paddingBottom="8dp"
             app:cardCornerRadius="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/currency_code"
+            app:layout_constraintEnd_toStartOf="@id/currency_code_canvas"
             app:layout_constraintStart_toEndOf="@id/padding_start"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -45,20 +45,28 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/currency_code"
+        <FrameLayout
+            android:id="@+id/currency_code_canvas"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:longClickable="true"
             android:paddingLeft="16dp"
-            android:textColor="?attr/text_color"
-            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/fading_edge_layout"
             app:layout_constraintStart_toEndOf="@+id/card_flag_canvas"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="USD" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/currency_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:longClickable="true"
+                android:textColor="?attr/text_color"
+                android:textSize="24sp"
+                tools:text="USD" />
+
+        </FrameLayout>
 
         <com.bosphere.fadingedgelayout.FadingEdgeLayout
             android:id="@+id/fading_edge_layout"
@@ -72,7 +80,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/blinking_cursor"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/currency_code"
+            app:layout_constraintStart_toEndOf="@+id/currency_code_canvas"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

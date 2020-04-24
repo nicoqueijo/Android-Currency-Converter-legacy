@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import java.math.BigDecimal
 import java.text.DecimalFormat
@@ -131,8 +131,8 @@ data class Currency(@PrimaryKey
             return when {
                 conversion.contains(".") -> {
                     val splitConversion = conversion.split(".")
-                    val wholePart = splitConversion[0]
-                    val decimalPart = splitConversion[1]
+                    val wholePart = splitConversion[FIRST.position]
+                    val decimalPart = splitConversion[SECOND.position]
                     decimalFormatter.format(BigDecimal(wholePart)) + decimalSeparator + decimalPart
                 }
                 else -> {

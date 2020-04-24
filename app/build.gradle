@@ -48,6 +48,7 @@ ext {
     fadingEdgeLayoutVersion = '1.0.0'
     recyclerBubbleVersion = '0.2.5'
     dragLinearLayoutVersion = '1.0.0'
+    tapTargetViewVersion = '1.13.0'
     appCompatVersion = '1.1.0'
     constraintLayoutVersion = '2.0.0-beta4'
     cardViewVersion = '1.0.0'
@@ -94,6 +95,9 @@ dependencies {
 
     // DragLinearLayout
     implementation "com.jmedeisis:draglinearlayout:$dragLinearLayoutVersion"
+
+    // TapTargetView
+    implementation "com.getkeepsafe.taptargetview:taptargetview:$tapTargetViewVersion"
 
     // Android
     implementation "androidx.appcompat:appcompat:$appCompatVersion"

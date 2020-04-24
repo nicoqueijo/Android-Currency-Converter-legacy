@@ -1,5 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
+import android.R.color.black
+import android.R.color.white
 import android.animation.LayoutTransition
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,11 +19,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.FIRST
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.copyToClipboard
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
@@ -29,6 +34,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isViewVisible
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
+
 
 class ActiveCurrenciesFragment : Fragment() {
 
@@ -183,6 +189,45 @@ class ActiveCurrenciesFragment : Fragment() {
             addRow(currency)
         }
         viewModel.wasListConstructed = true
+        if (viewModel.isFirstLaunch()) {
+            showTargets()
+            viewModel.setFirstLaunch(false)
+        }
+    }
+
+    /**
+     * Walks the user through some of the app's features on the first launch.
+     */
+    private fun showTargets() {
+        val addCurrencyTarget = TapTarget.forView(floatingActionButton, getString(R.string.add_currency_target_message))
+                .outerCircleColor(white)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(black)
+                .textColor(black)
+                .cancelable(false)
+                .transparentTarget(true)
+                .targetRadius(50)
+        val dragCurrencyTarget = TapTarget.forView((dragLinearLayout[FIRST.position] as RowActiveCurrency).flag,
+                getString(R.string.drag_currency_target_message))
+                .outerCircleColor(white)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(black)
+                .textColor(black)
+                .cancelable(false)
+                .transparentTarget(true)
+                .targetRadius(50)
+        val removeCurrencyTarget = TapTarget.forView((dragLinearLayout[FIRST.position] as RowActiveCurrency).currencyCode,
+                getString(R.string.remove_currency_target_message))
+                .outerCircleColor(white)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(black)
+                .textColor(black)
+                .cancelable(false)
+                .transparentTarget(true)
+                .targetRadius(50)
+        TapTargetSequence(this.activity)
+                .targets(addCurrencyTarget, dragCurrencyTarget, removeCurrencyTarget)
+                .start()
     }
 
     private fun styleRows() {
