@@ -28,6 +28,9 @@
     <string name="add_currency_target_message">Tap button to add currencies</string>
     <string name="drag_currency_target_message">Drag flag to reorder</string>
     <string name="remove_currency_target_message">Longpress currency code to remove</string>
+    <string name="remove_all_currencies">Remove all currencies?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="button_one">1</string>
     <string name="button_two">2</string>
     <string name="button_three">3</string>

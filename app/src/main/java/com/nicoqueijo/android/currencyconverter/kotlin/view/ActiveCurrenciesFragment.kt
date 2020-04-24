@@ -66,13 +66,13 @@ class ActiveCurrenciesFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         MaterialAlertDialogBuilder(requireActivity())
-                .setTitle("Remove all currencies?")
+                .setTitle(resources.getString(R.string.remove_all_currencies))
                 .setBackground(resources.getDrawable(R.drawable.dialog_background))
-                .setPositiveButton("OK") { _, _ ->
+                .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
                     removeAllCurrencies()
                     toggleViewVisibility()
                 }
-                .setNegativeButton("Cancel") { _, _ ->
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }
                 .show()
         return super.onOptionsItemSelected(item)
