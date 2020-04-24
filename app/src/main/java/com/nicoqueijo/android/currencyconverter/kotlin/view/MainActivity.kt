@@ -1,6 +1,9 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -91,24 +94,42 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             drawer.closeDrawer(GravityCompat.START)
-            when (viewModel.activeFragment.value) {
-                R.id.selectableCurrenciesFragment -> {
-                    if (menuItem.itemId == R.id.activeCurrenciesFragment) {
-                        true
-                    } else {
-                        navController.navigate(menuItem.itemId)
-                        true
+            if (menuItem.itemId == R.id.rateApp) {
+                fireRateAppIntent()
+                false
+            } else {
+                when (viewModel.activeFragment.value) {
+                    R.id.selectableCurrenciesFragment -> {
+                        menuItem.itemId == R.id.activeCurrenciesFragment
+                    }
+                    R.id.errorFragment -> {
+                        showNoInternetSnackbar()
+                        false
+                    }
+                    R.id.loadingCurrenciesFragment -> false
+                    else -> {
+                        false
                     }
                 }
-                R.id.errorFragment -> {
-                    showNoInternetSnackbar()
-                    false
-                }
-                R.id.loadingCurrenciesFragment -> false
-                else -> {
-                    false
-                }
             }
+        }
+    }
+
+    /**
+     * Start an explicit intent to open the app's Google Play link in the device's Google Play app.
+     * If this device doesn't have the Google Play app installed delegate the intent to a browser.
+     */
+    private fun fireRateAppIntent() {
+        val packageName = packageName
+        val googlePlayMarketUrl = "market://details?id="
+        val googlePlayWebUrl = "https://play.google.com/store/apps/details?id="
+        val rateAppIntent = Intent(Intent.ACTION_VIEW)
+        rateAppIntent.data = Uri.parse(googlePlayMarketUrl + packageName)
+        try {
+            startActivity(rateAppIntent)
+        } catch (e: ActivityNotFoundException) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayWebUrl + packageName))
+            startActivity(intent)
         }
     }
 

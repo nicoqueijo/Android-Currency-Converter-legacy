@@ -9,5 +9,9 @@
             android:id="@+id/activeCurrenciesFragment"
             android:icon="@drawable/ic_convert"
             android:title="@string/converter" />
+        <item
+            android:id="@+id/rateApp"
+            android:icon="@drawable/ic_thumb_up"
+            android:title="@string/rate_app" />
     </group>
 </menu>

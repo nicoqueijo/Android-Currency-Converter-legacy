@@ -6,6 +6,6 @@
 /build
 /captures
 .externalNativeBuild
-app/src/main/res/values/secrets.xml
+app/src/main/res/values/keys.xml
 app/release
 examples/
