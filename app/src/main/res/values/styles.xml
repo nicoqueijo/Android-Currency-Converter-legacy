@@ -4,6 +4,7 @@
     <attr name="ic_no_connection" format="reference" />
     <attr name="ic_error" format="reference" />
     <attr name="text_color" format="color" />
+    <attr name="text_hint_color" format="color" />
     <attr name="icon_color" format="color" />
     <attr name="row_background_color" format="color" />
     <attr name="fragment_background_color" format="color" />
@@ -23,6 +24,7 @@
         <item name="drawer_background_color">@color/almost_black</item>
         <item name="text_color">@android:color/white</item>
         <item name="icon_color">@android:color/white</item>
+        <item name="text_hint_color">@color/light_gray</item>
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
     </style>
 
@@ -52,18 +54,19 @@
     <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text
+        </item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/text_color</item>
     </style>
 
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/text_color</item>
     </style>
 
     <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/text_color</item>
     </style>
 </resources>

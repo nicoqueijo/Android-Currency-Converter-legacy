@@ -93,6 +93,7 @@
                 android:longClickable="true"
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
+                android:textColorHint="?attr/text_hint_color"
                 android:textSize="20sp"
                 tools:text="12,345.6789" />
 
