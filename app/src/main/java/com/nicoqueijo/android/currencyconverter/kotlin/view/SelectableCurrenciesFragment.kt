@@ -42,6 +42,22 @@ class SelectableCurrenciesFragment : Fragment() {
         initMenu(menu, inflater)
     }
 
+    private fun initMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search, menu)
+        val searchView = menu.findItem(R.id.search).actionView as SearchView
+        searchView.imeOptions = EditorInfo.IME_ACTION_GO
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
+    }
+
     private fun initViewsAndAdapter(view: View) {
         recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies)
         noResultsView = view.findViewById(R.id.no_results)
@@ -60,22 +76,6 @@ class SelectableCurrenciesFragment : Fragment() {
         })
         viewModel.searchQuery.observe(viewLifecycleOwner, Observer { searchQuery ->
             noResultsView.text = getString(R.string.no_results, searchQuery)
-        })
-    }
-
-    private fun initMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search, menu)
-        val searchView = menu.findItem(R.id.search).actionView as SearchView
-        searchView.imeOptions = EditorInfo.IME_ACTION_GO
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                adapter.filter.filter(newText)
-                return false
-            }
         })
     }
 }

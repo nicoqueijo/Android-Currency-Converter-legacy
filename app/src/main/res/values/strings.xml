@@ -9,6 +9,7 @@
     <string name="last_update">Last updated: %1$s</string>
     <string name="no_internet">No internet connection</string>
     <string name="refresh">Refresh</string>
+    <string name="remove_all">Remove all</string>
     <string name="tap_to_close">Tap again to close app</string>
     <string name="search">Search</string>
     <string name="open_in_browser">Open in browser</string>

@@ -4,9 +4,7 @@ import android.R.color.black
 import android.R.color.white
 import android.animation.LayoutTransition
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -14,13 +12,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.forEachIndexed
 import androidx.core.view.get
-import androidx.core.view.isVisible
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.jmedeisis.draglinearlayout.DragLinearLayout
@@ -45,15 +44,43 @@ class ActiveCurrenciesFragment : Fragment() {
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
     private lateinit var scrollView: ScrollView
+    private lateinit var menuItem: MenuItem
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_active_currencies, container, false)
         viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
         viewModel.initDefaultCurrencies()
+        setHasOptionsMenu(true)
         initViews(view)
         observeObservables()
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_remove_all, menu)
+        this.menuItem = menu.findItem(R.id.remove_all)
+        toggleViewVisibility()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        MaterialAlertDialogBuilder(requireActivity())
+                .setTitle("Remove all currencies?")
+                .setBackground(resources.getDrawable(R.drawable.dialog_background))
+                .setPositiveButton("OK") { _, _ ->
+                    removeAllCurrencies()
+                    toggleViewVisibility()
+                }
+                .setNegativeButton("Cancel") { _, _ ->
+                }
+                .show()
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun removeAllCurrencies() {
+        viewModel.removeAllCurrencies()
+        dragLinearLayout.removeAllViews()
     }
 
     private fun observeObservables() {
@@ -61,8 +88,8 @@ class ActiveCurrenciesFragment : Fragment() {
             if (databaseActiveCurrencies.isNotEmpty()) {
                 initActiveCurrencies(databaseActiveCurrencies)
                 styleRows()
-                toggleEmptyListViewVisibility()
             }
+            toggleViewVisibility()
         })
         viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
             updateHints()
@@ -282,7 +309,7 @@ class ActiveCurrenciesFragment : Fragment() {
                     removeDragView(this@row)
                     layoutTransition = null
                     styleRows()
-                    toggleEmptyListViewVisibility()
+                    toggleViewVisibility()
                     /**
                      * Restores the removed currency and restores the state before the currency was removed.
                      */
@@ -292,7 +319,7 @@ class ActiveCurrenciesFragment : Fragment() {
                                 addDragView(this@row, this@row, positionOfCurrencyToRemove)
                                 layoutTransition = null
                                 viewModel.handleUndo(currencyToRemove, positionOfCurrencyToRemove)
-                                toggleEmptyListViewVisibility()
+                                toggleViewVisibility()
                             }.show()
                     true
                 }
@@ -308,13 +335,16 @@ class ActiveCurrenciesFragment : Fragment() {
         }
     }
 
-    private fun toggleEmptyListViewVisibility() {
-        val numOfVisibleRows = dragLinearLayout.children.asSequence()
-                .filter { it.isVisible }
-                .count()
-        when (numOfVisibleRows) {
-            0 -> emptyList.show()
-            else -> emptyList.hide()
+    private fun toggleViewVisibility() {
+        when (dragLinearLayout.isEmpty()) {
+            true -> {
+                emptyList.show()
+                menuItem.hide()
+            }
+            false -> {
+                emptyList.hide()
+                menuItem.show()
+            }
         }
     }
 }

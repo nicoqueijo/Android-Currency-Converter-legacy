@@ -9,6 +9,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -115,6 +116,14 @@ object Utils {
 
     fun View.hide() {
         visibility = View.GONE
+    }
+
+    fun MenuItem.show() {
+        isVisible = true
+    }
+
+    fun MenuItem.hide() {
+        isVisible = false
     }
 
     /**

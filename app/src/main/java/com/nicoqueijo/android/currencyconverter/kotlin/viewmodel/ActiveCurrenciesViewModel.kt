@@ -309,6 +309,20 @@ class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
+    fun removeAllCurrencies() {
+        focusedCurrency.value = null
+        memoryActiveCurrencies.forEach {
+            it.order = INVALID.position
+            it.isSelected = false
+        }
+        val currenciesToRemove = mutableListOf<Currency>()
+        memoryActiveCurrencies.forEach {
+            currenciesToRemove.add(it.copy())
+        }
+        upsertCurrencies(currenciesToRemove)
+        memoryActiveCurrencies.clear()
+    }
+
     /**
      * Selects a set of default currencies on the first launch of the app based on the user's locale.
      * Logic: If the user's locale is US, it selects the US dollar and the three other most used

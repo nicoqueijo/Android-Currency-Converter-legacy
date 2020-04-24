@@ -31,7 +31,6 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasActiveCurre
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainActivityViewModel
@@ -55,8 +54,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * The banners ad's view needs to be added programatically if we want to set its ad unit id
-     * at run time.     See: https://stackoverflow.com/a/34232962/5906793
+     * The banners ad's view needs to be added programatically in order to set its ad unit id
+     * at run time.
+     * See: https://stackoverflow.com/a/34232962/5906793
      */
     private fun initBannerAd() {
         MobileAds.initialize(this, resources.getString(R.string.app_id))
