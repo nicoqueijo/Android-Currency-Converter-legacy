@@ -66,8 +66,8 @@ class ActiveCurrenciesFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         MaterialAlertDialogBuilder(requireActivity())
-                .setTitle(resources.getString(R.string.remove_all_currencies))
-                .setBackground(resources.getDrawable(R.drawable.dialog_background))
+                .setTitle(resources.getString(R.string.remove_all_dialog_title))
+                .setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.dialog_background))
                 .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
                     removeAllCurrencies()
                     toggleViewVisibility()
@@ -239,7 +239,7 @@ class ActiveCurrenciesFragment : Fragment() {
      * Walks the user through some of the app's features on the first launch.
      */
     private fun showTargets() {
-        val addCurrencyTarget = TapTarget.forView(floatingActionButton, getString(R.string.add_currency_target_message))
+        val addCurrencyTarget = TapTarget.forView(floatingActionButton, getString(R.string.add_target_message))
                 .outerCircleColor(white)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(black)
@@ -248,7 +248,7 @@ class ActiveCurrenciesFragment : Fragment() {
                 .transparentTarget(true)
                 .targetRadius(50)
         val dragCurrencyTarget = TapTarget.forView((dragLinearLayout[FIRST.position] as RowActiveCurrency).flag,
-                getString(R.string.drag_currency_target_message))
+                getString(R.string.drag_target_message))
                 .outerCircleColor(white)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(black)
@@ -257,7 +257,7 @@ class ActiveCurrenciesFragment : Fragment() {
                 .transparentTarget(true)
                 .targetRadius(50)
         val removeCurrencyTarget = TapTarget.forView((dragLinearLayout[FIRST.position] as RowActiveCurrency).currencyCode,
-                getString(R.string.remove_currency_target_message))
+                getString(R.string.remove_target_message))
                 .outerCircleColor(white)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(black)

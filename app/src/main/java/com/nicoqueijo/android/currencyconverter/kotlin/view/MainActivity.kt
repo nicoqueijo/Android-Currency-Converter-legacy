@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -24,6 +25,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
@@ -94,23 +96,34 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             drawer.closeDrawer(GravityCompat.START)
-            if (menuItem.itemId == R.id.rateApp) {
-                fireRateAppIntent()
-                false
-            } else {
-                when (viewModel.activeFragment.value) {
-                    R.id.selectableCurrenciesFragment -> {
-                        menuItem.itemId == R.id.activeCurrenciesFragment
-                    }
-                    R.id.errorFragment -> {
-                        showNoInternetSnackbar()
-                        false
-                    }
-                    R.id.loadingCurrenciesFragment -> false
-                    else -> {
-                        false
+            when (menuItem.itemId) {
+                R.id.rateApp -> {
+                    fireRateAppIntent()
+                    false
+                }
+                R.id.tips -> {
+                    fireTipsDialog()
+                    false
+                }
+                R.id.activeCurrenciesFragment -> {
+                    when (viewModel.activeFragment.value) {
+                        R.id.selectableCurrenciesFragment -> {
+                            menuItem.itemId == R.id.activeCurrenciesFragment
+                        }
+                        R.id.errorFragment -> {
+                            showNoInternetSnackbar()
+                            false
+                        }
+                        R.id.loadingCurrenciesFragment -> false
+                        else -> {
+                            false
+                        }
                     }
                 }
+                else -> {
+                    false
+                }
+
             }
         }
     }
@@ -131,6 +144,13 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayWebUrl + packageName))
             startActivity(intent)
         }
+    }
+
+    private fun fireTipsDialog() {
+        MaterialAlertDialogBuilder(this)
+                .setView(R.layout.tips)
+                .setBackground(ContextCompat.getDrawable(this, R.drawable.dialog_background))
+                .show()
     }
 
     private fun initListeners() {

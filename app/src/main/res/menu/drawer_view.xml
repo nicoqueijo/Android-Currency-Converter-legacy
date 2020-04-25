@@ -10,6 +10,10 @@
             android:icon="@drawable/ic_convert"
             android:title="@string/converter" />
         <item
+            android:id="@+id/tips"
+            android:icon="@drawable/ic_tips"
+            android:title="@string/tips" />
+        <item
             android:id="@+id/rateApp"
             android:icon="@drawable/ic_thumb_up"
             android:title="@string/rate_app" />

@@ -13,7 +13,7 @@
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:paddingLeft="14dp"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toTopOf="@id/bottom_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
