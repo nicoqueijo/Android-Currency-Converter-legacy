@@ -100,11 +100,24 @@ class ActiveCurrenciesFragment : Fragment() {
         emptyList = view.findViewById(R.id.empty_list)
         scrollView = view.findViewById(R.id.scroll_view)
         keyboard = view.findViewById(R.id.keyboard)
+        adjustViews(emptyList, keyboard)
         initDragLinearLayout(view)
         initFloatingActionButton(view)
         initKeyboardListener()
         if (viewModel.wasListConstructed) {
             restoreActiveCurrencies()
+        }
+    }
+
+    /**
+     * If the device has a height of less than 1920px then the paddingTop of the emptyList is reduced
+     * from 60dp to 20dp and the keyboards height is reduced from 250dp to 200dp. This is to optimize
+     * screen space and not have any views cut out.
+     */
+    private fun adjustViews(emptyList: LinearLayout, keyboard: DecimalNumberKeyboard) {
+        if (resources.displayMetrics.heightPixels < 1920) {
+            emptyList.setPadding(0, (20f * resources.displayMetrics.density).toInt(), 0, 0)
+            keyboard.layoutParams.height = (200f * resources.displayMetrics.density).toInt()
         }
     }
 
