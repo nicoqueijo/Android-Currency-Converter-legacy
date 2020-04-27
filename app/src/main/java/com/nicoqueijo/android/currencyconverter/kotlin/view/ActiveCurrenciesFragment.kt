@@ -45,7 +45,7 @@ class ActiveCurrenciesFragment : Fragment() {
     private lateinit var floatingActionButton: FloatingActionButton
     private lateinit var keyboard: DecimalNumberKeyboard
     private lateinit var scrollView: ScrollView
-    private lateinit var menuItem: MenuItem
+    private var menuItem: MenuItem? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -360,11 +360,11 @@ class ActiveCurrenciesFragment : Fragment() {
         when (dragLinearLayout.isEmpty()) {
             true -> {
                 emptyList.show()
-                menuItem.hide()
+                menuItem?.hide()
             }
             false -> {
                 emptyList.hide()
-                menuItem.show()
+                menuItem?.show()
             }
         }
     }

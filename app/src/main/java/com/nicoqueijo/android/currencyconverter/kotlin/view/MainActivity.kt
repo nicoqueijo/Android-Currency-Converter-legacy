@@ -105,25 +105,9 @@ class MainActivity : AppCompatActivity() {
                     fireTipsDialog()
                     false
                 }
-                R.id.activeCurrenciesFragment -> {
-                    when (viewModel.activeFragment.value) {
-                        R.id.selectableCurrenciesFragment -> {
-                            menuItem.itemId == R.id.activeCurrenciesFragment
-                        }
-                        R.id.errorFragment -> {
-                            showNoInternetSnackbar()
-                            false
-                        }
-                        R.id.loadingCurrenciesFragment -> false
-                        else -> {
-                            false
-                        }
-                    }
-                }
                 else -> {
                     false
                 }
-
             }
         }
     }

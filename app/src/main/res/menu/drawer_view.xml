@@ -6,10 +6,6 @@
         android:id="@+id/nav_group_fragments"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/activeCurrenciesFragment"
-            android:icon="@drawable/ic_convert"
-            android:title="@string/converter" />
-        <item
             android:id="@+id/tips"
             android:icon="@drawable/ic_tips"
             android:title="@string/tips" />
