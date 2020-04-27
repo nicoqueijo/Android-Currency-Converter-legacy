@@ -8,10 +8,10 @@ Currency conversion tool using live exchange rates.
 
 ### Demo
 <p float="left">
-  <img src="graphics/demos/demo1.gif" hspace="4" width="200" />
-  <img src="graphics/demos/demo2.gif" hspace="4" width="200" />
-  <img src="graphics/demos/demo1.gif" hspace="4" width="200" />
-  <img src="graphics/demos/demo2.gif" hspace="4" width="200" /> 
+  <img src="graphics/demos/demo1.gif" hspace="4" width="220" />
+  <img src="graphics/demos/demo2.gif" hspace="4" width="220" />
+  <img src="graphics/demos/demo3.gif" hspace="4" width="220" />
+  <img src="graphics/demos/demo4.gif" hspace="4" width="220" /> 
 </p>
 
 ### Screenshots
