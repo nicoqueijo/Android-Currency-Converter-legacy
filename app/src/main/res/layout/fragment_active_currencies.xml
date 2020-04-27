@@ -89,6 +89,7 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@android:color/white"
             android:src="@drawable/ic_add"
+            android:transitionName="shared_element_container"
             app:borderWidth="0dp"
             app:fabSize="normal" />
 

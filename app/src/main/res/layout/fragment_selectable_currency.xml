@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?fragment_background_color">
+    android:background="?fragment_background_color"
+    android:transitionName="shared_element_container">
 
     <TextView
         android:id="@+id/no_results"

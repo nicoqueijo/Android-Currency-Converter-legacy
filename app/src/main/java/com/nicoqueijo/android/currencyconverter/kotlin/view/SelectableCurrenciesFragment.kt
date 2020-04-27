@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.transition.ChangeBounds
 import com.futuremind.recyclerviewfastscroll.FastScroller
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter
@@ -23,18 +24,24 @@ class SelectableCurrenciesFragment : Fragment() {
     private lateinit var recyclerView: CustomRecyclerView
     private lateinit var noResultsView: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_selectable_currency, container, false)
         viewModel = ViewModelProvider(this).get(SelectableCurrenciesViewModel::class.java)
+        setTransitionDurations()
+        setHasOptionsMenu(true)
         initViewsAndAdapter(view)
         observeObservables()
         return view
+    }
+
+    private fun setTransitionDurations() {
+        sharedElementEnterTransition = ChangeBounds().apply {
+            duration = 300
+        }
+        sharedElementReturnTransition = ChangeBounds().apply {
+            duration = 300
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

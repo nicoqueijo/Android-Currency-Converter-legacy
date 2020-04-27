@@ -16,6 +16,7 @@ import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
@@ -65,6 +66,11 @@ class ActiveCurrenciesFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        fireRemoveAllDialog()
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun fireRemoveAllDialog() {
         MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(resources.getString(R.string.remove_all_dialog_title))
                 .setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.dialog_background))
@@ -75,7 +81,6 @@ class ActiveCurrenciesFragment : Fragment() {
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }
                 .show()
-        return super.onOptionsItemSelected(item)
     }
 
     private fun removeAllCurrencies() {
@@ -133,7 +138,10 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun initFloatingActionButton(view: View) {
         floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floating_action_button).apply {
             setOnClickListener {
-                findNavController().navigate(R.id.action_activeCurrenciesFragment_to_selectableCurrenciesFragment)
+                findNavController().navigate(R.id.action_activeCurrenciesFragment_to_selectableCurrenciesFragment,
+                        null,
+                        null,
+                        FragmentNavigatorExtras(this to "shared_element_container"))
             }
         }
     }

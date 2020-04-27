@@ -47,11 +47,7 @@
             tools:layout="@layout/fragment_active_currencies">
             <action
                 android:id="@+id/action_activeCurrenciesFragment_to_selectableCurrenciesFragment"
-                app:destination="@id/selectableCurrenciesFragment"
-                app:enterAnim="@android:anim/slide_in_left"
-                app:exitAnim="@android:anim/slide_out_right"
-                app:popEnterAnim="@android:anim/slide_in_left"
-                app:popExitAnim="@android:anim/slide_out_right" />
+                app:destination="@id/selectableCurrenciesFragment" />
         </fragment>
         <fragment
             android:id="@+id/selectableCurrenciesFragment"
