@@ -27,11 +27,11 @@
     <string name="click_to_add">Press the + button to add</string>
     <string name="no_results">No results found for \'%1$s\'</string>
     <string name="add_target_message">Tap button to add</string>
-    <string name="drag_target_message">Drag flag to re-order</string>
+    <string name="drag_target_message">Drag flag to reorder</string>
     <string name="remove_target_message">Long-press currency code to remove</string>
     <string name="remove_all_dialog_title">Remove all currencies?</string>
     <string name="how_to_use">How To Use</string>
-    <string name="drag_example">Drag the flag to re-order the currencies</string>
+    <string name="drag_example">Drag the flag to reorder the currencies</string>
     <string name="remove_example">Long-press the currency code to remove it</string>
     <string name="copy_example">Long-press the conversion to copy to clipboard</string>
     <string name="ok">OK</string>
