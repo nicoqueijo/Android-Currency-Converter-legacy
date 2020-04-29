@@ -2,7 +2,6 @@
 <resources>
     <!-- UI components -->
     <string name="app_name">Currency Converter</string>
-    <string name="converter">Converter</string>
     <string name="rate_app">Rate App</string>
     <string name="tips">Tips</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
@@ -13,14 +12,12 @@
     <string name="remove_all">Remove all</string>
     <string name="tap_to_close">Tap again to close app</string>
     <string name="search">Search</string>
-    <string name="open_in_browser">Open in browser</string>
-    <string name="launch_browser">Select browser app</string>
     <string name="item_removed">Item removed</string>
     <string name="undo">Undo</string>
+    <string name="conversion_copied">Conversion copied</string>
     <string name="fetching_data">Fetching data…</string>
     <string name="error_title">Error Occurred</string>
-    <string name="error_description">An error has occurred while attempting to retrieve the data
-        from the internet.</string>
+    <string name="error_description">An error has occurred while attempting to retrieve the data from the internet.</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
     <string name="empty_list">Empty list</string>

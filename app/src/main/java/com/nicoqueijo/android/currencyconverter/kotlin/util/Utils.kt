@@ -19,6 +19,7 @@ import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import androidx.navigation.NavController
 import com.jmedeisis.draglinearlayout.DragLinearLayout
+import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
 import java.math.BigDecimal
@@ -83,7 +84,7 @@ object Utils {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", text)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "Conversion copied", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.conversion_copied), Toast.LENGTH_SHORT).show()
     }
 
     /**
