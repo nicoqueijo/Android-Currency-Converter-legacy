@@ -30,7 +30,7 @@ class ErrorFragment : Fragment() {
         refreshMenuItem.setImageResource(R.drawable.ic_refresh)
         refreshMenuItem.setPadding(24, 24, 24, 24)
         refreshMenuItem.setOnClickListener {
-            findNavController().navigate(R.id.action_errorFragment_to_loadingCurrenciesFragment)
+            findNavController().navigate(R.id.action_errorFragment_to_splashFragment)
         }
     }
 }

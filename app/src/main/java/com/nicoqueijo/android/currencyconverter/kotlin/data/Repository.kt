@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint

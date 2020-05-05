@@ -9,25 +9,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.LoadingCurrenciesViewModel
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SplashViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
-class LoadingCurrenciesFragment : Fragment() {
+class SplashFragment : Fragment() {
 
-    private lateinit var viewModel: LoadingCurrenciesViewModel
+    private lateinit var viewModel: SplashViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_loading_currencies, container, false)
+        return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LoadingCurrenciesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 
     override fun onStart() {
@@ -41,10 +41,10 @@ class LoadingCurrenciesFragment : Fragment() {
             try {
                 viewModel.initCurrencies()
                 withContext(Dispatchers.Main) {
-                    findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_activeCurrenciesFragment)
+                    findNavController().navigate(R.id.action_splashFragment_to_watchlistFragment)
                 }
             } catch (e: IOException) {
-                findNavController().navigate(R.id.action_loadingCurrenciesFragment_to_errorFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_errorFragment)
             }
         }
     }

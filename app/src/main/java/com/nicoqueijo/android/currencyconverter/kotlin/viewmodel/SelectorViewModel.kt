@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,9 +14,8 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SelectableCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
+class SelectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Candidate for dependency injection
     private val repository = Repository(application)
     val allCurrencies = repository.getAllCurrencies()
     private fun upsertCurrency(currency: Currency) {

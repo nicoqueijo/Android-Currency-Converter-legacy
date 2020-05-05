@@ -13,21 +13,21 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.transition.ChangeBounds
 import com.futuremind.recyclerviewfastscroll.FastScroller
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectableCurrenciesAdapter
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
+import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectorAdapter
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectorViewModel
 
-class SelectableCurrenciesFragment : Fragment() {
+class SelectorFragment : Fragment() {
 
-    private lateinit var viewModel: SelectableCurrenciesViewModel
+    private lateinit var viewModel: SelectorViewModel
 
-    private lateinit var adapter: SelectableCurrenciesAdapter
+    private lateinit var adapter: SelectorAdapter
     private lateinit var recyclerView: CustomRecyclerView
     private lateinit var noResultsView: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_selectable_currency, container, false)
-        viewModel = ViewModelProvider(this).get(SelectableCurrenciesViewModel::class.java)
+        val view = inflater.inflate(R.layout.fragment_selector, container, false)
+        viewModel = ViewModelProvider(this).get(SelectorViewModel::class.java)
         setTransitionDurations()
         setHasOptionsMenu(true)
         initViewsAndAdapter(view)
@@ -66,10 +66,10 @@ class SelectableCurrenciesFragment : Fragment() {
     }
 
     private fun initViewsAndAdapter(view: View) {
-        recyclerView = view.findViewById(R.id.recycler_view_selectable_currencies)
+        recyclerView = view.findViewById(R.id.recycler_view_selector)
         noResultsView = view.findViewById(R.id.no_results)
         recyclerView.showIfEmpty(noResultsView)
-        adapter = SelectableCurrenciesAdapter(viewModel)
+        adapter = SelectorAdapter(viewModel)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)

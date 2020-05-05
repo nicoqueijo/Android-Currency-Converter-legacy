@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
     private fun initLastUpdateLabel() {
         viewModel.activeFragment.observe(this, Observer { activeFragment ->
             when (activeFragment) {
-                R.id.activeCurrenciesFragment ->
+                R.id.watchlistFragment ->
                     lastUpdateLabel.text = getString(R.string.last_update, viewModel.getFormattedLastUpdate())
             }
         })

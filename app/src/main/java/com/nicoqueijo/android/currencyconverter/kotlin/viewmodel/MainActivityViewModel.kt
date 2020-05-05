@@ -13,10 +13,9 @@ import java.util.*
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Candidate for dependency injection
     private val repository = Repository(application)
 
-    val activeFragment = MutableLiveData(R.id.loadingCurrenciesFragment)
+    val activeFragment = MutableLiveData(R.id.splashFragment)
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
     @SuppressLint("SimpleDateFormat")

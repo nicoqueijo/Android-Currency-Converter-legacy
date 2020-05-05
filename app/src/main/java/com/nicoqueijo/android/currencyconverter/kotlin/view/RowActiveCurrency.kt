@@ -21,7 +21,7 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
     val blinkingCursor: View
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.row_active_currency, this)
+        LayoutInflater.from(context).inflate(R.layout.row_watchlist, this)
         rowCanvas = findViewById(R.id.row_canvas)
         flag = findViewById(R.id.flag)
         currencyCode = findViewById(R.id.currency_code)

@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.futuremind.recyclerviewfastscroll.SectionTitleProvider
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
-import com.nicoqueijo.android.currencyconverter.databinding.RowSelectableCurrencyBinding
+import com.nicoqueijo.android.currencyconverter.databinding.RowSelectorBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectableCurrenciesViewModel
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectorViewModel
 
-class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesViewModel) :
-        ListAdapter<Currency, SelectableCurrenciesAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
+class SelectorAdapter(private val viewModel: SelectorViewModel) :
+        ListAdapter<Currency, SelectorAdapter.ViewHolder>(CurrencyDiffUtilCallback()),
         SectionTitleProvider,
         Filterable {
 
@@ -31,7 +31,7 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
         }
     }
 
-    inner class ViewHolder(private val binding: RowSelectableCurrencyBinding) :
+    inner class ViewHolder(private val binding: RowSelectorBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -50,7 +50,7 @@ class SelectableCurrenciesAdapter(private val viewModel: SelectableCurrenciesVie
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RowSelectableCurrencyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RowSelectorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

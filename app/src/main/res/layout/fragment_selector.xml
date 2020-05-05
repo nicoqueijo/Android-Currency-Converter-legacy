@@ -19,11 +19,11 @@
         android:textSize="18sp" />
 
     <com.nicoqueijo.android.currencyconverter.kotlin.view.CustomRecyclerView
-        android:id="@+id/recycler_view_selectable_currencies"
+        android:id="@+id/recycler_view_selector"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/row_selectable_currency" />
+        tools:listitem="@layout/row_selector" />
 
     <com.futuremind.recyclerviewfastscroll.FastScroller
         android:id="@+id/fast_scroller"

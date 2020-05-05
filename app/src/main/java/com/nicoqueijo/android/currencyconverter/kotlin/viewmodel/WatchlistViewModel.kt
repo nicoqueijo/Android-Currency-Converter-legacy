@@ -2,6 +2,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -23,9 +24,8 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.*
 
-class ActiveCurrenciesViewModel(application: Application) : AndroidViewModel(application) {
+class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Candidate for dependency injection
     private val repository = Repository(application)
 
     private fun upsertCurrency(currency: Currency) = repository.upsertCurrency(currency)

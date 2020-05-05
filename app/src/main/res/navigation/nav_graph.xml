@@ -3,25 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loadingCurrenciesFragment">
+    app:startDestination="@id/splashFragment">
     <fragment
-        android:id="@+id/loadingCurrenciesFragment"
-        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.LoadingCurrenciesFragment"
-        android:label="LoadingCurrenciesFragment"
-        tools:layout="@layout/fragment_loading_currencies">
+        android:id="@+id/splashFragment"
+        android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash">
         <action
-            android:id="@+id/action_loadingCurrenciesFragment_to_errorFragment"
+            android:id="@+id/action_splashFragment_to_errorFragment"
             app:destination="@id/errorFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/loadingCurrenciesFragment"
+            app:popUpTo="@+id/splashFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_loadingCurrenciesFragment_to_activeCurrenciesFragment"
-            app:destination="@id/activeCurrenciesFragment"
+            android:id="@+id/action_splashFragment_to_watchlistFragment"
+            app:destination="@id/watchlistFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/loadingCurrenciesFragment"
+            app:popUpTo="@+id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -30,29 +30,29 @@
         android:label="ErrorFragment"
         tools:layout="@layout/fragment_error">
         <action
-            android:id="@+id/action_errorFragment_to_loadingCurrenciesFragment"
-            app:destination="@id/loadingCurrenciesFragment"
+            android:id="@+id/action_errorFragment_to_splashFragment"
+            app:destination="@id/splashFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@+id/errorFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <navigation
-        android:id="@+id/activeCurrenciesFragment"
-        app:startDestination="@id/activeCurrenciesFragment">
+        android:id="@+id/watchlistFragment"
+        app:startDestination="@id/watchlistFragment">
         <fragment
-            android:id="@+id/activeCurrenciesFragment"
-            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.ActiveCurrenciesFragment"
-            android:label="ActiveCurrenciesFragment"
-            tools:layout="@layout/fragment_active_currencies">
+            android:id="@+id/watchlistFragment"
+            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.WatchlistFragment"
+            android:label="WatchlistFragment"
+            tools:layout="@layout/fragment_watchlist">
             <action
-                android:id="@+id/action_activeCurrenciesFragment_to_selectableCurrenciesFragment"
-                app:destination="@id/selectableCurrenciesFragment" />
+                android:id="@+id/action_watchlistFragment_to_selectorFragment"
+                app:destination="@id/selectorFragment" />
         </fragment>
         <fragment
-            android:id="@+id/selectableCurrenciesFragment"
-            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectableCurrenciesFragment"
-            android:label="SelectableCurrenciesFragment"
-            tools:layout="@layout/fragment_selectable_currency" />
+            android:id="@+id/selectorFragment"
+            android:name="com.nicoqueijo.android.currencyconverter.kotlin.view.SelectorFragment"
+            android:label="SelectorFragment"
+            tools:layout="@layout/fragment_selector" />
     </navigation>
 </navigation>

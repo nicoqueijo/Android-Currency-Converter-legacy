@@ -33,12 +33,12 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hide
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isViewVisible
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.ActiveCurrenciesViewModel
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.WatchlistViewModel
 
 
-class ActiveCurrenciesFragment : Fragment() {
+class WatchlistFragment : Fragment() {
 
-    private lateinit var viewModel: ActiveCurrenciesViewModel
+    private lateinit var viewModel: WatchlistViewModel
 
     private lateinit var emptyList: LinearLayout
     private lateinit var dragLinearLayout: DragLinearLayout
@@ -49,8 +49,8 @@ class ActiveCurrenciesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_active_currencies, container, false)
-        viewModel = ViewModelProvider(this).get(ActiveCurrenciesViewModel::class.java)
+        val view = inflater.inflate(R.layout.fragment_watchlist, container, false)
+        viewModel = ViewModelProvider(this).get(WatchlistViewModel::class.java)
         viewModel.initDefaultCurrencies()
         setHasOptionsMenu(true)
         initViews(view)
@@ -138,7 +138,7 @@ class ActiveCurrenciesFragment : Fragment() {
     private fun initFloatingActionButton(view: View) {
         floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floating_action_button).apply {
             setOnClickListener {
-                findNavController().navigate(R.id.action_activeCurrenciesFragment_to_selectableCurrenciesFragment,
+                findNavController().navigate(R.id.action_watchlistFragment_to_selectorFragment,
                         null,
                         null,
                         FragmentNavigatorExtras(this to "shared_element_container"))
@@ -210,7 +210,7 @@ class ActiveCurrenciesFragment : Fragment() {
                         scrollToFocusedCurrency()
                     }
                 }
-                this@ActiveCurrenciesFragment.updateHints()
+                this@WatchlistFragment.updateHints()
             }
             setDefaultFocus()
         }

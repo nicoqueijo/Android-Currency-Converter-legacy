@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
  * which displays information about why its empty.
  */
 class CustomRecyclerView : RecyclerView {
-    private lateinit var mEmptyListView: View
+
+    private lateinit var emptyListView: View
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -60,10 +61,10 @@ class CustomRecyclerView : RecyclerView {
     }
 
     fun showIfEmpty(emptyListView: View) {
-        mEmptyListView = emptyListView
+        this.emptyListView = emptyListView
     }
 
     private fun showEmptyListView() {
-        mEmptyListView.visibility = if (adapter!!.itemCount == 0) View.VISIBLE else View.GONE
+        emptyListView.visibility = if (adapter!!.itemCount == 0) View.VISIBLE else View.GONE
     }
 }
