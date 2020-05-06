@@ -23,8 +23,11 @@ https://openexchangerates.org/
 ### Architecture
 This app implements the MVVM architectural pattern using a single activity with fragment-swapping and data-caching using a repository to fetch local or remote data. 
 
-<img src="graphics/flowcharts/single_activity_diagram.jpg" width="550">
-<img src="graphics/flowcharts/data_flow_diagram.png" width="550">
+<img src="graphics/flowcharts/single_activity_diagram.jpg" width="700">
+<img src="graphics/flowcharts/data_flow_diagram.png" width="700">
+
+### Dependency Graph
+<img src="graphics/flowcharts/dependency_graph.PNG" width="700">
 
 ### Built with
 * <a href="https://developer.android.com/topic/libraries/architecture/viewmodel" target="_blank">ViewModel</a> - A class designed to store and manage UI-related data in a lifecycle conscious way.
