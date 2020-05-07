@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
      * See: https://stackoverflow.com/a/34232962/5906793
      */
     private fun initBannerAd() {
-        MobileAds.initialize(this, resources.getString(R.string.app_id))
+        MobileAds.initialize(this,  resources.getString(R.string.app_id))
         val adView = AdView(this)
         adView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)

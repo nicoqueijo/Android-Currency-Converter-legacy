@@ -10,8 +10,9 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
+class MainActivityViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository(application)
 

@@ -2,9 +2,10 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ContextModule
+import com.nicoqueijo.android.currencyconverter.kotlin.dagger.DaggerRepositoryComponent
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.coroutines.CoroutineScope
@@ -16,10 +17,13 @@ import java.net.SocketTimeoutException
 
 class Repository(private val context: Context) {
 
-    private val retrofitService = RetrofitFactory.getRetrofitService()
-    private val currencyDao = CurrencyDatabase.getInstance(context).currencyDao()
-    private val sharedPrefsProperties = context
-            .getSharedPreferences(context.packageName.plus(".properties"), Context.MODE_PRIVATE)
+    private val daggerRepositoryComponent = DaggerRepositoryComponent
+            .builder()
+            .contextModule(ContextModule(context))
+            .build()
+    private var exchangeRateService = daggerRepositoryComponent.getExchangeRateService()
+    private val currencyDao = daggerRepositoryComponent.getCurrencyDao()
+    private val sharedPreferences = daggerRepositoryComponent.getSharedPreferences()
 
     /**
      * Makes an API call if internet is available and the local data is either stale (hasn't been
@@ -30,12 +34,12 @@ class Repository(private val context: Context) {
         if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
-                retrofitResponse = retrofitService.getExchangeRates(getApiKey())
+                retrofitResponse = exchangeRateService.getExchangeRates(getApiKey())
             } catch (e: SocketTimeoutException) {
                 throw SocketTimeoutException("Network request timed out.")
             }
             if (retrofitResponse.isSuccessful) {
-                sharedPrefsProperties.edit()
+                sharedPreferences.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
                 currencyDao.upsertCurrencies(retrofitResponse.body()?.exchangeRates?.currencies!!)
@@ -51,7 +55,7 @@ class Repository(private val context: Context) {
     }
 
     val timestamp: Long
-        get() = sharedPrefsProperties.getLong("timestamp", NO_DATA) * 1000L
+        get() = sharedPreferences.getLong("timestamp", NO_DATA) * 1000L
 
     private val timeSinceLastUpdate: Long
         get() {
@@ -63,8 +67,8 @@ class Repository(private val context: Context) {
         }
 
     var isFirstLaunch: Boolean
-        get() = sharedPrefsProperties.getBoolean("first_launch", true)
-        set(value) = sharedPrefsProperties.edit().putBoolean("first_launch", value).apply()
+        get() = sharedPreferences.getBoolean("first_launch", true)
+        set(value) = sharedPreferences.edit().putBoolean("first_launch", value).apply()
 
     suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
 

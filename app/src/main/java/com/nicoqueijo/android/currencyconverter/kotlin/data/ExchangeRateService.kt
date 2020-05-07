@@ -10,20 +10,12 @@ import retrofit2.http.Query
 /**
  * API endpoint: https://openexchangerates.org/api/latest.json?app_id={app_id}
  */
-interface RetrofitService {
+interface ExchangeRateService {
 
     @GET("api/latest.json")
     suspend fun getExchangeRates(@Query("app_id") app_id: String): Response<ApiEndPoint>
-}
 
-object RetrofitFactory {
-    private const val BASE_URL = "https://openexchangerates.org/"
-
-    fun getRetrofitService(): RetrofitService {
-        return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
-                .create(RetrofitService::class.java)
+    companion object {
+        const val BASE_URL = "https://openexchangerates.org/"
     }
 }
