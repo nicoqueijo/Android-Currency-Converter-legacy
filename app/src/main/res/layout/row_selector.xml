@@ -83,7 +83,7 @@
             android:id="@+id/check_mark"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_check"
+            android:src="@drawable/ic_check_mark"
             android:visibility="@{currency.selected ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

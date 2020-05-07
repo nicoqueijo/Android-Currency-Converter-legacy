@@ -4,6 +4,7 @@
     <string name="app_name">Currency Converter</string>
     <string name="rate_app">Rate App</string>
     <string name="tips">Tips</string>
+    <string name="remove_ads">Remove Ads</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="last_update">Last updated: %1$s</string>

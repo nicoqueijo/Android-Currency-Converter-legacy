@@ -13,5 +13,9 @@
             android:id="@+id/rateApp"
             android:icon="@drawable/ic_thumb_up"
             android:title="@string/rate_app" />
+        <item
+            android:id="@+id/removeAds"
+            android:icon="@drawable/ic_remove_ads"
+            android:title="@string/remove_ads" />
     </group>
 </menu>

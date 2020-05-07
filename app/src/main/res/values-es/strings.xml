@@ -4,6 +4,7 @@
     <string name="app_name">Convertidor de Moneda</string>
     <string name="rate_app">Calificar Aplicación</string>
     <string name="tips">Consejos</string>
+    <string name="remove_ads">Eliminar Anuncios</string>
     <string name="nav_drawer_open">Abrir el cajón de navegación</string>
     <string name="nav_drawer_close">Cerrar el cajón de navegación</string>
     <string name="last_update">Última actualización: %1$s</string>
