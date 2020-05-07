@@ -2,13 +2,13 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
@@ -23,10 +23,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.*
+import javax.inject.Inject
 
 class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = Repository(application)
+    @Inject
+    lateinit var repository: Repository
+
+    init {
+        (application.applicationContext as MyApplication).getAppComponent().inject(this)
+    }
 
     private fun upsertCurrency(currency: Currency) = repository.upsertCurrency(currency)
     private fun upsertCurrencies(currencies: List<Currency>) = repository.upsertCurrencies(currencies)

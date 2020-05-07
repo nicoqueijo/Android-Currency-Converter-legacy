@@ -1,11 +1,11 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ContextModule
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.DaggerRepositoryComponent
+import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ApplicationScope
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.coroutines.CoroutineScope
@@ -14,16 +14,19 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 import java.net.SocketTimeoutException
+import javax.inject.Inject
 
-class Repository(private val context: Context) {
+@ApplicationScope
+class Repository @Inject constructor(private val context: Context) {
 
-    private val daggerRepositoryComponent = DaggerRepositoryComponent
-            .builder()
-            .contextModule(ContextModule(context))
-            .build()
-    private var exchangeRateService = daggerRepositoryComponent.getExchangeRateService()
-    private val currencyDao = daggerRepositoryComponent.getCurrencyDao()
-    private val sharedPreferences = daggerRepositoryComponent.getSharedPreferences()
+    @Inject
+    lateinit var exchangeRateService: ExchangeRateService
+
+    @Inject
+    lateinit var currencyDao: CurrencyDao
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     /**
      * Makes an API call if internet is available and the local data is either stale (hasn't been

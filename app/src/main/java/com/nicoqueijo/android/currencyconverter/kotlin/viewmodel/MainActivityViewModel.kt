@@ -7,14 +7,20 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.BuildConfig.BUILD_TYPE
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class MainActivityViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
+class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = Repository(application)
+    @Inject
+    lateinit var repository: Repository
+
+    init {
+        (application.applicationContext as MyApplication).getAppComponent().inject(this)
+    }
 
     val activeFragment = MutableLiveData(R.id.splashFragment)
     val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()

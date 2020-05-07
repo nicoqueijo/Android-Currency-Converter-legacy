@@ -2,21 +2,28 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class SelectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = Repository(application)
+    @Inject
+    lateinit var repository: Repository
+
+    init {
+        (application.applicationContext as MyApplication).getAppComponent().inject(this)
+    }
+
     val allCurrencies = repository.getAllCurrencies()
     private fun upsertCurrency(currency: Currency) {
         repository.upsertCurrency(currency)
