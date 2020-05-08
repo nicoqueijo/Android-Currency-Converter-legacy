@@ -1,11 +1,11 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -39,6 +39,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityVie
 class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
     private lateinit var viewModel: MainActivityViewModel
+    private lateinit var billingProcessor: BillingProcessor
 
     lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
@@ -48,37 +49,47 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     private lateinit var lastUpdateLabel: TextView
     private lateinit var closeAppToast: Toast
 
-    private lateinit var billingProcessor: BillingProcessor
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-
-        billingProcessor = BillingProcessor.newBillingProcessor(this, getString(R.string.google_play_license_key), this)
-        billingProcessor.initialize()
-
-        initBannerAd()
+        initBillingProcessor()
         initViews()
         handleNavigation()
         initLastUpdateLabel()
     }
 
+    private fun initBillingProcessor() {
+        billingProcessor = BillingProcessor.newBillingProcessor(this, getString(R.string.google_play_license_key), this)
+        billingProcessor.initialize()
+    }
+
     override fun onBillingInitialized() {
-        Log.d("Nicoo", "onBillingInitialized()")
-        billingProcessor.getPurchaseTransactionDetails("remove_ads")
+        if (billingProcessor.isPurchased(MainActivityViewModel.REMOVE_ADS_PRODUCT_ID)) {
+            navView.menu.findItem(R.id.removeAds).isVisible = false
+            MainActivityViewModel.adsEnabled = false
+        } else {
+            initBannerAd()
+        }
     }
 
-    override fun onPurchaseHistoryRestored() {
-        Log.d("Nicoo", "onPurchaseHistoryRestored()")
-    }
+    override fun onProductPurchased(productId: String, details: TransactionDetails?) {}
 
-    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
-        Log.d("Nicoo", "onProductPurchased($productId)")
-    }
+    override fun onPurchaseHistoryRestored() {}
 
-    override fun onBillingError(errorCode: Int, error: Throwable?) {
-        Log.d("Nicoo", "onBillingError($errorCode, $error)")
+    override fun onBillingError(errorCode: Int, error: Throwable?) {}
+
+    /**
+     * Called upon return from Google Billing dialog. Here we determine if purchase went through
+     * and if so recreate the Activity to reflect the new state.
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+        if (resultCode == Activity.RESULT_OK) {
+            recreate()
+        }
     }
 
     /**
@@ -132,8 +143,7 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
                     false
                 }
                 R.id.removeAds -> {
-                    // Trigger billing dialog
-                    billingProcessor.purchase(this, "remove_ads");
+                    billingProcessor.purchase(this, MainActivityViewModel.REMOVE_ADS_PRODUCT_ID)
                     false
                 }
                 else -> {

@@ -43,4 +43,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
+
+    companion object {
+        const val REMOVE_ADS_PRODUCT_ID = "remove_ads"
+        var adsEnabled = true
+    }
 }

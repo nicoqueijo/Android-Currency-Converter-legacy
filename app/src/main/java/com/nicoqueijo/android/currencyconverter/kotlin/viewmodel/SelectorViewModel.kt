@@ -36,7 +36,7 @@ class SelectorViewModel(application: Application) : AndroidViewModel(application
         get() = _searchQuery
 
     // 1 in 12 chance the user will be shown an interstitial ad when they select a currency.
-    val willShowAd = (1..12).random() == 1
+    val willShowAd = (1..12).random() == 1 && MainActivityViewModel.adsEnabled
     fun getInterstitialAdId(context: Context): String {
         with(context.resources) {
             return when (BuildConfig.BUILD_TYPE) {
