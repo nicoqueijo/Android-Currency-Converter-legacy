@@ -9,7 +9,7 @@ android {
         applicationId "com.nicoqueijo.android.currencyconverter"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 23
+        versionCode 24
         versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,6 +46,7 @@ ext {
     retrofit_version = '2.8.1'
     dagger_version = '2.27'
     google_play_billing_version = '2.2.0'
+    android_in_app_billing_version = '1.0.44'
     fading_edge_layout_version = '1.0.0'
     recycler_bubble_version = '0.2.5'
     drag_linear_layout_version = '1.0.0'
@@ -96,6 +97,9 @@ dependencies {
     implementation "com.android.billingclient:billing:$google_play_billing_version"
     implementation "com.android.billingclient:billing:$google_play_billing_version"
     implementation "com.android.billingclient:billing-ktx:$google_play_billing_version"
+
+    // Android In-App Billing v3
+    implementation "com.anjlab.android.iab.v3:library:$android_in_app_billing_version"
 
     // FadingEdgeLayout
     implementation "com.github.bosphere.android-fadingedgelayout:fadingedgelayout:$fading_edge_layout_version"

@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -21,6 +22,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.anjlab.android.iab.v3.BillingProcessor
+import com.anjlab.android.iab.v3.TransactionDetails
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -33,7 +36,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasActiveCurre
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -45,14 +48,37 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lastUpdateLabel: TextView
     private lateinit var closeAppToast: Toast
 
+    private lateinit var billingProcessor: BillingProcessor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
+        billingProcessor = BillingProcessor.newBillingProcessor(this, getString(R.string.google_play_license_key), this)
+        billingProcessor.initialize()
+
         initBannerAd()
         initViews()
         handleNavigation()
         initLastUpdateLabel()
+    }
+
+    override fun onBillingInitialized() {
+        Log.d("Nicoo", "onBillingInitialized()")
+        billingProcessor.getPurchaseTransactionDetails("remove_ads")
+    }
+
+    override fun onPurchaseHistoryRestored() {
+        Log.d("Nicoo", "onPurchaseHistoryRestored()")
+    }
+
+    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
+        Log.d("Nicoo", "onProductPurchased($productId)")
+    }
+
+    override fun onBillingError(errorCode: Int, error: Throwable?) {
+        Log.d("Nicoo", "onBillingError($errorCode, $error)")
     }
 
     /**
@@ -61,7 +87,7 @@ class MainActivity : AppCompatActivity() {
      * See: https://stackoverflow.com/a/34232962/5906793
      */
     private fun initBannerAd() {
-        MobileAds.initialize(this,  resources.getString(R.string.app_id))
+        MobileAds.initialize(this, resources.getString(R.string.app_id))
         val adView = AdView(this)
         adView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -103,6 +129,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.tips -> {
                     fireTipsDialog()
+                    false
+                }
+                R.id.removeAds -> {
+                    // Trigger billing dialog
+                    billingProcessor.purchase(this, "remove_ads");
                     false
                 }
                 else -> {
@@ -172,5 +203,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        billingProcessor.release()
+        super.onDestroy()
     }
 }

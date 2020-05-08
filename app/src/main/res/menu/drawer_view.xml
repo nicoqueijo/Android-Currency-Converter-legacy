@@ -13,6 +13,7 @@
             android:id="@+id/rateApp"
             android:icon="@drawable/ic_thumb_up"
             android:title="@string/rate_app" />
+        <!-- Don't show this item if user paid to remove ads -->
         <item
             android:id="@+id/removeAds"
             android:icon="@drawable/ic_remove_ads"
