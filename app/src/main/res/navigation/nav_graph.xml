@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
+    android:id="@+id/mainGraph"
     app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/splashFragment"
@@ -14,14 +14,14 @@
             app:destination="@id/errorFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/splashFragment"
+            app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashFragment_to_watchlistFragment"
-            app:destination="@id/watchlistFragment"
+            app:destination="@id/currencyGraph"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/splashFragment"
+            app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -34,11 +34,11 @@
             app:destination="@id/splashFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@+id/errorFragment"
+            app:popUpTo="@id/errorFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <navigation
-        android:id="@+id/watchlistFragment"
+        android:id="@+id/currencyGraph"
         app:startDestination="@id/watchlistFragment">
         <fragment
             android:id="@+id/watchlistFragment"

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var billingProcessor: BillingProcessor
 
-    lateinit var drawer: DrawerLayout
+    private lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var navController: NavController

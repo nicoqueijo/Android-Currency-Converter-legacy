@@ -14,7 +14,6 @@ import com.google.android.gms.ads.InterstitialAd
 import com.nicoqueijo.android.currencyconverter.databinding.RowSelectorBinding
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyDiffUtilCallback
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectorViewModel
 
 class SelectorAdapter(private val viewModel: SelectorViewModel) :
