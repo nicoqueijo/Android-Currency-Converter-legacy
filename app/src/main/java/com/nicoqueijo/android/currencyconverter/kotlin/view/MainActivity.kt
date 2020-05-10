@@ -32,7 +32,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasActiveCurrenciesNavigation
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
 
@@ -128,7 +127,6 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             viewModel.activeFragment.postValue(destination.id)
-            viewModel.fragmentBackstackEntries.add(destination.id)
         }
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -205,8 +203,7 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
-        } else if (navController.hasActiveCurrenciesNavigation()) {
-            viewModel.fragmentBackstackEntries.remove(navController.currentDestination?.id!!)
+        } else if (viewModel.activeFragment.value == R.id.selectorFragment) {
             navController.popBackStack()
         } else if (!closeAppToast.view.isShown) {
             closeAppToast.show()

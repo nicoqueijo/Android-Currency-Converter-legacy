@@ -17,7 +17,6 @@ import android.widget.ScrollView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
-import androidx.navigation.NavController
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
@@ -86,12 +85,6 @@ object Utils {
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, getString(R.string.conversion_copied), Toast.LENGTH_SHORT).show()
     }
-
-    /**
-     * If the NavController has at least two navigation entries in its backstack that means that
-     * the first two are the LoadingCurrenciesFragment and the ActiveCurrenciesFragment.
-     */
-    fun NavController.hasActiveCurrenciesNavigation() = backStack.size > 2
 
     fun List<*>.hasOnlyOneElement() = size == 1
 

@@ -23,7 +23,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     val activeFragment = MutableLiveData(R.id.splashFragment)
-    val fragmentBackstackEntries: MutableSet<Int> = mutableSetOf()
 
     @SuppressLint("SimpleDateFormat")
     fun getFormattedLastUpdate(): String {
