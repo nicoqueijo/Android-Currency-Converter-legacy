@@ -42,10 +42,18 @@ class Repository @Inject constructor(private val context: Context) {
                 throw SocketTimeoutException("Network request timed out.")
             }
             if (retrofitResponse.isSuccessful) {
+                val responseBody = retrofitResponse.body()
+                when {
+                    isDataEmpty() -> {
+                        currencyDao.upsertCurrencies(responseBody?.exchangeRates?.currencies!!)
+                    }
+                    isDataStale() -> {
+                        currencyDao.updateExchangeRates(responseBody?.exchangeRates?.currencies!!)
+                    }
+                }
                 sharedPreferences.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
                         .apply()
-                currencyDao.upsertCurrencies(retrofitResponse.body()?.exchangeRates?.currencies!!)
             } else {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())

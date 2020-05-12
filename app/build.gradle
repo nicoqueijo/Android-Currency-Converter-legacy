@@ -9,7 +9,7 @@ android {
         applicationId "com.nicoqueijo.android.currencyconverter"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 27
+        versionCode 29
         versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -12,7 +12,19 @@ interface CurrencyDao {
 
     @Transaction
     suspend fun upsertCurrencies(currencies: List<Currency>) {
-        currencies.forEach { upsertCurrency(it) }
+        currencies.forEach {
+            upsertCurrency(it)
+        }
+    }
+
+    @Query("UPDATE table_currency SET column_exchangeRate = :exchangeRate WHERE column_currencyCode = :currencyCode")
+    suspend fun updateExchangeRate(currencyCode: String, exchangeRate: Double)
+
+    @Transaction
+    suspend fun updateExchangeRates(currencies: List<Currency>) {
+        currencies.forEach {
+            updateExchangeRate(it.currencyCode, it.exchangeRate)
+        }
     }
 
     @Query("SELECT * FROM table_currency WHERE column_currencyCode = :currencyCode")
