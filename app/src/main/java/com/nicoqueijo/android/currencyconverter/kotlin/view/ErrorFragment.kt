@@ -1,22 +1,18 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.nicoqueijo.android.currencyconverter.R
 
-class ErrorFragment : Fragment() {
+class ErrorFragment : Fragment(R.layout.fragment_error) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_error, container, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -26,11 +22,12 @@ class ErrorFragment : Fragment() {
     }
 
     private fun initMenuItem(menu: Menu) {
-        val refreshMenuItem = menu.findItem(R.id.refresh).actionView as ImageView
-        refreshMenuItem.setImageResource(R.drawable.ic_refresh)
-        refreshMenuItem.setPadding(24, 24, 24, 24)
-        refreshMenuItem.setOnClickListener {
-            findNavController().navigate(R.id.action_errorFragment_to_splashFragment)
+        (menu.findItem(R.id.refresh).actionView as ImageView).apply {
+            setImageResource(R.drawable.ic_refresh)
+            setPadding(24, 24, 24, 24)
+            setOnClickListener {
+                findNavController().navigate(R.id.action_errorFragment_to_splashFragment)
+            }
         }
     }
 }

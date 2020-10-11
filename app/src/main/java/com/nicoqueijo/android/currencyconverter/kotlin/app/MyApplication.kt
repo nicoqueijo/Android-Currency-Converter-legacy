@@ -1,10 +1,10 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.app
 
 import android.app.Application
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ApplicationComponent
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ApplicationScope
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ContextModule
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.DaggerApplicationComponent
+import com.nicoqueijo.android.currencyconverter.kotlin.depinj.ApplicationComponent
+import com.nicoqueijo.android.currencyconverter.kotlin.depinj.ApplicationScope
+import com.nicoqueijo.android.currencyconverter.kotlin.depinj.ContextModule
+import com.nicoqueijo.android.currencyconverter.kotlin.depinj.DaggerApplicationComponent
 
 @ApplicationScope
 class MyApplication : Application() {

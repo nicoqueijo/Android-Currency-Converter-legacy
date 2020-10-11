@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.dagger.ApplicationScope
+import com.nicoqueijo.android.currencyconverter.kotlin.depinj.ApplicationScope
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +34,7 @@ class Repository @Inject constructor(private val context: Context) {
      * was returned into our local database. Else we throw an exception to let the called handle it.
      */
     suspend fun initCurrencies() {
-        if (isNetworkAvailable() && (isDataStale() || isDataEmpty())) {
+        if (isNetworkAvailable() && (isDataStale || isDataEmpty)) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
                 retrofitResponse = exchangeRateService.getExchangeRates(getApiKey())
@@ -44,12 +44,8 @@ class Repository @Inject constructor(private val context: Context) {
             if (retrofitResponse.isSuccessful) {
                 val responseBody = retrofitResponse.body()
                 when {
-                    isDataEmpty() -> {
-                        currencyDao.upsertCurrencies(responseBody?.exchangeRates?.currencies!!)
-                    }
-                    isDataStale() -> {
-                        currencyDao.updateExchangeRates(responseBody?.exchangeRates?.currencies!!)
-                    }
+                    isDataEmpty -> currencyDao.upsertCurrencies(responseBody?.exchangeRates?.currencies!!)
+                    isDataStale -> currencyDao.updateExchangeRates(responseBody?.exchangeRates?.currencies!!)
                 }
                 sharedPreferences.edit()
                         .putLong("timestamp", retrofitResponse.body()!!.timestamp)
@@ -58,7 +54,7 @@ class Repository @Inject constructor(private val context: Context) {
                 // Retrofit call executed but response wasn't in the 200s
                 throw IOException(retrofitResponse.errorBody()?.string())
             }
-        } else if (!isDataEmpty()) {
+        } else if (!isDataEmpty) {
             return
         } else {
             throw IOException("Network is unavailable and no local data found.")
@@ -115,9 +111,11 @@ class Repository @Inject constructor(private val context: Context) {
         return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
     }
 
-    private fun isDataStale() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
+    private val isDataStale
+        get() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
 
-    private fun isDataEmpty() = timeSinceLastUpdate == NO_DATA
+    private val isDataEmpty
+        get() = timeSinceLastUpdate == NO_DATA
 
     companion object {
         const val TWENTY_FOUR_HOURS = 86400000L

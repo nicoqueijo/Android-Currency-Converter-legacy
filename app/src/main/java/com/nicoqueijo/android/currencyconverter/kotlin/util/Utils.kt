@@ -148,4 +148,6 @@ object Utils {
     fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.CEILING)
 
     fun Int.isValid() = this != INVALID.position
+
+    val String.Companion.EMPTY get() = ""
 }

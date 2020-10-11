@@ -247,35 +247,25 @@ class WatchlistFragment : Fragment() {
      * Walks the user through some of the app's features on the first launch.
      */
     private fun showTargets() {
-        val addCurrencyTarget = TapTarget.forView(floatingActionButton, getString(R.string.add_target_message))
-                .outerCircleColor(white)
-                .outerCircleAlpha(0.90f)
-                .targetCircleColor(black)
-                .textColor(black)
-                .cancelable(false)
-                .transparentTarget(true)
-                .targetRadius(50)
-        val dragCurrencyTarget = TapTarget.forView((dragLinearLayout[FIRST.position] as RowActiveCurrency).flag,
+        val addCurrencyTarget = buildTapTarget(floatingActionButton, getString(R.string.add_target_message))
+        val dragCurrencyTarget = buildTapTarget((dragLinearLayout[FIRST.position] as RowActiveCurrency).flag,
                 getString(R.string.drag_target_message))
-                .outerCircleColor(white)
-                .outerCircleAlpha(0.90f)
-                .targetCircleColor(black)
-                .textColor(black)
-                .cancelable(false)
-                .transparentTarget(true)
-                .targetRadius(50)
-        val removeCurrencyTarget = TapTarget.forView((dragLinearLayout[FIRST.position] as RowActiveCurrency).currencyCode,
+        val removeCurrencyTarget = buildTapTarget((dragLinearLayout[FIRST.position] as RowActiveCurrency).currencyCode,
                 getString(R.string.remove_target_message))
-                .outerCircleColor(white)
-                .outerCircleAlpha(0.90f)
-                .targetCircleColor(black)
-                .textColor(black)
-                .cancelable(false)
-                .transparentTarget(true)
-                .targetRadius(50)
         TapTargetSequence(this.activity)
                 .targets(addCurrencyTarget, dragCurrencyTarget, removeCurrencyTarget)
                 .start()
+    }
+
+    private fun buildTapTarget(view: View, title: CharSequence): TapTarget {
+        return TapTarget.forView(view, title)
+                .outerCircleColor(white)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(black)
+                .textColor(black)
+                .cancelable(false)
+                .transparentTarget(true)
+                .targetRadius(50)
     }
 
     private fun styleRows() {

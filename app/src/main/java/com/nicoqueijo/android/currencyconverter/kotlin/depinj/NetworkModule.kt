@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.dagger
+package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import com.nicoqueijo.android.currencyconverter.kotlin.data.ExchangeRateService
 import dagger.Module

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.EMPTY
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
 import java.math.BigDecimal
@@ -45,7 +46,8 @@ data class Currency(@PrimaryKey
     }
 
     /**
-     * Currency code without the "USD_" prefix. Example: USD_EUR -> EUR
+     * Currency code without the "USD_" prefix.
+     * Example: USD_EUR -> EUR
      */
     val trimmedCurrencyCode
         get() = currencyCode.substring(CURRENCY_CODE_START_INDEX)
@@ -100,7 +102,7 @@ data class Currency(@PrimaryKey
          * The [conversionValue] as a String.
          * Example: "1234.5678"
          */
-        var conversionString: String = ""
+        var conversionString = String.EMPTY
 
         /**
          * The [conversionString] formatted according to locale.
@@ -112,14 +114,14 @@ data class Currency(@PrimaryKey
                 return if (conversionString.isNotBlank()) {
                     formatConversion(conversionString)
                 } else {
-                    ""
+                    String.EMPTY
                 }
             }
 
         /**
          * The hint displayed when [conversionText] is empty.
          */
-        var conversionHint: String = ""
+        var conversionHint = String.EMPTY
             set(value) {
                 field = formatConversion(BigDecimal(value).toString())
             }

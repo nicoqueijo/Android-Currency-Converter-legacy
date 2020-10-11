@@ -12,6 +12,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.EMPTY
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.*
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
@@ -89,9 +90,9 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun isInputValid(input: String): Boolean {
-        return validateLength(input) &&
+        return (validateLength(input) &&
                 validateDecimalPlaces(input) &&
-                validateDecimalSeparator(input)
+                validateDecimalSeparator(input))
     }
 
     /**
@@ -137,12 +138,10 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun clearConversions() {
-        focusedCurrency.value?.conversion?.conversionString = ""
+        focusedCurrency.value?.conversion?.conversionString = String.EMPTY
         memoryActiveCurrencies
                 .filter { it != focusedCurrency.value }
-                .forEach {
-                    it.conversion.conversionString = ""
-                }
+                .forEach { it.conversion.conversionString = String.EMPTY }
     }
 
     /**
@@ -160,7 +159,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                                 .conversion.conversionString.replace(",", ".")), fromRate, toRate)
                         it.conversion.conversionValue = conversionValue
                     } else {
-                        it.conversion.conversionString = ""
+                        it.conversion.conversionString = String.EMPTY
                     }
                 }
     }

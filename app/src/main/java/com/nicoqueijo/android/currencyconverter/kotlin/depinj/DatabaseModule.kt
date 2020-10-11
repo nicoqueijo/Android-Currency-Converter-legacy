@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.dagger
+package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import android.content.Context
 import com.nicoqueijo.android.currencyconverter.kotlin.data.CurrencyDao

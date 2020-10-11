@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.dagger
+package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import javax.inject.Scope
 
