@@ -8,10 +8,10 @@ Currency conversion tool using live exchange rates.
 
 ### Demo
 <p float="left">
-  <img src="graphics/demos/demo1.gif" hspace="4" width="205" />
-  <img src="graphics/demos/demo2.gif" hspace="4" width="205" />
-  <img src="graphics/demos/demo3.gif" hspace="4" width="205" />
-  <img src="graphics/demos/demo4.gif" hspace="4" width="205" /> 
+  <img src="graphics/demos/demo1.gif" hspace="4" width="197" />
+  <img src="graphics/demos/demo2.gif" hspace="4" width="197" />
+  <img src="graphics/demos/demo3.gif" hspace="4" width="197" />
+  <img src="graphics/demos/demo4.gif" hspace="4" width="197" /> 
 </p>
 
 ### Screenshots
@@ -23,6 +23,7 @@ https://openexchangerates.org/
 ### Architecture
 This app implements the MVVM architectural pattern using a single activity with fragment-swapping and data-caching using a repository to fetch local or remote data. 
 
+<img src="graphics/flowcharts/mvvm_architecture.png" width="700">
 <img src="graphics/flowcharts/single_activity_diagram.jpg" width="700">
 <img src="graphics/flowcharts/data_flow_diagram.png" width="700">
 
@@ -34,7 +35,7 @@ This app implements the MVVM architectural pattern using a single activity with 
 * <a href="https://developer.android.com/topic/libraries/architecture/livedata" target="_blank">LiveData</a> - An observable data holder class.
 * <a href="https://kotlinlang.org/docs/reference/coroutines-overview.html" target="_blank">Coroutines</a> - A great new feature of Kotlin which allow you to write asynchronous code in a sequential fashion.
 * <a href="https://developer.android.com/topic/libraries/architecture/room" target="_blank">Room</a> - An abstraction layer over SQLite to allow fluent database access while harnessing the full power of SQLite.
-* <a href="https://github.com/google/dagger" target="_blank">Dagger</a> - A fast dependency injector for Java and Android.
+* <a href="https://dagger.dev/hilt" target="_blank">Dagger-Hilt</a> - A dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project.
 * <a href="https://square.github.io/retrofit" target="_blank">Retrofit</a> - Type-safe HTTP client for Android and Java by Square, Inc.
 * <a href="https://developer.android.com/guide/navigation" target="_blank">Navigation</a> - A library that can manage complex navigation, transition animation, deep linking, and compile-time checked argument passing between the screens in your app.
 * <a href="https://developer.android.com/topic/libraries/data-binding" target="_blank">Data Binding</a> - A support library that allows you to bind UI components in your layouts to data sources in your app using a declarative format rather than programmatically.
