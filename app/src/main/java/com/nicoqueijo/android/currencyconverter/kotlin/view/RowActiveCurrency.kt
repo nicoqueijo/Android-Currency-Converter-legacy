@@ -1,5 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -12,7 +13,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 
 class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
-        ConstraintLayout(context, attrs) {
+        ConstraintLayout(context!!, attrs) {
 
     val rowCanvas: ConstraintLayout
     val flag: ImageView
@@ -29,6 +30,7 @@ class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
         blinkingCursor = findViewById(R.id.blinking_cursor)
     }
 
+    @SuppressLint("DefaultLocale")
     fun initRow(currency: Currency) {
         currencyCode.text = currency.trimmedCurrencyCode
         flag.setImageResource(Utils.getDrawableResourceByName(currency.currencyCode.toLowerCase(), context))
