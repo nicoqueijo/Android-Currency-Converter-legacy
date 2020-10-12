@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -18,7 +19,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -33,13 +33,17 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hideKeyboard
-import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainActivityViewModel
+import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ActivityScoped
 
+@AndroidEntryPoint
+@ActivityScoped
 class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
-    private lateinit var viewModel: MainActivityViewModel
-    private lateinit var billingProcessor: BillingProcessor
+    private val viewModel: MainViewModel by viewModels()
 
+    private lateinit var billingProcessor: BillingProcessor
     private lateinit var drawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -51,7 +55,6 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         initBillingProcessor()
         initViews()
         handleNavigation()
@@ -64,9 +67,9 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     }
 
     override fun onBillingInitialized() {
-        if (billingProcessor.isPurchased(MainActivityViewModel.REMOVE_ADS_PRODUCT_ID)) {
+        if (billingProcessor.isPurchased(MainViewModel.REMOVE_ADS_PRODUCT_ID)) {
             navView.menu.findItem(R.id.removeAds).isVisible = false
-            MainActivityViewModel.adsEnabled = false
+            MainViewModel.adsEnabled = false
         } else {
             initBannerAd()
         }
@@ -141,7 +144,7 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
                     false
                 }
                 R.id.removeAds -> {
-                    billingProcessor.purchase(this, MainActivityViewModel.REMOVE_ADS_PRODUCT_ID)
+                    billingProcessor.purchase(this, MainViewModel.REMOVE_ADS_PRODUCT_ID)
                     false
                 }
                 else -> {

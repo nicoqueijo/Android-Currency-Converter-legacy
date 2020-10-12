@@ -2,27 +2,23 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 
 import android.app.Application
 import android.content.Context
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class SelectorViewModel(application: Application) : AndroidViewModel(application) {
-
-    @Inject
-    lateinit var repository: Repository
-
-    init {
-        (application.applicationContext as MyApplication).getAppComponent().inject(this)
-    }
+@ActivityRetainedScoped
+class SelectorViewModel @ViewModelInject constructor(
+        private val repository: Repository,
+        application: Application) : AndroidViewModel(application) {
 
     val allCurrencies = repository.getAllCurrencies()
     private fun upsertCurrency(currency: Currency) {
@@ -36,7 +32,7 @@ class SelectorViewModel(application: Application) : AndroidViewModel(application
         get() = _searchQuery
 
     // 1 in 12 chance the user will be shown an interstitial ad when they select a currency.
-    val willShowAd = (1..12).random() == 1 && MainActivityViewModel.adsEnabled
+    val willShowAd = (1..12).random() == 1 && MainViewModel.adsEnabled
     fun getInterstitialAdId(context: Context): String {
         with(context.resources) {
             return when (BuildConfig.BUILD_TYPE) {

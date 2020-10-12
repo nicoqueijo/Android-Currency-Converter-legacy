@@ -3,24 +3,20 @@ package com.nicoqueijo.android.currencyconverter.kotlin.viewmodel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.BuildConfig.BUILD_TYPE
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
-
-    @Inject
-    lateinit var repository: Repository
-
-    init {
-        (application.applicationContext as MyApplication).getAppComponent().inject(this)
-    }
+@ActivityRetainedScoped
+class MainViewModel @ViewModelInject constructor(
+        private val repository: Repository,
+        application: Application) : AndroidViewModel(application) {
 
     val activeFragment = MutableLiveData(R.id.splashFragment)
 

@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.depinj.ApplicationScope
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.coroutines.CoroutineScope
@@ -16,18 +15,12 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-@ApplicationScope
-class Repository @Inject constructor(private val context: Context) {
-
-    @Inject
-    lateinit var exchangeRateService: ExchangeRateService
-
-    @Inject
-    lateinit var currencyDao: CurrencyDao
-
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
+class Repository @Inject constructor(
+        private val context: Context,
+        private val exchangeRateService: ExchangeRateService,
+        private val currencyDao: CurrencyDao,
+        private val sharedPreferences: SharedPreferences
+) {
     /**
      * Makes an API call if internet is available and the local data is either stale (hasn't been
      * updated in 24 hours) or we have no local data. If the call succeeds we store the data that

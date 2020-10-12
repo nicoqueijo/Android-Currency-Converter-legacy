@@ -7,18 +7,22 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.transition.ChangeBounds
 import com.futuremind.recyclerviewfastscroll.FastScroller
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.adapter.SelectorAdapter
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.SelectorViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
 
+@AndroidEntryPoint
+@FragmentScoped
 class SelectorFragment : Fragment() {
 
-    private lateinit var viewModel: SelectorViewModel
+    private val viewModel: SelectorViewModel by viewModels()
 
     private lateinit var adapter: SelectorAdapter
     private lateinit var recyclerView: CustomRecyclerView
@@ -27,7 +31,6 @@ class SelectorFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_selector, container, false)
-        viewModel = ViewModelProvider(this).get(SelectorViewModel::class.java)
         setTransitionDurations()
         setHasOptionsMenu(true)
         initViewsAndAdapter(view)

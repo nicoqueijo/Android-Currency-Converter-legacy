@@ -14,8 +14,8 @@ import androidx.core.view.forEachIndexed
 import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.getkeepsafe.taptargetview.TapTarget
@@ -34,11 +34,14 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isViewVisible
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.show
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.vibrate
 import com.nicoqueijo.android.currencyconverter.kotlin.viewmodel.WatchlistViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
 
-
+@AndroidEntryPoint
+@FragmentScoped
 class WatchlistFragment : Fragment() {
 
-    private lateinit var viewModel: WatchlistViewModel
+    private val viewModel: WatchlistViewModel by viewModels()
 
     private lateinit var emptyList: LinearLayout
     private lateinit var dragLinearLayout: DragLinearLayout
@@ -50,7 +53,6 @@ class WatchlistFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_watchlist, container, false)
-        viewModel = ViewModelProvider(this).get(WatchlistViewModel::class.java)
         viewModel.initDefaultCurrencies()
         setHasOptionsMenu(true)
         initViews(view)

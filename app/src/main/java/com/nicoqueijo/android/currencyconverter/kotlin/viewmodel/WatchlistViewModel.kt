@@ -5,10 +5,10 @@ import android.app.Application
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.nicoqueijo.android.currencyconverter.kotlin.app.MyApplication
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
@@ -20,20 +20,16 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElem
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.*
-import javax.inject.Inject
 
-class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
-
-    @Inject
-    lateinit var repository: Repository
-
-    init {
-        (application.applicationContext as MyApplication).getAppComponent().inject(this)
-    }
+@ActivityRetainedScoped
+class WatchlistViewModel @ViewModelInject constructor(
+        private val repository: Repository,
+        application: Application) : AndroidViewModel(application) {
 
     private fun upsertCurrency(currency: Currency) = repository.upsertCurrency(currency)
     private fun upsertCurrencies(currencies: List<Currency>) = repository.upsertCurrencies(currencies)
