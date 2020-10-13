@@ -21,6 +21,47 @@ class Repository @Inject constructor(
         private val currencyDao: CurrencyDao,
         private val sharedPreferences: SharedPreferences
 ) {
+
+    var isFirstLaunch: Boolean
+        get() = sharedPreferences.getBoolean("first_launch", true)
+        set(value) = sharedPreferences.edit().putBoolean("first_launch", value).apply()
+
+    val timestamp: Long
+        get() = sharedPreferences.getLong("timestamp", NO_DATA) * 1000L
+
+    private val isDataStale
+        get() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
+
+    private val isDataEmpty
+        get() = timeSinceLastUpdate == NO_DATA
+
+    private val timeSinceLastUpdate: Long
+        get() {
+            return if (timestamp != NO_DATA) {
+                System.currentTimeMillis() - timestamp
+            } else {
+                NO_DATA
+            }
+        }
+
+    fun getAllCurrencies() = currencyDao.getAllCurrencies()
+
+    fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
+
+    fun upsertCurrency(currency: Currency) {
+        CoroutineScope(Dispatchers.IO).launch {
+            currencyDao.upsertCurrency(currency)
+        }
+    }
+
+    fun upsertCurrencies(currencies: List<Currency>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            currencyDao.upsertCurrencies(currencies)
+        }
+    }
+
+    suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
+
     /**
      * Makes an API call if internet is available and the local data is either stale (hasn't been
      * updated in 24 hours) or we have no local data. If the call succeeds we store the data that
@@ -54,45 +95,11 @@ class Repository @Inject constructor(
         }
     }
 
-    val timestamp: Long
-        get() = sharedPreferences.getLong("timestamp", NO_DATA) * 1000L
-
-    private val timeSinceLastUpdate: Long
-        get() {
-            return if (timestamp != NO_DATA) {
-                System.currentTimeMillis() - timestamp
-            } else {
-                NO_DATA
-            }
-        }
-
-    var isFirstLaunch: Boolean
-        get() = sharedPreferences.getBoolean("first_launch", true)
-        set(value) = sharedPreferences.edit().putBoolean("first_launch", value).apply()
-
-    suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
-
-    fun upsertCurrency(currency: Currency) {
-        CoroutineScope(Dispatchers.IO).launch {
-            currencyDao.upsertCurrency(currency)
-        }
-    }
-
-    fun upsertCurrencies(currencies: List<Currency>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            currencyDao.upsertCurrencies(currencies)
-        }
-    }
-
-    fun getAllCurrencies() = currencyDao.getAllCurrencies()
-
-    fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
-
     private fun getApiKey(): String {
         with(context.resources) {
             return when (BuildConfig.BUILD_TYPE) {
-                "release" -> getString(R.string.openexchangerates_release_api_key)
-                "debug" -> getString(R.string.openexchangerates_debug_api_key)
+                RELEASE -> getString(R.string.openexchangerates_release_api_key)
+                DEBUG -> getString(R.string.openexchangerates_debug_api_key)
                 else -> getString(R.string.openexchangerates_release_api_key)
             }
         }
@@ -104,14 +111,10 @@ class Repository @Inject constructor(
         return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
     }
 
-    private val isDataStale
-        get() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
-
-    private val isDataEmpty
-        get() = timeSinceLastUpdate == NO_DATA
-
     companion object {
         const val TWENTY_FOUR_HOURS = 86400000L
         const val NO_DATA = 0L
+        const val RELEASE = "release"
+        const val DEBUG = "debug"
     }
 }
