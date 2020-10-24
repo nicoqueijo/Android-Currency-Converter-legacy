@@ -47,6 +47,8 @@ This app implements the MVVM architectural pattern using a single activity with 
 * <a href="https://github.com/justasm/DragLinearLayout" target="_blank">DragLinearLayout</a> - An Android LinearLayout that supports draggable and swappable child Views.
 * <a href="https://github.com/FutureMind/recycler-fast-scroll" target="_blank">Recycler Bubble</a> - Provides fast scroll and section indexer for recycler view.
 * <a href="https://github.com/KeepSafe/TapTargetView" target="_blank">TapTargetView</a> - An implementation of tap targets from Google's Material Design guidelines on feature discovery.
+* <a href="https://junit.org/junit5/" target="_blank">JUnit 5</a> - The most widely used testing framework for java applications.
+
 
 
 
