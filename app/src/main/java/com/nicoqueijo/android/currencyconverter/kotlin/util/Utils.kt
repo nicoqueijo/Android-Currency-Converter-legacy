@@ -88,7 +88,12 @@ object Utils {
 
     fun List<*>.hasOnlyOneElement() = size == 1
 
-    fun List<*>.isNotLastElement(position: Int) = size > position + 1
+    fun List<*>.isNotLastElement(position: Int): Boolean {
+        if (position < 0 || position >= size) {
+            throw IllegalArgumentException("Position: $position is out of bound.")
+        }
+        return size > position + 1
+    }
 
     fun <E> List<E>.elementBefore(position: Int): E {
         if (position <= 0) {
