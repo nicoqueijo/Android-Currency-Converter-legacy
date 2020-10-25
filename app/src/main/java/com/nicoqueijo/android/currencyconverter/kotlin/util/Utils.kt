@@ -86,29 +86,6 @@ object Utils {
         Toast.makeText(this, getString(R.string.conversion_copied), Toast.LENGTH_SHORT).show()
     }
 
-    fun List<*>.hasOnlyOneElement() = size == 1
-
-    fun List<*>.isNotLastElement(position: Int): Boolean {
-        if (position < 0 || position >= size) {
-            throw IllegalArgumentException("Position: $position is out of bound.")
-        }
-        return size > position + 1
-    }
-
-    fun <E> List<E>.elementBefore(position: Int): E {
-        if (position <= 0 || position >= size) {
-            throw IllegalArgumentException("Position: $position is invalid.")
-        }
-        return this[position - 1]
-    }
-
-    fun <E> List<E>.elementAfter(position: Int): E {
-        if (position < 0 || position >= size - 1) {
-            throw IllegalArgumentException("Position: $position is invalid.")
-        }
-        return this[position + 1]
-    }
-
     fun View.show() {
         visibility = View.VISIBLE
     }
@@ -148,6 +125,29 @@ object Utils {
         }
         val bottom = top + view.height
         return scrollBounds.top < top && scrollBounds.bottom > bottom
+    }
+
+    fun List<*>.hasOnlyOneElement() = size == 1
+
+    fun List<*>.isNotLastElement(position: Int): Boolean {
+        if (position < 0 || position >= size) {
+            throw IllegalArgumentException("Position: $position is out of bound.")
+        }
+        return size > position + 1
+    }
+
+    fun <E> List<E>.elementBefore(position: Int): E {
+        if (position <= 0 || position >= size) {
+            throw IllegalArgumentException("Position: $position is invalid.")
+        }
+        return this[position - 1]
+    }
+
+    fun <E> List<E>.elementAfter(position: Int): E {
+        if (position < 0 || position >= size - 1) {
+            throw IllegalArgumentException("Position: $position is invalid.")
+        }
+        return this[position + 1]
     }
 
     fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.HALF_DOWN)

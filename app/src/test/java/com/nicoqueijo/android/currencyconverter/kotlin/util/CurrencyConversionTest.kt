@@ -2,8 +2,10 @@ package com.nicoqueijo.android.currencyconverter.kotlin.util
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import java.math.BigDecimal
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class CurrencyConversionTest {
 
     /**
