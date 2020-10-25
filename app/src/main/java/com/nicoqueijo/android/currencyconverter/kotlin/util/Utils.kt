@@ -150,7 +150,7 @@ object Utils {
         return scrollBounds.top < top && scrollBounds.bottom > bottom
     }
 
-    fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.CEILING)
+    fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.HALF_DOWN)
 
     fun Int.isValid() = this != INVALID.position
 
