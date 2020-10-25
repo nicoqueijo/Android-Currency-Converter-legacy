@@ -96,15 +96,15 @@ object Utils {
     }
 
     fun <E> List<E>.elementBefore(position: Int): E {
-        if (position <= 0) {
-            throw IndexOutOfBoundsException()
+        if (position <= 0 || position >= size) {
+            throw IllegalArgumentException("Position: $position is invalid.")
         }
         return this[position - 1]
     }
 
     fun <E> List<E>.elementAfter(position: Int): E {
-        if (position >= size - 1) {
-            throw IndexOutOfBoundsException()
+        if (position < 0 || position >= size - 1) {
+            throw IllegalArgumentException("Position: $position is invalid.")
         }
         return this[position + 1]
     }
