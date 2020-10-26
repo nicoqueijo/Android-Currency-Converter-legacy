@@ -11,5 +11,4 @@ class ApiEndPoint {
 
     @Json(name = "rates")
     var exchangeRates: ExchangeRates? = null
-
 }

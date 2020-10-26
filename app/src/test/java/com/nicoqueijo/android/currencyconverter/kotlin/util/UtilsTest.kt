@@ -214,7 +214,7 @@ internal class UtilsTest {
         }
 
         @ParameterizedTest
-        @ValueSource(ints = [1, 2, 3, 4, 5, 6])
+        @ValueSource(ints = [1, 2, 3, 4, 5, 10, 25, 500, 9999])
         fun nonMinusOneShouldReturnTrue(value: Int) {
             val expected = true
             val actual = value.isValid()
