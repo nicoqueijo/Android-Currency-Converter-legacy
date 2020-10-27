@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 /**
  * Unfortunately I cannot test @Transaction-annoted functions and LiveData-returning functions
  * in the same class.
- * See: https://stackoverflow.com/questions/57027850/testing-android-room-with-livedata-coroutines-and-transactions/61044052#61044052
+ * See: https://stackoverflow.com/questions/57027850/testing-android-room-with-livedata-coroutines-and-transactions
  */
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantTaskExecutorExtension::class)

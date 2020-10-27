@@ -1,14 +1,15 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.util
 
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.EMPTY
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.deepEquals
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementAfter
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.elementBefore
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -141,6 +142,193 @@ internal class UtilsTest {
             assertThrows(IllegalArgumentException::class.java) {
                 list.elementAfter(position)
             }
+        }
+    }
+
+    @Nested
+    inner class ListCurrencyDeepEquals {
+        @Test
+        fun equalListsShouldReturnTrue() {
+            val listA = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_ARS", 78.120127).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_JPY", 104.70502716)
+            )
+            val listB = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_ARS", 78.120127).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_JPY", 104.70502716)
+            )
+            val areListsTheSame = listA.deepEquals(listB)
+            assertTrue(areListsTheSame)
+        }
+
+        @Test
+        fun differentListsShouldReturnFalse() {
+            val listA = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_ARS", 78.120127).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_JPY", 104.70502716)
+            )
+            val listB = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_SGD", 1.3581),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_ARS", 78.120127),
+                    Currency("USD_CNY", 6.6868)
+            )
+            val areListsTheSame = listA.deepEquals(listB)
+            assertFalse(areListsTheSame)
+        }
+
+        @Test
+        fun subsetListsWithDifferentSizeShouldReturnFalse() {
+            val listA = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+            )
+            val listB = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_ARS", 78.120127).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_JPY", 104.70502716)
+            )
+            val areListsTheSame = listA.deepEquals(listB)
+            assertFalse(areListsTheSame)
+        }
+
+        @Test
+        fun sameListsWithDifferentOrderShouldReturnFalse() {
+            val listA = listOf(
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_ARS", 78.120127).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_JPY", 104.70502716)
+            )
+            val listB = listOf(
+                    Currency("USD_ARS", 78.120127).apply {
+                        order = 1
+                        isSelected = true
+                    },
+                    Currency("USD_JPY", 104.70502716),
+                    Currency("USD_EUR", 0.842993).apply {
+                        order = 2
+                        isSelected = true
+                    },
+                    Currency("USD_BTC", 0.000076918096).apply {
+                        order = 0
+                        isSelected = true
+                    },
+                    Currency("USD_GBP", 0.766548),
+                    Currency("USD_USD", 1.0),
+                    Currency("USD_XAU", 0.00052584).apply {
+                        order = 3
+                        isSelected = true
+                    }
+            )
+            val areListsTheSame = listA.deepEquals(listB)
+            assertFalse(areListsTheSame)
         }
     }
 

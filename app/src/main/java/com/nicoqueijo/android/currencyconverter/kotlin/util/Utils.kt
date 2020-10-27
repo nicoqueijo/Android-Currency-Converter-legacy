@@ -19,6 +19,7 @@ import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
 import com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
 import java.math.BigDecimal
@@ -148,6 +149,25 @@ object Utils {
             throw IllegalArgumentException("Position: $position is invalid.")
         }
         return this[position + 1]
+    }
+
+    fun List<Currency>.deepEquals(other: List<Currency>): Boolean {
+        if (this.size != other.size) {
+            return false
+        }
+        val n = this.size
+        for (i in 0 until n) {
+            val currencyA = this[i]
+            val currencyB = other[i]
+            val areCurrenciesEqual = (currencyA.currencyCode == currencyB.currencyCode &&
+                    currencyA.exchangeRate == currencyB.exchangeRate &&
+                    currencyA.isSelected == currencyB.isSelected &&
+                    currencyA.order == currencyB.order)
+            if (!areCurrenciesEqual) {
+                return false
+            }
+        }
+        return true
     }
 
     fun BigDecimal.roundToFourDecimalPlaces(): BigDecimal = setScale(4, RoundingMode.HALF_DOWN)

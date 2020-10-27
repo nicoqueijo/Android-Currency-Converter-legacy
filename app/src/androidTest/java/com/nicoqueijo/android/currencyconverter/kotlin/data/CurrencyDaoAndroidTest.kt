@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.nicoqueijo.android.currencyconverter.InstantTaskExecutorExtension
 import com.nicoqueijo.android.currencyconverter.getOrAwaitValue
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.deepEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.*
@@ -188,20 +189,7 @@ internal class CurrencyDaoAndroidTest {
                     .sortedBy { it.order }
                     .toList()
             val databaseCurrencies = currencyDao.getActiveCurrencies().getOrAwaitValue()
-            assertTrue(sortedActiveCurrencies.size == databaseCurrencies.size)
-            var areListsEqual = true
-            for (i in 0 until databaseCurrencies.size) {
-                val currencyA = sortedActiveCurrencies[i]
-                val currencyB = databaseCurrencies[i]
-                val areCurrenciesEqual = (currencyA.currencyCode == currencyB.currencyCode &&
-                        currencyA.exchangeRate == currencyB.exchangeRate &&
-                        currencyA.isSelected == currencyB.isSelected &&
-                        currencyA.order == currencyB.order)
-                if (!areCurrenciesEqual) {
-                    areListsEqual = false
-                    break
-                }
-            }
+            val areListsEqual = databaseCurrencies.deepEquals(sortedActiveCurrencies)
             assertTrue(areListsEqual)
         }
 
