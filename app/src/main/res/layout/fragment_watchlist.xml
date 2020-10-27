@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/active_currencies_list"
+        android:id="@+id/selected_currencies_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="?fragment_background_color"
@@ -103,6 +103,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/active_currencies_list" />
+        app:layout_constraintTop_toBottomOf="@+id/selected_currencies_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

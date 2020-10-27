@@ -144,9 +144,9 @@ internal class CurrencyDaoAndroidTest {
     }
 
     @Nested
-    inner class GetActiveCurrencies {
+    inner class GetSelectedCurrencies {
         @Test
-        fun gettingActiveCurrenciesFromTheDatabaseShouldSucceed() = runBlockingTest {
+        fun gettingSelectedCurrenciesFromTheDatabaseShouldSucceed() = runBlockingTest {
             val currencyGBP = Currency("USD_GBP", 0.766548)
             val currencyBTC = Currency("USD_BTC", 0.000076918096).apply {
                 order = 0
@@ -184,18 +184,18 @@ internal class CurrencyDaoAndroidTest {
                 upsertCurrency(currencyJPY)
                 upsertCurrency(currencyEUR)
             }
-            val sortedActiveCurrencies = currencies.asSequence()
+            val sortedSelectedCurrencies = currencies.asSequence()
                     .filter { it.isSelected }
                     .sortedBy { it.order }
                     .toList()
-            val databaseCurrencies = currencyDao.getActiveCurrencies().getOrAwaitValue()
-            val areListsEqual = databaseCurrencies.deepEquals(sortedActiveCurrencies)
+            val databaseCurrencies = currencyDao.getSelectedCurrencies().getOrAwaitValue()
+            val areListsEqual = databaseCurrencies.deepEquals(sortedSelectedCurrencies)
             assertTrue(areListsEqual)
         }
 
         @Test
-        fun gettingActiveCurrenciesFromEmptyTableInTheDatabaseShouldYieldNoResults() = runBlockingTest {
-            val databaseCurrencies = currencyDao.getActiveCurrencies().getOrAwaitValue()
+        fun gettingSelectedCurrenciesFromEmptyTableInTheDatabaseShouldYieldNoResults() = runBlockingTest {
+            val databaseCurrencies = currencyDao.getSelectedCurrencies().getOrAwaitValue()
             assertTrue(databaseCurrencies.isEmpty())
         }
     }

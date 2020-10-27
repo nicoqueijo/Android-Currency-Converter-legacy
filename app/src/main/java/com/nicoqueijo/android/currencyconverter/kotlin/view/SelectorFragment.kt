@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.transition.ChangeBounds
 import com.futuremind.recyclerviewfastscroll.FastScroller
@@ -81,10 +80,10 @@ class SelectorFragment : Fragment() {
 
     @SuppressLint("StringFormatInvalid")
     private fun observeObservables() {
-        viewModel.allCurrencies.observe(viewLifecycleOwner, Observer { currencies ->
+        viewModel.allCurrencies.observe(viewLifecycleOwner, { currencies ->
             adapter.setCurrencies(currencies)
         })
-        viewModel.searchQuery.observe(viewLifecycleOwner, Observer { searchQuery ->
+        viewModel.searchQuery.observe(viewLifecycleOwner, { searchQuery ->
             noResultsView.text = getString(R.string.no_results, searchQuery)
         })
     }

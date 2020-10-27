@@ -18,7 +18,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -191,7 +190,7 @@ class MainActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     }
 
     private fun initLastUpdateLabel() {
-        viewModel.activeFragment.observe(this, Observer { activeFragment ->
+        viewModel.activeFragment.observe(this, { activeFragment ->
             when (activeFragment) {
                 R.id.watchlistFragment ->
                     lastUpdateLabel.text = getString(R.string.last_update, viewModel.getFormattedLastUpdate())

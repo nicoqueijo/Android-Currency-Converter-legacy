@@ -15,7 +15,6 @@ import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.getkeepsafe.taptargetview.TapTarget
@@ -91,14 +90,14 @@ class WatchlistFragment : Fragment() {
     }
 
     private fun observeObservables() {
-        viewModel.databaseActiveCurrencies.observe(viewLifecycleOwner, Observer { databaseActiveCurrencies ->
-            if (databaseActiveCurrencies.isNotEmpty()) {
-                initActiveCurrencies(databaseActiveCurrencies)
+        viewModel.databaseSelectedCurrencies.observe(viewLifecycleOwner, { databaseSelectedCurrencies ->
+            if (databaseSelectedCurrencies.isNotEmpty()) {
+                initSelectedCurrencies(databaseSelectedCurrencies)
                 styleRows()
             }
             toggleViewVisibility()
         })
-        viewModel.focusedCurrency.observe(viewLifecycleOwner, Observer {
+        viewModel.focusedCurrency.observe(viewLifecycleOwner, {
             updateHints()
         })
     }
@@ -112,7 +111,7 @@ class WatchlistFragment : Fragment() {
         initFloatingActionButton(view)
         initKeyboardListener()
         if (viewModel.wasListConstructed) {
-            restoreActiveCurrencies()
+            restoreSelectedCurrencies()
         }
     }
 
@@ -173,8 +172,8 @@ class WatchlistFragment : Fragment() {
     private fun vibrateAndShake() {
         keyboard.context.vibrate()
         viewModel.run {
-            val focusedRow = (dragLinearLayout[memoryActiveCurrencies
-                    .indexOf(focusedCurrency.value)] as RowActiveCurrency)
+            val focusedRow = (dragLinearLayout[memorySelectedCurrencies
+                    .indexOf(focusedCurrency.value)] as RowSelectedCurrency)
             focusedRow.conversion.startAnimation(AnimationUtils
                     .loadAnimation(getApplication(), R.anim.shake))
         }
@@ -182,31 +181,31 @@ class WatchlistFragment : Fragment() {
 
     private fun scrollToFocusedCurrency() {
         viewModel.focusedCurrency.value?.let {
-            val focusedRow = dragLinearLayout.getChildAt(viewModel.memoryActiveCurrencies.indexOf(it))
+            val focusedRow = dragLinearLayout.getChildAt(viewModel.memorySelectedCurrencies.indexOf(it))
             if (!scrollView.isViewVisible(focusedRow)) {
                 scrollView.smoothScrollTo(0, focusedRow.top)
             }
         }
     }
 
-    private fun restoreActiveCurrencies() {
-        viewModel.memoryActiveCurrencies.forEach { addRow(it) }
+    private fun restoreSelectedCurrencies() {
+        viewModel.memorySelectedCurrencies.forEach { addRow(it) }
     }
 
     /**
      * Determines how it should inflate the list of currencies when the database storing the state
      * of the currencies emits updates.
      */
-    private fun initActiveCurrencies(databaseActiveCurrencies: List<Currency>) {
+    private fun initSelectedCurrencies(databaseSelectedCurrencies: List<Currency>) {
         viewModel.run {
             if (!wasListConstructed) {
-                constructActiveCurrencies(databaseActiveCurrencies)
+                constructSelectedCurrencies(databaseSelectedCurrencies)
             }
-            if (wasCurrencyAddedViaFab(databaseActiveCurrencies)) {
-                databaseActiveCurrencies.takeLast(1).single().let {
-                    memoryActiveCurrencies.add(it)
+            if (wasCurrencyAddedViaFab(databaseSelectedCurrencies)) {
+                databaseSelectedCurrencies.takeLast(1).single().let {
+                    memorySelectedCurrencies.add(it)
                     addRow(it)
-                    if (!memoryActiveCurrencies.hasOnlyOneElement()) {
+                    if (!memorySelectedCurrencies.hasOnlyOneElement()) {
                         runConversions()
                         updateRows()
                         scrollToFocusedCurrency()
@@ -223,19 +222,19 @@ class WatchlistFragment : Fragment() {
             viewModel.updateHints()
             dragLinearLayout.children
                     .forEachIndexed { i, row ->
-                        row as RowActiveCurrency
-                        row.conversion.hint = viewModel.memoryActiveCurrencies[i].conversion.conversionHint
+                        row as RowSelectedCurrency
+                        row.conversion.hint = viewModel.memorySelectedCurrencies[i].conversion.conversionHint
                     }
         }
     }
 
     /**
-     * This inflates the DragLinearLayout with the active currencies from the database when the
+     * This inflates the DragLinearLayout with the selected currencies from the database when the
      * activity starts for the first time.
      */
-    private fun constructActiveCurrencies(databaseActiveCurrencies: List<Currency>) {
-        databaseActiveCurrencies.forEach { currency ->
-            viewModel.memoryActiveCurrencies.add(currency)
+    private fun constructSelectedCurrencies(databaseSelectedCurrencies: List<Currency>) {
+        databaseSelectedCurrencies.forEach { currency ->
+            viewModel.memorySelectedCurrencies.add(currency)
             addRow(currency)
         }
         viewModel.wasListConstructed = true
@@ -250,9 +249,9 @@ class WatchlistFragment : Fragment() {
      */
     private fun showTargets() {
         val addCurrencyTarget = buildTapTarget(floatingActionButton, getString(R.string.add_target_message))
-        val dragCurrencyTarget = buildTapTarget((dragLinearLayout[FIRST.position] as RowActiveCurrency).flag,
+        val dragCurrencyTarget = buildTapTarget((dragLinearLayout[FIRST.position] as RowSelectedCurrency).flag,
                 getString(R.string.drag_target_message))
-        val removeCurrencyTarget = buildTapTarget((dragLinearLayout[FIRST.position] as RowActiveCurrency).currencyCode,
+        val removeCurrencyTarget = buildTapTarget((dragLinearLayout[FIRST.position] as RowSelectedCurrency).currencyCode,
                 getString(R.string.remove_target_message))
         TapTargetSequence(this.activity)
                 .targets(addCurrencyTarget, dragCurrencyTarget, removeCurrencyTarget)
@@ -272,7 +271,7 @@ class WatchlistFragment : Fragment() {
 
     private fun styleRows() {
         dragLinearLayout.forEachIndexed { i, row ->
-            styleRow(viewModel.memoryActiveCurrencies[i], row as RowActiveCurrency)
+            styleRow(viewModel.memorySelectedCurrencies[i], row as RowSelectedCurrency)
         }
     }
 
@@ -280,13 +279,13 @@ class WatchlistFragment : Fragment() {
      * Styles the row in accordance to the focus state of its Currency. A row containing a focused
      * Currency should have blinking cursor at the end of it's conversion field and a dark gray background.
      */
-    private fun styleRow(currency: Currency, row: RowActiveCurrency) {
+    private fun styleRow(currency: Currency, row: RowSelectedCurrency) {
         row.run {
             if (currency.isFocused) {
                 rowCanvas.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_gray))
                 blinkingCursor.startAnimation(AnimationUtils.loadAnimation(viewModel.getApplication(), R.anim.blink))
             } else {
-                rowCanvas.background = ContextCompat.getDrawable(context, R.drawable.row_active_currency_background)
+                rowCanvas.background = ContextCompat.getDrawable(context, R.drawable.row_selected_currency_background)
                 blinkingCursor.clearAnimation()
             }
         }
@@ -295,8 +294,8 @@ class WatchlistFragment : Fragment() {
     private fun updateRows() {
         dragLinearLayout.children
                 .forEachIndexed { i, row ->
-                    row as RowActiveCurrency
-                    row.conversion.text = viewModel.memoryActiveCurrencies[i].conversion.conversionText
+                    row as RowSelectedCurrency
+                    row.conversion.text = viewModel.memorySelectedCurrencies[i].conversion.conversionText
                 }
     }
 
@@ -305,7 +304,7 @@ class WatchlistFragment : Fragment() {
      * its listeners so it could be dragged, removed, and restored.
      */
     private fun addRow(currency: Currency) {
-        RowActiveCurrency(activity).run row@{
+        RowSelectedCurrency(activity).run row@{
             initRow(currency)
             dragLinearLayout.run {
                 addView(this@row)
@@ -314,7 +313,7 @@ class WatchlistFragment : Fragment() {
                  * Removes this [currency] and adjusts the state accordingly.
                  */
                 currencyCode.setOnLongClickListener {
-                    val currencyToRemove = viewModel.memoryActiveCurrencies[indexOfChild(this@row)]
+                    val currencyToRemove = viewModel.memorySelectedCurrencies[indexOfChild(this@row)]
                     val positionOfCurrencyToRemove = currencyToRemove.order
                     viewModel.handleRemove(currencyToRemove, positionOfCurrencyToRemove)
                     activity?.vibrate()

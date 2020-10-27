@@ -40,8 +40,8 @@ class WatchlistViewModel @ViewModelInject constructor(
         repository.isFirstLaunch = value
     }
 
-    val databaseActiveCurrencies = repository.getActiveCurrencies()
-    val memoryActiveCurrencies = mutableListOf<Currency>()
+    val databaseSelectedCurrencies = repository.getSelectedCurrencies()
+    val memorySelectedCurrencies = mutableListOf<Currency>()
     val focusedCurrency = MutableLiveData<Currency?>()
     var wasListConstructed = false
 
@@ -135,7 +135,7 @@ class WatchlistViewModel @ViewModelInject constructor(
 
     fun clearConversions() {
         focusedCurrency.value?.conversion?.conversionString = String.EMPTY
-        memoryActiveCurrencies
+        memorySelectedCurrencies
                 .filter { it != focusedCurrency.value }
                 .forEach { it.conversion.conversionString = String.EMPTY }
     }
@@ -145,7 +145,7 @@ class WatchlistViewModel @ViewModelInject constructor(
      */
     fun runConversions() {
         val focusedCurrency = focusedCurrency.value
-        memoryActiveCurrencies
+        memorySelectedCurrencies
                 .filter { it != focusedCurrency }
                 .forEach {
                     val fromRate = focusedCurrency!!.exchangeRate
@@ -166,7 +166,7 @@ class WatchlistViewModel @ViewModelInject constructor(
     fun updateHints() {
         val focusedCurrency = focusedCurrency.value
         focusedCurrency!!.conversion.conversionHint = "1"
-        memoryActiveCurrencies
+        memorySelectedCurrencies
                 .filter { it != focusedCurrency }
                 .forEach {
                     val fromRate = focusedCurrency.exchangeRate
@@ -183,10 +183,10 @@ class WatchlistViewModel @ViewModelInject constructor(
      * list and the position will invalid.
      */
     fun changeFocusedCurrency(positionOfClickedCurrency: Int) {
-        val clickedCurrency = memoryActiveCurrencies[positionOfClickedCurrency]
-        val positionOfPreviouslyFocusedCurrency = memoryActiveCurrencies.indexOf(focusedCurrency.value)
+        val clickedCurrency = memorySelectedCurrencies[positionOfClickedCurrency]
+        val positionOfPreviouslyFocusedCurrency = memorySelectedCurrencies.indexOf(focusedCurrency.value)
         if (positionOfPreviouslyFocusedCurrency.isValid()) {
-            memoryActiveCurrencies[positionOfPreviouslyFocusedCurrency].isFocused = false
+            memorySelectedCurrencies[positionOfPreviouslyFocusedCurrency].isFocused = false
         }
         focusedCurrency.value = clickedCurrency
         clickedCurrency.isFocused = true
@@ -196,8 +196,8 @@ class WatchlistViewModel @ViewModelInject constructor(
      * Sets the focus to the first currency if the list is not empty.
      */
     fun setDefaultFocus() {
-        if (focusedCurrency.value == null && memoryActiveCurrencies.isNotEmpty()) {
-            focusedCurrency.value = memoryActiveCurrencies.take(1).single().also { firstCurrency ->
+        if (focusedCurrency.value == null && memorySelectedCurrencies.isNotEmpty()) {
+            focusedCurrency.value = memorySelectedCurrencies.take(1).single().also { firstCurrency ->
                 firstCurrency.isFocused = true
             }
         }
@@ -209,7 +209,7 @@ class WatchlistViewModel @ViewModelInject constructor(
         currencyToRemove.isSelected = false
         currencyToRemove.order = INVALID.position
         upsertCurrency(currencyToRemove)
-        memoryActiveCurrencies.remove(currencyToRemove)
+        memorySelectedCurrencies.remove(currencyToRemove)
     }
 
     fun handleUndo(currencyToRestore: Currency, positionOfCurrencyToRestore: Int) {
@@ -217,7 +217,7 @@ class WatchlistViewModel @ViewModelInject constructor(
         currencyToRestore.order = positionOfCurrencyToRestore
         upsertCurrency(currencyToRestore)
         shiftCurrenciesDown(positionOfCurrencyToRestore)
-        memoryActiveCurrencies.add(positionOfCurrencyToRestore, currencyToRestore)
+        memorySelectedCurrencies.add(positionOfCurrencyToRestore, currencyToRestore)
     }
 
     /**
@@ -231,21 +231,21 @@ class WatchlistViewModel @ViewModelInject constructor(
      *          Unfocus me, focus the item directly above me.
      */
     private fun reassignFocusedCurrency(positionOfLongClickedCurrency: Int) {
-        val removedCurrency = memoryActiveCurrencies[positionOfLongClickedCurrency]
+        val removedCurrency = memorySelectedCurrencies[positionOfLongClickedCurrency]
         if (focusedCurrency.value == removedCurrency) {
             when {
-                memoryActiveCurrencies.isNotLastElement(positionOfLongClickedCurrency) -> {
-                    memoryActiveCurrencies.elementAfter(positionOfLongClickedCurrency).let { newlyFocusedCurrency ->
+                memorySelectedCurrencies.isNotLastElement(positionOfLongClickedCurrency) -> {
+                    memorySelectedCurrencies.elementAfter(positionOfLongClickedCurrency).let { newlyFocusedCurrency ->
                         newlyFocusedCurrency.isFocused = true
                         removedCurrency.isFocused = false
                         focusedCurrency.value = newlyFocusedCurrency
                     }
                 }
-                memoryActiveCurrencies.hasOnlyOneElement() -> {
+                memorySelectedCurrencies.hasOnlyOneElement() -> {
                     focusedCurrency.value = null
                 }
                 else -> {
-                    memoryActiveCurrencies.elementBefore(positionOfLongClickedCurrency).let { newlyFocusedCurrency ->
+                    memorySelectedCurrencies.elementBefore(positionOfLongClickedCurrency).let { newlyFocusedCurrency ->
                         newlyFocusedCurrency.isFocused = true
                         removedCurrency.isFocused = false
                         focusedCurrency.value = newlyFocusedCurrency
@@ -260,7 +260,7 @@ class WatchlistViewModel @ViewModelInject constructor(
      */
     private fun shiftCurrenciesUp(orderOfCurrencyToRemove: Int) {
         run loop@{
-            memoryActiveCurrencies
+            memorySelectedCurrencies
                     .reversed()
                     .forEach { currency ->
                         if (currency.order == orderOfCurrencyToRemove) {
@@ -276,8 +276,8 @@ class WatchlistViewModel @ViewModelInject constructor(
      * All currencies below the restored currency are shifted down one position to make room.
      */
     private fun shiftCurrenciesDown(positionOfCurrencyToRestore: Int) {
-        for (i in positionOfCurrencyToRestore until memoryActiveCurrencies.size) {
-            memoryActiveCurrencies[i].let {
+        for (i in positionOfCurrencyToRestore until memorySelectedCurrencies.size) {
+            memorySelectedCurrencies[i].let {
                 it.order++
                 upsertCurrency(it)
             }
@@ -287,19 +287,19 @@ class WatchlistViewModel @ViewModelInject constructor(
     /**
      * This indicates the user added a currency by selecting it from the SelectableCurrenciesFragment
      * that was initiated by the click of the FloatingActionButton.
-     * The indication is triggered when, the only difference between [databaseActiveCurrencies] and
-     * [memoryActiveCurrencies] is that [databaseActiveCurrencies] has an extra element.
+     * The indication is triggered when, the only difference between [databaseSelectedCurrencies] and
+     * [memorySelectedCurrencies] is that [databaseSelectedCurrencies] has an extra element.
      */
-    fun wasCurrencyAddedViaFab(databaseActiveCurrencies: List<Currency>) =
-            (databaseActiveCurrencies.size - memoryActiveCurrencies.size == 1 &&
-                    databaseActiveCurrencies.dropLast(1) == memoryActiveCurrencies)
+    fun wasCurrencyAddedViaFab(databaseSelectedCurrencies: List<Currency>) =
+            (databaseSelectedCurrencies.size - memorySelectedCurrencies.size == 1 &&
+                    databaseSelectedCurrencies.dropLast(1) == memorySelectedCurrencies)
 
     /**
      * On the drag events, adjacent currencies need to swap position indices and this needs to be
      * reflected in memory and in the database.
      */
     fun swapCurrencies(firstPosition: Int, secondPosition: Int) {
-        memoryActiveCurrencies.run {
+        memorySelectedCurrencies.run {
             this[firstPosition].order = this[secondPosition].order.also {
                 this[secondPosition].order = this[firstPosition].order
             }
@@ -312,16 +312,16 @@ class WatchlistViewModel @ViewModelInject constructor(
 
     fun removeAllCurrencies() {
         focusedCurrency.value = null
-        memoryActiveCurrencies.forEach {
+        memorySelectedCurrencies.forEach {
             it.order = INVALID.position
             it.isSelected = false
         }
         val currenciesToRemove = mutableListOf<Currency>()
-        memoryActiveCurrencies.forEach {
+        memorySelectedCurrencies.forEach {
             currenciesToRemove.add(it.copy())
         }
         upsertCurrencies(currenciesToRemove)
-        memoryActiveCurrencies.clear()
+        memorySelectedCurrencies.clear()
     }
 
     /**

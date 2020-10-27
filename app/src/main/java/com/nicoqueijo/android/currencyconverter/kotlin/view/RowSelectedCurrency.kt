@@ -12,7 +12,7 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 
-class RowActiveCurrency(context: Context?, attrs: AttributeSet? = null) :
+class RowSelectedCurrency(context: Context?, attrs: AttributeSet? = null) :
         ConstraintLayout(context!!, attrs) {
 
     val rowCanvas: ConstraintLayout

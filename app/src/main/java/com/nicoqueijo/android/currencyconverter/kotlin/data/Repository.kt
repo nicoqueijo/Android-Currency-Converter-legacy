@@ -47,7 +47,7 @@ class Repository @Inject constructor(
 
     fun getAllCurrencies() = currencyDao.getAllCurrencies()
 
-    fun getActiveCurrencies() = currencyDao.getActiveCurrencies()
+    fun getSelectedCurrencies() = currencyDao.getSelectedCurrencies()
 
     fun upsertCurrency(currency: Currency) {
         CoroutineScope(Dispatchers.IO).launch {

@@ -30,5 +30,5 @@ interface CurrencyDao {
     fun getAllCurrencies(): LiveData<MutableList<Currency>>
 
     @Query("SELECT * FROM table_currency WHERE column_isSelected = 1 ORDER BY column_order ASC")
-    fun getActiveCurrencies(): LiveData<MutableList<Currency>>
+    fun getSelectedCurrencies(): LiveData<MutableList<Currency>>
 }

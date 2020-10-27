@@ -21,7 +21,7 @@ import com.jmedeisis.draglinearlayout.DragLinearLayout
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.Order.INVALID
-import com.nicoqueijo.android.currencyconverter.kotlin.view.RowActiveCurrency
+import com.nicoqueijo.android.currencyconverter.kotlin.view.RowSelectedCurrency
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -109,7 +109,7 @@ object Utils {
      */
     fun DragLinearLayout.asString() =
             children.joinToString(prefix = "{ ", postfix = " }") {
-                (it as RowActiveCurrency).toString()
+                (it as RowSelectedCurrency).toString()
             }
 
     /**
@@ -159,10 +159,7 @@ object Utils {
         for (i in 0 until n) {
             val currencyA = this[i]
             val currencyB = other[i]
-            val areCurrenciesEqual = (currencyA.currencyCode == currencyB.currencyCode &&
-                    currencyA.exchangeRate == currencyB.exchangeRate &&
-                    currencyA.isSelected == currencyB.isSelected &&
-                    currencyA.order == currencyB.order)
+            val areCurrenciesEqual = currencyA.deepEquals(currencyB)
             if (!areCurrenciesEqual) {
                 return false
             }
