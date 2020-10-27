@@ -60,6 +60,13 @@ data class Currency(@PrimaryKey
         return true
     }
 
+    fun deepEquals(other: Currency): Boolean {
+        return (this.currencyCode == other.currencyCode &&
+                this.exchangeRate == other.exchangeRate &&
+                this.isSelected == other.isSelected &&
+                this.order == other.order)
+    }
+
     override fun hashCode() = currencyCode.hashCode()
 
     /**
