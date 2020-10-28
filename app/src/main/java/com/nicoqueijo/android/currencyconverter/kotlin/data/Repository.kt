@@ -30,12 +30,6 @@ class Repository @Inject constructor(
     val timestamp: Long
         get() = sharedPreferences.getLong("timestamp", NO_DATA) * 1000L
 
-    private val isDataStale
-        get() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
-
-    private val isDataEmpty
-        get() = timeSinceLastUpdate == NO_DATA
-
     private val timeSinceLastUpdate: Long
         get() {
             return if (timestamp != NO_DATA) {
@@ -44,6 +38,12 @@ class Repository @Inject constructor(
                 NO_DATA
             }
         }
+
+    private val isDataStale
+        get() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
+
+    private val isDataEmpty
+        get() = timeSinceLastUpdate == NO_DATA
 
     fun getAllCurrencies() = currencyDao.getAllCurrencies()
 

@@ -10,7 +10,7 @@ internal class CurrencyConversionTest {
 
     /**
      * Pool of a few selected currencies for testing.
-     * Currency to Exchange Rate.
+     * Currency Code to Exchange Rate mapping.
      */
     private val exchangeRates = mapOf(
             "AED" to 3.673, // Emirati Dirham
