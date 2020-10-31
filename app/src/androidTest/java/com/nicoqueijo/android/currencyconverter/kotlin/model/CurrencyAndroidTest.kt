@@ -1,6 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.model
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.math.BigDecimal
@@ -21,7 +21,7 @@ internal class CurrencyAndroidTest {
         }
         val expected = "123,456,789.1234"
         val actual = currency.conversion.conversionText
-        assertEquals(expected, actual)
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -32,7 +32,7 @@ internal class CurrencyAndroidTest {
         }
         val expected = "123.456.789,1234"
         val actual = currency.conversion.conversionText
-        assertEquals(expected, actual)
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -43,6 +43,6 @@ internal class CurrencyAndroidTest {
         }
         val expected = "123 456 789,1234" // Unicode character U+202F (Not a regular space)
         val actual = currency.conversion.conversionText
-        assertEquals(expected, actual)
+        assertThat(actual).isEqualTo(expected)
     }
 }

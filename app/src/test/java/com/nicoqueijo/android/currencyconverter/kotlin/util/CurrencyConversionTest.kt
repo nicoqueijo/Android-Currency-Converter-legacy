@@ -1,6 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.util
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.math.BigDecimal
@@ -47,7 +47,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["USD"]
         val expected = BigDecimal("118.62494706361737286074736089149020217249728052308856")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -57,7 +57,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["JPY"]
         val expected = BigDecimal("10470.502716")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -67,7 +67,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["USD"]
         val expected = BigDecimal("130.45497477000787948047610847592062075695194560549371")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -77,7 +77,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["USD"]
         val expected = BigDecimal("71.38996985201573149375659018659196420221351740523159")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -87,7 +87,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["CAD"]
         val expected = BigDecimal("131.2575")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -97,7 +97,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["CNY"]
         val expected = BigDecimal("668.68")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -107,7 +107,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["CHF"]
         val expected = BigDecimal("90.4143")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -117,7 +117,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["HKD"]
         val expected = BigDecimal("775.0215")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -127,7 +127,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["GBP"]
         val expected = BigDecimal("90.93171592172176993166016799665003149492344539041248")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -137,7 +137,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["KRW"]
         val expected = BigDecimal("112844.5")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     /**
@@ -150,7 +150,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["VEF"]
         val expected = BigDecimal("323054853361164842145858305583.06820153218561208275358245997144807120550669676005")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -160,7 +160,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["BTC"]
         val expected = BigDecimal("0.00000000000003095449548569488452849310239997030645")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     /**
@@ -173,7 +173,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["AED"]
         val expected = BigDecimal("0")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -183,7 +183,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["JPY"]
         val expected = BigDecimal("24.67094373845814004859730505853766291142036668875613")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -193,7 +193,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["VEF"]
         val expected = BigDecimal("3365.48388843103089830383365962769260565740920698580059")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -203,7 +203,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["XAG"]
         val expected = BigDecimal("0.00746307403830888787716174674253745540710573583687")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -213,7 +213,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["MXN"]
         val expected = BigDecimal("6910.32134592395178714396955439300716173680343061450534")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -223,7 +223,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["BTC"]
         val expected = BigDecimal("0.01697670925844740944604338074377907239097185490653")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -233,7 +233,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["AUD"]
         val expected = BigDecimal("26266237.88461756471058796640191989029198331523912919261755")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -243,7 +243,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["USD"]
         val expected = BigDecimal("23478014.03468735737106344135098128708352350524874486535828")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -253,7 +253,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["EUR"]
         val expected = BigDecimal("4009.17764114747335321956814353481694820398985558700338")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -263,7 +263,7 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["KRW"]
         val expected = BigDecimal("6055918.47623464408334847473444414566994782756634291651328")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 
     @Test
@@ -273,6 +273,6 @@ internal class CurrencyConversionTest {
         val to = exchangeRates["ARS"]
         val expected = BigDecimal("5087649048143592730405.19856526479750778816199376947040498442367601246046")
         val actual = CurrencyConversion.convertCurrency(amount, from!!, to!!)
-        assertEquals(expected.toDouble(), actual.toDouble())
+        assertThat(actual.toDouble()).isEqualTo(expected.toDouble())
     }
 }

@@ -3,14 +3,13 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import com.google.common.truth.Truth.assertThat
 import com.nicoqueijo.android.currencyconverter.InstantTaskExecutorExtension
 import com.nicoqueijo.android.currencyconverter.getOrAwaitValue
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
-import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.deepEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
@@ -42,57 +41,57 @@ internal class CurrencyDaoAndroidTest {
             val insertedCurrency = Currency("USD_EUR", 0.842993)
             currencyDao.upsertCurrency(insertedCurrency)
             val retrievedCurrency = currencyDao.getCurrency("USD_EUR")
-            assertEquals(insertedCurrency, retrievedCurrency)
+            assertThat(retrievedCurrency).isEqualTo(insertedCurrency)
         }
 
         @Test
-        fun insertingCurrencyThatIsAlreadyInTheDatabaseShouldBeReplaced() = runBlockingTest {
+        fun insertingCurrencyThatIsAlreadyInTheDatabaseShouldReplaceTheOriginal() = runBlockingTest {
             val originalCurrency = Currency("USD_EUR", 0.842993)
             currencyDao.upsertCurrency(originalCurrency)
             val repeatedCurrency = Currency("USD_EUR", 0.865147)
             currencyDao.upsertCurrency(repeatedCurrency)
             val expected = 1
             val actual = currencyDao.getAllCurrencies().getOrAwaitValue().size
-            assertEquals(expected, actual)
+            assertThat(actual).isEqualTo(expected)
         }
     }
 
     @Nested
     inner class UpdateExchangeRate {
         @Test
-        fun updatingAnExchangeRateInTheDatabaseShouldSucceed() = runBlockingTest {
+        fun updatingAnExchangeRateInTheDatabaseShouldUpdateIt() = runBlockingTest {
             val currency = Currency("USD_EUR", 0.842993)
             currencyDao.upsertCurrency(currency)
             val modifiedCurrency = currency.copy(exchangeRate = 0.865147)
             currencyDao.updateExchangeRate(modifiedCurrency.currencyCode, modifiedCurrency.exchangeRate)
             val databaseCurrency = currencyDao.getCurrency("USD_EUR")
-            assertEquals(databaseCurrency.exchangeRate, modifiedCurrency.exchangeRate)
+            assertThat(modifiedCurrency.exchangeRate).isEqualTo(databaseCurrency.exchangeRate)
         }
     }
 
     @Nested
     inner class GetCurrency {
         @Test
-        fun gettingACurrencyFromTheDatabaseShouldSucceed() = runBlockingTest {
+        fun gettingACurrencyFromTheDatabaseShouldReturnIt() = runBlockingTest {
             val currency = Currency("USD_EUR", 0.842993)
             currencyDao.upsertCurrency(currency)
             val databaseCurrency = currencyDao.getCurrency("USD_EUR")
-            assertEquals(currency, databaseCurrency)
+            assertThat(databaseCurrency).isEqualTo(currency)
         }
 
         @Test
-        fun gettingANonExistentCurrencyFromTheDatabaseShouldFail() = runBlockingTest {
+        fun gettingANonExistentCurrencyFromTheDatabaseShouldReturnNull() = runBlockingTest {
             val currencyEUR = Currency("USD_EUR", 0.842993)
             currencyDao.upsertCurrency(currencyEUR)
             val databaseCurrency = currencyDao.getCurrency("USD_ARS")
-            assertNull(databaseCurrency)
+            assertThat(databaseCurrency).isNull()
         }
     }
 
     @Nested
     inner class GetAllCurrencies {
         @Test
-        fun gettingAllCurrenciesFromTheDatabaseShouldSucceed() = runBlockingTest {
+        fun gettingAllCurrenciesFromTheDatabaseShouldReturnAllCurrencies() = runBlockingTest {
             val currencyBTC = Currency("USD_BTC", 0.000076918096).apply {
                 order = 0
                 isSelected = true
@@ -131,22 +130,20 @@ internal class CurrencyDaoAndroidTest {
                 upsertCurrency(currencyARS)
             }
             val databaseCurrencies = currencyDao.getAllCurrencies().getOrAwaitValue()
-            val areSame = databaseCurrencies.containsAll(currencies) &&
-                    currencies.containsAll(databaseCurrencies)
-            assertTrue(areSame)
+            assertThat(currencies).containsExactlyElementsIn(databaseCurrencies)
         }
 
         @Test
         fun gettingAllCurrenciesFromEmptyTableInTheDatabaseShouldYieldNoResults() = runBlockingTest {
             val databaseCurrencies = currencyDao.getAllCurrencies().getOrAwaitValue()
-            assertTrue(databaseCurrencies.isEmpty())
+            assertThat(databaseCurrencies).isEmpty()
         }
     }
 
     @Nested
     inner class GetSelectedCurrencies {
         @Test
-        fun gettingSelectedCurrenciesFromTheDatabaseShouldSucceed() = runBlockingTest {
+        fun gettingSelectedCurrenciesFromTheDatabaseShouldReturnSelectedCurrencies() = runBlockingTest {
             val currencyGBP = Currency("USD_GBP", 0.766548)
             val currencyBTC = Currency("USD_BTC", 0.000076918096).apply {
                 order = 0
@@ -189,14 +186,13 @@ internal class CurrencyDaoAndroidTest {
                     .sortedBy { it.order }
                     .toList()
             val databaseCurrencies = currencyDao.getSelectedCurrencies().getOrAwaitValue()
-            val areListsEqual = databaseCurrencies.deepEquals(sortedSelectedCurrencies)
-            assertTrue(areListsEqual)
+            assertThat(sortedSelectedCurrencies).containsExactlyElementsIn(databaseCurrencies).inOrder()
         }
 
         @Test
         fun gettingSelectedCurrenciesFromEmptyTableInTheDatabaseShouldYieldNoResults() = runBlockingTest {
             val databaseCurrencies = currencyDao.getSelectedCurrencies().getOrAwaitValue()
-            assertTrue(databaseCurrencies.isEmpty())
+            assertThat(databaseCurrencies).isEmpty()
         }
     }
 }

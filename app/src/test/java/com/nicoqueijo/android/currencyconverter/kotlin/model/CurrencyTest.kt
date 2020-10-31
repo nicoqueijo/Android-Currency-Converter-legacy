@@ -1,6 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.model
 
-import org.junit.jupiter.api.Assertions.*
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -13,38 +13,38 @@ internal class CurrencyTest {
         @Test
         fun sameCurrencyObjectShouldReturnTrue() {
             val currency = Currency("USD_EUR", 0.842993)
-            assertEquals(currency, currency)
+            assertThat(currency).isEqualTo(currency)
         }
 
         @Test
         fun sameCurrenciesShouldReturnTrue() {
             val currencyA = Currency("USD_EUR", 0.842993)
             val currencyB = currencyA.copy()
-            assertFalse(currencyA === currencyB)
+            assertThat(currencyA).isNotSameInstanceAs(currencyB)
             val currencyC = Currency("USD_EUR", 0.842993)
-            assertEquals(currencyA, currencyB)
-            assertEquals(currencyB, currencyC)
+            assertThat(currencyA).isEqualTo(currencyB)
+            assertThat(currencyB).isEqualTo(currencyC)
         }
 
         @Test
         fun currenciesWithSameCurrencyCodeButDifferentExchangeRatesShouldReturnTrue() {
             val currencyA = Currency("USD_EUR", 0.842993)
             val currencyB = Currency("USD_EUR", 0.8641)
-            assertEquals(currencyA, currencyB)
+            assertThat(currencyA).isEqualTo(currencyB)
         }
 
         @Test
         fun differentTypeOfCurrencyObjectsShouldReturnFalse() {
             val currencyA = Currency("USD_EUR", 0.842993)
             val currencyB = java.util.Currency.getInstance("EUR")
-            assertNotEquals(currencyA, currencyB)
+            assertThat(currencyA).isNotEqualTo(currencyB)
         }
 
         @Test
         fun currenciesWithDifferentCurrencyCodesButSameExchangeRatesShouldReturnFalse() {
             val currencyA = Currency("USD_USD", 1.0)
             val currencyB = Currency("USD_BSD", 1.0)
-            assertNotEquals(currencyA, currencyB)
+            assertThat(currencyA).isNotEqualTo(currencyB)
         }
     }
 
@@ -54,7 +54,7 @@ internal class CurrencyTest {
         fun sameCurrencyObjectShouldReturnTrue() {
             val currency = Currency("USD_EUR", 0.842993)
             val areEqual = currency.deepEquals(currency)
-            assertTrue(areEqual)
+            assertThat(areEqual).isTrue()
         }
 
         @Test
@@ -68,7 +68,7 @@ internal class CurrencyTest {
                 isSelected = true
             }
             val areEqual = currencyA.deepEquals(currencyB)
-            assertTrue(areEqual)
+            assertThat(areEqual).isTrue()
         }
 
         @Test
@@ -82,7 +82,7 @@ internal class CurrencyTest {
                 isSelected = true
             }
             val areEqual = currencyA.deepEquals(currencyB)
-            assertFalse(areEqual)
+            assertThat(areEqual).isFalse()
         }
 
         @Test
@@ -96,7 +96,7 @@ internal class CurrencyTest {
                 isSelected = true
             }
             val areEqual = currencyA.deepEquals(currencyB)
-            assertFalse(areEqual)
+            assertThat(areEqual).isFalse()
         }
 
         @Test
@@ -110,7 +110,7 @@ internal class CurrencyTest {
                 isSelected = false
             }
             val areEqual = currencyA.deepEquals(currencyB)
-            assertFalse(areEqual)
+            assertThat(areEqual).isFalse()
         }
 
         @Test
@@ -124,7 +124,7 @@ internal class CurrencyTest {
                 isSelected = true
             }
             val areEqual = currencyA.deepEquals(currencyB)
-            assertFalse(areEqual)
+            assertThat(areEqual).isFalse()
         }
     }
 
@@ -135,7 +135,7 @@ internal class CurrencyTest {
             val currency = Currency("USD_EUR", 0.842993)
             val expected = "EUR"
             val actual = currency.trimmedCurrencyCode
-            assertEquals(expected, actual)
+            assertThat(actual).isEqualTo(expected)
         }
     }
 
@@ -146,7 +146,7 @@ internal class CurrencyTest {
             val currency = Currency("USD_EUR", 0.842993)
             val expected = "{-1 EUR    }"
             val actual = currency.toString()
-            assertEquals(expected, actual)
+            assertThat(actual).isEqualTo(expected)
         }
 
         @Test
@@ -158,7 +158,7 @@ internal class CurrencyTest {
             }
             val expected = "{7 EUR F S}"
             val actual = currency.toString()
-            assertEquals(expected, actual)
+            assertThat(actual).isEqualTo(expected)
         }
 
         @Test
@@ -169,7 +169,7 @@ internal class CurrencyTest {
             }
             val expected = "{7 EUR F  }"
             val actual = currency.toString()
-            assertEquals(expected, actual)
+            assertThat(actual).isEqualTo(expected)
         }
 
         @Test
@@ -180,7 +180,7 @@ internal class CurrencyTest {
             }
             val expected = "{7 EUR   S}"
             val actual = currency.toString()
-            assertEquals(expected, actual)
+            assertThat(actual).isEqualTo(expected)
         }
     }
 }

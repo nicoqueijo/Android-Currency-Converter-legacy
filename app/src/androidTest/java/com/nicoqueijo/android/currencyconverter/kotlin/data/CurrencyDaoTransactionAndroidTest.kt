@@ -3,14 +3,13 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import com.google.common.truth.Truth.assertThat
 import com.nicoqueijo.android.currencyconverter.InstantTaskExecutorExtension
 import com.nicoqueijo.android.currencyconverter.getOrAwaitValue
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.concurrent.Executors
 
@@ -45,7 +44,7 @@ internal class CurrencyDaoTransactionAndroidTest {
     @Nested
     inner class UpsertCurrencies {
         @Test
-        fun insertingMultipleCurrenciesInTheDatabaseShouldSucceed() = runBlocking {
+        fun insertingMultipleCurrenciesInTheDatabaseShouldInsertThemCorrectly(): Unit = runBlocking {
             val currencies = listOf(
                     Currency("USD_USD", 1.0),
                     Currency("USD_EUR", 0.842993),
@@ -57,16 +56,14 @@ internal class CurrencyDaoTransactionAndroidTest {
             )
             currencyDao.upsertCurrencies(currencies)
             val databaseCurrencies = currencyDao.getAllCurrencies().getOrAwaitValue()
-            val areSame = databaseCurrencies.containsAll(currencies) &&
-                    currencies.containsAll(databaseCurrencies)
-            assertTrue(areSame)
+            assertThat(currencies).containsExactlyElementsIn(databaseCurrencies)
         }
     }
 
     @Nested
     inner class UpdateExchangeRates {
         @Test
-        fun updatingMultipleExchangeRatesInTheDatabaseShouldSucceed() = runBlocking {
+        fun updatingMultipleExchangeRatesInTheDatabaseShouldPerformUpdatesCorrectly() = runBlocking {
             val currencyEUR = Currency("USD_EUR", 0.842993)
             val currencyJPY = Currency("USD_JPY", 104.70502716)
             val currencyARS = Currency("USD_ARS", 78.120127)
@@ -81,9 +78,9 @@ internal class CurrencyDaoTransactionAndroidTest {
             val databaseCurrencyEUR = databaseCurrencies.find { it.currencyCode == "USD_EUR" }!!
             val databaseCurrencyJPY = databaseCurrencies.find { it.currencyCode == "USD_JPY" }!!
             val databaseCurrencyARS = databaseCurrencies.find { it.currencyCode == "USD_ARS" }!!
-            assertEquals(modifiedCurrencyEUR.exchangeRate, databaseCurrencyEUR.exchangeRate)
-            assertEquals(modifiedCurrencyJPY.exchangeRate, databaseCurrencyJPY.exchangeRate)
-            assertEquals(modifiedCurrencyARS.exchangeRate, databaseCurrencyARS.exchangeRate)
+            assertThat(databaseCurrencyEUR.exchangeRate).isEqualTo(modifiedCurrencyEUR.exchangeRate)
+            assertThat(databaseCurrencyJPY.exchangeRate).isEqualTo(modifiedCurrencyJPY.exchangeRate)
+            assertThat(databaseCurrencyARS.exchangeRate).isEqualTo(modifiedCurrencyARS.exchangeRate)
         }
     }
 }
