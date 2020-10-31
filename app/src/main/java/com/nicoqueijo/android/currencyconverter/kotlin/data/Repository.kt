@@ -7,11 +7,12 @@ import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
+import com.nicoqueijo.android.currencyconverter.kotlin.model.ExchangeRates
+import com.nicoqueijo.android.currencyconverter.kotlin.model.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
@@ -63,36 +64,50 @@ class Repository @Inject constructor(
     suspend fun getCurrency(currencyCode: String) = currencyDao.getCurrency(currencyCode)
 
     /**
-     * Makes an API call if internet is available and the local data is either stale (hasn't been
-     * updated in 24 hours) or we have no local data. If the call succeeds we store the data that
-     * was returned into our local database. Else we throw an exception to let the called handle it.
+     * Makes an API call and persists the response if it's successful.
      */
-    suspend fun initCurrencies() {
+    suspend fun fetchCurrencies(): Resource {
         if (isNetworkAvailable() && (isDataStale || isDataEmpty)) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
                 retrofitResponse = exchangeRateService.getExchangeRates(getApiKey())
             } catch (e: SocketTimeoutException) {
-                throw SocketTimeoutException("Network request timed out.")
+                return Resource.Error("Network request timed out.")
             }
-            if (retrofitResponse.isSuccessful) {
-                val responseBody = retrofitResponse.body()
-                when {
-                    isDataEmpty -> currencyDao.upsertCurrencies(responseBody?.exchangeRates?.currencies!!)
-                    isDataStale -> currencyDao.updateExchangeRates(responseBody?.exchangeRates?.currencies!!)
-                }
-                sharedPreferences.edit()
-                        .putLong("timestamp", retrofitResponse.body()!!.timestamp)
-                        .apply()
+            return if (retrofitResponse.isSuccessful) {
+                persistResponse(retrofitResponse)
+                Resource.Success
             } else {
                 // Retrofit call executed but response wasn't in the 200s
-                throw IOException(retrofitResponse.errorBody()?.string())
+                Resource.Error(retrofitResponse.errorBody()?.string())
             }
         } else if (!isDataEmpty) {
-            return
+            return Resource.Success
         } else {
-            throw IOException("Network is unavailable and no local data found.")
+            return Resource.Error("Network is unavailable and no local data found.")
         }
+    }
+
+    private suspend fun persistResponse(response: Response<ApiEndPoint>) {
+        response.body()?.let { responseBody ->
+            responseBody.exchangeRates?.let { exchangeRates ->
+                persistCurrencies(exchangeRates)
+            }
+            persistTimestamp(responseBody.timestamp)
+        }
+    }
+
+    private suspend fun persistCurrencies(exchangeRates: ExchangeRates) {
+        when {
+            isDataEmpty -> currencyDao.upsertCurrencies(exchangeRates.currencies)
+            isDataStale -> currencyDao.updateExchangeRates(exchangeRates.currencies)
+        }
+    }
+
+    private fun persistTimestamp(timestamp: Long) {
+        sharedPreferences.edit()
+                .putLong("timestamp", timestamp)
+                .apply()
     }
 
     private fun getApiKey(): String {
