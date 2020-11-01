@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
+import com.nicoqueijo.android.currencyconverter.kotlin.data.DefaultRepository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 @ActivityRetainedScoped
 class SelectorViewModel @ViewModelInject constructor(
-        private val repository: Repository,
+        private val repository: DefaultRepository,
         application: Application) : AndroidViewModel(application) {
 
     val allCurrencies = repository.getAllCurrencies()
