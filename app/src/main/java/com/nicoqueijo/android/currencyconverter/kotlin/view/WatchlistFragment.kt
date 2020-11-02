@@ -277,7 +277,7 @@ class WatchlistFragment : Fragment() {
 
     /**
      * Styles the row in accordance to the focus state of its Currency. A row containing a focused
-     * Currency should have blinking cursor at the end of it's conversion field and a dark gray background.
+     * Currency should have blinking cursor at the end of its conversion field and a dark gray background.
      */
     private fun styleRow(currency: Currency, row: RowSelectedCurrency) {
         row.run {

@@ -53,14 +53,6 @@ class SplashFragment : Fragment() {
                     }
                 }
             }
-            /*try {
-                viewModel.fetchCurrencies()
-                withContext(Dispatchers.Main) {
-                    findNavController().navigate(R.id.action_splashFragment_to_watchlistFragment)
-                }
-            } catch (e: IOException) {
-                findNavController().navigate(R.id.action_splashFragment_to_errorFragment)
-            }*/
         }
     }
 }
