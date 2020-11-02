@@ -9,7 +9,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.nicoqueijo.android.currencyconverter.kotlin.data.DefaultRepository
+import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.util.CurrencyConversion
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.EMPTY
@@ -28,7 +28,7 @@ import java.util.*
 
 @ActivityRetainedScoped
 class WatchlistViewModel @ViewModelInject constructor(
-        private val repository: DefaultRepository,
+        private val repository: Repository,
         application: Application) : AndroidViewModel(application) {
 
     private fun upsertCurrency(currency: Currency) = repository.upsertCurrency(currency)
