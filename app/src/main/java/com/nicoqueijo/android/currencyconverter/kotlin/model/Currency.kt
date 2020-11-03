@@ -82,7 +82,7 @@ data class Currency(@PrimaryKey
      *
      *    *blank if not selected/focused
      */
-    override fun toString() = StringBuilder().apply {
+    override fun toString() = buildString {
         append("{")
         append(order)
         append(" ")
@@ -92,7 +92,7 @@ data class Currency(@PrimaryKey
         append(" ")
         append(if (isSelected) "S" else " ")
         append("}")
-    }.toString()
+    }
 
     inner class Conversion(conversionValue: BigDecimal) {
         /**
