@@ -1,7 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import android.content.Context
-import android.content.SharedPreferences
+import com.nicoqueijo.android.currencyconverter.kotlin.data.AppPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object SharedPreferencesModule {
 
     @Singleton
     @Provides
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("${context.packageName}.properties", Context.MODE_PRIVATE)
+    fun provideSharedPreferences(@ApplicationContext context: Context): AppPrefs {
+        return AppPrefs(context)
     }
 }

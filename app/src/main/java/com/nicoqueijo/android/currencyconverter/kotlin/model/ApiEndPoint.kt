@@ -3,6 +3,9 @@ package com.nicoqueijo.android.currencyconverter.kotlin.model
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+/**
+ * https://docs.openexchangerates.org/docs/latest-json
+ */
 @JsonClass(generateAdapter = true)
 class ApiEndPoint {
 

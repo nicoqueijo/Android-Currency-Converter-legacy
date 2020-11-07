@@ -14,7 +14,7 @@ import java.util.*
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class UtilsAndroidTest {
 
-    private var context = ApplicationProvider.getApplicationContext<Context>()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @Nested
     inner class GetStringByResourceName {

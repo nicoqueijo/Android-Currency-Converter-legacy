@@ -1,11 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.nicoqueijo.android.currencyconverter.kotlin.data.CurrencyDao
-import com.nicoqueijo.android.currencyconverter.kotlin.data.DefaultRepository
-import com.nicoqueijo.android.currencyconverter.kotlin.data.ExchangeRateService
-import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
+import com.nicoqueijo.android.currencyconverter.kotlin.data.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +19,7 @@ object RepositoryModule {
             @ApplicationContext context: Context,
             exchangeRateService: ExchangeRateService,
             currencyDao: CurrencyDao,
-            sharedPreferences: SharedPreferences): Repository {
-        return DefaultRepository(context, exchangeRateService, currencyDao, sharedPreferences)
+            appPrefs: AppPrefs): Repository {
+        return DefaultRepository(context, exchangeRateService, currencyDao, appPrefs)
     }
 }

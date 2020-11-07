@@ -8,8 +8,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.nicoqueijo.android.currencyconverter.BuildConfig.BUILD_TYPE
 import com.nicoqueijo.android.currencyconverter.R
-import com.nicoqueijo.android.currencyconverter.kotlin.data.DefaultRepository
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
+import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository.Companion.DEBUG
+import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository.Companion.RELEASE
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,8 +24,8 @@ class MainViewModel @ViewModelInject constructor(
 
     @SuppressLint("SimpleDateFormat")
     fun getFormattedLastUpdate(): String {
-        val timestamp = repository.timestamp
-        val date = Date(timestamp)
+        val timestampInMillis = repository.timestamp * 1000L
+        val date = Date(timestampInMillis)
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
         simpleDateFormat.timeZone = TimeZone.getDefault()
         return simpleDateFormat.format(date)
@@ -33,8 +34,8 @@ class MainViewModel @ViewModelInject constructor(
     fun getBannerAdId(context: Context): String {
         with(context.resources) {
             return when (BUILD_TYPE) {
-                "release" -> getString(R.string.ad_unit_id_banner)
-                "debug" -> getString(R.string.ad_unit_id_banner_test)
+                RELEASE -> getString(R.string.ad_unit_id_banner)
+                DEBUG -> getString(R.string.ad_unit_id_banner_test)
                 else -> getString(R.string.ad_unit_id_banner)
             }
         }

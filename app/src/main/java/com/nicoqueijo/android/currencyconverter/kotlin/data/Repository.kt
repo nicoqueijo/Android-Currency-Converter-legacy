@@ -16,8 +16,6 @@ interface Repository {
     suspend fun fetchCurrencies(): Resource
 
     companion object {
-        const val TWENTY_FOUR_HOURS = 86400000L
-        const val NO_DATA = 0L
         const val RELEASE = "release"
         const val DEBUG = "debug"
     }
