@@ -171,5 +171,9 @@ object Utils {
 
     fun Int.isValid() = this != INVALID.position
 
+    fun Long.toSeconds() = this / 1_000L
+
+    fun Long.toMillis() = this * 1_000L
+
     val String.Companion.EMPTY get() = ""
 }

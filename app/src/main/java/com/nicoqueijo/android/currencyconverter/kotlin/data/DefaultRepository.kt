@@ -26,7 +26,7 @@ class DefaultRepository @Inject constructor(
 
     override var isFirstLaunch = appPrefs.isFirstLaunch
 
-    override val timestamp = appPrefs.timestamp
+    override val timestampInSeconds = appPrefs.timestampInSeconds
 
     override fun getAllCurrencies() = currencyDao.getAllCurrencies()
 
@@ -76,7 +76,7 @@ class DefaultRepository @Inject constructor(
             responseBody.exchangeRates?.let { exchangeRates ->
                 persistCurrencies(exchangeRates)
             }
-            appPrefs.timestamp = responseBody.timestamp
+            appPrefs.timestampInSeconds = responseBody.timestamp
         }
     }
 

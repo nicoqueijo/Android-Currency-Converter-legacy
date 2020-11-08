@@ -1,6 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.toMillis
 
 class AppPrefs(context: Context) {
 
@@ -12,20 +13,20 @@ class AppPrefs(context: Context) {
         get() = sharedPrefs.getBoolean(FIRST_LAUNCH, true)
         set(value) = editor.putBoolean(FIRST_LAUNCH, value).apply()
 
-    var timestamp: Long
+    var timestampInSeconds: Long
         get() = (sharedPrefs.getLong(TIMESTAMP, NO_DATA))
         set(value) = editor.putLong(TIMESTAMP, value).apply()
 
     val isDataStale
-        get() = timeSinceLastUpdate > TWENTY_FOUR_HOURS
+        get() = timeSinceLastUpdateInMillis > TWENTY_FOUR_HOURS_IN_MILLIS
 
     val isDataEmpty
-        get() = timeSinceLastUpdate == NO_DATA
+        get() = timeSinceLastUpdateInMillis == NO_DATA
 
-    private val timeSinceLastUpdate: Long
+    private val timeSinceLastUpdateInMillis: Long
         get() {
-            return if (timestamp != NO_DATA) {
-                System.currentTimeMillis() - (timestamp * 1000L)
+            return if (timestampInSeconds != NO_DATA) {
+                System.currentTimeMillis() - timestampInSeconds.toMillis()
             } else {
                 NO_DATA
             }
@@ -34,7 +35,7 @@ class AppPrefs(context: Context) {
     companion object {
         const val FIRST_LAUNCH = "first_launch"
         const val TIMESTAMP = "timestamp"
-        const val TWENTY_FOUR_HOURS = 86400000L
+        const val TWENTY_FOUR_HOURS_IN_MILLIS = 86_400_000L
         const val NO_DATA = 0L
     }
 }

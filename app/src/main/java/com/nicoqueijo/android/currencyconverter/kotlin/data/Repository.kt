@@ -7,7 +7,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.Resource
 interface Repository {
 
     var isFirstLaunch: Boolean
-    val timestamp: Long
+    val timestampInSeconds: Long
     fun getAllCurrencies(): LiveData<MutableList<Currency>>
     fun getSelectedCurrencies(): LiveData<MutableList<Currency>>
     fun upsertCurrency(currency: Currency)

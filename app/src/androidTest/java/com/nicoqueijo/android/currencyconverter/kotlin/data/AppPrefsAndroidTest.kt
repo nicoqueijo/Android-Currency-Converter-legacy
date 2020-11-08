@@ -3,6 +3,7 @@ package com.nicoqueijo.android.currencyconverter.kotlin.data
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.toSeconds
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -27,7 +28,6 @@ internal class AppPrefsAndroidTest {
 
     @Nested
     inner class IsFirstLaunch {
-
         @Test
         fun whenNoValueExistsShouldReturnTrueByDefault() {
             val actual = appPrefs.isFirstLaunch
@@ -50,54 +50,53 @@ internal class AppPrefsAndroidTest {
     }
 
     @Nested
-    inner class Timestamp {
-
+    inner class TimestampInSeconds {
         @Test
         fun whenNoValueExistsShouldReturn0ByDefault() {
-            val actual = appPrefs.timestamp
+            val actual = appPrefs.timestampInSeconds
             assertThat(actual).isEqualTo(AppPrefs.NO_DATA)
         }
 
         @Test
         fun timestampShouldReturnCorrectValueWhenSetTo_1604779208() {
-            appPrefs.timestamp = 1604779208L
-            val actual = appPrefs.timestamp
-            val expected = 1604779208L
+            appPrefs.timestampInSeconds = 1_604_779_208L
+            val actual = appPrefs.timestampInSeconds
+            val expected = 1_604_779_208L
             assertThat(actual).isEqualTo(expected)
         }
 
         @Test
         fun timestampShouldReturnCorrectValueWhenSetTo_1748522368() {
-            appPrefs.timestamp = 1748522368L
-            val actual = appPrefs.timestamp
-            val expected = 1748522368L
+            appPrefs.timestampInSeconds = 1_748_522_368L
+            val actual = appPrefs.timestampInSeconds
+            val expected = 1_748_522_368L
             assertThat(actual).isEqualTo(expected)
         }
     }
 
+    /**
+     * Note: These tests depend on the system clock.
+     */
     @Nested
     inner class IsDataStale {
-
         @Test
         fun whenDataHasBeenUpdatedInThePast24HoursShouldReturnFalse() {
-            // Time units in seconds
-            val oneHour = 3600L
-            val currentTime = System.currentTimeMillis() / 1000L
-            val twentyFourHours = AppPrefs.TWENTY_FOUR_HOURS / 1000L
+            val oneHour = 3_600L
+            val currentTime = System.currentTimeMillis().toSeconds()
+            val twentyFourHours = AppPrefs.TWENTY_FOUR_HOURS_IN_MILLIS.toSeconds()
             val timestamp = currentTime - twentyFourHours + oneHour
-            appPrefs.timestamp = timestamp
+            appPrefs.timestampInSeconds = timestamp
             val actual = appPrefs.isDataStale
             assertThat(actual).isFalse()
         }
 
         @Test
         fun whenDataHasNotBeenUpdatedInThePast24HoursShouldReturnTrue() {
-            // Time units in seconds
-            val oneHour = 3600L
-            val currentTime = System.currentTimeMillis() / 1000L
-            val twentyFourHours = AppPrefs.TWENTY_FOUR_HOURS / 1000L
+            val oneHour = 3_600L
+            val currentTime = System.currentTimeMillis().toSeconds()
+            val twentyFourHours = AppPrefs.TWENTY_FOUR_HOURS_IN_MILLIS.toSeconds()
             val timestamp = currentTime - twentyFourHours - oneHour
-            appPrefs.timestamp = timestamp
+            appPrefs.timestampInSeconds = timestamp
             val actual = appPrefs.isDataStale
             assertThat(actual).isTrue()
         }
@@ -105,7 +104,6 @@ internal class AppPrefsAndroidTest {
 
     @Nested
     inner class IsDataEmpty {
-
         @Test
         fun whenDataIsEmptyShouldReturnTrue() {
             val actual = appPrefs.isDataEmpty
@@ -114,10 +112,9 @@ internal class AppPrefsAndroidTest {
 
         @Test
         fun whenDataIsNotEmptyShouldReturnFalse() {
-            appPrefs.timestamp = 1604779208L
+            appPrefs.timestampInSeconds = 1_604_779_208L
             val actual = appPrefs.isDataEmpty
             assertThat(actual).isFalse()
         }
     }
-
 }

@@ -10,6 +10,8 @@ import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.hasOnlyOneElem
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNotLastElement
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isValid
 import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.roundToFourDecimalPlaces
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.toMillis
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.toSeconds
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -401,6 +403,76 @@ internal class UtilsTest {
         fun shouldReturnEmptyString() {
             val expected = ""
             val actual = String.EMPTY
+            assertThat(actual).isEqualTo(expected)
+        }
+    }
+
+    @Nested
+    inner class LongToSeconds {
+        @Test
+        fun zeroMillisShouldReturnZeroSeconds() {
+            val timeInMillis = 0L
+            val actual = timeInMillis.toSeconds()
+            val expected = 0L
+            assertThat(actual).isEqualTo(expected)
+        }
+
+        @Test
+        fun under1000MillisShouldReturnZeroSeconds() {
+            val timeInMillis = 345L
+            val actual = timeInMillis.toSeconds()
+            val expected = 0L
+            assertThat(actual).isEqualTo(expected)
+        }
+
+        @Test
+        fun millionsOfMillisShouldReturnCorrectSeconds() {
+            val timeInMillis = 3_600_000L
+            val actual = timeInMillis.toSeconds()
+            val expected = 3_600L
+            assertThat(actual).isEqualTo(expected)
+        }
+
+        @Test
+        fun trillionsOfMillisShouldReturnCorrectSeconds() {
+            val timeInMillis = 1_604_779_208_123L
+            val actual = timeInMillis.toSeconds()
+            val expected = 1_604_779_208L
+            assertThat(actual).isEqualTo(expected)
+        }
+
+        @Test
+        fun trillionsOfMillisShouldTruncateCorrectlyAndReturnCorrectSeconds() {
+            val timeInMillis = 1_604_779_208_987L
+            val actual = timeInMillis.toSeconds()
+            val expected = 1_604_779_208L
+            assertThat(actual).isEqualTo(expected)
+        }
+    }
+
+    @Nested
+    inner class LongToMillis {
+        @Test
+        fun zeroSecondsShouldReturnZeroMillis() {
+            val timeInSeconds = 0L
+            val actual = timeInSeconds.toMillis()
+            val expected = 0L
+            assertThat(actual).isEqualTo(expected)
+        }
+
+        @Test
+        fun thousandsOfSecondsShouldReturnCorrectMillis() {
+            val timeInSeconds = 3_600L
+            val actual = timeInSeconds.toMillis()
+            val expected = 3_600_000L
+            assertThat(actual).isEqualTo(expected)
+        }
+
+        @Test
+        fun millionsOfSecondsShouldReturnCorrectMillis() {
+            val timeInSeconds = 1_604_779_208L
+            val actual = timeInSeconds.toMillis()
+            val expected = 1_604_779_208_000L
             assertThat(actual).isEqualTo(expected)
         }
     }

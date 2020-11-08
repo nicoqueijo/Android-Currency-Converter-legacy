@@ -11,6 +11,7 @@ import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository.Companion.DEBUG
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository.Companion.RELEASE
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.toMillis
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +25,7 @@ class MainViewModel @ViewModelInject constructor(
 
     @SuppressLint("SimpleDateFormat")
     fun getFormattedLastUpdate(): String {
-        val timestampInMillis = repository.timestamp * 1000L
+        val timestampInMillis = repository.timestampInSeconds.toMillis()
         val date = Date(timestampInMillis)
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
         simpleDateFormat.timeZone = TimeZone.getDefault()

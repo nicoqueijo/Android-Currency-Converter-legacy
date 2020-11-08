@@ -10,7 +10,7 @@ class FakeRepository : Repository {
         get() = TODO("Not yet implemented")
         set(value) {}
 
-    override val timestamp: Long
+    override val timestampInSeconds: Long
         get() = TODO("Not yet implemented")
 
     override fun getAllCurrencies(): LiveData<MutableList<Currency>> {
