@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
 import android.graphics.Rect
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -126,6 +127,12 @@ object Utils {
         }
         val bottom = top + view.height
         return scrollBounds.top < top && scrollBounds.bottom > bottom
+    }
+
+    fun Context.isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
     }
 
     fun List<*>.hasOnlyOneElement() = size == 1

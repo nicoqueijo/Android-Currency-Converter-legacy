@@ -83,6 +83,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     testImplementation "com.google.truth:truth:$truth_version"
     testImplementation "io.mockk:mockk:$mockk_version"
 

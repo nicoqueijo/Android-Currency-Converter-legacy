@@ -49,6 +49,7 @@ This app implements the MVVM architectural pattern using a single activity with 
 * <a href="https://github.com/KeepSafe/TapTargetView" target="_blank">TapTargetView</a> - An implementation of tap targets from Google's Material Design guidelines on feature discovery.
 * <a href="https://github.com/junit-team/junit5" target="_blank">JUnit 5</a> - The most widely used testing framework for Java applications.
 * <a href="https://github.com/google/truth" target="_blank">Truth</a> - A library that makes your test assertions and failure messages more readable.
+* <a href="https://github.com/mockk/mockk" target="_blank">MockK</a> - A mocking library for Kotlin.
 
 
 ### Acknowledgments

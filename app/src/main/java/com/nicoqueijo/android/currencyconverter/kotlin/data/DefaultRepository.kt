@@ -1,7 +1,6 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.data
 
 import android.content.Context
-import android.net.ConnectivityManager
 import com.nicoqueijo.android.currencyconverter.BuildConfig
 import com.nicoqueijo.android.currencyconverter.R
 import com.nicoqueijo.android.currencyconverter.kotlin.data.Repository.Companion.DEBUG
@@ -10,6 +9,7 @@ import com.nicoqueijo.android.currencyconverter.kotlin.model.ApiEndPoint
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Currency
 import com.nicoqueijo.android.currencyconverter.kotlin.model.ExchangeRates
 import com.nicoqueijo.android.currencyconverter.kotlin.model.Resource
+import com.nicoqueijo.android.currencyconverter.kotlin.util.Utils.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,12 +50,12 @@ class DefaultRepository @Inject constructor(
      * Makes an API call and persists the response if it's successful.
      */
     override suspend fun fetchCurrencies(): Resource {
-        if (isNetworkAvailable() && (appPrefs.isDataStale || appPrefs.isDataEmpty)) {
+        if (context.isNetworkAvailable() && (appPrefs.isDataEmpty || appPrefs.isDataStale)) {
             val retrofitResponse: Response<ApiEndPoint>
             try {
                 retrofitResponse = exchangeRateService.getExchangeRates(getApiKey())
             } catch (e: SocketTimeoutException) {
-                return Resource.Error("Network request timed out.")
+                return Resource.Error(NETWORK_TIMEOUT_ERROR_MESSAGE)
             }
             return if (retrofitResponse.isSuccessful) {
                 persistResponse(retrofitResponse)
@@ -67,7 +67,7 @@ class DefaultRepository @Inject constructor(
         } else if (!appPrefs.isDataEmpty) {
             return Resource.Success
         } else {
-            return Resource.Error("Network is unavailable and no local data found.")
+            return Resource.Error(NETWORK_OR_DATA_UNAVAILABLE_ERROR_MESSAGE)
         }
     }
 
@@ -97,9 +97,8 @@ class DefaultRepository @Inject constructor(
         }
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
+    companion object {
+        const val NETWORK_OR_DATA_UNAVAILABLE_ERROR_MESSAGE = "Network is unavailable and no local data found."
+        const val NETWORK_TIMEOUT_ERROR_MESSAGE = "Network request timed out."
     }
 }

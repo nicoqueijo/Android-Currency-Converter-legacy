@@ -17,11 +17,11 @@ class AppPrefs(context: Context) {
         get() = (sharedPrefs.getLong(TIMESTAMP, NO_DATA))
         set(value) = editor.putLong(TIMESTAMP, value).apply()
 
-    val isDataStale
-        get() = timeSinceLastUpdateInMillis > TWENTY_FOUR_HOURS_IN_MILLIS
-
     val isDataEmpty
         get() = timeSinceLastUpdateInMillis == NO_DATA
+
+    val isDataStale
+        get() = timeSinceLastUpdateInMillis > TWENTY_FOUR_HOURS_IN_MILLIS
 
     private val timeSinceLastUpdateInMillis: Long
         get() {
