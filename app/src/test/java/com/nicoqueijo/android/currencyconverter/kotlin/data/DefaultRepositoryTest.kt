@@ -16,11 +16,11 @@ import java.net.SocketTimeoutException
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class DefaultRepositoryTest {
 
-    val context = mockk<Context>(relaxed = true)
-    val exchangeRateService = mockk<ExchangeRateService>(relaxed = true)
-    val currencyDao = mockk<CurrencyDao>(relaxed = true)
-    val appPrefs = mockk<AppPrefs>(relaxed = true)
-    val repository: Repository = DefaultRepository(
+    private val context = mockk<Context>(relaxed = true)
+    private val exchangeRateService = mockk<ExchangeRateService>(relaxed = true)
+    private val currencyDao = mockk<CurrencyDao>(relaxed = true)
+    private val appPrefs = mockk<AppPrefs>(relaxed = true)
+    private val repository: Repository = DefaultRepository(
             context,
             exchangeRateService,
             currencyDao,
