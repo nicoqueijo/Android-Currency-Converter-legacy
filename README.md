@@ -40,6 +40,10 @@ This app implements the MVVM architectural pattern using a single activity with 
 * <a href="https://developer.android.com/guide/navigation" target="_blank">Navigation</a> - A library that can manage complex navigation, transition animation, deep linking, and compile-time checked argument passing between the screens in your app.
 * <a href="https://developer.android.com/topic/libraries/data-binding" target="_blank">Data Binding</a> - A support library that allows you to bind UI components in your layouts to data sources in your app using a declarative format rather than programmatically.
 * <a href="https://github.com/square/moshi" target="_blank">Moshi</a> - A modern JSON library for Android and Java.
+* <a href="https://github.com/junit-team/junit5" target="_blank">JUnit 5</a> - The most widely used testing framework for Java applications.
+* <a href="https://github.com/mockk/mockk" target="_blank">MockK</a> - A mocking library for Kotlin.
+* <a href="https://github.com/google/truth" target="_blank">Truth</a> - A library that makes your test assertions and failure messages more readable.
+* <a href="https://github.com/material-components/material-components-android" target="_blank">Material Components for Android</a> - A library that brings Material Theming, new widgets, dark theme support and other exciting features to your Android app.
 * <a href="https://developers.google.com/admob/android/quick-start" target="_blank">Google AdMob</a> - A mobile advertising platform that you can use to generate revenue from your app.
 * <a href="https://developer.android.com/google/play/billing/billing_library_overview" target="_blank">Google Play Billing</a> - A service that lets you sell digital content on Android.
 * <a href="https://github.com/anjlab/android-inapp-billing-v3" target="_blank">Android In-App Billing v3</a> - A simple, straight-forward implementation of the Android v3 In-app billing API.
@@ -47,10 +51,6 @@ This app implements the MVVM architectural pattern using a single activity with 
 * <a href="https://github.com/justasm/DragLinearLayout" target="_blank">DragLinearLayout</a> - An Android LinearLayout that supports draggable and swappable child Views.
 * <a href="https://github.com/FutureMind/recycler-fast-scroll" target="_blank">Recycler Bubble</a> - Provides fast scroll and section indexer for recycler view.
 * <a href="https://github.com/KeepSafe/TapTargetView" target="_blank">TapTargetView</a> - An implementation of tap targets from Google's Material Design guidelines on feature discovery.
-* <a href="https://github.com/junit-team/junit5" target="_blank">JUnit 5</a> - The most widely used testing framework for Java applications.
-* <a href="https://github.com/google/truth" target="_blank">Truth</a> - A library that makes your test assertions and failure messages more readable.
-* <a href="https://github.com/mockk/mockk" target="_blank">MockK</a> - A mocking library for Kotlin.
-
 
 ### Acknowledgments
 * App icon made by Freepik from www.flaticon.com
