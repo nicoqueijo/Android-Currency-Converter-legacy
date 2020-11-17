@@ -17,7 +17,7 @@ Currency conversion tool using live exchange rates.
 ### Screenshots
 https://github.com/nicoqueijo/Android-Currency-Converter/tree/master/graphics/screenshots
 
-### API used
+### API service
 https://openexchangerates.org/
 
 ### Architecture
