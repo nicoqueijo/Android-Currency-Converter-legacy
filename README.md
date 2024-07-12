@@ -1,4 +1,14 @@
-## Currency Converter
+# DEPRECATED
+
+⚠️ **This repository is no longer maintained and has been archived.** ⚠️
+
+After 4+ years of this project being inactive the Android landscape evolved significantly. To update it with modern tools and best practices, it was determined that starting a new project from scratch would be more efficient and maintainable. As a result, this repository has been deprecated.
+
+Please check out the replacing repository found at [Android-Currency-Converter](https://github.com/nicoqueijo/Android-Currency-Converter).
+
+-------------------------------------------------------
+
+### Overview
 Currency conversion tool using live exchange rates.
 
 ### Installation
